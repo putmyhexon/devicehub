@@ -2,162 +2,185 @@
 * Copyright © 2019 contains code contributed by Orange SA, authors: Denis Barbaron - Licensed under the Apache license 2.0
 **/
 
-var QueryParser = require('./util/query-parser')
+let QueryParser = require('./util/query-parser')
+const _ = require('lodash')
 
 module.exports = function DeviceListCtrl(
   $scope
+, $http
 , DeviceService
 , DeviceColumnService
 , GroupService
 , ControlService
 , SettingsService
 , $location
+, GenericModalService
 ) {
   $scope.tracker = DeviceService.trackAll($scope)
   $scope.control = ControlService.create($scope.tracker.devices, '*ALL')
 
   $scope.columnDefinitions = DeviceColumnService
 
-  var defaultColumns = [
+  const defaultColumns = [
     {
       name: 'state'
-    , selected: true
+      , selected: true
     }
-  , {
+    , {
       name: 'model'
-    , selected: true
+      , selected: false
     }
-  , {
+    , {
       name: 'name'
-    , selected: true
+      , selected: true
     }
-  , {
+    , {
       name: 'serial'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'operator'
-    , selected: true
+      , selected: false
     }
-  , {
+    , {
       name: 'releasedAt'
-    , selected: true
+      , selected: false
     }
-  , {
+    , {
       name: 'version'
-    , selected: true
+      , selected: true
     }
-  , {
+    , {
       name: 'network'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'display'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'manufacturer'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'marketName'
-    , selected: false
+      , selected: true
     }
-  , {
+    , {
       name: 'sdk'
-    , selected: false
+      , selected: true
     }
-  , {
+    , {
       name: 'abi'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'cpuPlatform'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'openGLESVersion'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'browser'
-    , selected: false
+      , selected: true
     }
-  , {
+    , {
+      name: 'mobileService'
+      , selected: true
+    }
+    , {
+      name: 'macAddress'
+      , selected: false
+    }
+    , {
+      name: 'place'
+      , selected: false
+    }
+    , {
+      name: 'storageId'
+      , selected: false
+    }
+    , {
       name: 'phone'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'imei'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'imsi'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'iccid'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'batteryHealth'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'batterySource'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'batteryStatus'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'batteryLevel'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'batteryTemp'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'provider'
-    , selected: true
+      , selected: false
     }
-  , {
+    , {
       name: 'notes'
-    , selected: true
+      , selected: true
     }
-  , {
+    , {
       name: 'owner'
-    , selected: true
+      , selected: true
     }
-  , {
+    , {
       name: 'group'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'groupSchedule'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'groupStartTime'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'groupEndTime'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'groupRepetitions'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'groupOwner'
-    , selected: false
+      , selected: false
     }
-  , {
+    , {
       name: 'groupOrigin'
-    , selected: false
+      , selected: false
+    }
+    , {
+      name: 'bookedBefore'
+      , selected: true
     }
   ]
 
@@ -168,7 +191,7 @@ module.exports = function DeviceListCtrl(
   , source: 'deviceListColumns'
   })
 
-  var defaultSort = {
+  let defaultSort = {
     fixed: [
       {
         name: 'state'
@@ -237,4 +260,29 @@ module.exports = function DeviceListCtrl(
     $scope.sort = defaultSort
     $scope.columns = defaultColumns
   }
+
+  let params = (new URL(document.location)).searchParams
+  let name = params.get('need_accept')
+  if (name) {
+    GenericModalService.open({
+      // eslint-disable-next-line max-len
+      message: 'Перед использованием необходимо обязательно ознакомиться с правилами использования!'
+      , type: 'Warning'
+      , size: 'lg'
+      , cancel: false
+    })
+      .then(() => {
+        $scope.control.setPolicyAccepted()
+        $http.get('/auth/docs').then(function(response) {
+          window.open(response.data.docsUrl, '_blank').focus()
+        })
+        window.location.replace((document.location.href).replace(document.location.search, ''))
+      })
+      .catch((e) => {
+        location.reload()
+      })
+  }
+
 }
+
+document.title = window.location.host.split('.')[0]

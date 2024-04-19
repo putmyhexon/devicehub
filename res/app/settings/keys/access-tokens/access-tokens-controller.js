@@ -5,8 +5,8 @@ module.exports = function AccessTokensCtrl($scope, AccessTokenService) {
 
     function updateTokens() {
       AccessTokenService.getAccessTokens()
-        .success(function(response) {
-          $scope.accessTokenTitles = response.titles || []
+        .then(function(response) {
+          $scope.accessTokenTitles = response.data.titles || []
         })
     }
 

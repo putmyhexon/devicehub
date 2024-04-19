@@ -21,13 +21,12 @@
   border-top: 1px solid #e5e5e5;
 }
 
-
 .stf-modal .dialog-header-error {
   background-color: #d2322d;
 }
 
 .stf-modal .dialog-header-wait {
-  background-color: #428bca;
+  background-color: #2787F5;
 }
 
 .stf-modal .dialog-header-notify {

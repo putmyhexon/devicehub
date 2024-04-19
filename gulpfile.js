@@ -8,6 +8,7 @@ var gulp = require('gulp')
 var gutil = require('gulp-util')
 var jsonlint = require('gulp-jsonlint')
 var eslint = require('gulp-eslint')
+var eslintIfFixed = require('gulp-eslint-if-fixed')
 var EslintCLIEngine = require('eslint').CLIEngine
 var webpack = require('webpack')
 var webpackConfig = require('./webpack.config').webpack
@@ -25,8 +26,7 @@ var run = require('gulp-run')
 
 gulp.task('jsonlint', function() {
   return gulp.src([
-      '.bowerrc'
-    , '.yo-rc.json'
+      '.yo-rc.json'
     , '*.json'
     ], {allowEmpty: true})
     .pipe(jsonlint())
@@ -39,7 +39,6 @@ gulp.task('eslint', function() {
   return gulp.src([
       'lib/**/*.js'
     , 'res/**/*.js'
-    , '!res/bower_components/**'
     , '*.js'
   ])
     // eslint() attaches the lint output to the "eslint" property
@@ -77,6 +76,25 @@ gulp.task('eslint-cli', function(done) {
   else {
     done()
   }
+})
+
+gulp.task('lint-fix', function() {
+  let isContainsFixes = false
+  return gulp.src([
+    'lib/**/*.js'
+    , 'res/**/*.js'
+  ])
+    .pipe(eslint({fix: true}))
+    .pipe(eslintIfFixed(file =>{
+        isContainsFixes = true
+        return file.base
+    }))
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError()).on('end', function() {
+      if(isContainsFixes) {
+        throw new Error('Eslint repaired code in files (try to re-commit)')
+      }
+    })
 })
 
 gulp.task('run:checkversion', function() {
@@ -201,7 +219,6 @@ gulp.task('webpack:others', function(callback) {
 gulp.task('pug', function() {
   return gulp.src([
       './res/**/*.pug'
-    , '!./res/bower_components/**'
     ])
     .pipe(pug({
       locals: {
@@ -219,7 +236,6 @@ gulp.task('translate:extract', gulp.series('pug', function() {
   return gulp.src([
       './tmp/html/**/*.html'
     , './res/**/*.js'
-    , '!./res/bower_components/**'
     , '!./res/build/**'
     ])
     .pipe(gettext.extract('stf.pot'))

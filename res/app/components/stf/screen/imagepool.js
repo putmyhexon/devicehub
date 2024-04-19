@@ -6,7 +6,7 @@ function ImagePool(size) {
 
 ImagePool.prototype.next = function() {
   if (this.images.length < this.size) {
-    var image = new Image()
+    const image = new Image()
     this.images.push(image)
     return image
   }

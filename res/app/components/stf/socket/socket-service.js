@@ -1,18 +1,18 @@
-var io = require('socket.io')
+const io = require('socket.io')
 
 module.exports = function SocketFactory(
   $rootScope
 , VersionUpdateService
 , AppState
 ) {
-  var websocketUrl = AppState.config.websocketUrl || ''
+  let websocketUrl = AppState.config.websocketUrl || ''
 
-  var socket = io(websocketUrl, {
-    reconnection: false, transports: ['websocket']
+  let socket = io(websocketUrl, {
+    reconnection: true, transports: ['websocket']
   })
 
   socket.scoped = function($scope) {
-    var listeners = []
+    let listeners = []
 
     $scope.$on('$destroy', function() {
       listeners.forEach(function(listener) {

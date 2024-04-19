@@ -1,68 +1,87 @@
-var _ = require('lodash')
+const _ = require('lodash')
 
 module.exports = function DeviceControlCtrl($scope, DeviceService, GroupService,
-  $location, $timeout, $window, $rootScope, LogcatService) {
-
+                                            $location, $timeout, $window, $rootScope, LogcatService, GenericModalService) {
   $scope.showScreen = true
 
   $scope.groupTracker = DeviceService.trackGroup($scope)
 
   $scope.groupDevices = $scope.groupTracker.devices
 
-  $scope.$on('$locationChangeStart', function(event, next, current) {
+  $scope.networkType = navigator.connection ? navigator.connection.effectiveType : '4g'
+
+  $scope.canChangeQuality = !!navigator.connection
+
+  $scope.$on('$locationChangeStart', function (event, next, current) {
     $scope.LogcatService = LogcatService
     $rootScope.LogcatService = LogcatService
   })
 
-  $scope.kickDevice = function(device) {
-    if (Object.keys(LogcatService.deviceEntries).includes(device.serial)) {
-      LogcatService.deviceEntries[device.serial].allowClean = true
-    }
-
-    $scope.LogcatService = LogcatService
-    $rootScope.LogcatService = LogcatService
-
-    if (!device || !$scope.device) {
-      alert('No device found')
-      return
-    }
-
-    try {
-      // If we're trying to kick current device
-      if (device.serial === $scope.device.serial) {
-
-        // If there is more than one device left
-        if ($scope.groupDevices.length > 1) {
-
-          // Control first free device first
-          var firstFreeDevice = _.find($scope.groupDevices, function(dev) {
-            return dev.serial !== $scope.device.serial
-          })
-          $scope.controlDevice(firstFreeDevice)
-
-          // Then kick the old device
-          GroupService.kick(device).then(function() {
-            $scope.$digest()
-          })
-        } else {
-          // Kick the device
-          GroupService.kick(device).then(function() {
-            $scope.$digest()
-          })
-          $location.path('/devices/')
-        }
-      } else {
-        GroupService.kick(device).then(function() {
-          $scope.$digest()
-        })
-      }
-    } catch (e) {
-      alert(e.message)
-    }
+  $scope.changeQuality = function(quality) {
+    $scope.canChangeQuality = false
+    $scope.control.changeQuality(quality)
   }
 
-  $scope.controlDevice = function(device) {
-    $location.path('/control/' + device.serial)
+  $scope.kickDevice = function (device) {
+    // eslint-disable-next-line max-len
+    GenericModalService.open({
+      // eslint-disable-next-line max-len
+      message: 'Вы уверены, что хотите освободить девайс? Девайс будет очищен перед возвращением в список устройств'
+      , type: 'Warning'
+      , size: 'lg'
+      , cancel: true
+    })
+      .then(function () {
+        if (Object.keys(LogcatService.deviceEntries).includes(device.serial)) {
+          LogcatService.deviceEntries[device.serial].allowClean = true
+        }
+
+        $scope.LogcatService = LogcatService
+        $rootScope.LogcatService = LogcatService
+
+        if (!device || !$scope.device) {
+          alert('No device found')
+          return
+        }
+
+        try {
+          // If we're trying to kick current device
+          if (device.serial === $scope.device.serial) {
+
+            // If there is more than one device left
+            if ($scope.groupDevices.length > 1) {
+
+              // Control first free device first
+              var firstFreeDevice = _.find($scope.groupDevices, function (dev) {
+                return dev.serial !== $scope.device.serial
+              })
+              $scope.controlDevice(firstFreeDevice)
+
+              // Then kick the old device
+              GroupService.kick(device).then(function () {
+                $scope.$digest()
+              })
+            } else {
+              // Kick the device
+              GroupService.kick(device).then(function () {
+                $scope.$digest()
+              })
+              $location.path('/devices/')
+            }
+          } else {
+            GroupService.kick(device).then(function () {
+              $scope.$digest()
+            })
+          }
+        } catch (e) {
+          alert(e.message)
+        }
+      })
+  }
+
+  $scope.controlDevice = function (device) {
+    $location.path('/c/' + device.serial)
+    //$location.path('/control/' + device.serial)
   }
 
   function isPortrait(val) {
@@ -81,17 +100,17 @@ module.exports = function DeviceControlCtrl($scope, DeviceService, GroupService,
     return (value === 90 || value === 270)
   }
 
-  $scope.tryToRotate = function(rotation) {
+  $scope.tryToRotate = function (rotation) {
     if (rotation === 'portrait') {
       $scope.control.rotate(0)
-      $timeout(function() {
+      $timeout(function () {
         if (isLandscape()) {
           $scope.currentRotation = 'landscape'
         }
       }, 400)
     } else if (rotation === 'landscape') {
       $scope.control.rotate(90)
-      $timeout(function() {
+      $timeout(function () {
         if (isPortrait()) {
           $scope.currentRotation = 'portrait'
         }
@@ -101,7 +120,7 @@ module.exports = function DeviceControlCtrl($scope, DeviceService, GroupService,
 
   $scope.currentRotation = 'portrait'
 
-  $scope.$watch('device.display.rotation', function(newValue) {
+  $scope.$watch('device.display.rotation', function (newValue) {
     if (isPortrait(newValue)) {
       $scope.currentRotation = 'portrait'
     } else if (isLandscape(newValue)) {
@@ -110,7 +129,7 @@ module.exports = function DeviceControlCtrl($scope, DeviceService, GroupService,
   })
 
   // TODO: Refactor this inside control and server-side
-  $scope.rotateLeft = function() {
+  $scope.rotateLeft = function () {
     var angle = 0
     if ($scope.device && $scope.device.display) {
       angle = $scope.device.display.rotation
@@ -127,7 +146,7 @@ module.exports = function DeviceControlCtrl($scope, DeviceService, GroupService,
     }
   }
 
-  $scope.rotateRight = function() {
+  $scope.rotateRight = function () {
     var angle = 0
     if ($scope.device && $scope.device.display) {
       angle = $scope.device.display.rotation
@@ -144,4 +163,37 @@ module.exports = function DeviceControlCtrl($scope, DeviceService, GroupService,
     }
   }
 
+
+  $scope.autoQuality = function() {
+    let networkType = navigator.connection.effectiveType
+    if ($scope.networkType === networkType)
+    {
+      return
+    }
+    if (!$scope.canChangeQuality) {
+      return
+    }
+
+    $scope.networkType = networkType
+    switch (networkType) {
+      case 'slow-2g': {
+        $scope.control.changeQuality(10)
+        break
+      }
+      case '2g': {
+        $scope.control.changeQuality(20)
+        break
+      }
+      case '3g': {
+        $scope.control.changeQuality(60)
+        break
+      }
+      case '4g': {
+        $scope.control.changeQuality(80)
+        break
+      }
+    }
+  }
+
+  setInterval($scope.autoQuality, 5000)
 }

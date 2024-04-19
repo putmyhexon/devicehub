@@ -2,6 +2,13 @@
   .heading
     stacked-icon(icon='fa-bug', color='color-darkgreen')
     span(translate) Remote debug
+    button(
+        type='button',
+        ng-click='copyLink()',
+        uib-tooltip='{{"Copy link"|translate}}',
+        tooltip-placement='bottom'
+      ).btn.pull-right.btn-sm.btn-primary-outline
+        i.fa.fa-clipboard
     help-icon(topic='Remote-Debug', uib-tooltip='{{remoteDebugTooltip | translate}}')
 
   .widget-content.padded

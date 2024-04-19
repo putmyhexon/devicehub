@@ -1,0 +1,84 @@
+.stf-shell .shell-result {
+  font-size: 12px;
+  color: #fefefe;
+  background: #444;
+  padding: 6px 6px;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.stf-shell .device-list-shell-result-name {
+  color: #fefefe;
+  font-size: 14px;
+  font-weight: 300;
+  margin-top: 12px;
+  padding: 6px 6px;
+  background: #444;
+}
+
+.stf-shell .shell-input {
+  font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+  font-size: 12px;
+}
+
+.stf-shell .selectable {
+  user-select: text;
+}
+
+.stf-pager-devices-total-items {
+  margin-top: 5px;
+}
+
+.stf-shell .device-header {
+  margin-left: 10px;
+}
+
+.stf-shell .heading .device-header-icon {
+  font-size: 16px;
+}
+
+.stf-shell .device-list-icon {
+  margin-right: 10px;
+}
+
+.stf-shell .device-filters-items {
+  margin-top: 5px;
+}
+
+.stf-shell .device-filters-item {
+  margin: 0px 10px 15px 15px;
+}
+
+.stf-shell .devices-list .device-line {
+  padding: 10px;
+  border-bottom: 1px solid #dddddd;
+  margin-left: 0px;
+}
+
+.stf-shell .devices-list .device-line.device-actions {
+  padding-bottom: 23px;
+}
+
+.stf-shell .device-list-details {
+  display: inline-block;
+}
+
+.stf-shell .device-list-label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.stf-shell .device-list-name {
+  color: #2787F5;
+  font-size: 14px;
+  font-weight: 300;
+  margin: 2px 0 6px;
+}
+
+.stf-shell .device-list-id {
+  font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+  font-size: 10px;
+  margin-bottom: 2px;
+  color: #999999;
+  font-weight: 300;
+}

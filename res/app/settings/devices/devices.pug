@@ -5,7 +5,7 @@
 .widget-container.fluid-height.stf-devices(ng-controller='DevicesCtrl')
   .heading
     i.fa.fa-mobile.device-header-icon
-    span(translate) Device list 
+    span(translate) Device list
 
     a.pull-right.btn.btn-sm(ng-href='')
       i.fa.fa-question-circle.fa-fw(uib-tooltip='{{"More about Devices" | translate}}' tooltip-placement='left')
@@ -31,7 +31,6 @@
 
               button.btn.btn-xs.btn-danger.pull-right(
                 type='button'
-                uib-tooltip="{{'Remove the device selection' | translate}}"
                 tooltip-placement='bottom'
                 tooltip-popup-delay='500'
                 ng-disabled='!filteredDevices.length'
@@ -46,9 +45,9 @@
                 tooltip-popup-delay='500'
                 ng-click='confirmRemove.value = !confirmRemove.value'
                 ng-class='{"btn-warning-outline": !confirmRemove.value, "btn-success": confirmRemove.value}')
-                  i.fa.fa-lock(ng-if='confirmRemove.value')
-                  i.fa.fa-unlock(ng-if='!confirmRemove.value')
-                  span(translate) Confirm Remove
+                i.fa.fa-lock(ng-if='confirmRemove.value')
+                i.fa.fa-unlock(ng-if='!confirmRemove.value')
+                span(translate) Need confirm
 
               button.btn.btn-xs.btn-danger-outline.pull-right(
                 type='button'
@@ -57,8 +56,9 @@
                 tooltip-popup-delay='500'
                 ng-click='showFilters = !showFilters'
                 ng-class='{"btn-danger-outline": !showFilters, "btn-danger": showFilters}')
-                  i.fa.fa-trash-o
-                  span(translate) Filters
+                i.fa.fa-trash-o
+                span(translate) Filters
+
 
         li.list-group-item(ng-if='showFilters')
           .device-line
@@ -111,7 +111,7 @@
           | filter:search \
           | orderBy: 'model' \
           | pagedObjectsFilter:scopeDevicesCtrl:'deviceCurrentPage':'deviceItemsPerPage':'filteredDevices' \
-            track by device.serial") 
+            track by device.serial")
           .device-line.device-actions
             i.fa.fa-mobile.fa-2x.fa-fw.device-list-icon
             .device-list-details.selectable
@@ -121,17 +121,32 @@
                 span(ng-bind-template="{{::': ' + device.serial + ' - '}}")
                 span(translate) OS
                 span(ng-bind-template="{{': ' + device.version + ' - '}}")
-                span(translate) Screen 
+                span(translate) Screen
                 span(ng-bind-template="{{': ' + device.displayStr + ' - '}}")
                 span(translate) SDK
                 span(ng-bind-template="{{': ' + device.sdk + ' - '}}")
-                span(translate) Location 
+                span(translate) Location
                 span(ng-bind-template="{{': ' + device.provider.name + ' - '}}")
                 span(translate) Group Origin
-                span(ng-bind-template="{{': ' + device.group.originName}}")
+                span(ng-bind-template="{{': ' + device.group.originName + ' - '}}")
+                span(translate) adb Port:
+                  input(ng-value="{{device.adbPort ? device.adbPort : ''}}", id="{{'adbPort' + '_' + device.serial}}")
+                  button(type='button' ng-click='renewAdbPort(device.serial)')
+                    span(translate) Upd adb port
+                span(translate)  - Storage Id:
+                input(value="{{device.storageId ? device.storageId : ''}}", id="{{'storageId' + '_' + device.serial}}")
+                span(translate)  - Place:
+                input(value="{{device.place ? device.place : ''}}", id="{{'place' + '_' + device.serial}}")
 
             button.btn.btn-xs.btn-danger-outline.pull-right(
               type='button'
               ng-click='removeDevice(device.serial, confirmRemove.value)')
-                i.fa.fa-trash-o
-                span(translate) Remove
+              i.fa.fa-trash-o
+              span(translate) Remove
+
+            button.btn.btn-xs.btn-success.pull-right(
+              type='button'
+              ng-click='updateDevice(device.serial, confirmRemove.value)')
+              i.fa.fa-check
+              span(translate) Save
+

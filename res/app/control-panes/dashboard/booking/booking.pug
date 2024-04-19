@@ -1,0 +1,15 @@
+.widget-container.fluid-height.stf-upload(ng-controller='BookingCtrl')
+  .heading
+    stacked-icon(icon='fa-clock-o', color='color-blue')
+    span(translate) Device booking
+    button(
+      type='button',
+      ng-click='reBook()',
+      uib-tooltip='{{"Extend booking"|translate}}',
+      tooltip-placement='bottom'
+    ).btn.pull-right.btn-sm.btn-primary-outline
+      i.fa.fa-plus-square-o
+
+  .widget-content.padded
+    span(translate) Booked before
+    span  {{bookedBefore}}

@@ -27,13 +27,13 @@
       tbody
         tr.header(ng-repeat='f in explorer.files | filter:search | orderBy: ["-mode|fileIsDir", "+name"]')
           td
-            button.btn.btn-sm.btn-primary-outline(
+            button.btn.btn-sm.btn-tertiary(
             ng-click='dirEnter(f.name)', ng-show='f.mode|fileIsDir')
               span
                 i.fa.fa-folder-open
               span {{f.name}}
 
-            button.btn.btn-sm.btn-primary-outline(
+            button.btn.btn-sm.btn-tertiary(
             ng-click='getFile(f.name)', ng-hide='f.mode|fileIsDir')
               span
                 i.fa.fa-file-o

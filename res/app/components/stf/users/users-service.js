@@ -40,6 +40,14 @@ module.exports = function UsersServiceFactory(
     return $http.delete('/api/v1/users/' + email + buildQueryParameters(filters))
   }
 
+  UsersService.grantAdmin = function (email) {
+    return $http.get('/api/v1/users/grantAdmin/' + email)
+  }
+
+  UsersService.revokeAdmin = function (email) {
+    return $http.get('/api/v1/users/revokeAdmin/' + email)
+  }
+
   UsersService.removeUsers = function(filters, emails) {
     return $http({
       method: 'DELETE',

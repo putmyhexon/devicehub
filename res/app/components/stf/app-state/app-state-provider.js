@@ -5,9 +5,6 @@ module.exports = function AppStateProvider() {
     },
     user: {
       settings: {}
-    },
-    device: {
-      platform: ''
     }
   }
 

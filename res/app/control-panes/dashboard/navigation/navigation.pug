@@ -1,7 +1,7 @@
 .widget-container.fluid-height.stf-navigation(ng-controller='NavigationCtrl')
   .heading
     stacked-icon(icon='fa-globe', color='color-blue')
-    span(translate) Navigation
+    span(translate) Open link or deeplink
     span
       button.btn.btn-xs.btn-danger-outline.pull-right(ng-click='clearSettings()',
       uib-tooltip='{{ "Reset all browser settings" | translate }}')
@@ -14,12 +14,11 @@
   .widget-content.padded
     form(enable-autofill, ng-submit='openUrl()')
       .input-group.url-input-container
-        input.form-control(type='text', name='textURL', placeholder='http://...',
+        input.form-control(type='text', name='textURL', placeholder='http://... or vk://...',
         autocomplete='url', ng-model='textURL', text-focus-select,
         autocapitalize='off', spellcheck='false', blur-element='blurUrl'
         accesskey='N', tabindex='10', ng-change='textUrlChanged()',
         focus-element='nav.focusUrl')
-        img(ng-src='{{urlFavicon}}')
 
         .input-group-btn
           button(ng-click='openURL()', ng-disabled='!textURL', translate).btn.btn-primary-outline Open

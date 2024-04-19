@@ -5,7 +5,9 @@
 .login2(ng-controller='SignInCtrl')
   .login-wrapper
     a(href='./')
-      img(width='160', height='160', src='/static/logo/exports/STF-512.png', title='STF')
+      img(width='225', height='56',
+        src="{{window.location.host.split('.')[0].includes('devicehub') ? '/static/logo/exports/devicehub.svg' : '/static/logo/exports/emulatorhub.svg'}}",
+        title="{{window.location.host.split('.')[0].includes('devicehub')? 'DeviceHub' : 'EmulatorHub'}}")
 
     form(name='signin', novalidate, ng-submit='submit()')
       .alert.alert-danger(ng-show='error')
@@ -17,30 +19,29 @@
         .input-group
           span.input-group-addon
             i.fa.fa-user
-          input.form-control(ng-model='username', name='username', required, type='text', placeholder='LDAP Username',
-          autocorrect='off', autocapitalize='off', spellcheck='false', autocomplete='section-login username')
+          input.form-control(ng-model='username', name='username', required, type='text', placeholder='username',
+            autocorrect='off', autocapitalize='off', spellcheck='false', autocomplete='section-login username')
         .alert.alert-warning(ng-show='signin.username.$dirty && signin.username.$invalid')
-          span(ng-show='signin.username.$error.required', translate) Please enter your LDAP username
+          span(ng-show='signin.username.$error.required', translate) Please enter your Single Sign-On login
 
       .form-group
         .input-group
           span.input-group-addon
             i.fa.fa-lock
           input.form-control(ng-model='password', name='password', required, type='password', placeholder='Password',
-          autocorrect='off', autocapitalize='off', spellcheck='false', autocomplete='section-login current-password')
+            autocorrect='off', autocapitalize='off', spellcheck='false', autocomplete='section-login current-password')
         .alert.alert-warning(ng-show='signin.password.$dirty && signin.password.$invalid')
-          span(translate) Please enter your password
+          span(translate) Please enter your Single Sign-On password
 
       input.btn.btn-lg.btn-primary.btn-block(type='submit', value='Log In')
 
       button.btn.btn-sm.btn-default-outline(
         type='button'
-        uib-tooltip="{{'Write a mail to the support team' | translate}}"
-        ng-disabled='!contactEmail'
-        ng-click='mailToSupport()'
+        uib-tooltip="{{'Contact with support team' | translate}}"
+        ng-click='openSupportLink()'
         tooltip-placement='top'
         tooltip-popup-delay='500')
-          i.fa.fa-envelope-o
-          span(translate) Contact Support 
+        i.fa.fa-envelope-o
+        span(translate) Contact Support
 
 

@@ -1,6 +1,6 @@
 module.exports =
   function ControlPanesNoDeviceController($location, SettingsService) {
-    var lastUsedDevice = SettingsService.get('lastUsedDevice')
+    let lastUsedDevice = SettingsService.get('lastUsedDevice')
 
     if (lastUsedDevice) {
       $location.path('/control/' + lastUsedDevice)

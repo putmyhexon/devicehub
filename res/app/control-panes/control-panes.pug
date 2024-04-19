@@ -1,4 +1,4 @@
-div(ng-controller='ControlPanesHotKeysCtrl').fill-height
+div(ng-controller='ControlPanesHotKeysCtrl', ng-if='device').fill-height
   div(ng-if='$root.basicMode || $root.standalone').fill-height
     div.fill-height.basic-remote-control
       .remote-control
@@ -10,9 +10,8 @@ div(ng-controller='ControlPanesHotKeysCtrl').fill-height
       .remote-control
         div(ng-include='"control-panes/device-control/device-control.pug"').fill-height
 
-    div(fa-pane, pane-id='control-bottom-tabs', pane-anchor='south', pane-size='30% + 2px', pane-handle='4').pane-bottom-p
-      .widget-container.fluid-height
-        nice-tabs(key='ControlBottomTabs', direction='below', tabs='belowTabs', filter='$root.platform')
-    div(fa-pane, pane-id='control-top-tabs', pane-anchor='')
+    div(fa-pane, pane-id='control-top-tabs', pane-anchor='', pane-size='30% + 2px')
       .widget-container.fluid-height
         nice-tabs(key='ControlBottomTabs', tabs='topTabs', filter='$root.platform')
+
+div(ng-controller='ControlPanesHotKeysCtrl', ng-if='!device').fill-height

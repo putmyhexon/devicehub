@@ -6,8 +6,8 @@ module.exports = function($http, $templateCache, $compile) {
     if (compileFn) {
       compileFn(scope, cloneAttachFn)
     } else {
-      $http.get(src, {cache: $templateCache}).success(function(response) {
-        var responseContents = angular.element('<div></div>').html(response).contents()
+      $http.get(src, {cache: $templateCache}).then(function(response) {
+        var responseContents = angular.element('<div></div>').html(response.data).contents()
         compileFn = cache[src] = $compile(responseContents)
         compileFn(scope, cloneAttachFn)
       })

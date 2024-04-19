@@ -79,7 +79,7 @@ Colors for awesome fonts
 }
 
 .text-status-inuse {
-  color: blue;
+  color: #2787F5;
 }
 
 /**
@@ -187,7 +187,7 @@ svg {
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #2787F5;
   stroke-width: 1.5px;
 }
 
@@ -265,12 +265,12 @@ svg {
     Drawer
 */
 .stf-drawer {
-  background: #ddd;
+  background: #e1e3e6;
 
 }
 
 .stf-drawer-bar {
-  background: #aaa;
+  background: #e1e3e6;
 }
 
 .stf-drawer-docked-down .stf-drawer-bar {
@@ -343,7 +343,7 @@ svg {
 }
 
 .remote-control {
-  background: #888;
+  background: #e1e3e6;
   width: 100%;
   height: 100%;
 }
@@ -357,7 +357,7 @@ svg {
 }
 
 a.active {
-  color: #007aff !important;
+  color: #2787F5 !important;
 }
 
 .weinre-window {

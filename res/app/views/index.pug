@@ -9,9 +9,9 @@ html(ng-app='app')
     meta(name='apple-mobile-web-app-title', content='STF')
     meta(name='format-detection', content='telephone=no')
     meta(name='apple-mobile-web-app-status-bar-style', content='black-translucent')
-    link(href='static/logo/exports/STF-128.png', rel='apple-touch-icon')
+    link(href='static/logo/exports/VK_favicon', rel='apple-touch-icon')
 
-    title(ng-bind='pageTitle ? "STF - " + pageTitle : "STF"') STF
+    title DeviceHub
   body(ng-cloak).bg-1.fill-height.unselectable
     div(ng-controller='LayoutCtrl', basic-mode, admin-mode, standalone, landscape).fill-height
       .pane-top.fill-height(fa-pane)
@@ -27,5 +27,4 @@ html(ng-app='app')
           div(ng-view).fill-height
 
     script(src='/app/api/v1/state.js')
-    script(src='static/app/build/entry/commons.entry.js')
     script(src='static/app/build/entry/app.entry.js')

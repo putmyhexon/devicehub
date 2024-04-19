@@ -1,26 +1,30 @@
-var Promise = require('bluebird')
+let Promise = require('bluebird')
 
 module.exports = function GroupServiceFactory(
   socket
 , TransactionService
 , TransactionError
 ) {
-  var groupService = {
+  let groupService = {
   }
 
   groupService.invite = function(device) {
+    let minute = 1000 * 60
+    let timeout = device.group.id === device.group.origin ? minute * 15 : 1 //1 for Infinity
+    timeout = device.group.class === 'once' ? minute * 40 : timeout
     if (!device.usable) {
       return Promise.reject(new Error('Device is not usable'))
     }
 
-    var tx = TransactionService.create(device)
+    let tx = TransactionService.create(device)
     socket.emit('group.invite', device.channel, tx.channel, {
       requirements: {
         serial: {
           value: device.serial
         , match: 'exact'
         }
-      }
+      },
+      timeout: timeout
     })
     return tx.promise
       .then(function(result) {
@@ -36,7 +40,8 @@ module.exports = function GroupServiceFactory(
       return Promise.reject(new Error('Device is not usable'))
     }
 
-    var tx = TransactionService.create(device)
+
+    let tx = TransactionService.create(device)
     socket.emit('group.kick', device.channel, tx.channel, {
       requirements: {
         serial: {

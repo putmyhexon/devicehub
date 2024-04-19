@@ -7,7 +7,6 @@ module.exports = function InstallService(
 , $http
 , $filter
 , StorageService
-, AppState
 ) {
   var installService = Object.create(null)
 
@@ -72,9 +71,9 @@ module.exports = function InstallService(
         installation.update(uploadResult.progress / 2, uploadResult.lastData)
         installation.manifest = uploadResult.body
         return control.install({
-            href: installation.href,
-            manifest: installation.manifest,
-            launch: installation.launch
+            href: installation.href
+          , manifest: installation.manifest
+          , launch: installation.launch
           })
           .progressed(function(result) {
             installation.update(50 + result.progress / 2, result.lastData)
@@ -90,13 +89,12 @@ module.exports = function InstallService(
 
   installService.installFile = function(control, $files) {
     var installation = new Installation('uploading')
-    let isIOSPlatform = AppState.device.platform === 'iOS'
     $rootScope.$broadcast('installation', installation)
     return StorageService.storeFile('apk', $files, {
         filter: function(file) {
-          return isIOSPlatform ? /\.(ipa)$/i.test(file.name) : /\.(apk|aab)$/i.test(file.name)
+          return /\.(apk|aab)$/i.test(file.name)
         }
-    })
+      })
       .progressed(function(e) {
         if (e.lengthComputable) {
           installation.update(e.loaded / e.total * 100 / 2, 'uploading')
@@ -105,35 +103,23 @@ module.exports = function InstallService(
       .then(function(res) {
         installation.update(100 / 2, 'processing')
         installation.href = res.data.resources.file.href
-        if(isIOSPlatform) {
-          installation.manifest = {'application': {'activities': {}}}
-          return control.install({
-            href: installation.href,
-            manifest: installation.manifest,
-            launch: installation.launch
-          })
-            .progressed(function(result) {
-              installation.update(50 + result.progress / 2, result.lastData)
-            })
-        } else {
-          return $http.get(installation.href + '/manifest')
-            .then(function(res) {
-              if (res.data.success) {
-                installation.manifest = res.data.manifest
-                return control.install({
-                  href: installation.href,
-                  manifest: installation.manifest,
-                  launch: installation.launch
+        return $http.get(installation.href + '/manifest')
+          .then(function(res) {
+            if (res.data.success) {
+              installation.manifest = res.data.manifest
+              return control.install({
+                  href: installation.href
+                , manifest: installation.manifest
+                , launch: installation.launch
                 })
-                  .progressed(function(result) {
-                    installation.update(50 + result.progress / 2, result.lastData)
-                  })
-              }
-              else {
-                throw new Error('Unable to retrieve manifest')
-              }
-            })
-        }
+                .progressed(function(result) {
+                  installation.update(50 + result.progress / 2, result.lastData)
+                })
+            }
+            else {
+              throw new Error('Unable to retrieve manifest')
+            }
+          })
       })
       .then(function() {
         installation.okay('installed')
@@ -141,7 +127,7 @@ module.exports = function InstallService(
       .catch(function(err) {
         installation.fail(err.code || err.message)
       })
-    }
+  }
 
   return installService
 }

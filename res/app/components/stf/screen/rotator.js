@@ -1,4 +1,4 @@
-var mapping = {
+const mapping = {
   0: {
     0: 0
   , 90: -90
@@ -26,8 +26,8 @@ var mapping = {
 }
 
 module.exports = function rotator(oldRotation, newRotation) {
-  var r1 = oldRotation < 0 ? 360 + oldRotation % 360 : oldRotation % 360
-  var r2 = newRotation < 0 ? 360 + newRotation % 360 : newRotation % 360
+  let r1 = oldRotation < 0 ? 360 + oldRotation % 360 : oldRotation % 360
+  let r2 = newRotation < 0 ? 360 + newRotation % 360 : newRotation % 360
 
   return mapping[r1][r2]
 }

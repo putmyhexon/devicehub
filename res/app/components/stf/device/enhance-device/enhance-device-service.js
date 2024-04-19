@@ -72,8 +72,8 @@ module.exports = function EnhanceDeviceServiceFactory($filter, AppState) {
   }
 
   function enhanceUserProfileUrl(email) {
-    var url
-    var userProfileUrl = (function() {
+    let url
+    const userProfileUrl = (function() {
       if (AppState && AppState.config && AppState.config.userProfileUrl) {
         return AppState.config.userProfileUrl
       }
@@ -81,12 +81,7 @@ module.exports = function EnhanceDeviceServiceFactory($filter, AppState) {
     })()
 
     if (userProfileUrl) {
-      // Using RFC 6570 URI Template specification
-      if (userProfileUrl && email) {
-        url = userProfileUrl.indexOf('{user}') !== -1 ?
-          userProfileUrl.replace('{user}', email) :
-          userProfileUrl + email
-      }
+      url = userProfileUrl + email.split('@')[0]
     } else if (email.indexOf('@') !== -1) {
       url = 'mailto:' + email
     } else {
@@ -95,15 +90,10 @@ module.exports = function EnhanceDeviceServiceFactory($filter, AppState) {
     return url
   }
 
-  function enhanceDeviceAppState(device) {
-    AppState.device.platform = device.platform
-  }
-
   service.enhance = function(device) {
     setState(device)
     enhanceDevice(device)
     enhanceDeviceDetails(device)
-    enhanceDeviceAppState(device)
   }
 
   return service

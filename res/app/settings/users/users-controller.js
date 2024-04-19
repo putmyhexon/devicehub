@@ -3,7 +3,6 @@
 **/
 
 const _ = require('lodash')
-
 module.exports = function UsersCtrl(
   $scope
 , UsersService
@@ -106,6 +105,53 @@ module.exports = function UsersCtrl(
       CommonService.errorWrapper(
         UsersService.removeUser
       , [email, $scope.removingFilters]
+      )
+    }
+  }
+
+  $scope.grantAdmin = function(email, askConfirmation) {
+    if (askConfirmation) {
+      GenericModalService.open({
+        message: 'Really grant access to user?'
+        , type: 'Warning'
+        , size: 'sm'
+        , cancel: true
+      })
+        .then(function() {
+          CommonService.errorWrapper(
+            UsersService.grantAdmin
+            , [email, $scope.removingFilters]
+          )
+        })
+    }
+    else {
+      CommonService.errorWrapper(
+        UsersService.grantAdmin
+        , [email, $scope.removingFilters]
+      )
+    }
+  }
+
+
+  $scope.revokeAdmin = function(email, askConfirmation) {
+    if (askConfirmation) {
+      GenericModalService.open({
+        message: 'Really revoke access of this user?'
+        , type: 'Warning'
+        , size: 'sm'
+        , cancel: true
+      })
+        .then(function() {
+          CommonService.errorWrapper(
+            UsersService.revokeAdmin
+            , [email, $scope.removingFilters]
+          )
+        })
+    }
+    else {
+      CommonService.errorWrapper(
+        UsersService.revokeAdmin
+        , [email, $scope.removingFilters]
       )
     }
   }

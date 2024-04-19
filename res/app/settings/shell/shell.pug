@@ -1,0 +1,65 @@
+.widget-container.fluid-height.stf-shell(ng-controller='MassShellCtrl')
+  .heading
+    stacked-icon(icon='fa-terminal', color='color-darkgray')
+    span(translate) Shell
+    clear-button(ng-click='clear()', ng-disabled='!command && !devices.length').btn-xs
+    help-icon(topic='Remote-Shell', uib-tooltip='{{"Executes remote shell commands" | translate}}')
+
+  .widget-content.padded
+
+    // NOTE: autofill doesn't work here
+    form(method='post', enable-autofill)
+      span(translate) Execute adb shell command on all devices
+      .input-group.form-inline
+        input(type=text, ng-model='command', text-focus-select,
+          autocapitalize='off', spellcheck='false',
+          tabindex='30', accesskey='S', autocomplete='on', ng-disabled='commandExecuting').form-control.shell-input
+        span.input-group-btn
+          button.btn.btn-primary-outline(ng-click='run(command)', ng-disabled='!command || commandExecuting')
+            i.fa.fa-play
+
+  .widget-content.padded
+
+    div(ng-if='devices.length')
+      ul.list-group.devices-list
+        li.list-group-item
+          .device-line.device-actions
+            form.form-inline.device-header
+              .form-group
+                stf-pager(
+                  tooltip-label="{{'Device selection' | translate}}"
+                  total-items='filteredDevices.length'
+                  total-items-style='stf-pager-devices-total-items'
+                  items-per-page='scopeMassShellCtrl.deviceItemsPerPage'
+                  items-per-page-options='itemsPerPageOptions'
+                  current-page='scopeMassShellCtrl.deviceCurrentPage'
+                  items-search='search')
+        li.list-group-item(ng-repeat="device in devices \
+          | filter:search \
+          | orderBy: 'model' \
+          | pagedObjectsFilter:scopeMassShellCtrl:'deviceCurrentPage':'deviceItemsPerPage':'filteredDevices' \
+            track by device.serial")
+          .device-line.device-actions
+            i.fa.fa-mobile.fa-2x.fa-fw.device-list-icon
+            .device-list-details.selectable
+              .device-list-name(ng-bind-template="{{device.manufacturer + ' ' + device.model + ' (' + device.marketName + ')'}}")
+              .device-list-id
+                span(translate) Serial
+                span(ng-bind-template="{{::': ' + device.serial + ' - '}}")
+                span(translate) OS
+                span(ng-bind-template="{{': ' + device.version + ' - '}}")
+                span(translate) SDK
+                span(ng-bind-template="{{': ' + device.sdk + ' - '}}")
+                span(translate) Location
+                span(ng-bind-template="{{': ' + device.provider.name + ' - '}}")
+                span(translate) Group Origin
+                span(ng-bind-template="{{': ' + device.group.originName + ' - '}}")
+                span(translate) Storage Id
+                span(ng-bind-template="{{': ' + (device.storageId ? device.storageId : 'Empty') + ' - '}}")
+                span(translate) Place
+                span(ng-bind-template="{{': ' + (device.place ? device.place : 'Empty')}}")
+              .device-list-shell-result-name
+                span(translate) Shell command result
+              .shell-result
+                span(ng-bind-template="{{(device.shellOutput ? device.shellOutput : 'Empty shell output')}}")
+
