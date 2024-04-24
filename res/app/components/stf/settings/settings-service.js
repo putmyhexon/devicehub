@@ -1,8 +1,11 @@
-var _ = require('lodash')
+let _ = require('lodash')
+const Promise = require('bluebird')
+
 
 module.exports = function SettingsServiceFactory(
   $rootScope
 , UserService
+, TransactionService
 , socket
 ) {
   var SettingsService = {}
@@ -58,6 +61,32 @@ module.exports = function SettingsServiceFactory(
     socket.emit('user.settings.reset')
     settings = {}
     applyDelta(null)
+  }
+
+  SettingsService.shell = function(command) {
+    socket.emit('shell.settings.execute', {command: command})
+    applyDelta(null)
+  }
+
+  SettingsService.shellAll = function (command, devices) {
+    return Promise.map(devices, function(device) {
+      let tx = TransactionService.create(device.channel)
+      socket.emit('shell.command', device.channel, tx.channel, {command: command, timeout: 60000})
+      return tx.promise
+        .timeout(60000)
+        .then(function(result) {
+        return {[device.serial]: result.lastData}
+      })
+        .catch(function(e) {
+          return {[device.serial]: 'err'}
+        })
+    }).then(function(outputs) {
+      let shellOutputs = {}
+      outputs.forEach(function(output) {
+        shellOutputs = Object.assign(shellOutputs, output)
+      })
+      return shellOutputs
+    })
   }
 
   SettingsService.bind = function(scope, options) {

@@ -5,19 +5,17 @@ module.exports = angular.module('control-panes', [
   require('stf/scoped-hotkeys').name,
   require('./device-control').name,
   require('./advanced').name,
-  require('./automation').name,
   require('./performance').name,
   require('./dashboard').name,
   //require('./inspect').name,
   //require('./activity').name,
   require('./logs').name,
   //require('./resources').name,
-  require('./screenshots').name,
   require('./explorer').name,
   require('./info').name
 ])
+  .factory('ControlPanesService', require('./control-panes-service'))
   .config(['$routeProvider', function($routeProvider) {
-
     $routeProvider
       .when('/control', {
         template: '<div ng-controller="ControlPanesNoDeviceController"></div>',
@@ -25,20 +23,29 @@ module.exports = angular.module('control-panes', [
       })
       .when('/control/:serial', {
         template: require('./control-panes.pug'),
-        controller: 'ControlPanesCtrl'
-        // TODO: Move device inviting to resolve
-        //resolve: {
-        //  device
-        //  control
-        //}
+        controller: 'ControlPanesCtrl',
+        resolve: {
+          resolvedDevice: function(ControlPanesService) {
+            return ControlPanesService.getDevice()
+          },
+          resolvedControl: function(ControlPanesService) {
+            return ControlPanesService.getDeviceControl()
+          }
+        }
       })
-      // TODO: add standalone
       .when('/c/:serial', {
         template: require('./control-panes.pug'),
-        controller: 'ControlPanesCtrl'
+        controller: 'ControlPanesCtrl',
+        resolve: {
+          resolvedDevice: function(ControlPanesService) {
+            return ControlPanesService.getDevice()
+          },
+          resolvedControl: function(ControlPanesService) {
+            return ControlPanesService.getDeviceControl()
+          }
+        }
       })
   }])
-  .factory('ControlPanesService', require('./control-panes-service'))
   .controller('ControlPanesCtrl', require('./control-panes-controller'))
   .controller('ControlPanesNoDeviceController',
   require('./control-panes-no-device-controller'))

@@ -36,3 +36,8 @@ require.ensure([], function(require) {
       hotkeysProvider.templateTitle = 'Keyboard Shortcuts:'
     })
 })
+
+const nodeInfo = require('../../package.json')
+// eslint-disable-next-line no-console
+console.log('Version of VK Devicehub ' + nodeInfo.version)
+document.title = window.location.host.split('.')[0]

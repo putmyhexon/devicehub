@@ -3,21 +3,21 @@
 **/
 
 module.exports =
-  function ControlPanesController($scope, $http, gettext, $routeParams,
+  function ControlPanesController($scope, resolvedDevice, resolvedControl, $http, gettext, $routeParams,
     $timeout, $location, DeviceService, GroupService, ControlService,
     StorageService, FatalMessageService, SettingsService) {
 
-    var sharedTabs = [
+    $scope.topTabs = [
       {
-        title: gettext('Screenshots'),
-        icon: 'fa-camera color-skyblue',
-        templateUrl: 'control-panes/screenshots/screenshots.pug',
+        title: gettext('Dashboard'),
+        icon: 'fa-dashboard fa-fw color-pink',
+        templateUrl: 'control-panes/dashboard/dashboard.pug',
         filters: ['native', 'web']
       },
       {
-        title: gettext('Automation'),
-        icon: 'fa-road color-lila',
-        templateUrl: 'control-panes/automation/automation.pug',
+        title: gettext('Logs'),
+        icon: 'fa-list-alt color-red',
+        templateUrl: 'control-panes/logs/logs.pug',
         filters: ['native', 'web']
       },
       {
@@ -40,28 +40,9 @@ module.exports =
       }
     ]
 
-    $scope.topTabs = [
-      {
-        title: gettext('Dashboard'),
-        icon: 'fa-dashboard fa-fw color-pink',
-        templateUrl: 'control-panes/dashboard/dashboard.pug',
-        filters: ['native', 'web']
-      }
-    ].concat(angular.copy(sharedTabs))
+    $scope.device = resolvedDevice
+    $scope.control = resolvedControl
 
-    $scope.belowTabs = [
-      {
-        title: gettext('Logs'),
-        icon: 'fa-list-alt color-red',
-        templateUrl: 'control-panes/logs/logs.pug',
-        filters: ['native', 'web']
-      }
-    ].concat(angular.copy(sharedTabs))
-
-    $scope.device = null
-    $scope.control = null
-
-    // TODO: Move this out to Ctrl.resolve
     function getDevice(serial) {
       DeviceService.get(serial, $scope)
         .then(function(device) {
@@ -71,11 +52,10 @@ module.exports =
           $scope.device = device
           $scope.control = ControlService.create(device, device.channel)
 
-          // TODO: Change title, flickers too much on Chrome
-          // $rootScope.pageTitle = device.name
+          // eslint-disable-next-line no-unused-expressions
+          device.model.includes('x86_64') ? window.document.title = 'Emulator SDK ' + device.sdk : window.document.title = device.model
 
           SettingsService.set('lastUsedDevice', serial)
-
           return device
         })
         .catch(function() {

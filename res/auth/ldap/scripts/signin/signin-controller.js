@@ -7,18 +7,18 @@ module.exports = function SignInCtrl($scope, $http, CommonService) {
   $scope.error = null
 
   $scope.submit = function() {
-    var data = {
+    let data = {
       username: $scope.signin.username.$modelValue
       , password: $scope.signin.password.$modelValue
     }
     $scope.invalid = false
     $http.post('/auth/api/v1/ldap', data)
-      .success(function(response) {
+      .then(function(response) {
         $scope.error = null
-        location.replace(response.redirect)
+        location.replace(response.data.redirect)
       })
-      .error(function(response) {
-        switch (response.error) {
+      .catch(function(response) {
+        switch (response.data.error) {
           case 'ValidationError':
             $scope.error = {
               $invalid: true
@@ -38,11 +38,13 @@ module.exports = function SignInCtrl($scope, $http, CommonService) {
       })
   }
 
-  $scope.mailToSupport = function() {
-    CommonService.url('mailto:' + $scope.contactEmail)
+  $scope.openSupportLink = function() {
+    $http.get('/auth/contact').then(function(response) {
+      window.open(response.data.contactUrl, '_blank').focus()
+    })
   }
 
   $http.get('/auth/contact').then(function(response) {
-    $scope.contactEmail = response.data.contact.email
+    $scope.contactUrl = response.data.contactUrl
   })
 }

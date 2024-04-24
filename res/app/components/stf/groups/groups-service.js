@@ -106,14 +106,14 @@ module.exports = function GroupsServiceFactory(
   }
 
   GroupsService.getOboeMyGroups = function(addGroup) {
-    return oboe(CommonService.getBaseUrl() + '/api/v1/groups?owner=true')
+    return oboe(CommonService.getBaseUrl() + '/api/v1/groups')
       .node('groups[*]', function(group) {
         addGroup(group)
       })
   }
 
   GroupsService.getMyGroups = function() {
-    return $http.get('/api/v1/groups?owner=true')
+    return $http.get('/api/v1/groups')
   }
 
   GroupsService.getGroup = function(id) {

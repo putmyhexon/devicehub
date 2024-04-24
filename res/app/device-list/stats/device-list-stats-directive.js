@@ -26,15 +26,15 @@ module.exports = function DeviceListStatsDirective(
       scope.currentUser = UserService.currentUser
 
       function findTextNodes() {
-        var elements = element[0].getElementsByClassName('counter')
-        for (var i = 0, l = elements.length; i < l; ++i) {
+        let elements = element[0].getElementsByClassName('counter')
+        for (let i = 0, l = elements.length; i < l; ++i) {
           nodes[elements[i].getAttribute('data-type')] = elements[i].firstChild
         }
       }
 
       function notify() {
         nodes.total.nodeValue = scope.counter.total
-        nodes.usable.nodeValue = scope.counter.usable
+        nodes.usable.nodeValue = scope.counter.usable - scope.counter.busy
         nodes.busy.nodeValue = scope.counter.busy
         nodes.using.nodeValue = scope.counter.using
       }

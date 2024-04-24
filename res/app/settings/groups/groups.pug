@@ -5,9 +5,9 @@
 .widget-container.fluid-height.stf-groups(ng-controller='GroupsCtrl')
   .heading
     i.fa.fa-object-group
-    span(translate) Group list 
+    span(translate) Group list
 
-    button.btn.btn-xs.btn-primary-outline.pull-right(
+    button.btn.btn-xs.btn-tertiary.pull-right(
       type='button'
       ng-disabled='!conditionForGroupCreation() || hideGroupCreation'
       uib-tooltip="{{'Groups number quota is reached' | translate}}"
@@ -80,8 +80,8 @@
           | filter:search \
           | orderBy: 'name' \
           | pagedObjectsFilter:scopeGroupsCtrl:'groupCurrentPage':'groupItemsPerPage':'filteredGroups' \
-            track by group.id") 
-          .group-line.group-actions
+            track by group.id")
+          .group-line.group-actions(ng-if='group.id')
             i.fa.fa-object-group.fa-2x.fa-fw.group-list-icon
             .group-list-details.selectable
               form.form-inline(name='nameForm' ng-if="group.state === 'pending' && showName")
@@ -108,14 +108,14 @@
               .group-list-id
                 span(translate) Identifier
                 span(ng-bind-template="{{::': ' +  group.id + ' - '}}")
-                span(translate) Class 
+                span(translate) Class
                 span(ng-bind-template="{{': ' +  getClassName(group.class) + ' - '}}")
-                span(translate) Devices 
+                span(translate) Devices
                 span(ng-bind-template="{{': ' +  group.devices.length + ' - '}}")
-                span(translate) Users 
+                span(translate) Users
                 span(ng-bind-template="{{': ' +  group.users.length}}")
                 span(ng-if='isAdmin()' ng-bind-template="{{::' - '}}")
-                span(ng-if='isAdmin()' translate) Owner 
+                span(ng-if='isAdmin()' translate) Owner
                 span(ng-if='isAdmin()' ng-bind-template="{{::': ' + group.owner.name}}")
 
             button.btn.btn-xs.btn-danger-outline.pull-right(
@@ -130,7 +130,7 @@
               ng-if="group.state === 'pending'"
               ng-click='updateGroupState(group)')
                 i.fa.fa-unlock
-                span(translate) Get ready 
+                span(translate) Get ready
 
             button.btn.btn-xs.pull-right(
               type='button'
@@ -139,7 +139,7 @@
               ng-class='{"btn-primary-outline": !showName && group.state === "pending",\
                          "btn-primary": showName && group.state === "pending"}')
                 i.fa.fa-tag
-                span(translate) Name 
+                span(translate) Name
 
             button.btn.btn-xs.pull-right(
               type='button'
@@ -165,7 +165,7 @@
               ng-click='initShowUsers(group); showUsers = !showUsers'
               ng-class='{"btn-primary-outline": !showUsers, "btn-primary": showUsers}')
                 i.fa.fa-user
-                span(translate) Users 
+                span(translate) Users
 
             button.btn.btn-xs.btn-danger.pull-right(
               type='button'

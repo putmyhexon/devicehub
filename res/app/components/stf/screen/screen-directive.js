@@ -1,7 +1,6 @@
-var _ = require('lodash')
-var rotator = require('./rotator')
-var ImagePool = require('./imagepool')
-
+let _ = require('lodash')
+let rotator = require('./rotator')
+let ImagePool = require('./imagepool')
 module.exports = function DeviceScreenDirective(
   $document
 , ScalingService
@@ -18,17 +17,29 @@ module.exports = function DeviceScreenDirective(
     , device: '&'
     }
   , link: function(scope, element) {
-      var URL = window.URL || window.webkitURL
-      var BLANK_IMG =
+      let URL = window.URL || window.webkitURL
+      let BLANK_IMG =
         'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
-      var cssTransform = VendorUtil.style(['transform', 'webkitTransform'])
+      let cssTransform = VendorUtil.style(['transform', 'webkitTransform'])
 
-      var device = scope.device()
-      var control = scope.control()
+      let device = scope.device()
+      let control = scope.control()
 
-      var input = element.find('input')
+      let input = element.find('input')
 
-      var screen = scope.screen = {
+      let inputDebounceTime = (function() {
+        let ram = parseInt(device.ram, 10)
+        switch(true) {
+          case ram <= 2 * 1024 * 1024 && ram > 0:
+            return 200
+          case ram >= 2 * 1024 * 1024 && ram <= 6 * 1024 * 1024:
+            return 175
+          default:
+            return 150
+        }
+      })()
+
+      let screen = scope.screen = {
         rotation: 0
       , bounds: {
           x: 0
@@ -38,10 +49,12 @@ module.exports = function DeviceScreenDirective(
         }
       }
 
-      var scaler = ScalingService.coordinator(
+      let scaler = ScalingService.coordinator(
         device.display.width
       , device.display.height
       )
+
+      let scroll = 0
 
       /**
        * SCREEN HANDLING
@@ -58,24 +71,24 @@ module.exports = function DeviceScreenDirective(
           catch (err) { /* noop */ }
         }
 
-        var ws = new WebSocket(device.display.url)
+        let ws = new WebSocket(device.display.url)
         ws.binaryType = 'blob'
 
         ws.onerror = function errorListener() {
-          // @todo Handle
+          ws = new WebSocket(device.display.url)
         }
 
         ws.onclose = function closeListener() {
-          // @todo Maybe handle
+          ws = new WebSocket(device.display.url)
         }
 
         ws.onopen = function openListener() {
           checkEnabled()
         }
 
-        var canvas = element.find('canvas')[0]
-        var g = canvas.getContext('2d')
-        var positioner = element.find('div')[0]
+        let canvas = element.find('canvas')[0]
+        let g = canvas.getContext('2d')
+        let positioner = element.find('div')[0]
 
         function vendorBackingStorePixelRatio(g) {
           return g.webkitBackingStorePixelRatio ||
@@ -85,24 +98,24 @@ module.exports = function DeviceScreenDirective(
             g.backingStorePixelRatio || 1
         }
 
-        var devicePixelRatio = window.devicePixelRatio || 1
-        var backingStoreRatio = vendorBackingStorePixelRatio(g)
-        var frontBackRatio = devicePixelRatio / backingStoreRatio
+        let devicePixelRatio = window.devicePixelRatio || 1
+        let backingStoreRatio = vendorBackingStorePixelRatio(g)
+        let frontBackRatio = devicePixelRatio / backingStoreRatio
 
-        var options = {
+        let options = {
           autoScaleForRetina: true
         , density: Math.max(1, Math.min(1.5, devicePixelRatio || 1))
         , minscale: 0.36
         }
 
-        var adjustedBoundSize
-        var cachedEnabled = false
+        let adjustedBoundSize
+        let cachedEnabled = false
 
         function updateBounds() {
           function adjustBoundedSize(w, h) {
-            var sw = w * options.density
-            var sh = h * options.density
-            var f
+            let sw = w * options.density
+            let sh = h * options.density
+            let f
 
             if (sw < (f = device.display.width * options.minscale)) {
               sw *= f / sw
@@ -121,8 +134,8 @@ module.exports = function DeviceScreenDirective(
           }
 
           // FIXME: element is an object HTMLUnknownElement in IE9
-          var w = screen.bounds.w = element[0].offsetWidth
-          var h = screen.bounds.h = element[0].offsetHeight
+          let w = screen.bounds.w = element[0].offsetWidth
+          let h = screen.bounds.h = element[0].offsetHeight
 
           // Developer error, let's try to reduce debug time
           if (!w || !h) {
@@ -131,7 +144,7 @@ module.exports = function DeviceScreenDirective(
             )
           }
 
-          var newAdjustedBoundSize = (function() {
+          let newAdjustedBoundSize = (function() {
             switch (screen.rotation) {
             case 90:
             case 270:
@@ -167,7 +180,7 @@ module.exports = function DeviceScreenDirective(
         }
 
         function checkEnabled() {
-          var newEnabled = shouldUpdateScreen()
+          let newEnabled = shouldUpdateScreen()
 
           if (newEnabled === cachedEnabled) {
             updateBounds()
@@ -204,7 +217,7 @@ module.exports = function DeviceScreenDirective(
         }
 
         ws.onmessage = (function() {
-          var cachedScreen = {
+          let cachedScreen = {
             rotation: 0
           , bounds: {
               x: 0
@@ -214,11 +227,11 @@ module.exports = function DeviceScreenDirective(
             }
           }
 
-          var cachedImageWidth = 0
-          var cachedImageHeight = 0
-          var cssRotation = 0
-          var alwaysUpright = false
-          var imagePool = new ImagePool(10)
+          let cachedImageWidth = 0
+          let cachedImageHeight = 0
+          let cssRotation = 0
+          let alwaysUpright = false
+          let imagePool = new ImagePool(10)
 
           function applyQuirks(banner) {
             element[0].classList.toggle(
@@ -295,17 +308,14 @@ module.exports = function DeviceScreenDirective(
                   })
                 }
 
-                var blob = new Blob([message.data], {
-                  type: 'image/jpeg'
+                let blob = new Blob([message.data], {
+                  type: 'image/webp'
                 })
-
-                var img = imagePool.next()
+                let img = imagePool.next()
 
                 img.onload = function() {
                   updateImageArea(this)
-
                   g.drawImage(img, 0, 0, img.width, img.height)
-
                   // Try to forcefully clean everything to get rid of memory
                   // leaks. Note that despite this effort, Chrome will still
                   // leak huge amounts of memory when the developer tools are
@@ -335,7 +345,7 @@ module.exports = function DeviceScreenDirective(
                   url = null
                 }
 
-                var url = URL.createObjectURL(blob)
+                let url = URL.createObjectURL(blob)
                 img.src = url
               }
             }
@@ -370,8 +380,8 @@ module.exports = function DeviceScreenDirective(
           control.rotate(90)
         })
 
-        var canvasAspect = 1
-        var parentAspect = 1
+        let canvasAspect = 1
+        let parentAspect = 1
 
         function resizeListener() {
           parentAspect = element[0].offsetWidth / element[0].offsetHeight
@@ -495,7 +505,7 @@ module.exports = function DeviceScreenDirective(
 
         input.bind('keydown', keydownListener)
         input.bind('keyup', keyupListener)
-        input.bind('input', inputListener)
+        input.bind('input', _.debounce(inputListener, inputDebounceTime))
         input.bind('paste', pasteListener)
         input.bind('copy', copyListener)
       })()
@@ -510,13 +520,13 @@ module.exports = function DeviceScreenDirective(
        * as possible.
        */
       ;(function() {
-        var slots = []
-        var slotted = Object.create(null)
-        var fingers = []
-        var seq = -1
-        var cycle = 100
-        var fakePinch = false
-        var lastPossiblyBuggyMouseUpEvent = 0
+        let slots = []
+        let slotted = Object.create(null)
+        let fingers = []
+        let seq = -1
+        let cycle = 100
+        let fakePinch = false
+        let lastPossiblyBuggyMouseUpEvent = 0
 
         function nextSeq() {
           return ++seq >= cycle ? (seq = 0) : seq
@@ -526,8 +536,8 @@ module.exports = function DeviceScreenDirective(
           // The reverse order is important because slots and fingers are in
           // opposite sort order. Anyway don't change anything here unless
           // you understand what it does and why.
-          for (var i = 9; i >= 0; --i) {
-            var finger = createFinger(i)
+          for (let i = 9; i >= 0; --i) {
+            let finger = createFinger(i)
             element.append(finger)
             slots.push(i)
             fingers.unshift(finger)
@@ -535,7 +545,7 @@ module.exports = function DeviceScreenDirective(
         }
 
         function activateFinger(index, x, y, pressure) {
-          var scale = 0.5 + pressure
+          let scale = 0.5 + pressure
           fingers[index].classList.add('active')
           fingers[index].style[cssTransform] =
             'translate3d(' + x + 'px,' + y + 'px,0) ' +
@@ -547,19 +557,19 @@ module.exports = function DeviceScreenDirective(
         }
 
         function deactivateFingers() {
-          for (var i = 0, l = fingers.length; i < l; ++i) {
+          for (let i = 0, l = fingers.length; i < l; ++i) {
             fingers[i].classList.remove('active')
           }
         }
 
         function createFinger(index) {
-          var el = document.createElement('span')
+          let el = document.createElement('span')
           el.className = 'finger finger-' + index
           return el
         }
 
         function calculateBounds() {
-          var el = element[0]
+          let el = element[0]
 
           screen.bounds.w = el.offsetWidth
           screen.bounds.h = el.offsetHeight
@@ -574,7 +584,7 @@ module.exports = function DeviceScreenDirective(
         }
 
         function mouseDownListener(event) {
-          var e = event
+          let e = event
           if (e.originalEvent) {
             e = e.originalEvent
           }
@@ -591,10 +601,10 @@ module.exports = function DeviceScreenDirective(
           calculateBounds()
           startMousing()
 
-          var x = e.pageX - screen.bounds.x
-          var y = e.pageY - screen.bounds.y
-          var pressure = 0.5
-          var scaled = scaler.coords(
+          let x = e.pageX - screen.bounds.x
+          let y = e.pageY - screen.bounds.y
+          let pressure = 0.5
+          let scaled = scaler.coords(
                 screen.bounds.w
               , screen.bounds.h
               , x
@@ -634,7 +644,7 @@ module.exports = function DeviceScreenDirective(
         }
 
         function mouseMoveListener(event) {
-          var e = event
+          let e = event
           if (e.originalEvent) {
             e = e.originalEvent
           }
@@ -645,15 +655,15 @@ module.exports = function DeviceScreenDirective(
           }
           e.preventDefault()
 
-          var addGhostFinger = !fakePinch && e.altKey
-          var deleteGhostFinger = fakePinch && !e.altKey
+          let addGhostFinger = !fakePinch && e.altKey
+          let deleteGhostFinger = fakePinch && !e.altKey
 
           fakePinch = e.altKey
 
-          var x = e.pageX - screen.bounds.x
-          var y = e.pageY - screen.bounds.y
-          var pressure = 0.5
-          var scaled = scaler.coords(
+          let x = e.pageX - screen.bounds.x
+          let y = e.pageY - screen.bounds.y
+          let pressure = 0.5
+          let scaled = scaler.coords(
                 screen.bounds.w
               , screen.bounds.h
               , x
@@ -687,7 +697,7 @@ module.exports = function DeviceScreenDirective(
         }
 
         function mouseUpListener(event) {
-          var e = event
+          let e = event
           if (e.originalEvent) {
             e = e.originalEvent
           }
@@ -736,7 +746,7 @@ module.exports = function DeviceScreenDirective(
          *     <input id="focusable" type="text" />
          *
          *     <script>
-         *     var touchable = document.getElementById('touchable')
+         *     let touchable = document.getElementById('touchable')
          *       , focusable = document.getElementById('focusable')
          *       , counter = 0
          *
@@ -784,7 +794,7 @@ module.exports = function DeviceScreenDirective(
         }
 
         function touchStartListener(event) {
-          var e = event
+          let e = event
           e.preventDefault()
 
           //Make it jQuery compatible also
@@ -798,8 +808,8 @@ module.exports = function DeviceScreenDirective(
             startTouching()
           }
 
-          var currentTouches = Object.create(null)
-          var i, l
+          let currentTouches = Object.create(null)
+          let i, l
 
           for (i = 0, l = e.touches.length; i < l; ++i) {
             currentTouches[e.touches[i].identifier] = 1
@@ -809,7 +819,7 @@ module.exports = function DeviceScreenDirective(
             return !(id in currentTouches)
           }
 
-          // We might have lost a touchend event due to various edge cases
+          // We might have lost a touchend event due to letious edge cases
           // (literally) such as dragging from the bottom of the screen so that
           // the control center appears. If so, let's ask for a reset.
           if (Object.keys(slotted).some(maybeLostTouchEnd)) {
@@ -828,12 +838,12 @@ module.exports = function DeviceScreenDirective(
           }
 
           for (i = 0, l = e.changedTouches.length; i < l; ++i) {
-            var touch = e.changedTouches[i]
-            var slot = slots.pop()
-            var x = touch.pageX - screen.bounds.x
-            var y = touch.pageY - screen.bounds.y
-            var pressure = touch.force || 0.5
-            var scaled = scaler.coords(
+            let touch = e.changedTouches[i]
+            let slot = slots.pop()
+            let x = touch.pageX - screen.bounds.x
+            let y = touch.pageY - screen.bounds.y
+            let pressure = touch.force || 0.5
+            let scaled = scaler.coords(
                   screen.bounds.w
                 , screen.bounds.h
                 , x
@@ -853,21 +863,35 @@ module.exports = function DeviceScreenDirective(
           control.touchCommit(nextSeq())
         }
 
+        function scrollListener(event) {
+
+          const sc = {x: 1000, y: 1000} // start coordinates
+          if (Math.abs(scroll) > 200) {
+            if (scroll > 0) {
+              control.shell(`input swipe ${sc.x} ${sc.y} ${sc.x} ${sc.y + 100} 30`)
+            }
+            if (scroll < 0) {
+              control.shell(`input swipe ${sc.x} ${sc.y} ${sc.x} ${sc.y - 100} 30`)
+            }
+            scroll = 0
+          }
+        }
+
         function touchMoveListener(event) {
-          var e = event
+          let e = event
           e.preventDefault()
 
           if (e.originalEvent) {
             e = e.originalEvent
           }
 
-          for (var i = 0, l = e.changedTouches.length; i < l; ++i) {
-            var touch = e.changedTouches[i]
-            var slot = slotted[touch.identifier]
-            var x = touch.pageX - screen.bounds.x
-            var y = touch.pageY - screen.bounds.y
-            var pressure = touch.force || 0.5
-            var scaled = scaler.coords(
+          for (let i = 0, l = e.changedTouches.length; i < l; ++i) {
+            let touch = e.changedTouches[i]
+            let slot = slotted[touch.identifier]
+            let x = touch.pageX - screen.bounds.x
+            let y = touch.pageY - screen.bounds.y
+            let pressure = touch.force || 0.5
+            let scaled = scaler.coords(
                   screen.bounds.w
                 , screen.bounds.h
                 , x
@@ -883,16 +907,16 @@ module.exports = function DeviceScreenDirective(
         }
 
         function touchEndListener(event) {
-          var e = event
+          let e = event
           if (e.originalEvent) {
             e = e.originalEvent
           }
 
-          var foundAny = false
+          let foundAny = false
 
-          for (var i = 0, l = e.changedTouches.length; i < l; ++i) {
-            var touch = e.changedTouches[i]
-            var slot = slotted[touch.identifier]
+          for (let i = 0, l = e.changedTouches.length; i < l; ++i) {
+            let touch = e.changedTouches[i]
+            let slot = slotted[touch.identifier]
             if (typeof slot === 'undefined') {
               // We've already disposed of the contact. We may have gotten a
               // touchend event for the same contact twice.
@@ -928,7 +952,10 @@ module.exports = function DeviceScreenDirective(
         element.on('touchstart', touchStartListener)
         element.on('mousedown', mouseDownListener)
         element.on('mouseup', mouseUpBugWorkaroundListener)
-
+        element.on('mousewheel', (e) => {
+          scroll += -(e.deltaY)
+        })
+        setInterval(() => scrollListener(), 1000)
         createSlots()
       })()
     }

@@ -17,26 +17,17 @@ module.exports = function DevicesCtrl(
     'model,' +
     'serial,' +
     'version,' +
-    'display.height,' +
-    'display.width,' +
     'manufacturer,' +
     'sdk,' +
-    'abi,' +
-    'cpuPlatform,' +
-    'openGLESVersion,' +
     'marketName,' +
-    'phone.imei,' +
     'provider.name,' +
-    'group.originName'
+    'group.originName,' +
+    'storageId,' +
+    'place,' +
+    'adbPort'
 
 
   function publishDevice(device) {
-    if (!device.model) {
-      device.display = {}
-    }
-    else {
-      device.displayStr = device.display.width + 'x' + device.display.height
-    }
     for (var i in device) {
       if (device[i] === null) {
         device[i] = ''
@@ -122,6 +113,69 @@ module.exports = function DevicesCtrl(
       , [serial, $scope.removingFilters]
       )
     }
+  }
+
+  $scope.renewAdbPort = function (serial) {
+    DevicesService.renewAdbPort(serial).then((res) => {
+      let port = res.data.port
+      if (port) {
+        document.getElementById('adbPort_' + serial).value = port
+      }
+    })
+  }
+
+  $scope.updateDevice = function (serial, askConfirmation) {
+    let place = document.getElementById('place_' + serial).value
+    let storageId = document.getElementById('storageId_' + serial).value
+    let adbPort = document.getElementById('adbPort_' + serial).value
+    if (adbPort !== '') {
+      adbPort = parseInt(adbPort, 10)
+      DevicesService.getAdbRange().then((response) => {
+        let range = response.data.adbRange
+        range = range.split('-')
+        const adbRangeStart = parseInt(range[0], 10)
+        const adbRangeEnd = parseInt(range[1], 10)
+        if (adbPort < adbRangeStart || adbPort > adbRangeEnd) {
+            GenericModalService.open({
+              message: 'Adb port must be in ' + range
+              , type: 'Error'
+              , size: 'sm'
+              , cancel: true
+            })
+              .finally(() => {
+                adbPort = ''
+                applyDeviceParams(serial, askConfirmation, place, storageId, adbPort)
+              })
+          }
+        else {
+          applyDeviceParams(serial, askConfirmation, place, storageId, adbPort)
+        }
+      })
+    }
+    else {
+      applyDeviceParams(serial, askConfirmation, place, storageId, adbPort)
+    }
+
+  }
+
+
+  function applyDeviceParams (serial, askConfirmation, place, storageId, adbPort) {
+    // eslint-disable-next-line no-param-reassign
+    adbPort = parseInt(adbPort, 10)
+    if (askConfirmation) {
+          GenericModalService.open({
+            message: 'Really update this device?'
+            , type: 'Warning'
+            , size: 'sm'
+            , cancel: true
+          })
+          .then(() => {
+            DevicesService.updateDevice(serial, place, storageId, adbPort)
+          })
+      }
+      else {
+        DevicesService.updateDevice(serial, place, storageId, adbPort)
+      }
   }
 
   $scope.removeDevices = function(search, filteredDevices, askConfirmation) {

@@ -1,16 +1,20 @@
 .row
   .col-md-6
-    div(ng-include='"control-panes/dashboard/navigation/navigation.pug"')
+    div(ng-include='"control-panes/advanced/input/input.pug"')
   .col-md-6
-    div(ng-include='"control-panes/dashboard/clipboard/clipboard.pug"')
+    div(ng-include='"control-panes/dashboard/booking/booking.pug"')
+  .col-md-6
+    div(ng-include='"control-panes/advanced/remote-debug/remote-debug.pug"')
+  .col-md-6
+    div(ng-include='"control-panes/dashboard/navigation/navigation.pug"')
 
 .row
   .col-md-6
     div(ng-include='"control-panes/dashboard/install/install.pug"')
+
+.row
   .col-md-6(ng-if='$root.platform == "native"')
     div(ng-include='"control-panes/dashboard/shell/shell.pug"')
-.row
+
   .col-md-6
-    div(ng-include='"control-panes/dashboard/apps/apps.pug"')
-  .col-md-6
-    div(ng-include='"control-panes/advanced/remote-debug/remote-debug.pug"')
+    div(ng-include='"control-panes/dashboard/clipboard/clipboard.pug"')

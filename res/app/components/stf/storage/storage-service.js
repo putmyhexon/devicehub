@@ -1,7 +1,7 @@
-var Promise = require('bluebird')
+const Promise = require('bluebird')
 
 module.exports = function StorageServiceFactory($http, $upload) {
-  var service = {}
+  let service = {}
 
   service.storeUrl = function(type, url) {
     return $http({
@@ -14,10 +14,10 @@ module.exports = function StorageServiceFactory($http, $upload) {
   }
 
   service.storeFile = function(type, files, options) {
-    var resolver = Promise.defer()
-    var input = options.filter ? files.filter(options.filter) : files
+    let resolver = Promise.defer()
+    let input = options.filter ? files.filter(options.filter) : files
 
-    if (input.length) {
+    if (input.length > 0) {
       $upload.upload({
           url: '/s/upload/' + type
         , method: 'POST'
@@ -36,7 +36,7 @@ module.exports = function StorageServiceFactory($http, $upload) {
         )
     }
     else {
-      var err = new Error('No input files')
+      let err = new Error('No input files')
       err.code = 'no_input_files'
       resolver.reject(err)
     }

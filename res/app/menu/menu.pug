@@ -1,23 +1,25 @@
 //
   Copyright © 2019 contains code contributed by Orange SA, authors: Denis Barbaron - Licensed under the Apache license 2.0
 //
-
 .navbar.stf-menu(ng-controller='MenuCtrl')
   .container-fluid.stf-top-bar
-    a.stf-logo(ng-href="/#!/devices") STF
+    a(id="MenuLogo", ng-href="/#!/devices")
     ul.nav.stf-nav(nav-menu='current').unselectable
       li(ng-cloak)
-        a(ng-href='/#!/control/{{lastUsedDevice}}', ng-show='lastUsedDevice')
-          span.fa.fa-mobile
-          span(ng-if='!$root.basicMode', translate) Control
+        //a(ng-href='/#!/control/{{lastUsedDevice}}', ng-show='lastUsedDevice')
+        //  div
+        //    include ../icons/28/device_icon.svg
+        //  span(ng-if='!$root.basicMode', translate) Control
         a(ng-href='/#!/devices', accesskey='1')
-          span.fa.fa-sitemap
+          div
+            include ../icons/28/devices_icon.svg
           span(ng-if='!$root.basicMode', translate) Devices
-        a(ng-href='/#!/groups')
-          span.fa.fa-object-group
-          span(ng-if='!$root.basicMode', translate) Groups
+        //a(ng-href='/#!/groups')
+        //   span.fa.fa-object-group
+        //  span(ng-if='!$root.basicMode', translate) Groups
         a(ng-href='/#!/settings')
-          span.fa.fa-gears
+          div
+            include ../icons/28/settings_icon.svg
           span(ng-if='!$root.basicMode', translate) Settings
     ul.nav.stf-nav.stf-feedback.pull-right(ng-cloak, nav-menu='current').unselectable
       li.stf-nav-web-native-button(ng-if='!$root.basicMode && isControlRoute')
@@ -28,19 +30,21 @@
       li.stf-nav-web-native-button(ng-if='!$root.basicMode')
        button.btn.btn-sm.btn-default-outline(
         type='button'
-        ng-click='mailToSupport()')
+        ng-click='openSupportLink()')
           i.fa.fa-envelope-o
-          span(translate) Contact Support 
+          span(translate) DeviceHub Support
 
       li.stf-nav-web-native-button(ng-if='!$root.basicMode')
-       button.btn.btn-sm.btn-default-outline(
-        type='button'
-        ng-click='logout()')
-          i.fa.fa-sign-out
-          span(translate) Logout 
-
-      li(ng-show='!$root.basicMode')
-        a(ng-href='/#!/help', accesskey='6')
+        button.btn.btn-sm.btn-default-outline(
+          type='button'
+          ng-click='openConfluence()')
           i.fa.fa-question-circle.fa-fw
-          | {{ "Help" | translate }}
+          span(translate) Help
+
+      li.stf-nav-web-native-button(ng-if='!$root.basicMode')
+        button.btn.btn-sm.btn-default-outline(
+          type='button'
+          ng-click='logout()')
+          i.fa.fa-sign-out
+          span(translate) Logout
 

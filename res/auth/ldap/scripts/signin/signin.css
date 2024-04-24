@@ -46,34 +46,3 @@ body {
 .login2 .login-wrapper input[type="submit"]:hover {
     background: transparent;
 }
-
-.login2 .login-wrapper .social-login {
-    margin-bottom: 20px;
-    padding-bottom: 25px;
-    border-bottom: 1px solid #cccccc;
-}
-
-.login2 .login-wrapper .social-login > .btn {
-    width: 49%;
-    margin: 0;
-}
-
-.login2 .login-wrapper .social-login .facebook {
-    background-color: #335397;
-    border-color: #335397;
-}
-
-.login2 .login-wrapper .social-login .facebook:hover {
-    background-color: transparent;
-    color: #335397;
-}
-
-.login2 .login-wrapper .social-login .twitter {
-    background-color: #00c7f7;
-    border-color: #00c7f7;
-}
-
-.login2 .login-wrapper .social-login .twitter:hover {
-    background-color: transparent;
-    color: #00c7f7;
-}

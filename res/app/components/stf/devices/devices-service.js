@@ -46,6 +46,10 @@ module.exports = function DevicesServiceFactory(
     return $http.get('/api/v1/devices/' + serial + '?fields=' + fields)
   }
 
+  DevicesService.getAdbRange = function() {
+    return $http.get('/api/v1/devices/adbRange')
+  }
+
   DevicesService.removeDevice = function(serial, filters) {
     return $http.delete('/api/v1/devices/' + serial + buildQueryParameters(filters))
   }
@@ -75,6 +79,14 @@ module.exports = function DevicesServiceFactory(
 
   DevicesService.removeOriginGroupDevice = function(id, serial) {
     return $http.delete('/api/v1/devices/' + serial + '/groups/' + id)
+  }
+
+  DevicesService.renewAdbPort = function (serial) {
+    return $http.put('/api/v1/devices/' + serial + '/adbPort')
+  }
+
+  DevicesService.updateDevice = function(serial, place, storageId, adbPort) {
+    return $http.put('/api/v1/devices/' + serial + '/updateStorageInfo/?place=' + place + '&storageId=' + storageId + '&adbPort=' + adbPort)
   }
 
   DevicesService.removeOriginGroupDevices = function(id, serials) {

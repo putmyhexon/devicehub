@@ -142,15 +142,19 @@ module.exports = function GroupsCtrl(
   }
 
   function initGroup(group) {
-    cachedGroupsClass[group.id] = group.class
-    if (typeof $scope.groupsEnv[group.id] === 'undefined') {
-      $scope.groupsEnv[group.id] = {}
-      initAvailableGroupDevices(group, [], {})
-      if (group.privilege === 'root') {
-        rootGroupId = group.id
+    if (group.id) {
+      cachedGroupsClass[group.id] = group.class
+      if (typeof $scope.groupsEnv[group.id] === 'undefined') {
+        $scope.groupsEnv[group.id] = {}
+        initAvailableGroupDevices(group, [], {})
+        if (group.privilege === 'root') {
+          rootGroupId = group.id
+        }
       }
+      return group
+    } else {
+      return null
     }
-    return group
   }
 
   function addGroup(group, timeStamp) {
@@ -580,6 +584,7 @@ module.exports = function GroupsCtrl(
         .then(function(response) {
           if (!response.success &&
               response.status === 409 &&
+            // eslint-disable-next-line no-prototype-builtins
               response.data.hasOwnProperty('conflicts')) {
             $scope.groupsEnv[group.id].showConflicts = true
             $scope.groupsEnv[group.id].conflicts = response.data.conflicts
@@ -711,6 +716,7 @@ module.exports = function GroupsCtrl(
     .then(function(response) {
       if (!response.success &&
           response.status === 409 &&
+        // eslint-disable-next-line no-prototype-builtins
           response.data.hasOwnProperty('conflicts')) {
         $scope.groupsEnv[group.id].conflicts = []
         response.data.conflicts.forEach(function(conflict) {

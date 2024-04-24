@@ -32,8 +32,9 @@ module.exports = function DeviceColumnService($filter, gettext, SettingsService,
       }
     })
   , group: TextCell({
-      title: gettext('Group Name')
-    , value: function(device) {
+        title: gettext('Group Name')
+      , target: '_blank'
+      , value: function(device) {
         return $filter('translate')(device.group.name)
       }
     })
@@ -217,10 +218,42 @@ module.exports = function DeviceColumnService($filter, gettext, SettingsService,
         return device.browser || {apps: []}
       }
     })
+    , mobileService: TextCell({
+      title: gettext('Mobile service')
+    , value: function (device) {
+        let services = []
+        let deviceService = device.service || {hasGMS: false, hasHMS: false}
+        if (deviceService.hasGMS) {
+          services.push('GMS')
+        }
+        if (deviceService.hasHMS) {
+          services.push('HMS')
+        }
+        return services.join(', ')
+      }
+    })
   , serial: TextCell({
       title: gettext('Serial')
     , value: function(device) {
         return device.serial || ''
+      }
+    })
+  , storageId: TextCell({
+      title: gettext('Storage ID')
+      , value: function(device) {
+        return device.storageId || ''
+      }
+    })
+  , macAddress: TextCell({
+      title: gettext('MAC Address')
+      , value: function(device) {
+        return device.macAddress || ''
+      }
+    })
+  , place: TextCell({
+      title: gettext('Physical Place')
+      , value: function(device) {
+        return device.place || ''
       }
     })
   , manufacturer: TextCell({
@@ -232,7 +265,16 @@ module.exports = function DeviceColumnService($filter, gettext, SettingsService,
   , marketName: TextCell({
     title: gettext('Market name')
     , value: function(device) {
-      return device.marketName || ''
+        return device.marketName || ''
+    }
+  })
+  , bookedBefore: TextCell({
+    title: gettext('Booked before')
+    , value: function(device) {
+        console.log(device)
+        const startTime = device.statusChangedAt
+        const expireTime = new Date(new Date(startTime).getTime() + device.bookedBefore)
+        return device.bookedBefore ? expireTime : 'Not booked'
     }
   })
   , sdk: NumberCell({
@@ -332,7 +374,7 @@ module.exports = function DeviceColumnService($filter, gettext, SettingsService,
       }
     })
   , provider: TextCell({
-      title: gettext('Location')
+      title: gettext('Provider name')
     , value: function(device) {
         return device.provider ? device.provider.name : ''
       }
@@ -343,14 +385,11 @@ module.exports = function DeviceColumnService($filter, gettext, SettingsService,
         return device.notes || ''
       }
     })
-  , owner: LinkCell({
+  , owner: TextCell({
       title: gettext('User')
     , target: '_blank'
     , value: function(device) {
-        return device.owner ? device.owner.name : ''
-      }
-    , link: function(device) {
-        return device.owner ? device.enhancedUserProfileUrl : ''
+          return device.owner ? device.owner.name : ''
       }
     })
   }
@@ -396,8 +435,13 @@ function TextCell(options) {
     title: options.title
   , defaultOrder: 'asc'
   , build: function() {
-      var td = document.createElement('td')
+      let td = document.createElement('td')
       td.appendChild(document.createTextNode(''))
+      td.addEventListener('click', (event) => {
+        let target = event.target || event.srcElement
+        let copyText = target.innerText || target.textContent
+        navigator.clipboard.writeText(copyText)
+      })
       return td
     }
   , update: function(td, item) {
@@ -659,7 +703,7 @@ function DeviceStatusCell(options) {
   , available: 'state-available btn-primary-outline'
   , ready: 'state-ready btn-primary-outline'
   , present: 'state-present btn-primary-outline'
-  , preparing: 'state-preparing btn-primary-outline btn-success-outline'
+  , preparing: 'state-preparing btn-info-outline btn-success-outline'
   , unauthorized: 'state-unauthorized btn-danger-outline'
   , offline: 'state-offline btn-warning-outline'
   , automation: 'state-automation btn-info'
@@ -683,7 +727,7 @@ function DeviceStatusCell(options) {
         (stateClasses[device.state] || 'btn-default-outline')
 
       if (device.usable && !device.using) {
-        a.href = '#!/control/' + device.serial
+        a.href = '#!/c/' + device.serial
       }
       else {
         a.removeAttribute('href')

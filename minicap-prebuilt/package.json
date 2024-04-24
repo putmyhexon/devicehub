@@ -1,0 +1,54 @@
+{
+  "_args": [
+    [
+      "@devicefarmer/minicap-prebuilt@2.7.0",
+      "/Users/di.smirnov/WebstormProjects/stf2"
+    ]
+  ],
+  "_from": "@devicefarmer/minicap-prebuilt@2.7.0",
+  "_id": "@devicefarmer/minicap-prebuilt@2.7.0",
+  "_inBundle": false,
+  "_integrity": "sha512-1xIgypl9QAIDuOBb+LipCGDbd5YEZnqQzi9JRPT1y7B+FcjACv0YGJ3Hr8jT+imFJcAv2Y1tinmAzqaXOFwDbw==",
+  "_location": "/@devicefarmer/minicap-prebuilt",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "@devicefarmer/minicap-prebuilt@2.7.0",
+    "name": "@devicefarmer/minicap-prebuilt",
+    "escapedName": "@devicefarmer%2fminicap-prebuilt",
+    "scope": "@devicefarmer",
+    "rawSpec": "2.7.0",
+    "saveSpec": null,
+    "fetchSpec": "2.7.0"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@devicefarmer/minicap-prebuilt/-/minicap-prebuilt-2.7.0.tgz",
+  "_spec": "2.7.0",
+  "_where": "/Users/di.smirnov/WebstormProjects/stf2",
+  "author": {
+    "name": "DeviceFarmer",
+    "email": "support@devicefarmer.com",
+    "url": "https://devicefarmer.github.io"
+  },
+  "bugs": {
+    "url": "https://github.com/DeviceFarmer/minicap/issues"
+  },
+  "description": "Prebuilt binaries of minicap.",
+  "homepage": "https://github.com/DeviceFarmer/minicap#readme",
+  "keywords": [
+    "minicap"
+  ],
+  "license": "Apache-2.0",
+  "name": "@devicefarmer/minicap-prebuilt",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DeviceFarmer/minicap.git"
+  },
+  "scripts": {
+    "prepublish": "make"
+  },
+  "version": "2.7.0"
+}

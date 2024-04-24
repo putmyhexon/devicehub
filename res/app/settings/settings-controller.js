@@ -41,5 +41,12 @@ module.exports = function SettingsCtrl($scope, gettext, AppState) {
         templateUrl: 'settings/users/users.pug'
       }
     )
+    $scope.settingTabs.push(
+      {
+        title: gettext('Shell'),
+        icon: 'fa-terminal fa-fw',
+        templateUrl: 'settings/shell/shell.pug'
+      }
+    )
   }
 }

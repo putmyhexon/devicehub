@@ -7,8 +7,7 @@ module.exports = function ControlServiceFactory(
 , gettext
 , KeycodesMapped
 ) {
-  var controlService = {
-  }
+  const controlService = {}
 
   function ControlService(target, channel) {
     function sendOneWay(action, data) {
@@ -165,6 +164,12 @@ module.exports = function ControlServiceFactory(
       })
     }
 
+    this.changeQuality = function(quality) {
+      return sendOneWay('quality.change', {
+        quality: quality
+      })
+    }
+
     this.testForward = function(forward) {
       return sendTwoWay('forward.test', {
         targetHost: forward.targetHost
@@ -293,18 +298,8 @@ module.exports = function ControlServiceFactory(
       return sendTwoWay('wifi.get')
     }
 
-    this.setBluetoothEnabled = function(enabled) {
-      return sendTwoWay('bluetooth.set', {
-        enabled: enabled
-      })
-    }
-
-    this.getBluetoothStatus = function() {
-      return sendTwoWay('bluetooth.get')
-    }
-
-    this.cleanBluetoothBondedDevices = function() {
-      return sendTwoWay('bluetooth.cleanBonds')
+    this.setPolicyAccepted = function() {
+      return sendOneWay('policy.accept')
     }
 
     window.cc = this

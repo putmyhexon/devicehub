@@ -5,7 +5,9 @@
 .login2(ng-controller='SignInCtrl')
   .login-wrapper
     a(href='./')
-      img(width='160', height='160', src='/static/logo/exports/STF-512.png', title='STF')
+      img(width='225', height='56',
+        src="{{window.location.host.split('.')[0].includes('devicehub') ? '/static/logo/exports/devicehub.svg' : '/static/logo/exports/emulatorhub.svg'}}",
+        title="{{window.location.host.split('.')[0].includes('devicehub')? 'DeviceHub' : 'EmulatorHub'}}")
 
     form(name='signin', novalidate, ng-submit='submit()')
       .alert.alert-danger(ng-show='error')
@@ -36,9 +38,8 @@
 
       button.btn.btn-sm.btn-default-outline(
         type='button'
-        uib-tooltip="{{'Write a mail to the support team' | translate}}"
-        ng-disabled='!contactEmail'
-        ng-click='mailToSupport()'
+        uib-tooltip="{{'Contact with support team' | translate}}"
+        ng-click='openSupportLink()'
         tooltip-placement='top'
         tooltip-popup-delay='500')
           i.fa.fa-envelope-o

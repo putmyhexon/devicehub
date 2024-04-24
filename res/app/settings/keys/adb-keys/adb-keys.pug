@@ -1,11 +1,12 @@
 .widget-container.fluid-height.stf-keys.stf-adb-keys(ng-controller='AdbKeysCtrl')
   .heading
     i.fa.fa-android
+    i.fa.fa-andr
     span(translate) ADB Keys
 
     button.btn.pull-right.btn-sm(
     ng-click='showAdd = !showAdd',
-    ng-class='{ "btn-primary-outline": !showAdd, "btn-primary": showAdd }')
+    ng-class='{ "btn-tertiary": !showAdd, "btn-primary": showAdd }')
       i.fa.fa-plus.fa-fw
 
     a(ng-href='/#!/docs/ADB-Keys').pull-right.btn.btn-sm

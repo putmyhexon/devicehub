@@ -32,10 +32,10 @@ describe('Control Page', function() {
 
     waitUrl(/control/)
 
-    browser.sleep(500)
+    browser.sleep(5000)
 
     browser.getCurrentUrl().then(function(newUrl) {
-      expect(newUrl).toContain(localhost + 'control/')
+      expect(newUrl).toContain(browser.baseUrl + 'control/')
     })
   })
 

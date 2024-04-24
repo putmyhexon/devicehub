@@ -243,7 +243,15 @@ module.exports = function DeviceServiceFactory($http, socket, EnhanceDeviceServi
   deviceService.load = function(serial) {
     return $http.get('/api/v1/devices/' + serial)
       .then(function(response) {
-        return response.data.device
+        let data = response.data.device
+        data.usable = data.present && data.status === 3 && data.ready &&
+          (!data.owner || data.using)
+
+        // Make sure we don't mistakenly think we still have the device
+        if (!data.usable || !data.owner) {
+          data.using = false
+        }
+        return data
       })
   }
 

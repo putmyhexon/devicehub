@@ -376,6 +376,7 @@ dl {
 }
 
 .btn {
+  border-radius: 8px;
   font-weight: 500;
   margin: 0 5px 5px 0;
   @include transition(all 100ms);
@@ -474,6 +475,18 @@ dl {
   }
 }
 
+.btn-tertiary {
+  color: $main;
+  background: transparent;
+  &:hover, &.active {
+    background: $main;
+    color: white;
+    .caret {
+      border-top-color: white;
+    }
+  }
+}
+
 .btn-default-outline, .btn-primary-outline, .btn-success-outline,
 .btn-info-outline, .btn-warning-outline, .btn-danger-outline {
   background: transparent;
@@ -492,6 +505,9 @@ dl {
 
 .btn-primary-outline {
   color: $main;
+  border-color: $main;
+  border-width: 1px;
+  border-radius: 3px;
   &:hover, &.active {
     background: $main;
     color: white;
@@ -499,10 +515,16 @@ dl {
       border-top-color: white;
     }
   }
+  &:disabled{
+    border-color: #999999;
+  }
 }
 
 .btn-success-outline {
   color: $success;
+  border-color: $success;
+  border-width: 1px;
+  border-radius: 3px;
   &:hover, &.active {
     background: $success;
     color: white;
@@ -510,10 +532,16 @@ dl {
       border-top-color: white;
     }
   }
+  &:disabled{
+    border-color: #999999;
+  }
 }
 
 .btn-info-outline {
   color: $info;
+  border-color: $info;
+  border-width: 1px;
+  border-radius: 3px;
   &:hover, &.active {
     background: $info;
     color: white;
@@ -521,10 +549,16 @@ dl {
       border-top-color: white;
     }
   }
+  &:disabled{
+    border-color: #999999;
+  }
 }
 
 .btn-warning-outline {
   color: $warning;
+  border-color: $warning;
+  border-width: 1px;
+  border-radius: 3px;
   &:hover, &.active {
     background: $warning;
     color: white;
@@ -532,16 +566,25 @@ dl {
       border-top-color: white;
     }
   }
+  &:disabled{
+    border-color: #999999;
+  }
 }
 
 .btn-danger-outline {
   color: $danger;
+  border-color: $danger;
+  border-width: 1px;
+  border-radius: 3px;
   &:hover, &.active {
     background: $danger;
     color: white;
     .caret {
       border-top-color: white;
     }
+  }
+  &:disabled{
+    border-color: #999999;
   }
 }
 
@@ -643,6 +686,7 @@ dl {
 .widget-container {
   min-height: 320px;
   background: white;
+  border-radius: 15px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   &.fluid-height {
     height: auto;
@@ -652,6 +696,7 @@ dl {
     background: rgba(255, 255, 255, 0.94);
     height: 50px;
     padding: 15px 15px;
+    border-radius: 15px;
     color: $dark-text;
     font-size: 15px;
     width: 100%;

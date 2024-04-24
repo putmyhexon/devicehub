@@ -1,5 +1,5 @@
 /**
-* Copyright © 2019-2023 contains code contributed by Orange SA, authors: Denis Barbaron - Licensed under the Apache license 2.0
+* Copyright © 2019 contains code contributed by Orange SA, authors: Denis Barbaron - Licensed under the Apache license 2.0
 **/
 
 module.exports = function MenuCtrl(
@@ -10,6 +10,7 @@ module.exports = function MenuCtrl(
 , $http
 , CommonService
 , LogcatService
+, GenericModalService
 , socket
 , $cookies
 , $window) {
@@ -28,24 +29,54 @@ module.exports = function MenuCtrl(
     $scope.isControlRoute = $location.path().search('/control') !== -1
   })
 
-  $scope.mailToSupport = function() {
-    CommonService.url('mailto:' + $scope.contactEmail)
+  $scope.openSupportLink = function() {
+    $http.get('/auth/contact').then(function(response) {
+      window.open(response.data.contactUrl, '_blank').focus()
+    })
   }
 
-  $http.get('/auth/contact').then(function(response) {
-    $scope.contactEmail = response.data.contact.email
-  })
+  $scope.openConfluence = function() {
+    $http.get('/auth/docs').then(function(response) {
+      window.open(response.data.docsUrl, '_blank').focus()
+    })
+  }
 
   $scope.logout = function() {
-    const cookies = $cookies.getAll()
-    for (const key in cookies) {
-      if (cookies.hasOwnProperty(key)) {
-        $cookies.remove(key, {path: '/'})
+    $http.get('/app/api/v1/auth_url').then(function(response) {
+      let authUrl = response.data.authUrl
+      if (!authUrl.includes('mock') && !authUrl.includes('ldap')) {
+        GenericModalService.open({
+          message: 'Вы авторизованы через способ, когда вход происходит автоматически'
+          , type: 'Warning'
+          , size: 'lg'
+        })
+          .then(() => {
+            $cookies.remove('XSRF-TOKEN', {path: '/'})
+            $cookies.remove('ssid', {path: '/'})
+            $cookies.remove('ssid.sig', {path: '/'})
+            $window.location = '/'
+            setTimeout(function() {
+              socket.disconnect()
+            }, 100)
+          })
       }
-    }
-    $window.location = '/'
-    setTimeout(function() {
-      socket.disconnect()
-    }, 100)
+      else {
+        $cookies.remove('XSRF-TOKEN', {path: '/'})
+        $cookies.remove('ssid', {path: '/'})
+        $cookies.remove('ssid.sig', {path: '/'})
+        $window.location = '/'
+        setTimeout(function() {
+          socket.disconnect()
+        }, 100)
+      }
+    })
+  }
+
+  let logo = document.getElementById('MenuLogo')
+  if (window.location.host.split('.')[0].includes('device')) {
+    logo.classList.add('devicehub-logo')
+  }
+  else {
+    logo.classList.add('emulatorhub-logo')
   }
 }

@@ -2,7 +2,7 @@ module.exports = function RemoteDebugCtrl($scope, $timeout, gettext) {
   function startRemoteConnect() {
     if ($scope.control) {
       $scope.control.startRemoteConnect().then(function(result) {
-        var url = result.lastData
+        let url = result.lastData
         $scope.$apply(function() {
           $scope.debugCommand = 'adb connect ' + url
         })
@@ -32,5 +32,11 @@ module.exports = function RemoteDebugCtrl($scope, $timeout, gettext) {
     }
 
   })
+
+  $scope.copyLink = function() {
+    navigator.clipboard.writeText($scope.debugCommand).then(() => {
+
+    })
+  }
 
 }

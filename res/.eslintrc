@@ -18,11 +18,13 @@
     "new-cap": 0,
     "spaced-comment": 0,
     "quote-props": 0,
-    "operator-linebreak": 0
+    "operator-linebreak": 0,
+    "space-before-function-paren": 0,
+    "max-len": 0
   },
   "globals": {
-    "angular": 1,
-    "inject": 1,
-    "waitUrl": 1
+    "angular": true,
+    "inject": true,
+    "waitUrl": true
   }
 }
