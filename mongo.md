@@ -1,9 +1,14 @@
-## Переход на MongoDB
+## Transition to MongoDB
 
-Мы перевели всю ферму на MongoDB с сохранением логики работы и добавлением оптимизаций
-Для корректной работы необходима Mongo версии 6.0.10 в режиме replicaSet
-Также, в случае, если вам необходимо мигрировать данные из rethinkDB
-вы можете воспользоваться командой
+### Migration Process
+We migrated the entire farm to MongoDB while preserving the existing logic and introducing optimizations.
+
+### Requirements
+To ensure proper functionality, MongoDB version 6.0.10 in replicaSet mode is required.
+
+### Data Migration
+If you need to migrate data from RethinkDB, you can use the following command:
+
 ```bash
 stf migrate-to-mongo
 ```

@@ -4,7 +4,7 @@
     "node": true
   },
   "parserOptions": {
-    "ecmaVersion": 2015
+    "ecmaVersion": 2020
   },
   "rules": {
     // Possible errors
@@ -103,7 +103,7 @@
     "key-spacing": [2, {"beforeColon": false, "afterColon": true, "mode": "strict"}], // optionally set `[2, {"beforeColon": false, "afterColon": true, "mode": "strict", "align": "colon"}]`
     "lines-around-comment": 2, // optionally set `[2, {"beforeBlockComment": true, "beforeLineComment": true, "allowBlockStart": true}]`
     "linebreak-style": 0, // optionally set `[1, "unix"]`
-    "max-len": [2, 100, 2, {"ignoreComments": true, "ignoreUrls": true}], // NOTE: Our limit is 80 however ESLint does not have an ignoreStrings so lets have more buffer
+    "max-len": [2, 150, 2, {"ignoreComments": true, "ignoreUrls": true}], // NOTE: Our limit is 80 however ESLint does not have an ignoreStrings so lets have more buffer
     "max-nested-callbacks": [1, 5],
     "new-cap": 2, // optionally set `[2, {"capIsNewExceptions": ["Person"]}]`
     "new-parens": 2,
@@ -153,9 +153,12 @@
     "no-path-concat": 2, // `2` is default
     "no-process-exit": 0, // `2` is default
     "no-restricted-modules": 0, // no default, optionally set `[2, "fs", "os"]`
-    "no-sync": 1, // `2` is default
+    "no-sync": 1 // `2` is default
 
     // eslint v2
     //"keyword-spacing": 2
+  },
+  "globals": {
+    "$window": true
   }
 }

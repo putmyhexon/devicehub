@@ -1,4 +1,4 @@
-const io = require('socket.io')
+const io = require('socket.io-client')
 
 module.exports = function SocketFactory(
   $rootScope
@@ -8,7 +8,10 @@ module.exports = function SocketFactory(
   let websocketUrl = AppState.config.websocketUrl || ''
 
   let socket = io(websocketUrl, {
-    reconnection: true, transports: ['websocket']
+    autoConnect: true,
+    reconnectionAttempts: 3,
+    reconnection: true,
+    transports: ['websocket']
   })
 
   socket.scoped = function($scope) {
@@ -39,6 +42,10 @@ module.exports = function SocketFactory(
     $rootScope.$apply(function() {
       socket.ip = ip
     })
+  })
+
+  socket.on('connection_error', function(err) {
+    console.log(err)
   })
 
   return socket

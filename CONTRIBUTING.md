@@ -1,27 +1,25 @@
 # Contributing
 
-We are happy to accept any contributions that make sense and respect the rules listed below.
+We welcome contributions that adhere to the guidelines outlined below.
 
 ## How to contribute
 
-1. Fork the repo.
-2. Create a feature branch for your contribution out of the `master` branch. Only one contribution per branch is accepted.
-3. Implement your contribution while respecting our rules (see below).
-4. If possible, add tests for your contribution to make sure it actually works.
-5. Don't forget to run `npm test` just right before submitting, it also checks for code styling issues.
-6. Submit a pull request against our `master` branch!
+1. Fork the repository.
+2. Create a feature branch for your contribution based on the `master` branch. Each branch should focus on a single contribution.
+3. Implement your contribution while following our guidelines (see below).
+4. If possible, include tests for your contribution to ensure its functionality.
+5. Before submitting, run `npm test` to check for any code styling issues.
+6. Submit a pull request against the `master` branch of our repository.
 
-## Rules
+## Guidelines
 
-* **Do** use feature branches.
-* **Do** conform to existing coding style so that your contribution fits in.
-* **Do** use [EditorConfig] to enforce our [whitespace rules](.editorconfig). If your editor is not supported, enforce the settings manually.
-* **Do not** touch the `version` field in [package.json](package.json).
-* **Do not** commit any generated files, unless already in the repo. If absolutely necessary, explain why.
-* **Do not** create any top level files or directories. If absolutely necessary, explain why and update [.npmignore](.npmignore).
+* **Do** use feature branches for your contributions.
+* **Do** adhere to the existing coding style to maintain consistency.
+* **Do** use [EditorConfig] to apply our [whitespace rules](.editorconfig). If your editor does not support EditorConfig, manually adjust the settings.
+* **Do not** modify the `version` field in [package.json](package.json).
+* **Do not** commit generated files unless they are already present in the repository. If necessary, provide an explanation.
+* **Do not** create top-level files or directories without justification, and ensure updates to [.npmignore](.npmignore) if needed.
 
 ## License
 
 By contributing your code, you agree to license your contribution under our [LICENSE](LICENSE).
-
-[editorconfig]: <http://editorconfig.org/>

@@ -777,7 +777,7 @@ paths:
     get:
       summary: Gets users
       description: gets users; if you are the administrator user then all user fields are returned, otherwise only 'email'
-      operationId: grantAdminAccess
+      operationId: grantAdmin
       tags:
         - admin
       parameters:
@@ -795,6 +795,7 @@ paths:
           description: >
             Unexpected Error:
               * 401: Unauthorized => bad credentials
+              * 403: Forbidden => user doesnt have admin privilege
               * 500: Internal Server Error
           schema:
             $ref: "#/definitions/UnexpectedErrorResponse"
@@ -805,7 +806,7 @@ paths:
     get:
       summary: Gets users
       description: gets users; if you are the administrator user then all user fields are returned, otherwise only 'email'
-      operationId: revokeAdminAccess
+      operationId: revokeAdmin
       tags:
         - admin
       parameters:
@@ -823,6 +824,7 @@ paths:
           description: >
             Unexpected Error:
               * 401: Unauthorized => bad credentials
+              * 403: Forbidden => user doesnt have admin privilege
               * 500: Internal Server Error
           schema:
             $ref: "#/definitions/UnexpectedErrorResponse"
@@ -924,6 +926,51 @@ paths:
               * 404: Not Found => unknown user
               * 500: Internal Server Error
               * 503: Service Unavailable => server too busy or a lock on a resource is pending
+          schema:
+            $ref: "#/definitions/UnexpectedErrorResponse"
+      security:
+        - accessTokenAuth: [ ]
+  /users/service/{email}:
+    x-swagger-router-controller: users
+    post:
+      summary: Creates a serviceUser
+      description: Creates a user in the database by parameters
+      operationId: createServiceUser
+      tags:
+        - admin
+      parameters:
+        - name: email
+          in: path
+          description: User identifier (email)
+          required: true
+          type: string
+        - name: name
+          in: query
+          description: User name
+          required: true
+          type: string
+        - name: admin
+          in: query
+          description: Give user admin privilege
+          required: false
+          type: boolean
+        - name: secret
+          in: query
+          description: Secret for jwt
+          required: true
+          type: string
+      responses:
+        "201":
+          description: User information
+          schema:
+            $ref: "#/definitions/ServiceUserResponse"
+        default:
+          description: >
+            Unexpected Error:
+              * 400: Bad Request => user already exists
+              * 401: Unauthorized => bad credentials
+              * 403: Forbidden => user doesnt have admin privilege
+              * 500: Internal Server Error
           schema:
             $ref: "#/definitions/UnexpectedErrorResponse"
       security:
@@ -2666,6 +2713,18 @@ definitions:
         type: string
       user:
         type: object
+  ServiceUserResponse:
+    required:
+      - success
+      - description
+      - serviceUserInfo
+    properties:
+      success:
+        type: boolean
+      description:
+        type: string
+      serviceUserInfo:
+        type: object
   Token:
     type: object
     properties:
@@ -2826,12 +2885,6 @@ definitions:
     properties:
       serials:
         description: Comma-separated list of serials
-        type: string
-  URLPayload:
-    description: Payload object for url
-    properties:
-      url:
-        description: string with url
         type: string
   ErrorResponse:
     required:

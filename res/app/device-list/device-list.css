@@ -2,6 +2,12 @@
   color: deepskyblue;
 }
 
+.device-search {
+  border-radius: 10px;
+  width: 80%;
+  margin-bottom: 5px;
+}
+
 .widget-container{
   border-radius: 15px;
 }

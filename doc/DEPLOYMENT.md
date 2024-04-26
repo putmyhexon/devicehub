@@ -1,12 +1,13 @@
 # Deployment
 
-So you've got STF running via `stf local` and now you'd like to deploy it to real servers. While there are of course various ways to set everything up, this document will focus on a [systemd](http://www.freedesktop.org/wiki/Software/systemd/) + [Docker](https://www.docker.com/) deployment. Even if you've got a different setup, you should be able to use the configuration files as a rough guide. You can also check some [Setup Examples](https://github.com/openstf/setup-examples) which uses [Vagrant](https://www.vagrantup.com/) and [Virtual Box](https://www.virtualbox.org/) to create a virtual setup. But before going there, it is highly recommended that you read this document thoroughly.
+So you've got STF running via `stf local` and now you'd like to deploy it to real servers. \
+
+* [Deployment by docker-compose for systems with <= 100 devices](docker-compose-deployment.md)
+* Deployment by docker-compose for systems with > 100 devices
+* Deployment by helm in k8s
+* Deployment by operator
 
 STF consists of multiple independent processes communicating via [ZeroMQ](http://zeromq.org/) and [Protocol Buffers](https://github.com/google/protobuf). We call each process a "unit" to match systemd terminology.
-
-The core topology is as follows.
-
-![Rough core topology](topo-v1.png?raw=true)
 
 Each unit and its function will be explained later in the document.
 
@@ -40,12 +41,10 @@ The provider role requires the following units, which must be together on a sing
 
 The app role can contain any of the following units. You may distribute them as you wish, as long as the [assumptions above](#assumptions) hold. Some units may have more requirements, they will be listed where applicable.
 
-* [rethinkdb-proxy-28015.service](#rethinkdb-proxy-28015service)
 * [stf-app@.service](#stf-appservice)
 * [stf-auth@.service](#stf-authservice)
 * [stf-log-rethinkdb.service](#stf-log-rethinkdbservice)
 * [stf-migrate.service](#stf-migrateservice)
-* [stf-notify-hipchat.service](#stf-notify-hipchatservice)
 * [stf-processor@.service](#stf-processorservice)
 * [stf-provider@.service](#stf-providerservice)
 * [stf-reaper.service](#stf-reaperservice)
@@ -60,9 +59,10 @@ The app role can contain any of the following units. You may distribute them as 
 
 ### Database role
 
-The database role requires the following units, UNLESS you already have a working RethinkDB server/cluster running somewhere. In that case you simply will not have this role, and should point your [rethinkdb-proxy-28015.service](#rethinkdb-proxy-28015service) to that server instead.
+The database role requires the following units, UNLESS you already have a working RethinkDB server/cluster running somewhere.
+In that case you simply will not have this role,
+and should point your [rethinkdb-proxy-28015.service](#rethinkdb-proxy-28015service) to that server instead.
 
-* [rethinkdb.service](#rethinkdbservice)
 
 ### Proxy role
 
@@ -960,7 +960,7 @@ http {
   upstream stf_api {
     server 192.168.255.100:3700 max_fails=0;
   }
-  
+
   upstream swagger_ui {
     server 192.168.255.100:3800 max_fails=0;
   }

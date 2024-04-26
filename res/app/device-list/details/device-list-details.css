@@ -2,6 +2,21 @@
   white-space: nowrap;
 }
 
+.header {
+  font-weight: normal;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 48px;
+  text-align: left;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgb(145, 147, 153);
+  position: relative;
+  background-color: inherit;
+}
+
+
+
 .device-list-details-content .device-list-product,
 .device-list-details-content .device-list-carrier {
   white-space: normal;

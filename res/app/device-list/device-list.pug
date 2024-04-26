@@ -13,13 +13,12 @@
               select(name='searchFields')
                 option(ng-repeat='column in columns', ng-value='column.name + ": "',
                 ng-bind='columnDefinitions[column.name].title | translate')
-            input(type='search', autosave='deviceFilter'
+            input.device-search(type='search', autosave='deviceFilter'
               name='deviceFilter', ng-model='search.deviceFilter', ng-change='applyFilter(search.deviceFilter)',
               ng-model-options='{debounce: 150}'
               autocorrect='off', autocapitalize='off', spellcheck='false',
               list='searchFields', multiple, focus-element='search.focusElement',
               text-focus-select, accesskey='4', placeholder="{{'Device search' | translate}}",
-              style="width: 80%; margin-bottom: 5px;"
               ).form-control.input-sm.device-search.pull-right
 
             span.pull-right
