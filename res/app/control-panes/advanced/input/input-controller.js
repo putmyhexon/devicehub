@@ -11,7 +11,7 @@ module.exports = function InputCtrl($scope) {
   }
 
   $scope.unlockDevice = function() {
-    run('input text 1452').then(() => {
+    run('input text 0000').then(() => {
       run('input keyevent 66')
     })
   }
