@@ -2564,6 +2564,8 @@ paths:
       operationId: writeStats
       tags:
         - stats
+      consumes:
+        - multipart/form-data
       parameters:
         - name: serial
           in: formData

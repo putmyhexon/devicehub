@@ -24,7 +24,7 @@
     "doc": "cli-docs-generator --cli=stf --pretty_cli_name=stf -o ./units.md\n"
   },
   "dependencies": {
-    "@devicefarmer/adbkit": "2.11.3",
+    "@devicefarmer/adbkit": "3.2.6",
     "@devicefarmer/adbkit-apkreader": "3.2.4",
     "@devicefarmer/adbkit-monkey": "1.2.1",
     "@devicefarmer/minicap-prebuilt": "file:minicap-prebuilt",
@@ -79,6 +79,7 @@
     "husky": "4.3.8",
     "in-publish": "2.0.1",
     "jquery": "3.7.0",
+    "js-yaml": "4.1.0",
     "jws": "3.2.2",
     "ldapjs": "1.0.2",
     "lodash": "4.17.21",
@@ -104,7 +105,6 @@
     "pug": "3.0.2",
     "query-string": "7.1.1",
     "request-progress": "2.0.1",
-    "rethinkdb": "2.4.2",
     "semver": "7.5.3",
     "serve-favicon": "2.5.0",
     "serve-static": "1.15.0",
@@ -120,6 +120,7 @@
     "utf-8-validate": "5.0.9",
     "uuid": "3.4.0",
     "ws": "3.3.3",
+    "yaml": "2.4.2",
     "yargs": "7.1.0",
     "yauzl": "2.10.0",
     "zeromq": "5.2.8"
@@ -197,7 +198,7 @@
     "npm": ">=8.5.2"
   },
   "externalDependencies": {
-    "rethinkdb": ">= 2.2",
+    "monogdb": ">= 6",
     "zeromq": ">= 4",
     "protobuf": ">= 3",
     "gm": "~1",

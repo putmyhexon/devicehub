@@ -28,7 +28,7 @@ Commands:
   groups-engine         Start the groups engine unit.
   doctor                Diagnose potential issues with your installation.
   local [serial..]      Start a complete local development environment.
-  log-rethinkdb         Start a RethinkDB log unit.
+  log-mongodb           Start a MongoDB log unit.
   migrate               Migrates the database to the latest version.
   processor [name]      Start a processor unit.
   provider [serial..]   Start a provider unit.
@@ -58,7 +58,7 @@ Options:
 * [groups-engine](#groups-engine)
 * [doctor](#doctor)
 * [local](#local)
-* [log-rethinkdb](#log-rethinkdb)
+* [log-mongodb](#log-mongodb)
 * [migrate](#migrate)
 * [processor](#processor)
 * [provider](#provider)
@@ -497,16 +497,16 @@ option to uppercase, replacing dashes with underscores and prefixing it with
 
 ```
 
-### log-rethinkdb
+### log-mongodb
 
 ```sh
-$ stf log-rethinkdb --help
+$ stf log-mongodb --help
 ```
 
 Help output:
 
 ```
-stf log-rethinkdb
+stf log-mongodb
 
 Options:
   -h, --help         Show help.                                        [boolean]
@@ -517,7 +517,7 @@ Options:
 
 Each option can be be overwritten with an environment variable by converting the
 option to uppercase, replacing dashes with underscores and prefixing it with
-`STF_LOG_RETHINKDB_` (e.g. `STF_LOG_RETHINKDB_PRIORITY`).
+`STF_LOG_MONGODB_` (e.g. `STF_LOG_MONGODB_PRIORITY`).
 
 ```
 
