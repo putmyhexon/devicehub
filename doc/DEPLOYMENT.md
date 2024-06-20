@@ -19,7 +19,7 @@ For this example deployment, the following assumptions will be made. You will ne
 * You have [Docker](https://www.docker.com/) running on each host
 * Each host has an `/etc/environment` (a la [CoreOS](https://coreos.com/)) file with `COREOS_PRIVATE_IPV4=MACHINE_IP_HERE`. This is used to load the machine IP address in configuration files.
   - You can create the file yourself or alternatively replace `${COREOS_PRIVATE_IPV4}` manually as required.
-* You're deploying [openstf/stf:latest](https://registry.hub.docker.com/u/openstf/stf/). There's also a fixed tag for each release if you're feeling less adventurous.
+* You are deploying self built image
 * You want to access the app at https://stf.example.org/. Change to the actual URL you want to use.
 * You have RethinkDB running on `rethinkdb.stf.example.org`. Change to the actual address/IP where required.
   - You may also use SRV records by giving the url in `srv+tcp://rethinkdb-28015.skydns.stf.example.org` format.
@@ -76,7 +76,7 @@ These external units are required for the actual STF units to work.
 
 You need to have a single `adbd.service` unit running on each host where you have devices connected.
 
-The docker container comes with a default, insecure ADB key for convenience purposes, so that you won't have to accept a new ADB key on your devices each time the unit restarts. This is insecure because anyone in possession of the insecure key will then be able to access your device without any prompt, assuming they have physical access to it. This may or may not be a problem for you. See [sorccu/adb](https://registry.hub.docker.com/u/sorccu/adb/) for more information if you'd like to provide your own keys.
+The docker container comes with a default, insecure ADB key for convenience purposes, so that you won't have to accept a new ADB key on your devices each time the unit restarts. This is insecure because anyone in possession of the insecure key will then be able to access your device without any prompt, assuming they have physical access to it. This may or may not be a problem for you. See [devicefarmer/adb](https://registry.hub.docker.com/u/devicefarmer/adb/) for more information if you'd like to provide your own keys.
 
 ```ini
 [Unit]
@@ -87,15 +87,16 @@ Requires=docker.service
 [Service]
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull sorccu/adb:latest
+RestartSec=3
+ExecStartPre=/usr/bin/docker pull devicefarmer/adb:latest
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
 ExecStart=/usr/bin/docker run --rm \
   --name %p \
   --privileged \
+  -p 5037:5037 \
   -v /dev/bus/usb:/dev/bus/usb \
-  --net host \
-  sorccu/adb:latest
+  devicefarmer/adb:latest
 ExecStop=/usr/bin/docker exec %p adb kill-server
 ```
 
@@ -167,7 +168,7 @@ Requires=docker.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/ambassador:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/ambassador:latest
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
 ExecStart=/usr/bin/docker run --rm \
@@ -175,7 +176,7 @@ ExecStart=/usr/bin/docker run --rm \
   -e "AUTHKEY=YOUR_RETHINKDB_AUTH_KEY_HERE_IF_ANY" \
   -p 28015 \
   -e RETHINKDB_PORT_28015_TCP=tcp://rethinkdb.stf.example.org:28015 \
-  openstf/ambassador:latest
+  devicefarmer/ambassador:latest
 ExecStop=-/usr/bin/docker stop -t 10 %p
 ```
 
@@ -201,7 +202,7 @@ BindsTo=rethinkdb-proxy-28015.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p-%i
 ExecStartPre=-/usr/bin/docker rm %p-%i
 ExecStart=/usr/bin/docker run --rm \
@@ -209,7 +210,7 @@ ExecStart=/usr/bin/docker run --rm \
   --link rethinkdb-proxy-28015:rethinkdb \
   -e "SECRET=YOUR_SESSION_SECRET_HERE" \
   -p %i:3000 \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf app --port 3000 \
     --auth-url https://stf.example.org/auth/mock/ \
     --websocket-url wss://stf.example.org/
@@ -240,14 +241,14 @@ Requires=docker.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p-%i
 ExecStartPre=-/usr/bin/docker rm %p-%i
 ExecStart=/usr/bin/docker run --rm \
   --name %p-%i \
   -e "SECRET=YOUR_SESSION_SECRET_HERE" \
   -p %i:3000 \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf auth-mock --port 3000 \
     --app-url https://stf.example.org/
 ExecStop=-/usr/bin/docker stop -t 10 %p-%i
@@ -273,7 +274,7 @@ Requires=docker.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p-%i
 ExecStartPre=-/usr/bin/docker rm %p-%i
 ExecStart=/usr/bin/docker run --rm \
@@ -287,7 +288,7 @@ ExecStart=/usr/bin/docker run --rm \
   -e "OAUTH_CALLBACK_URL=https://stf.example.org/auth/oauth/callback" \
   -e "OAUTH_SCOPE=openid email" \
   -p %i:3000 \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf auth-oauth2 --port 3000 \
     --app-url https://stf.example.org/
 ExecStop=-/usr/bin/docker stop -t 10 %p-%i
@@ -305,7 +306,7 @@ This is one of the multiple options for authentication provided by STF. It uses 
 
 This is a template unit, meaning that you'll need to start it with an instance identifier. In this example configuration the identifier is used to specify the exposed port number (i.e. `stf-auth@3200.service` runs on port 3200). You can have multiple instances running on the same host by using different ports.
 
-**NOTE:** Don't forget to change the `--auth-url` option in the `stf-app` unit. For SAML 2.0, the value should be `https://stf.example.org/auth/saml/`.
+**NOTE:** Don't forget to change the `--auth-url` option in the `stf-app` unit. For SAML 2.0, the value should be `https://stf.example.org/auth/saml/`. Regarding the Service Provider (SP) Metadata, it can be accessed via the path `/auth/saml/metadata`, so for instance using the URL `https://stf.example.org/auth/saml/metadata`.
 
 ```ini
 [Unit]
@@ -317,7 +318,7 @@ Requires=docker.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p-%i
 ExecStartPre=-/usr/bin/docker rm %p-%i
 ExecStart=/usr/bin/docker run --rm \
@@ -328,7 +329,7 @@ ExecStart=/usr/bin/docker run --rm \
   -e "SAML_ID_PROVIDER_ISSUER=YOUR_ID_PROVIDER_ISSUER" \
   -e "SAML_ID_PROVIDER_CERT_PATH=/etc/id_provider.cert" \
   -p %i:3000 \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf auth-saml2 --port 3000 \
     --app-url https://stf.example.org/
 ExecStop=-/usr/bin/docker stop -t 10 %p-%i
@@ -355,7 +356,7 @@ BindsTo=rethinkdb-proxy-28015.service
 [Service]
 EnvironmentFile=/etc/environment
 Type=oneshot
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
 ExecStart=/usr/bin/docker run --rm \
@@ -364,7 +365,7 @@ ExecStart=/usr/bin/docker run --rm \
   -e "STF_ROOT_GROUP_NAME=YOUR_ROOT_GROUP_NAME_HERE" \
   -e "STF_ADMIN_NAME=YOUR_ADMIN_NAME_HERE" \
   -e "STF_ADMIN_EMAIL=YOUR_ADMIN_EMAIL_HERE" \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf migrate
 ```
 
@@ -386,13 +387,13 @@ BindsTo=rethinkdb-proxy-28015.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p-%i
 ExecStartPre=-/usr/bin/docker rm %p-%i
 ExecStart=/usr/bin/docker run --rm \
   --name %p-%i \
   --link rethinkdb-proxy-28015:rethinkdb \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf processor %p-%i \
     --connect-app-dealer tcp://appside.stf.example.org:7160 \
     --connect-dev-dealer tcp://devside.stf.example.org:7260
@@ -407,13 +408,13 @@ The provider unit connects to ADB and start worker processes for each device. It
 
 The name of the provider shows up in the device list, making it easier to see where the physical devices are located. In this configuration the name is set to the hostname.
 
-Note that the provider needs to be able to manage a certain port range, so `--net host` is required until Docker makes it easier to work with ranges. The ports are used for internal services and the screen capturing WebSocket.
-
 This is a template unit, meaning that you'll need to start it with an instance identifier. In this example configuration the identifier is used to specify the provider ID, which can then be matched against in the [nginx](http://nginx.org/) configuration later on. The ID should be unique and persistent. This is only one way to set things up, you may choose to do things differently if it seems sketchy.
 
 Note that you cannot have more than one provider unit running on the same host, as they would compete over which one gets to control the devices. In the future we might add a negotiation protocol to allow for relatively seamless upgrades.
 
 Furthermore, if you're using a self-signed cert, you may have to add `-e "NODE_TLS_REJECT_UNAUTHORIZED=0"` to the `docker run` command. Don't forget to end the line with `\`.
+
+`--net host` is no longer required since newer Docker versions allow port ranges to be specified.
 
 ```ini
 [Unit]
@@ -425,13 +426,15 @@ BindsTo=adbd.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+RestartSec=3
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p-%i
 ExecStartPre=-/usr/bin/docker rm %p-%i
 ExecStart=/usr/bin/docker run --rm \
   --name %p-%i \
-  --net host \
-  openstf/stf:latest \
+  --link adbd:adbd \
+  -p 15000-25000:15000-25000 \
+  devicefarmer/stf:latest \
   stf provider \
     --name "%H/%i" \
     --connect-sub tcp://devside.stf.example.org:7250 \
@@ -441,7 +444,8 @@ ExecStart=/usr/bin/docker run --rm \
     --min-port=15000 \
     --max-port=25000 \
     --heartbeat-interval 10000 \
-    --screen-ws-url-pattern "wss://stf.example.org/d/%i/<%= serial %>/<%= publicPort %>/"
+    --screen-ws-url-pattern "wss://stf.example.org/d/%i/<%= serial %>/<%= publicPort %>/" \
+    --adb-host adbd
 ExecStop=-/usr/bin/docker stop -t 10 %p-%i
 ```
 
@@ -463,13 +467,13 @@ BindsTo=rethinkdb-proxy-28015.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
 ExecStart=/usr/bin/docker run --rm \
   --name %p \
   --link rethinkdb-proxy-28015:rethinkdb \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf reaper dev \
     --connect-push tcp://devside.stf.example.org:7270 \
     --connect-sub tcp://appside.stf.example.org:7150 \
@@ -495,13 +499,13 @@ Requires=docker.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p-%i
 ExecStartPre=-/usr/bin/docker rm %p-%i
 ExecStart=/usr/bin/docker run --rm \
   --name %p-%i \
   -p %i:3000 \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf storage-plugin-apk --port 3000 \
     --storage-url https://stf.example.org/
 ExecStop=-/usr/bin/docker stop -t 10 %p-%i
@@ -525,13 +529,13 @@ Requires=docker.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p-%i
 ExecStartPre=-/usr/bin/docker rm %p-%i
 ExecStart=/usr/bin/docker run --rm \
   --name %p-%i \
   -p %i:3000 \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf storage-plugin-image --port 3000 \
     --storage-url https://stf.example.org/
 ExecStop=-/usr/bin/docker stop -t 10 %p-%i
@@ -551,7 +555,7 @@ Requires=docker.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p-%i
 ExecStartPre=-/usr/bin/docker rm %p-%i
 ExecStartPre=/bin/mkdir -p /mnt/storage
@@ -560,7 +564,7 @@ ExecStart=/usr/bin/docker run --rm \
   --name %p-%i \
   -v /mnt/storage:/data \
   -p %i:3000 \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf storage-temp --port 3000 \
     --save-dir /data
 ExecStop=-/usr/bin/docker stop -t 10 %p-%i
@@ -584,13 +588,13 @@ Requires=docker.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
 ExecStart=/usr/bin/docker run --rm \
   --name %p \
   --net host \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf triproxy app \
     --bind-pub "tcp://*:7150" \
     --bind-dealer "tcp://*:7160" \
@@ -616,13 +620,13 @@ Requires=docker.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
 ExecStart=/usr/bin/docker run --rm \
   --name %p \
   --net host \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf triproxy dev \
     --bind-pub "tcp://*:7250" \
     --bind-dealer "tcp://*:7260" \
@@ -650,7 +654,7 @@ BindsTo=rethinkdb-proxy-28015.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p-%i
 ExecStartPre=-/usr/bin/docker rm %p-%i
 ExecStart=/usr/bin/docker run --rm \
@@ -658,7 +662,7 @@ ExecStart=/usr/bin/docker run --rm \
   --link rethinkdb-proxy-28015:rethinkdb \
   -e "SECRET=YOUR_SESSION_SECRET_HERE" \
   -p %i:3000 \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf websocket --port 3000 \
     --storage-url https://stf.example.org/ \
     --connect-sub tcp://appside.stf.example.org:7150 \
@@ -684,7 +688,7 @@ BindsTo=rethinkdb-proxy-28015.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p-%i
 ExecStartPre=-/usr/bin/docker rm %p-%i
 ExecStart=/usr/bin/docker run --rm \
@@ -692,7 +696,7 @@ ExecStart=/usr/bin/docker run --rm \
   --link rethinkdb-proxy-28015:rethinkdb \
   -e "SECRET=YOUR_SESSION_SECRET_HERE" \
   -p %i:3000 \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf api --port 3000 \
   --connect-sub tcp://appside.stf.example.org:7150 \
   --connect-push tcp://appside.stf.example.org:7170 \
@@ -727,14 +731,14 @@ BindsTo=rethinkdb-proxy-28015.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
 ExecStart=/usr/bin/docker run --rm \
   --name %p \
   --link rethinkdb-proxy-28015:rethinkdb \
   -e "SECRET=YOUR_SESSION_SECRET_HERE" \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf groups-engine \
   --connect-sub tcp://appside.stf.example.org:7150 \
   --connect-push tcp://appside.stf.example.org:7170 \
@@ -765,13 +769,13 @@ BindsTo=rethinkdb-proxy-28015.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
 ExecStart=/usr/bin/docker run --rm \
   --name %p \
   --link rethinkdb-proxy-28015:rethinkdb \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf log-rethinkdb \
     --connect-sub tcp://appside.stf.example.org:7150
 ExecStop=-/usr/bin/docker stop -t 10 %p
@@ -795,14 +799,14 @@ BindsTo=docker.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
 ExecStart=/usr/bin/docker run --rm \
   --name %p \
   -e "HIPCHAT_TOKEN=YOUR_HIPCHAT_TOKEN_HERE" \
   -e "HIPCHAT_ROOM=YOUR_HIPCHAT_ROOM_HERE" \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf notify-hipchat \
     --connect-sub tcp://appside.stf.example.org:7150
 ExecStop=-/usr/bin/docker stop -t 10 %p
@@ -824,14 +828,14 @@ BindsTo=docker.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p
 ExecStartPre=-/usr/bin/docker rm %p
 ExecStart=/usr/bin/docker run --rm \
   --name %p \
   -e "SLACK_TOKEN=YOUR_SLACK_TOKEN_HERE" \
   -e "SLACK_CHANNEL=YOUR_SLACK_CHANNEL_HERE" \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf notify-slack \
     --connect-sub tcp://appside.stf.example.org:7150
 ExecStop=-/usr/bin/docker stop -t 10 %p
@@ -855,13 +859,13 @@ Requires=docker.service
 EnvironmentFile=/etc/environment
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/docker pull openstf/stf:latest
+ExecStartPre=/usr/bin/docker pull devicefarmer/stf:latest
 ExecStartPre=-/usr/bin/docker kill %p-%i
 ExecStartPre=-/usr/bin/docker rm %p-%i
 ExecStart=/usr/bin/docker run --rm \
   --name %p-%i \
   -p %i:3000 \
-  openstf/stf:latest \
+  devicefarmer/stf:latest \
   stf storage-s3 --port 3000 \
     --bucket YOUR_S3_BUCKET_NAME_HERE \
     --profile YOUR_AWS_CREDENTIALS_PROFILE \

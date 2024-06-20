@@ -277,7 +277,7 @@ module.exports = function DeviceColumnService($filter, gettext, SettingsService,
         return device.bookedBefore ? expireTime : 'Not booked'
     }
   })
-  , sdk: NumberCell({
+  , sdk: TextCell({
       title: gettext('SDK')
     , defaultOrder: 'desc'
     , value: function(device) {
