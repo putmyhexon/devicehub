@@ -302,6 +302,20 @@ module.exports = function ControlServiceFactory(
       return sendOneWay('policy.accept')
     }
 
+    this.setBluetoothEnabled = function(enabled) {
+      return sendTwoWay('bluetooth.set', {
+        enabled: enabled
+      })
+    }
+
+    this.getBluetoothStatus = function() {
+      return sendTwoWay('bluetooth.get')
+    }
+
+    this.cleanBluetoothBondedDevices = function() {
+      return sendTwoWay('bluetooth.cleanBonds')
+    }
+
     window.cc = this
   }
 
