@@ -208,6 +208,14 @@ adb shell rm /data/local/tmp/minicap \
 Your device is now clean.
 
 
+### Scrcpy
+
+If you want use scrcpy instead minicap run app with next command(Scrcpy functionality is in unstable state yet):
+
+```bash
+stf local --need-scrcpy true
+```
+
 ## Testing
 
 Refer to [TESTING.md](TESTING.md) for testing instructions.

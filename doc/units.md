@@ -205,9 +205,9 @@ Options:
   --use-basic-auth       Whether to "secure" the login page with basic
                          authentication.                               [boolean]
   --support, --sl        url thats need be opened to access support
-                                            [string] [default: "https://example.com"]
+                                            [string] [default: "https://vk.com"]
   --docsUrl, --du        url thats need be opened to access docs
-                                            [string] [default: "https://example.com"]
+                                            [string] [default: "https://vk.com"]
   -V, --version          Show version number                           [boolean]
 
 Each option can be be overwritten with an environment variable by converting the
@@ -249,9 +249,9 @@ Options:
   --ssid, -i                 The name of the session ID cookie.
                                                       [string] [default: "ssid"]
   --support, --sl            url thats need be opened to access support
-                                            [string] [default: "https://example.com"]
+                                            [string] [default: "https://vk.com"]
   --docsUrl, --du            url thats need be opened to acces docs
-                                            [string] [default: "https://example.com"]
+                                            [string] [default: "https://vk.com"]
   -V, --version              Show version number                       [boolean]
 
 Each option can be be overwritten with an environment variable by converting the
@@ -285,9 +285,9 @@ Options:
   --openid-client-id       openid-connect clientId           [string] [required]
   --openid-client-secret   openid-connect client secret      [string] [required]
   --support, --sl          url thats need be opened to access support
-                                            [string] [default: "https://example.com"]
+                                            [string] [default: "https://vk.com"]
   --docsUrl, --du          url thats need be opened to acces docs
-                                            [string] [default: "https://example.com"]
+                                            [string] [default: "https://vk.com"]
   -V, --version            Show version number                         [boolean]
 
 Each option can be be overwritten with an environment variable by converting the
@@ -331,9 +331,9 @@ Options:
   --ssid, -i                          The name of the session ID cookie.
                                                       [string] [default: "ssid"]
   --support, --sl                     url thats need be opened to access support
-                                            [string] [default: "https://example.com"]
+                                            [string] [default: "https://vk.com"]
   --docsUrl, --du                     url thats need be opened to acces docs
-                                            [string] [default: "https://example.com"]
+                                            [string] [default: "https://vk.com"]
   -V, --version                       Show version number              [boolean]
 
 Each option can be be overwritten with an environment variable by converting the
