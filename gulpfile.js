@@ -9,7 +9,7 @@ var gutil = require('gulp-util')
 var jsonlint = require('gulp-jsonlint')
 var eslint = require('gulp-eslint')
 var eslintIfFixed = require('gulp-eslint-if-fixed')
-var EslintCLIEngine = require('eslint').CLIEngine
+const {ESLint} = require('eslint')
 var webpack = require('webpack')
 var webpackConfig = require('./webpack.config').webpack
 var webpackStatusConfig = require('./res/common/status/webpack.config')
@@ -19,7 +19,7 @@ var del = require('del')
 // var protractor = require('gulp-protractor')
 var protractor = require('./res/test/e2e/helpers/gulp-protractor-adv')
 var protractorConfig = './res/test/protractor.conf'
-var karma = require('karma').server
+var Karma = require('karma').Server
 var karmaConfig = '/res/test/karma.conf.js'
 var stream = require('stream')
 var run = require('gulp-run')
@@ -33,49 +33,37 @@ gulp.task('jsonlint', function() {
     .pipe(jsonlint.reporter())
 })
 
-// Try to use eslint-cli directly instead of eslint-gulp
-// since it doesn't support cache yet
-gulp.task('eslint', function() {
-  return gulp.src([
-      'lib/**/*.js'
-    , 'res/**/*.js'
-    , '*.js'
-  ])
-    // eslint() attaches the lint output to the "eslint" property
-    // of the file object so it can be used by other modules.
-    .pipe(eslint())
-    // eslint.format() outputs the lint results to the console.
-    // Alternatively use eslint.formatEach() (see Docs).
-    .pipe(eslint.format())
-    // To have the process exit with an error code (1) on
-    // lint error, return the stream and pipe to failAfterError last.
-    .pipe(eslint.failAfterError())
-})
-
 gulp.task('eslint-cli', function(done) {
-  var cli = new EslintCLIEngine({
-    cache: true
-  , fix: false
-  })
+  (async() => {
+    const cli = new ESLint({
+      cache: true
+    , fix: false
+    })
 
-  var report = cli.executeOnFiles([
-    'lib/**/*.js'
-    , 'res/app/**/*.js'
-    , 'res/auth/**/*.js'
-    , 'res/common/**/*.js'
-    , 'res/test/**/*.js'
-    , 'res/web_modules/**/*.js'
-    , '*.js'
-  ])
-  var formatter = cli.getFormatter()
-  console.log(formatter(report.results))
+    const report = await cli.lintFiles([
+      'lib/**/*.js'
+      , 'res/app/**/*.js'
+      , 'res/auth/**/*.js'
+      , 'res/common/**/*.js'
+      , 'res/test/**/*.js'
+      , 'res/web_modules/**/*.js'
+      , '*.js'
+    ])
+    // 3. Modify the files with the fixed code.
+    await ESLint.outputFixes(report)
+    const errors = ESLint.getErrorResults(report)
 
-  if (report.errorCount > 0) {
-    done(new gutil.PluginError('eslint-cli', new Error('ESLint error')))
-  }
-  else {
-    done()
-  }
+    // 4. Format the results.
+    const formatter = await cli.loadFormatter('stylish')
+    const resultText = formatter.format(errors)
+
+    if (errors.length > 0) {
+      done(new gutil.PluginError('eslint-cli', resultText))
+    }
+    else {
+      done()
+    }
+  })()
 })
 
 gulp.task('lint-fix', function() {
@@ -104,16 +92,18 @@ gulp.task('run:checkversion', function() {
 
 
 gulp.task('karma_ci', function(done) {
-  karma.start({
+  const karma = new Karma({
     configFile: path.join(__dirname, karmaConfig)
   , singleRun: true
   }, done)
+  karma.start()
 })
 
 gulp.task('karma', function(done) {
-  karma.start({
+  const karma = new Karma({
     configFile: path.join(__dirname, karmaConfig)
   }, done)
+  karma.start()
 })
 
 if (gutil.env.multi) {

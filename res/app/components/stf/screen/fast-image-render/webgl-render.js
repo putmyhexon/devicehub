@@ -2,8 +2,6 @@
  Based on http://www-cs-students.stanford.edu/~eparker/files/crunch/renderer.js
  */
 
-/*global Float32Array */
-
 /**
  * Constructs a renderer object.
  * @param {WebGLRenderingContext} gl The GL context.
