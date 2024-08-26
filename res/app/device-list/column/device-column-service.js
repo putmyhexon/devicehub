@@ -32,9 +32,8 @@ module.exports = function DeviceColumnService($filter, gettext, SettingsService,
       }
     })
   , group: TextCell({
-        title: gettext('Group Name')
-      , target: '_blank'
-      , value: function(device) {
+      title: gettext('Group Name')
+    , value: function(device) {
         return $filter('translate')(device.group.name)
       }
     })
@@ -81,7 +80,7 @@ module.exports = function DeviceColumnService($filter, gettext, SettingsService,
   , model: DeviceModelCell({
       title: gettext('Model')
     , value: function(device) {
-        return device.model || device.serial
+        return device.name || device.model || device.serial
       }
     })
   , name: DeviceNameCell({
@@ -90,6 +89,12 @@ module.exports = function DeviceColumnService($filter, gettext, SettingsService,
         return device.name || device.model || device.serial
       }
     }, AppState.user.email)
+  , platform: TextCell({
+      title: gettext('Platform')
+    , value: function(device) {
+      return device.platform || ''
+    }
+  })
   , operator: TextCell({
       title: gettext('Carrier')
     , value: function(device) {
@@ -194,7 +199,7 @@ module.exports = function DeviceColumnService($filter, gettext, SettingsService,
         return (device.network.type || '').toUpperCase()
       }
     })
-  , display: TextCell({
+  , display: ScreenCell({
       title: gettext('Screen')
     , defaultOrder: 'desc'
     , value: function(device) {
@@ -271,7 +276,6 @@ module.exports = function DeviceColumnService($filter, gettext, SettingsService,
   , bookedBefore: TextCell({
     title: gettext('Booked before')
     , value: function(device) {
-        console.log(device)
         const startTime = device.statusChangedAt
         const expireTime = new Date(new Date(startTime).getTime() + device.bookedBefore)
         return device.bookedBefore ? expireTime : 'Not booked'
@@ -442,6 +446,30 @@ function TextCell(options) {
         let copyText = target.innerText || target.textContent
         navigator.clipboard.writeText(copyText)
       })
+      return td
+    }
+  , update: function(td, item) {
+      var t = td.firstChild
+      t.nodeValue = options.value(item)
+      return td
+    }
+  , compare: function(a, b) {
+      return compareIgnoreCase(options.value(a), options.value(b))
+    }
+  , filter: function(item, filter) {
+      return filterIgnoreCase(options.value(item), filter.query)
+    }
+  })
+}
+
+function ScreenCell(options) {
+  return _.defaults(options, {
+    title: options.title
+  , defaultOrder: 'asc'
+  , build: function() {
+      var td = document.createElement('td')
+      td.appendChild(document.createTextNode(''))
+      td.id = 'device-screen'
       return td
     }
   , update: function(td, item) {
@@ -727,10 +755,22 @@ function DeviceStatusCell(options) {
         (stateClasses[device.state] || 'btn-default-outline')
 
       if (device.usable && !device.using) {
-        a.href = '#!/c/' + device.serial
+        a.href = '#!/control/' + device.serial
       }
       else {
         a.removeAttribute('href')
+      }
+
+      if (device.status === 6) {
+        a.className = 'btn btn-xs device-status btn-success-outline'
+      }
+
+      if (device.status === 1) {
+        a.className = 'btn btn-xs device-status btn-warning-outline'
+      }
+
+      if (device.status === 7) {
+        a.className = 'btn btn-xs device-status btn-danger-outline'
       }
 
       t.nodeValue = options.value(device)

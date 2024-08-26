@@ -32,25 +32,41 @@ RUN cd /tmp && \
 # Sneak the stf executable into $PATH.
 ENV PATH=/app/bin:$PATH \
     DEBIAN_FRONTEND=noninteractive
+ENV ALLOW_OUTDATED_DEPENDENCIES=1
+# Work in app dir by default.
+WORKDIR /app
 
+# Export default app port, not enough for all processes but it should do
+# for now.
 EXPOSE 3000
 
+# Install app requirements. Trying to optimize push speed for dependant apps
+# by reducing layers as much as possible. Note that one of the final steps
+# installs development files for node-gyp so that npm install won't have to
+# wait for them on the first native module installation.
 RUN   useradd --system \
       --create-home \
       --shell /usr/sbin/nologin \
       stf
 
+ENV NODEJS_REL=v17.9.0
+ENV BUNDLETOOL_REL=1.8.2
+
+# Copy app source.
 COPY . /tmp/build/
 
+# Give permissions to our build user.
 RUN mkdir -p /app && \
     chown -R stf-build:stf-build /tmp/build /tmp/bundletool /app
 
+# Switch over to the build user.
 USER stf-build
 
+# Run the build.
 RUN set -x && \
     cd /tmp/build && \
     export PATH=$PWD/node_modules/.bin:$PATH && \
-    npm install --python="/usr/bin/python3"  --loglevel http && \
+    npm ci --python="/usr/bin/python3"  --loglevel http && \
     npm pack && \
     tar xzf vk-devicehub-*.tgz --strip-components 1 -C /app && \
     npm prune --production && \
@@ -61,6 +77,8 @@ RUN set -x && \
     cd /app && \
     find /tmp -mindepth 1 ! -regex '^/tmp/hsperfdata_root\(/.*\)?' -delete
 
+# Switch to the app user.
 USER stf
 
+# Show help by default.
 CMD stf --help

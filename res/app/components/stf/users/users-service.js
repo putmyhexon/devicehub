@@ -41,11 +41,11 @@ module.exports = function UsersServiceFactory(
   }
 
   UsersService.grantAdmin = function (email) {
-    return $http.get('/api/v1/users/grantAdmin/' + email)
+    return $http.post('/api/v1/users/grantAdmin/' + email)
   }
 
   UsersService.revokeAdmin = function (email) {
-    return $http.get('/api/v1/users/revokeAdmin/' + email)
+    return $http.delete('/api/v1/users/revokeAdmin/' + email)
   }
 
   UsersService.removeUsers = function(filters, emails) {

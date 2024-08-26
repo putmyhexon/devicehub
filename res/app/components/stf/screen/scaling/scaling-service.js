@@ -48,8 +48,10 @@ module.exports = function ScalingServiceFactory() {
      * |--------------|------|---------|---------|---------|
      */
     return {
-      coords: function(boundingW, boundingH, relX, relY, rotation) {
+      coords: function(boundingW, boundingH, relX, relY, rotation, ios) {
         var w, h, x, y, ratio, scaledValue
+
+        let isIosDevice = ios
 
         switch (rotation) {
         case 0:
@@ -63,21 +65,29 @@ module.exports = function ScalingServiceFactory() {
           h = boundingW
           x = boundingH - relY
           y = relX
-          break
-        case 180:
-          w = boundingW
-          h = boundingH
-          x = boundingW - relX
-          y = boundingH - relY
-          break
-        case 270:
-          w = boundingH
-          h = boundingW
-          x = relY
-          y = boundingW - relX
-          break
-        }
 
+          // X and Y are inverted on iOS
+          if (isIosDevice) {
+            w = boundingH
+            h = boundingW
+            x = relY
+            y = relX
+          }
+          break
+          case 180:
+            w = boundingW
+            h = boundingH
+            x = boundingW - relX
+            y = boundingH - relY
+            break
+          case 270:
+            w = boundingH
+            h = boundingW
+            x = relY
+            y = boundingW - relX
+            break
+          }
+ 
         ratio = w / h
 
         if (realRatio > ratio) {
@@ -109,10 +119,8 @@ module.exports = function ScalingServiceFactory() {
         else {
           // covers the area vertically
           scaledValue = h * realRatio
-
           // adjust x to start from the scaled left edge
           x -= (w - scaledValue) / 2
-
           // not touching the screen, but we want to trigger certain events
           // (like touchup) anyway, so let's do it on the edges.
           if (x < 0) {
@@ -131,6 +139,13 @@ module.exports = function ScalingServiceFactory() {
           }
 
           w = scaledValue
+        }
+
+        if (rotation === 90 && isIosDevice) {
+          return {
+            xP: y / h,
+            yP: x / w
+          }
         }
 
         return {

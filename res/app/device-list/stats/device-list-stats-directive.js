@@ -49,7 +49,6 @@ module.exports = function DeviceListStatsDirective(
 
       function addListener(device) {
         var stats = updateStats(device)
-
         scope.counter.total += 1
         scope.counter.usable += stats.usable
         scope.counter.busy += stats.busy
@@ -93,6 +92,8 @@ module.exports = function DeviceListStatsDirective(
       tracker.on('add', addListener)
       tracker.on('change', changeListener)
       tracker.on('remove', removeListener)
+
+      tracker.devices.forEach(changeListener)
 
       scope.$on('$destroy', function() {
         tracker.removeListener('add', addListener)

@@ -3,7 +3,7 @@ stf ios-device \
     --device-name "" \
     --host localhost \
     --screen-port 7409 \
-    --connect-port 9100 \
+    --mjpeg-port  9100 \
     --provider di-smirnov \
     --public-ip localhost \
     --screen-ws-url-pattern "ws://localhost:7409" \

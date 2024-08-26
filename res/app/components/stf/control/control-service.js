@@ -16,7 +16,12 @@ module.exports = function ControlServiceFactory(
 
     function sendTwoWay(action, data) {
       var tx = TransactionService.create(target)
-      socket.emit(action, channel, tx.channel, data)
+      if(target.ios && target.ios === true) {
+        socket.emit(action + 'Ios', channel, tx.channel, data)
+      } else {
+        socket.emit(action, channel, tx.channel, data)
+      }
+
       return tx.promise
     }
 
@@ -57,6 +62,44 @@ module.exports = function ControlServiceFactory(
       , x: x
       , y: y
       , pressure: pressure
+      })
+    }
+
+    this.tapDeviceTreeElement = function(label) {
+      sendOneWay('tapDeviceTreeElement', {
+        label: label
+      })
+    }
+
+    this.touchDownIos = function(seq, contact, x, y, pressure) {
+      sendOneWay('input.touchDownIos', {
+        seq: seq
+        , contact: contact
+        , x: x
+        , y: y
+        , pressure: pressure
+      })
+    }
+
+    this.touchMoveIos = function(x, y, pX, pY, pressure, contact, seq) {
+      sendOneWay('input.touchMoveIos', {
+        seq: seq
+        , contact: contact
+        , toX: x
+        , toY: y
+        , fromX: pX
+        , fromY: pY
+        , pressure: pressure
+      })
+    }
+
+    this.touchMoveIos2 = function(seq, contact, x, y, pressure) {
+      sendOneWay('input.touchMoveIos', {
+        seq: seq
+        , contact: contact
+        , x: x
+        , y: y
+        , pressure: pressure
       })
     }
 
@@ -147,6 +190,14 @@ module.exports = function ControlServiceFactory(
       return sendTwoWay('device.install', options)
     }
 
+    this.installIos = function(options) {
+      return sendTwoWay('deviceIos.install', options)
+    }
+
+    this.getTreeElements = function() {
+      return sendTwoWay('getTreeElements')
+    }
+
     this.uninstall = function(pkg) {
       return sendTwoWay('device.uninstall', {
         packageName: pkg
@@ -219,12 +270,16 @@ module.exports = function ControlServiceFactory(
 
     this.clearBrowser = function(browser) {
       return sendTwoWay('browser.clear', {
-        browser: browser.id
+        browser: browser ? browser.id : null
       })
     }
 
     this.openStore = function() {
       return sendTwoWay('store.open')
+    }
+
+    this.openSettings = function() {
+      return sendOneWay('settings.open')
     }
 
     this.screenshot = function() {

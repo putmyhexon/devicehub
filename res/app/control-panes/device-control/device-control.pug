@@ -5,18 +5,18 @@
         .stf-vnc-control-header.as-cell
           .stf-vnc-right-buttons.pull-right
             .btn-group
-              label.btn-sm.btn-primary-outline(type='button', ng-click='tryToRotate("portrait")',
+              label.btn-sm.btn-primary-outline(type='button', ng-click='tryToRotate("portrait")', ng-hide='device.platform === "tvOS"',
               ng-model='currentRotation', uib-btn-radio='"portrait"',
               uib-tooltip='{{ "Portrait" | translate }} ({{ "Current rotation:" | translate }} {{ device.display.rotation }}°)', tooltip-placement='bottom').pointer
                 i.fa.fa-mobile
-              label.btn-sm.btn-primary-outline(type='button', ng-click='tryToRotate("landscape")',
+              label.btn-sm.btn-primary-outline(type='button', ng-click='tryToRotate("landscape")', ng-hide='device.platform === "tvOS"',
                 ng-model='currentRotation', uib-btn-radio='"landscape"',
               uib-tooltip='{{ "Landscape" | translate }} ({{ "Current rotation:" | translate }} {{ device.display.rotation }}°)', tooltip-placement='bottom').pointer
                 i.fa.fa-mobile.fa-rotate-90
             .button-spacer
-            button(type='button', ng-click='changeQuality(20)', uib-tooltip='{{"Change to low quality"|translate}}', tooltip-placement='bottom').btn.btn-sm.btn-info
+            button(type='button', ng-hide='device.ios', ng-click='changeQuality(20)', uib-tooltip='{{"Change to low quality"|translate}}', tooltip-placement='bottom').btn.btn-sm.btn-info
               i.fa.fa-minus-square-o
-            button(type='button', ng-click='changeQuality(80)', uib-tooltip='{{"Change to high quality"|translate}}', tooltip-placement='bottom').btn.btn-sm.btn-info
+            button(type='button', ng-hide='device.ios', ng-click='changeQuality(80)', uib-tooltip='{{"Change to high quality"|translate}}', tooltip-placement='bottom').btn.btn-sm.btn-info
               i.fa.fa-plus-square-o
             button(type='button', ng-click='kickDevice(device); $event.stopPropagation()', uib-tooltip='{{"Stop Using"|translate}}', tooltip-placement='bottom').btn.btn-sm.btn-danger-outline
               i.fa.fa-times
@@ -37,12 +37,15 @@
 
       .stf-vnc-bottom.as-row(ng-hide='$root.standalone')
         .controls.as-cell
-          .btn-group.btn-group-justified
-            a(device-control-key='back', title='{{"Back"|translate}}').btn.btn-primary.btn-lg.no-transition
-              i.fa.fa-mail-reply
+          .btn-group.btn-group-justified(ng-if='!device.ios')
+            a(device-control-key='menu', title='{{"Menu"|translate}}').btn.btn-primary.btn-lg.no-transition
+              i.fa.fa-bars
             a(device-control-key='home', title='{{"Home"|translate}}').btn.btn-primary.btn-lg.no-transition
               i.fa.fa-home
             a(device-control-key='app_switch', title='{{"App switch"|translate}}').btn.btn-primary.btn-lg.no-transition
               i.fa.fa-square-o
-            a(device-control-key='menu', title='{{"Menu"|translate}}').btn.btn-primary.btn-lg.no-transition
+            a(device-control-key='back', title='{{"Back"|translate}}').btn.btn-primary.btn-lg.no-transition
+              i.fa.fa-mail-reply
+          .btn-group.btn-group-justified(ng-if='device.ios')
+            a(device-control-key='home', title='{{"Home"|translate}}', ng-click="goHome()").btn.btn-primary.btn-lg.no-transition
               i.fa.fa-bars

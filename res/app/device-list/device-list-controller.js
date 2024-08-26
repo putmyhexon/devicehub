@@ -15,6 +15,7 @@ module.exports = function DeviceListCtrl(
 , SettingsService
 , $location
 , GenericModalService
+, $route
 ) {
   $scope.tracker = DeviceService.trackAll($scope)
   $scope.control = ControlService.create($scope.tracker.devices, '*ALL')
@@ -34,7 +35,11 @@ module.exports = function DeviceListCtrl(
       name: 'name'
       , selected: true
     }
-    , {
+  , {
+      name: 'platform'
+    , selected: false
+    }
+  , {
       name: 'serial'
       , selected: false
     }
@@ -194,11 +199,11 @@ module.exports = function DeviceListCtrl(
   let defaultSort = {
     fixed: [
       {
-        name: 'state'
-        , order: 'asc'
+        name: 'default'
+        , order: 'none'
       }
-    ]
-    , user: [
+    ],
+    user: [
       {
         name: 'name'
         , order: 'asc'
@@ -240,6 +245,12 @@ module.exports = function DeviceListCtrl(
   }
 
   $scope.applyFilter = function(query) {
+    if (!query) {
+      localStorage.removeItem('deviceFilters')
+      localStorage.setItem('deviceFilters', JSON.stringify([]))
+      $scope.filter = []
+      $route.reload()
+    }
     $scope.filter = QueryParser.parse(query)
   }
 
@@ -259,6 +270,8 @@ module.exports = function DeviceListCtrl(
     $scope.filter = []
     $scope.sort = defaultSort
     $scope.columns = defaultColumns
+    localStorage.removeItem('deviceFilters')
+    localStorage.setItem('deviceFilters', JSON.stringify([]))
   }
 
   let params = (new URL(document.location)).searchParams
@@ -281,6 +294,14 @@ module.exports = function DeviceListCtrl(
       .catch((e) => {
         location.reload()
       })
+  }
+
+  let deviceFilters = JSON.parse(localStorage.getItem('deviceFilters')) || []
+
+  let filter = deviceFilters[0]
+
+  if (filter) {
+    $scope.search.deviceFilter = `${filter.field ? filter.field : ''}: ${filter.query ? filter.query : ''}`
   }
 
 }

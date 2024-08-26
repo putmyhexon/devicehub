@@ -4,7 +4,10 @@ module.exports = function InstallCtrl(
 ) {
   $scope.accordionOpen = true
   $scope.installation = null
-
+  $scope.bundleId = ''
+  $scope.onChange = function() {
+    $scope.bundleId = this.bundleId
+  }
   $scope.clear = function() {
     $scope.installation = null
     $scope.accordionOpen = false
@@ -19,9 +22,7 @@ module.exports = function InstallCtrl(
   }
 
   $scope.installFile = function($files) {
-    if ($files.length) {
       return InstallService.installFile($scope.control, $files)
-    }
   }
 
   $scope.uninstall = function(packageName) {
