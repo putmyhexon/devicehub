@@ -61,6 +61,12 @@ module.exports = function InstallService(
     this.emit('change')
   }
 
+  installService.validationError = function(err) {
+    var installation = new Installation('downloading')
+    $rootScope.$broadcast('installation', installation)
+    installation.fail(err)
+  }
+
   installService.installUrl = function(control, url) {
     var installation = new Installation('downloading')
     $rootScope.$broadcast('installation', installation)

@@ -12,7 +12,7 @@ module.exports = angular.module('control-panes', [
   require('./logs').name,
   //require('./resources').name,
   require('./explorer').name,
-  require('./info').name
+  require('./info').name,
 ])
   .factory('ControlPanesService', require('./control-panes-service'))
   .config(['$routeProvider', function($routeProvider) {

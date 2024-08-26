@@ -8,26 +8,26 @@
       div.special-keys-buttons
         button(uib-tooltip='{{ "Power" | translate }}', ng-click='press("power")').btn.btn-danger.btn-xs
           i.fa.fa-power-off
-        button(uib-tooltip='{{ "Unlock device" | translate }}', ng-click='unlockDevice()').btn.btn-primary.btn-xs
+        button(uib-tooltip='{{ "Unlock device" | translate }}', ng-click='unlockDevice()', ng-if='!device.ios').btn.btn-primary.btn-xs
           i.fa.fa-unlock
         button(uib-tooltip='{{ "Camera" | translate }}', ng-click='press("camera")').btn.btn-primary.btn-xs
           i.fa.fa-camera
-        button(uib-tooltip='{{ "Switch Charset" | translate }}', ng-click='press("switch_charset")').btn.btn-primary.btn-info.btn-xs
+        button(uib-tooltip='{{ "Switch Charset" | translate }}', ng-click='press("switch_charset")' ng-disabled='device.platform === "tvOS"').btn.btn-primary.btn-info.btn-xs
           i.fa  Aa
         button(uib-tooltip='{{ "Search" | translate }}', ng-click='press("search")').btn.btn-primary.btn-xs
           i.fa.fa-search
 
         h6(translate) Volume
         .btn-group
-          button(uib-tooltip='{{ "Mute" | translate }}', ng-click='press("mute")').btn.btn-primary.btn-xs
+          button(uib-tooltip='{{ "Mute" | translate }}' id='muteButton').btn.btn-primary.btn-xs
             i.fa.fa-volume-off
           button(uib-tooltip='{{ "Volume Down" | translate }}', ng-click='press("volume_down")').btn.btn-primary.btn-xs
             i.fa.fa-volume-down
           button(uib-tooltip='{{ "Volume Up" | translate }}', ng-click='press("volume_up")').btn.btn-primary.btn-xs
             i.fa.fa-volume-up
 
-        h6(translate) Special actions
-        div.special-keys-buttons
+        h6(translate, ng-if='!device.ios') Special actions
+        div.special-keys-buttons(ng-if='!device.ios')
           button(uib-tooltip='{{ "Set Light Theme" | translate }}', ng-click='setLightTheme()').btn.btn-primary.btn-xs
             i.fa.fa-sun-o
           button(uib-tooltip='{{ "Set Dark Theme" | translate }}', ng-click='setDarkTheme()').btn.btn-primary.btn-xs
@@ -44,8 +44,8 @@
           button(uib-tooltip='{{ "Change language" | translate }}', ng-click='openLanguageChange()').btn.btn-primary.btn-xs
             i.fa.fa-language
 
-        h6(translate) Font size
-          div.special-keys-buttons
+        h6(translate, ng-if='!device.ios') Font size
+          div.special-keys-buttons(ng-if='!device.ios')
             button(uib-tooltip='{{ "Small" | translate }}', ng-click='fontChange(0.85)').btn.btn-primary.btn-xs
               i.fa ᵃ
             button(uib-tooltip='{{ "Normal" | translate }}', ng-click='fontChange(1.0)').btn.btn-primary.btn-xs
@@ -53,17 +53,17 @@
             button(uib-tooltip='{{ "Big" | translate }}', ng-click='fontChange(1.3)').btn.btn-primary.btn-xs
               i.fa A
 
-        h6(translate) Media
-        .btn-group
-          button(uib-tooltip='{{ "Rewind" | translate }}', ng-click='press("media_rewind")').btn.btn-primary.btn-xs
+        h6(translate, ng-if='!device.ios') Media
+        .btn-group(ng-if='!device.ios')
+          button(uib-tooltip='{{ "Rewind" | translate }}', ng-click='press("media_rewind")', ng-disabled='device.ios').btn.btn-primary.btn-xs
             i.fa.fa-fast-backward
-          button(uib-tooltip='{{ "Previous" | translate }}', ng-click='press("media_previous")').btn.btn-primary.btn-xs
+          button(uib-tooltip='{{ "Previous" | translate }}', ng-click='press("media_previous")', ng-disabled='device.ios').btn.btn-primary.btn-xs
             i.fa.fa-step-backward
-          button(uib-tooltip='{{ "Play/Pause" | translate }}', ng-click='press("media_play_pause")').btn.btn-primary.btn-xs
+          button(uib-tooltip='{{ "Play/Pause" | translate }}', ng-click='press("media_play_pause")', ng-disabled='device.ios').btn.btn-primary.btn-xs
             i.fa.fa-youtube-play
-          button(uib-tooltip='{{ "Stop" | translate }}', ng-click='press("media_stop")').btn.btn-primary.btn-xs
+          button(uib-tooltip='{{ "Stop" | translate }}', ng-click='press("media_stop")', ng-disabled='device.ios').btn.btn-primary.btn-xs
             i.fa.fa-stop
-          button(uib-tooltip='{{ "Next" | translate }}', ng-click='press("media_next")').btn.btn-primary.btn-xs
+          button(uib-tooltip='{{ "Next" | translate }}', ng-click='press("media_next")', ng-disabled='device.ios').btn.btn-primary.btn-xs
             i.fa.fa-step-forward
-          button(uib-tooltip='{{ "Fast Forward" | translate }}', ng-click='press("media_fast_forward")').btn.btn-primary.btn-xs
+          button(uib-tooltip='{{ "Fast Forward" | translate }}', ng-click='press("media_fast_forward")', ng-disabled='device.ios').btn.btn-primary.btn-xs
             i.fa.fa-fast-forward

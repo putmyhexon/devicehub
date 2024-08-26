@@ -108,17 +108,6 @@ module.exports = function DeviceServiceFactory($http, socket, EnhanceDeviceServi
       }
     }.bind(this)
 
-    function fetch(data) {
-      deviceService.load(data.serial)
-        .then(function(device) {
-          return changeListener({
-            important: true
-          , data: device
-          })
-        })
-        .catch(function() {})
-    }
-
     function addListener(event) {
       var device = get(event.data)
       if (device) {
@@ -142,17 +131,6 @@ module.exports = function DeviceServiceFactory($http, socket, EnhanceDeviceServi
         }
         notify(event)
       }
-
-      /** code removed to avoid to show forbidden devices in user view!
-      else {
-        if (options.filter(event.data)) {
-          insert(event.data)
-          // We've only got partial data
-          fetch(event.data)
-          notify(event)
-        }
-      }
-      **/
     }
 
     scopedSocket.on('device.add', addListener)
@@ -215,7 +193,6 @@ module.exports = function DeviceServiceFactory($http, socket, EnhanceDeviceServi
       }
     , digest: false
     })
-
     oboe(CommonService.getBaseUrl() + '/api/v1/devices')
       .node('devices[*]', function(device) {
         tracker.add(device)
@@ -255,16 +232,14 @@ module.exports = function DeviceServiceFactory($http, socket, EnhanceDeviceServi
       })
   }
 
-  deviceService.get = function(serial, $scope) {
-    var tracker = new Tracker($scope, {
-      filter: function(device) {
-        return device.serial === serial
-      }
-    , digest: true
+  deviceService.get = (serial, $scope) => {
+    const tracker = new Tracker($scope, {
+      filter: (device) => device.serial === serial,
+      digest: true,
     })
 
     return deviceService.load(serial)
-      .then(function(device) {
+      .then((device) => {
         tracker.add(device)
         return device
       })

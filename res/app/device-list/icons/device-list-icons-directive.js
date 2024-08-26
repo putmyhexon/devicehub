@@ -86,16 +86,29 @@ module.exports = function DeviceListIconsDirective(
         }
 
         if (device.usable && !device.using) {
-          a.href = '#!/control/' + device.serial
+          a.href = 'stf#!/control/' + device.serial
           li.classList.remove('device-is-busy')
         }
         else if (device.using && device.usable) {
-          a.href = '#!/control/' + device.serial
+          a.href = 'stf#!/control/' + device.serial
         }
         else {
           a.removeAttribute('href')
           li.classList.add('device-is-busy')
         }
+
+        if (device.status === 6) {
+          button.className = ('btn btn-xs device-status btn-success-outline')
+        }
+
+        if (device.status === 1) {
+          button.className = ('btn btn-xs device-status btn-warning-outline')
+        }
+
+        if (device.status === 7) {
+          button.className = ('btn btn-xs device-status btn-danger-outline')
+        }
+
         return li
       }
     }
@@ -195,12 +208,6 @@ module.exports = function DeviceListIconsDirective(
         , desc: 'asc'
         }
 
-        var fixedMatch = findInSorting(scope.sort.fixed)
-        if (fixedMatch) {
-          fixedMatch.order = swap[fixedMatch.order]
-          return
-        }
-
         var userMatch = findInSorting(scope.sort.user)
         if (userMatch) {
           userMatch.order = swap[userMatch.order]
@@ -273,8 +280,45 @@ module.exports = function DeviceListIconsDirective(
 
       // Updates filters on visible items.
       function updateFilters(filters) {
-        activeFilters = filters
-        return filterAll()
+        let deviceFilters = JSON.parse(localStorage.getItem('deviceFilters'))
+
+        // Use input filters
+        if (!deviceFilters[0]) {
+          activeFilters = filters
+          storeFilters(filters)
+          return filterAll()
+        }
+
+        // Use saved filters
+        if (deviceFilters[0] && !filters[0]) {
+          activeFilters = deviceFilters
+          return filterAll()
+        }
+
+        if (!deviceFilters[0] && !filters[0]) {
+          activeFilters = filters
+          return filterAll()
+        }
+
+        // Check if saved filter is the same as the current filter
+        if (deviceFilters[0] && filters[0] && deviceFilters[0].field === filters[0].field && deviceFilters[0].query === filters[0].query) {
+          activeFilters = deviceFilters
+          return filterAll()
+        }
+
+        // Check if they are different
+        if (deviceFilters[0] && filters[0] && (deviceFilters[0].field !== filters[0].field || deviceFilters[0].query !== filters[0].query)) {
+          activeFilters = filters
+          storeFilters(filters)
+          filterAll()
+        }
+
+      }
+
+      // Saves and updates filters on LocalStorage.
+      function storeFilters(filters) {
+        localStorage.removeItem('deviceFilters')
+        localStorage.setItem('deviceFilters', JSON.stringify(filters))
       }
 
       // Applies filteItem() to all items.
@@ -355,6 +399,12 @@ module.exports = function DeviceListIconsDirective(
           // Find the first difference
           for (var i = 0, l = activeSorting.length; i < l; ++i) {
             var sort = activeSorting[i]
+
+            if (sort.name === 'default') {
+              diff = 0
+              break
+            }
+
             diff = scope.columnDefinitions[sort.name].compare(deviceA, deviceB)
             if (diff !== 0) {
               diff *= mapping[sort.order]

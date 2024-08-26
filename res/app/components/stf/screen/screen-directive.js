@@ -1,67 +1,281 @@
-let _ = require('lodash')
-let rotator = require('./rotator')
-let ImagePool = require('./imagepool')
+const _ = require('lodash') // TODO: import debounce only
+const rotator = require('./rotator')
+const ImagePool = require('./imagepool')
+const Promise = require('bluebird')
+
 module.exports = function DeviceScreenDirective(
-  $document
-, ScalingService
-, VendorUtil
-, PageVisibilityService
-, $timeout
-, $window
+  $document,
+  $rootScope,
+  $route,
+  $timeout,
+  $window,
+  $uibModalStack,
+  GroupService,
+  PageVisibilityService,
+  ScalingService,
+  ScreenLoaderService,
+  TemporarilyUnavailableService,
+  VendorUtil,
 ) {
   return {
-    restrict: 'E'
-  , template: require('./screen.pug')
-  , scope: {
-      control: '&'
-    , device: '&'
-    }
-  , link: function(scope, element) {
-      let URL = window.URL || window.webkitURL
-      let BLANK_IMG =
-        'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
-      let cssTransform = VendorUtil.style(['transform', 'webkitTransform'])
+    restrict: 'E',
+    template: require('./screen.pug'),
+    scope: {
+      control: '<',
+      device: '=',
+    },
+    link: function($scope, $element) {
+      // eslint-disable-next-line prefer-destructuring
 
-      let device = scope.device()
-      let control = scope.control()
+      let attempts = parseInt(localStorage.getItem(`attempts-${$scope.device.serial}`)) || 0
 
-      let input = element.find('input')
-
-      let inputDebounceTime = (function() {
-        let ram = parseInt(device.ram, 10)
-        switch(true) {
-          case ram <= 2 * 1024 * 1024 && ram > 0:
-            return 200
-          case ram >= 2 * 1024 * 1024 && ram <= 6 * 1024 * 1024:
-            return 175
-          default:
-            return 150
-        }
-      })()
-
-      let screen = scope.screen = {
-        rotation: 0
-      , bounds: {
-          x: 0
-        , y: 0
-        , w: 0
-        , h: 0
-        }
+      if ($scope.device.ios && $scope.device.present && (!$scope.device.display.width || !$scope.device.display.height) && attempts < 3) {
+        attempts++
+        localStorage.setItem(`attempts-${$scope.device.serial}`, attempts)
+        return Promise.delay(1000).then(() => $route.reload())
       }
 
-      let scaler = ScalingService.coordinator(
-        device.display.width
-      , device.display.height
-      )
+      localStorage.removeItem(`attempts-${$scope.device.serial}`)
 
-      let scroll = 0
+      const element = $element[0]
+      const URL = window.URL || window.webkitURL
+      const BLANK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+      const cssTransform = VendorUtil.style(['transform', 'webkitTransform'])
+      const input = element.querySelector('.screen__input')
+      const screen = {
+        rotation: 0,
+        bounds: {
+          x: 0,
+          y: 0,
+          w: 0,
+          h: 0,
+        },
+      }
+      const cachedScreen = {
+        rotation: 0,
+        bounds: {
+          x: 0,
+          y: 0,
+          w: 0,
+          h: 0,
+        },
+      }
+      const scaler = ScalingService.coordinator(
+        $scope.device.display.width,
+        $scope.device.display.height
+      )
+      let cachedImageWidth = 0
+      let cachedImageHeight = 0
+      let cssRotation = 0
+      let alwaysUpright = false
+      const imagePool = new ImagePool(10)
+      let canvasAspect = 1
+      let parentAspect = 1
+      const wsReconnectionInterval = 5000 // 5s
+      const wsReconnectionMaxAttempts = 3 // 5s * 3 -> 15s total delay
+      let wsReconnectionAttempt = 0
+      let wsReconnectionTimeoutID = null
+      let wsReconnecting = false
+      let tempUnavailableModalInstance = null
+
+      $scope.screen = screen
+      ScreenLoaderService.show()
+      handleScreen()
+      handleKeyboard()
+      handleTouch()
+
+      function closeTempUnavailableModal() {
+        if (tempUnavailableModalInstance) {
+          tempUnavailableModalInstance.dismiss(true)
+          tempUnavailableModalInstance = null
+        } else {
+          const modalInstance = $uibModalStack.getTop()
+
+          if (modalInstance && modalInstance.value.openedClass === '_temporarily-unavailable-modal') {
+            modalInstance.key.dismiss(true)
+          }
+        }
+      }
 
       /**
        * SCREEN HANDLING
        *
        * This section should deal with updating the screen ONLY.
        */
-      ;(function() {
+      function handleScreen() {
+        let ws, adjustedBoundSize
+        const canvas = element.querySelector('.screen__canvas')
+        const g = canvas.getContext('2d')
+        // const positioner = element.querySelector('div.positioner')
+        const devicePixelRatio = window.devicePixelRatio || 1
+        const backingStoreRatio = vendorBackingStorePixelRatio(g)
+        const frontBackRatio = devicePixelRatio / backingStoreRatio
+        const options = {
+          autoScaleForRetina: true,
+          density: Math.max(1, Math.min(1.5, devicePixelRatio || 1)),
+          minscale: 0.36,
+        }
+        let cachedEnabled = false
+
+        connectWS()
+        addListeners()
+        resizeListener()
+
+        $scope.retryLoadingScreen = function() {
+          if ($scope.displayError === 'secure') {
+            $scope.control.home()
+          }
+        }
+
+        function addListeners() {
+          const deviceUsingUnwatch = $scope.$watch('device.using', checkEnabled)
+          // TODO: for now control-panes controller will reload the state to handle this case
+          // const deviceStateUnwatch = $scope.$watch('device.state', (newValue, oldValue) => {
+          //   // Try to reconnect after status changed
+          //   if (newValue !== oldValue && newValue === 'available') {
+          //     reconnectWS()
+          //   }
+          // })
+          const showScreenUnwatch = $scope.$watch('$parent.showScreen', checkEnabled)
+          const visibilitychangeUnwatch = $scope.$on('visibilitychange', checkEnabled)
+          const debouncedPaneResizeUnwatch = $scope.$on('fa-pane-resize', _.debounce(updateBounds, 1000))
+          const paneResizeUnwatch = $scope.$on('fa-pane-resize', resizeListener)
+          const guestPortraitUnwatch = $scope.$on('guest-portrait', () => $scope.control.rotate(0))
+          const guestLandscapeUnwatch = $scope.$on('guest-landscape', () => $scope.control.rotate(90))
+
+          $window.addEventListener('resize', resizeListener, false)
+          // remove all listeners
+          $scope.$on('$destroy', () => {
+            if (wsReconnectionTimeoutID) {
+              $timeout.cancel(wsReconnectionTimeoutID)
+            }
+            deviceUsingUnwatch()
+            // deviceStateUnwatch()
+            showScreenUnwatch()
+            visibilitychangeUnwatch()
+            debouncedPaneResizeUnwatch()
+            paneResizeUnwatch()
+            guestPortraitUnwatch()
+            guestLandscapeUnwatch()
+            stop()
+            $window.removeEventListener('resize', resizeListener, false)
+          })
+        }
+
+        function connectWS() {
+          ws = new WebSocket($scope.device.display.url)
+
+          ws.binaryType = 'blob'
+          ws.onerror = errorListener
+          ws.onclose = closeListener
+          ws.onopen = openListener
+          ws.onmessage = messageListener
+        }
+
+        function reconnectWS() {
+          // no need reconnect by WS status (OPEN - no need, CONNECTING - "onclose" will fire reconnection)
+          if (ws && (ws.readyState === WebSocket.CONNECTING || ws.readyState === WebSocket.OPEN)) {
+            return
+          }
+          // no need reconnect if it is already in progress
+          if (wsReconnecting || wsReconnectionTimeoutID) {
+            return
+          }
+
+          wsReconnecting = true
+          wsReconnectionAttempt += 1
+          stop()
+          connectWS()
+        }
+
+        function errorListener() {
+          // handle if need
+          // console.log('DeviceScreen::WS connection error')
+        }
+
+        function closeListener() {
+          wsReconnecting = false
+          ScreenLoaderService.show()
+
+          if (wsReconnectionAttempt < wsReconnectionMaxAttempts) {
+            wsReconnectionTimeoutID = $timeout(() => {
+              wsReconnectionTimeoutID = null
+              reconnectWS()
+            }, wsReconnectionInterval)
+          } else if (!tempUnavailableModalInstance) {
+            tempUnavailableModalInstance = TemporarilyUnavailableService
+              .open('Service is currently unavailable! Try your attempt later.')
+          }
+        }
+
+        function openListener() {
+          closeTempUnavailableModal()
+          checkEnabled()
+
+          if (wsReconnecting) {
+            wsReconnecting = false
+            wsReconnectionAttempt = 0
+          }
+        }
+
+        function messageListener(message) {
+          screen.rotation = $scope.device.display.rotation
+
+          if (message.data instanceof Blob) {
+            if (shouldUpdateScreen()) {
+              if ($scope.displayError) {
+                $scope.$apply(() => {
+                  $scope.displayError = false
+                })
+              }
+              if (ScreenLoaderService.isVisible) {
+                ScreenLoaderService.hide()
+              }
+
+              let blob = new Blob([message.data], {type: 'image/jpeg'})
+              let img = imagePool.next()
+              let url = URL.createObjectURL(blob)
+              const cleanData = () => {
+                img.onload = img.onerror = null
+                img.src = BLANK_IMG
+                img = null
+                blob = null
+                URL.revokeObjectURL(url)
+                url = null
+              }
+
+              img.onload = function() {
+                updateImageArea(this)
+                g.drawImage(img, 0, 0, img.width, img.height)
+
+                // Try to forcefully clean everything to get rid of memory
+                // leaks. Note that despite this effort, Chrome will still
+                // leak huge amounts of memory when the developer tools are
+                // open, probably to save the resources for inspection. When
+                // the developer tools are closed no memory is leaked.
+                cleanData()
+              }
+
+              img.onerror = function() {
+                // Happily ignore. I suppose this shouldn't happen, but
+                // sometimes it does, presumably when we're loading images
+                // too quickly.
+
+                // Do the same cleanup here as in onload.
+                cleanData()
+              }
+
+              img.src = url
+            }
+          } else if (/^start /.test(message.data)) {
+            applyQuirks(JSON.parse(message.data.substr('start '.length)))
+          } else if (message.data === 'secure_on') {
+            $scope.$apply(() => {
+              $scope.displayError = 'secure'
+            })
+          }
+        }
+
         function stop() {
           try {
             ws.onerror = ws.onclose = ws.onmessage = ws.onopen = null
@@ -71,125 +285,99 @@ module.exports = function DeviceScreenDirective(
           catch (err) { /* noop */ }
         }
 
-        let ws = new WebSocket(device.display.url)
-        ws.binaryType = 'blob'
-
-        ws.onerror = function errorListener() {
-          ws = new WebSocket(device.display.url)
-        }
-
-        ws.onclose = function closeListener() {
-          ws = new WebSocket(device.display.url)
-        }
-
-        ws.onopen = function openListener() {
-          checkEnabled()
-        }
-
-        let canvas = element.find('canvas')[0]
-        let g = canvas.getContext('2d')
-        let positioner = element.find('div')[0]
-
         function vendorBackingStorePixelRatio(g) {
-          return g.webkitBackingStorePixelRatio ||
-            g.mozBackingStorePixelRatio ||
-            g.msBackingStorePixelRatio ||
-            g.oBackingStorePixelRatio ||
-            g.backingStorePixelRatio || 1
+          return g.webkitBackingStorePixelRatio
+            || g.mozBackingStorePixelRatio
+            || g.msBackingStorePixelRatio
+            || g.oBackingStorePixelRatio
+            || g.backingStorePixelRatio
+            || 1
         }
-
-        let devicePixelRatio = window.devicePixelRatio || 1
-        let backingStoreRatio = vendorBackingStorePixelRatio(g)
-        let frontBackRatio = devicePixelRatio / backingStoreRatio
-
-        let options = {
-          autoScaleForRetina: true
-        , density: Math.max(1, Math.min(1.5, devicePixelRatio || 1))
-        , minscale: 0.36
-        }
-
-        let adjustedBoundSize
-        let cachedEnabled = false
 
         function updateBounds() {
-          function adjustBoundedSize(w, h) {
-            let sw = w * options.density
-            let sh = h * options.density
-            let f
-
-            if (sw < (f = device.display.width * options.minscale)) {
-              sw *= f / sw
-              sh *= f / sh
-            }
-
-            if (sh < (f = device.display.height * options.minscale)) {
-              sw *= f / sw
-              sh *= f / sh
-            }
-
-            return {
-              w: Math.ceil(sw)
-            , h: Math.ceil(sh)
-            }
-          }
-
-          // FIXME: element is an object HTMLUnknownElement in IE9
-          let w = screen.bounds.w = element[0].offsetWidth
-          let h = screen.bounds.h = element[0].offsetHeight
-
           // Developer error, let's try to reduce debug time
-          if (!w || !h) {
-            throw new Error(
-              'Unable to read bounds; container must have dimensions'
-            )
+          if (!element.offsetWidth || !element.offsetHeight) {
+            throw new Error('Unable to read bounds; container must have dimensions')
           }
 
-          let newAdjustedBoundSize = (function() {
-            switch (screen.rotation) {
+          const w = element.offsetWidth
+          const h = element.offsetHeight
+          let newAdjustedBoundSize
+
+          screen.bounds.w = w
+          screen.bounds.h = h
+          newAdjustedBoundSize = getNewAdjustedBoundSize(w, h)
+
+          if (!adjustedBoundSize
+            || newAdjustedBoundSize.w !== adjustedBoundSize.w
+            || newAdjustedBoundSize.h !== adjustedBoundSize.h) {
+            adjustedBoundSize = newAdjustedBoundSize
+            onScreenInterestAreaChanged()
+          }
+        }
+
+        function getNewAdjustedBoundSize(w, h) {
+          switch (screen.rotation) {
             case 90:
             case 270:
               return adjustBoundedSize(h, w)
             case 0:
             case 180:
-              /* falls through */
+            /* falls through */
             default:
               return adjustBoundedSize(w, h)
-            }
-          })()
+          }
+        }
 
-          if (!adjustedBoundSize ||
-            newAdjustedBoundSize.w !== adjustedBoundSize.w ||
-            newAdjustedBoundSize.h !== adjustedBoundSize.h) {
-            adjustedBoundSize = newAdjustedBoundSize
-            onScreenInterestAreaChanged()
+        function adjustBoundedSize(w, h) {
+          let sw = w * options.density
+          let sh = h * options.density
+          const scaledW = $scope.device.display.width * options.minscale
+          const scaledH = $scope.device.display.height * options.minscale
+
+          if (sw < scaledW) {
+            sw *= scaledW / sw
+            sh *= scaledW / sh
+          }
+
+          if (sh < scaledH) {
+            sw *= scaledH / sw
+            sh *= scaledH / sh
+          }
+
+          return {
+            w: Math.ceil(sw),
+            h: Math.ceil(sh),
           }
         }
 
         function shouldUpdateScreen() {
           return (
             // NO if the user has disabled the screen.
-            scope.$parent.showScreen &&
+            $scope.$parent.showScreen
             // NO if we're not even using the device anymore.
-            device.using &&
+            //$scope.device.using &&
             // NO if the page is not visible (e.g. background tab).
-            !PageVisibilityService.hidden &&
+            && !PageVisibilityService.hidden
             // NO if we don't have a connection yet.
-            ws.readyState === WebSocket.OPEN
+            && (ws && ws.readyState === WebSocket.OPEN)
             // YES otherwise
           )
         }
 
-        function checkEnabled() {
-          let newEnabled = shouldUpdateScreen()
+        function checkEnabled(isReconnected) {
+          const newEnabled = shouldUpdateScreen()
 
           if (newEnabled === cachedEnabled) {
             updateBounds()
-          }
-          else if (newEnabled) {
+            onScreenInterestGained()
+            // if (isReconnected) {
+            //   onScreenInterestGained()
+            // }
+          } else if (newEnabled) {
             updateBounds()
             onScreenInterestGained()
-          }
-          else {
+          } else {
             g.clearRect(0, 0, canvas.width, canvas.height)
             onScreenInterestLost()
           }
@@ -198,211 +386,94 @@ module.exports = function DeviceScreenDirective(
         }
 
         function onScreenInterestGained() {
-          if (ws.readyState === WebSocket.OPEN) {
+          if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send('size ' + adjustedBoundSize.w + 'x' + adjustedBoundSize.h)
             ws.send('on')
           }
         }
 
         function onScreenInterestAreaChanged() {
-          if (ws.readyState === WebSocket.OPEN) {
+          if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send('size ' + adjustedBoundSize.w + 'x' + adjustedBoundSize.h)
           }
         }
 
         function onScreenInterestLost() {
-          if (ws.readyState === WebSocket.OPEN) {
+          if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send('off')
           }
         }
 
-        ws.onmessage = (function() {
-          let cachedScreen = {
-            rotation: 0
-          , bounds: {
-              x: 0
-            , y: 0
-            , w: 0
-            , h: 0
-            }
-          }
-
-          let cachedImageWidth = 0
-          let cachedImageHeight = 0
-          let cssRotation = 0
-          let alwaysUpright = false
-          let imagePool = new ImagePool(10)
-
-          function applyQuirks(banner) {
-            element[0].classList.toggle(
-              'quirk-always-upright', alwaysUpright = banner.quirks.alwaysUpright)
-          }
-
-          function hasImageAreaChanged(img) {
-            return cachedScreen.bounds.w !== screen.bounds.w ||
-              cachedScreen.bounds.h !== screen.bounds.h ||
-              cachedImageWidth !== img.width ||
-              cachedImageHeight !== img.height ||
-              cachedScreen.rotation !== screen.rotation
-          }
-
-          function isRotated() {
-            return screen.rotation === 90 || screen.rotation === 270
-          }
-
-          function updateImageArea(img) {
-            if (!hasImageAreaChanged(img)) {
-              return
-            }
-
-            cachedImageWidth = img.width
-            cachedImageHeight = img.height
-
-            if (options.autoScaleForRetina) {
-              canvas.width = cachedImageWidth * frontBackRatio
-              canvas.height = cachedImageHeight * frontBackRatio
-              g.scale(frontBackRatio, frontBackRatio)
-            }
-            else {
-              canvas.width = cachedImageWidth
-              canvas.height = cachedImageHeight
-            }
-
-            cssRotation += rotator(cachedScreen.rotation, screen.rotation)
-
-            canvas.style[cssTransform] = 'rotate(' + cssRotation + 'deg)'
-
-            cachedScreen.bounds.h = screen.bounds.h
-            cachedScreen.bounds.w = screen.bounds.w
-            cachedScreen.rotation = screen.rotation
-
-            canvasAspect = canvas.width / canvas.height
-
-            if (isRotated() && !alwaysUpright) {
-              canvasAspect = img.height / img.width
-              element[0].classList.add('rotated')
-            }
-            else {
-              canvasAspect = img.width / img.height
-              element[0].classList.remove('rotated')
-            }
-
-            if (alwaysUpright) {
-              // If the screen image is always in upright position (but we
-              // still want the rotation animation), we need to cancel out
-              // the rotation by using another rotation.
-              positioner.style[cssTransform] = 'rotate(' + -cssRotation + 'deg)'
-            }
-
-            maybeFlipLetterbox()
-          }
-
-          return function messageListener(message) {
-            screen.rotation = device.display.rotation
-
-            if (message.data instanceof Blob) {
-              if (shouldUpdateScreen()) {
-                if (scope.displayError) {
-                  scope.$apply(function() {
-                    scope.displayError = false
-                  })
-                }
-
-                let blob = new Blob([message.data], {
-                  type: 'image/webp'
-                })
-                let img = imagePool.next()
-
-                img.onload = function() {
-                  updateImageArea(this)
-                  g.drawImage(img, 0, 0, img.width, img.height)
-                  // Try to forcefully clean everything to get rid of memory
-                  // leaks. Note that despite this effort, Chrome will still
-                  // leak huge amounts of memory when the developer tools are
-                  // open, probably to save the resources for inspection. When
-                  // the developer tools are closed no memory is leaked.
-                  img.onload = img.onerror = null
-                  img.src = BLANK_IMG
-                  img = null
-                  blob = null
-
-                  URL.revokeObjectURL(url)
-                  url = null
-                }
-
-                img.onerror = function() {
-                  // Happily ignore. I suppose this shouldn't happen, but
-                  // sometimes it does, presumably when we're loading images
-                  // too quickly.
-
-                  // Do the same cleanup here as in onload.
-                  img.onload = img.onerror = null
-                  img.src = BLANK_IMG
-                  img = null
-                  blob = null
-
-                  URL.revokeObjectURL(url)
-                  url = null
-                }
-
-                let url = URL.createObjectURL(blob)
-                img.src = url
-              }
-            }
-            else if (/^start /.test(message.data)) {
-              applyQuirks(JSON.parse(message.data.substr('start '.length)))
-            }
-            else if (message.data === 'secure_on') {
-              scope.$apply(function() {
-                scope.displayError = 'secure'
-              })
-            }
-          }
-        })()
-
-        // NOTE: instead of fa-pane-resize, a fa-child-pane-resize could be better
-        scope.$on('fa-pane-resize', _.debounce(updateBounds, 1000))
-        scope.$watch('device.using', checkEnabled)
-        scope.$on('visibilitychange', checkEnabled)
-        scope.$watch('$parent.showScreen', checkEnabled)
-
-        scope.retryLoadingScreen = function() {
-          if (scope.displayError === 'secure') {
-            control.home()
-          }
+        function applyQuirks(banner) {
+          // eslint-disable-next-line prefer-destructuring
+          alwaysUpright = banner.quirks.alwaysUpright
+          element.classList.toggle('quirk-always-upright', alwaysUpright)
         }
 
-        scope.$on('guest-portrait', function() {
-          control.rotate(0)
-        })
+        function hasImageAreaChanged(img) {
+          return cachedScreen.bounds.w !== screen.bounds.w
+            || cachedScreen.bounds.h !== screen.bounds.h
+            || cachedImageWidth !== img.width
+            || cachedImageHeight !== img.height
+            || cachedScreen.rotation !== screen.rotation
+        }
 
-        scope.$on('guest-landscape', function() {
-          control.rotate(90)
-        })
+        function isRotated() {
+          return screen.rotation === 90 || screen.rotation === 270
+        }
 
-        let canvasAspect = 1
-        let parentAspect = 1
+        function updateImageArea(img) {
+          if (!hasImageAreaChanged(img)) {
+            return
+          }
+
+          cachedImageWidth = img.width
+          cachedImageHeight = img.height
+
+          if (options.autoScaleForRetina) {
+            canvas.width = cachedImageWidth * frontBackRatio
+            canvas.height = cachedImageHeight * frontBackRatio
+            g.scale(frontBackRatio, frontBackRatio)
+          } else {
+            canvas.width = cachedImageWidth
+            canvas.height = cachedImageHeight
+          }
+
+          cssRotation += rotator(cachedScreen.rotation, screen.rotation)
+          // canvas.style[cssTransform] = 'rotate(' + cssRotation + 'deg)'
+
+          cachedScreen.bounds.h = screen.bounds.h
+          cachedScreen.bounds.w = screen.bounds.w
+          cachedScreen.rotation = screen.rotation
+
+          canvasAspect = canvas.width / canvas.height
+          if (isRotated() && !alwaysUpright) {
+            canvasAspect = img.height / img.width
+            element.classList.add('rotated')
+          } else {
+            canvasAspect = img.width / img.height
+            element.classList.remove('rotated')
+          }
+
+          // if (alwaysUpright) {
+            // If the screen image is always in upright position (but we
+            // still want the rotation animation), we need to cancel out
+            // the rotation by using another rotation.
+            // positioner.style[cssTransform] = 'rotate(' + -cssRotation + 'deg)'
+          // }
+
+          maybeFlipLetterbox()
+        }
 
         function resizeListener() {
-          parentAspect = element[0].offsetWidth / element[0].offsetHeight
+          parentAspect = element.offsetWidth / element.offsetHeight
           maybeFlipLetterbox()
         }
 
         function maybeFlipLetterbox() {
-          element[0].classList.toggle(
-            'letterboxed', parentAspect < canvasAspect)
+          element.classList.toggle('letterboxed', parentAspect < canvasAspect)
         }
-
-        $window.addEventListener('resize', resizeListener, false)
-        scope.$on('fa-pane-resize', resizeListener)
-
-        resizeListener()
-
-        scope.$on('$destroy', function() {
-          stop()
-          $window.removeEventListener('resize', resizeListener, false)
-        })
-      })()
+      }
 
       /**
        * KEYBOARD HANDLING
@@ -413,7 +484,9 @@ module.exports = function DeviceScreenDirective(
        * For now, try to keep the whole section as a separate unit as much
        * as possible.
        */
-      ;(function() {
+      function handleKeyboard() {
+        const $input = angular.element(input)
+
         function isChangeCharsetKey(e) {
           // Add any special key here for changing charset
           //console.log('e', e)
@@ -450,7 +523,7 @@ module.exports = function DeviceScreenDirective(
         function handleSpecialKeys(e) {
           if (isChangeCharsetKey(e)) {
             e.preventDefault()
-            control.keyPress('switch_charset')
+            $scope.control.keyPress('switch_charset')
             return true
           }
 
@@ -463,12 +536,12 @@ module.exports = function DeviceScreenDirective(
           if (e.keyCode === 9) {
             e.preventDefault()
           }
-          control.keyDown(e.keyCode)
+          $scope.control.keyDown(e.keyCode)
         }
 
         function keyupListener(e) {
           if (!handleSpecialKeys(e)) {
-            control.keyUp(e.keyCode)
+            $scope.control.keyUp(e.keyCode)
           }
         }
 
@@ -477,7 +550,7 @@ module.exports = function DeviceScreenDirective(
           // the real value instead of any "\n" -> " " conversions we might see
           // in the input value.
           e.preventDefault()
-          control.paste(e.clipboardData.getData('text/plain'))
+          $scope.control.paste(e.clipboardData.getData('text/plain'))
         }
 
         function copyListener(e) {
@@ -487,9 +560,9 @@ module.exports = function DeviceScreenDirective(
           // what happens is that on the first copy, it will attempt to fetch
           // the clipboard contents. Only on the second copy will it actually
           // copy that to the clipboard.
-          control.getClipboardContent()
-          if (control.clipboardContent) {
-            e.clipboardData.setData('text/plain', control.clipboardContent)
+          $scope.control.getClipboardContent()
+          if ($scope.control.clipboardContent) {
+            e.clipboardData.setData('text/plain', $scope.control.clipboardContent)
           }
         }
 
@@ -499,16 +572,16 @@ module.exports = function DeviceScreenDirective(
           // you use the "Romaji" Kotoeri input method, we'll never get any
           // keypress events. It also causes us to lose the very first keypress
           // on the page. Currently I'm not sure if we can fix that one.
-          control.type(this.value)
+          $scope.control.type(this.value)
           this.value = ''
         }
 
-        input.bind('keydown', keydownListener)
-        input.bind('keyup', keyupListener)
-        input.bind('input', _.debounce(inputListener, inputDebounceTime))
-        input.bind('paste', pasteListener)
-        input.bind('copy', copyListener)
-      })()
+        $input.bind('keydown', keydownListener)
+        $input.bind('keyup', keyupListener)
+        $input.bind('input', inputListener)
+        $input.bind('paste', pasteListener)
+        $input.bind('copy', copyListener)
+      }
 
       /**
        * TOUCH HANDLING
@@ -519,12 +592,13 @@ module.exports = function DeviceScreenDirective(
        * For now, try to keep the whole section as a separate unit as much
        * as possible.
        */
-      ;(function() {
-        let slots = []
-        let slotted = Object.create(null)
-        let fingers = []
+      function handleTouch() {
+        let prevCoords = {}
+        const slots = []
+        const slotted = Object.create(null)
+        const fingers = []
         let seq = -1
-        let cycle = 100
+        const cycle = 100
         let fakePinch = false
         let lastPossiblyBuggyMouseUpEvent = 0
 
@@ -537,7 +611,8 @@ module.exports = function DeviceScreenDirective(
           // opposite sort order. Anyway don't change anything here unless
           // you understand what it does and why.
           for (let i = 9; i >= 0; --i) {
-            let finger = createFinger(i)
+            const finger = createFinger(i)
+
             element.append(finger)
             slots.push(i)
             fingers.unshift(finger)
@@ -545,11 +620,12 @@ module.exports = function DeviceScreenDirective(
         }
 
         function activateFinger(index, x, y, pressure) {
-          let scale = 0.5 + pressure
+          const scale = 0.5 + pressure
+          const cssTranslate = `translate3d(${x}px,${y}px,0)`
+          const cssScale = `scale(${scale},${scale})`
+
           fingers[index].classList.add('active')
-          fingers[index].style[cssTransform] =
-            'translate3d(' + x + 'px,' + y + 'px,0) ' +
-            'scale(' + scale + ',' + scale + ')'
+          fingers[index].style[cssTransform] = `${cssTranslate} ${cssScale})`
         }
 
         function deactivateFinger(index) {
@@ -563,13 +639,15 @@ module.exports = function DeviceScreenDirective(
         }
 
         function createFinger(index) {
-          let el = document.createElement('span')
-          el.className = 'finger finger-' + index
+          const el = document.createElement('span')
+
+          el.className = `finger finger-${index}`
+
           return el
         }
 
         function calculateBounds() {
-          let el = element[0]
+          let el = element
 
           screen.bounds.w = el.offsetWidth
           screen.bounds.h = el.offsetHeight
@@ -585,15 +663,14 @@ module.exports = function DeviceScreenDirective(
 
         function mouseDownListener(event) {
           let e = event
+
           if (e.originalEvent) {
             e = e.originalEvent
           }
-
           // Skip secondary click
           if (e.which === 3) {
             return
           }
-
           e.preventDefault()
 
           fakePinch = e.altKey
@@ -601,50 +678,65 @@ module.exports = function DeviceScreenDirective(
           calculateBounds()
           startMousing()
 
-          let x = e.pageX - screen.bounds.x
-          let y = e.pageY - screen.bounds.y
-          let pressure = 0.5
-          let scaled = scaler.coords(
-                screen.bounds.w
-              , screen.bounds.h
-              , x
-              , y
-              , screen.rotation
-              )
+          const x = e.pageX - screen.bounds.x
+          const y = e.pageY - screen.bounds.y
+          const pressure = 0.5
+          const scaled = scaler.coords(
+            screen.bounds.w,
+            screen.bounds.h,
+            x,
+            y,
+            screen.rotation,
+            $scope.device.ios,
+          )
 
-          control.touchDown(nextSeq(), 0, scaled.xP, scaled.yP, pressure)
-
-          if (fakePinch) {
-            control.touchDown(nextSeq(), 1, 1 - scaled.xP, 1 - scaled.yP,
-              pressure)
+          prevCoords = {
+            x: scaled.xP,
+            y: scaled.yP,
           }
 
-          control.touchCommit(nextSeq())
+          // TODO: can be non boolean?
+          if ($scope.device.ios && $scope.device.ios === true) {
+             $scope.control.touchDownIos(nextSeq(), 0, scaled.xP, scaled.yP, pressure)
+            if (fakePinch) {
+              $scope.control.touchDownIos(nextSeq(), 1, 1 - scaled.xP, 1 - scaled.yP, pressure)
+            }
+          } else {
+            $scope.control.touchDown(nextSeq(), 0, scaled.xP, scaled.yP, pressure)
+            if (fakePinch) {
+              $scope.control.touchDown(nextSeq(), 1, 1 - scaled.xP, 1 - scaled.yP, pressure)
+            }
+          }
 
+          $scope.control.touchCommit(nextSeq())
           activateFinger(0, x, y, pressure)
 
           if (fakePinch) {
-            activateFinger(1, -e.pageX + screen.bounds.x + screen.bounds.w,
-              -e.pageY + screen.bounds.y + screen.bounds.h, pressure)
+            activateFinger(
+              1,
+              -e.pageX + screen.bounds.x + screen.bounds.w,
+              -e.pageY + screen.bounds.y + screen.bounds.h,
+              pressure
+            )
           }
 
-          element.bind('mousemove', mouseMoveListener)
+          $element.bind('mousemove', mouseMoveListener)
           $document.bind('mouseup', mouseUpListener)
           $document.bind('mouseleave', mouseUpListener)
 
-          if (lastPossiblyBuggyMouseUpEvent &&
-              lastPossiblyBuggyMouseUpEvent.timeStamp > e.timeStamp) {
+          if (lastPossiblyBuggyMouseUpEvent
+            && lastPossiblyBuggyMouseUpEvent.timeStamp > e.timeStamp) {
             // We got mouseup before mousedown. See mouseUpBugWorkaroundListener
             // for details.
             mouseUpListener(lastPossiblyBuggyMouseUpEvent)
-          }
-          else {
+          } else {
             lastPossiblyBuggyMouseUpEvent = null
           }
         }
 
         function mouseMoveListener(event) {
           let e = event
+
           if (e.originalEvent) {
             e = e.originalEvent
           }
@@ -655,49 +747,58 @@ module.exports = function DeviceScreenDirective(
           }
           e.preventDefault()
 
-          let addGhostFinger = !fakePinch && e.altKey
-          let deleteGhostFinger = fakePinch && !e.altKey
+          const addGhostFinger = !fakePinch && e.altKey
+          const deleteGhostFinger = fakePinch && !e.altKey
 
           fakePinch = e.altKey
 
-          let x = e.pageX - screen.bounds.x
-          let y = e.pageY - screen.bounds.y
-          let pressure = 0.5
-          let scaled = scaler.coords(
-                screen.bounds.w
-              , screen.bounds.h
-              , x
-              , y
-              , screen.rotation
-              )
+          const x = e.pageX - screen.bounds.x
+          const y = e.pageY - screen.bounds.y
+          const pressure = 0.5
+          const scaled = scaler.coords(
+            screen.bounds.w,
+            screen.bounds.h,
+            x,
+            y,
+            screen.rotation,
+            $scope.device.ios,
+          )
 
-          control.touchMove(nextSeq(), 0, scaled.xP, scaled.yP, pressure)
+          $scope.control.touchMove(nextSeq(), 0, scaled.xP, scaled.yP, pressure)
+          //$scope.control.touchMoveIos(nextSeq(), 0, scaled.xP, scaled.yP, pressure)
 
           if (addGhostFinger) {
-            control.touchDown(nextSeq(), 1, 1 - scaled.xP, 1 - scaled.yP, pressure)
-          }
-          else if (deleteGhostFinger) {
-            control.touchUp(nextSeq(), 1)
-          }
-          else if (fakePinch) {
-            control.touchMove(nextSeq(), 1, 1 - scaled.xP, 1 - scaled.yP, pressure)
+            // TODO: can be non boolean?
+            if ($scope.device.ios && $scope.device.ios === true) {
+              $scope.control.touchDownIos(nextSeq(), 1, 1 - scaled.xP, 1 - scaled.yP, pressure)
+            } else {
+              $scope.control.touchDown(nextSeq(), 1, 1 - scaled.xP, 1 - scaled.yP, pressure)
+            }
+          } else if (deleteGhostFinger) {
+            $scope.control.touchUp(nextSeq(), 1)
+          } else if (fakePinch) {
+            $scope.control.touchMove(nextSeq(), 1, 1 - scaled.xP, 1 - scaled.yP, pressure)
+            //$scope.control.touchMoveIos(nextSeq(), 1, 1 - scaled.xP, 1 - scaled.yP, pressure)
           }
 
-          control.touchCommit(nextSeq())
-
+          $scope.control.touchCommit(nextSeq())
           activateFinger(0, x, y, pressure)
 
           if (deleteGhostFinger) {
             deactivateFinger(1)
-          }
-          else if (fakePinch) {
-            activateFinger(1, -e.pageX + screen.bounds.x + screen.bounds.w,
-              -e.pageY + screen.bounds.y + screen.bounds.h, pressure)
+          } else if (fakePinch) {
+            activateFinger(
+              1,
+              -e.pageX + screen.bounds.x + screen.bounds.w,
+              -e.pageY + screen.bounds.y + screen.bounds.h,
+              pressure
+            )
           }
         }
 
         function mouseUpListener(event) {
           let e = event
+
           if (e.originalEvent) {
             e = e.originalEvent
           }
@@ -708,14 +809,39 @@ module.exports = function DeviceScreenDirective(
           }
           e.preventDefault()
 
-          control.touchUp(nextSeq(), 0)
+          const x = e.pageX - screen.bounds.x
+          const y = e.pageY - screen.bounds.y
+          const pressure = 0.5
+          const scaled = scaler.coords(
+            screen.bounds.w,
+            screen.bounds.h,
+            x,
+            y,
+            screen.rotation,
+            $scope.device.ios,
+          )
 
-          if (fakePinch) {
-            control.touchUp(nextSeq(), 1)
+          if ((Math.abs(prevCoords.x - scaled.xP) >= 0.1
+            || Math.abs(prevCoords.y - scaled.yP) >= 0.1)
+            && $scope.device.ios && $scope.device.ios === true) { // TODO: can be non boolean?
+            $scope.control.touchMoveIos(
+              scaled.xP,
+              scaled.yP,
+              prevCoords.x,
+              prevCoords.y,
+              pressure,
+              nextSeq(),
+              0
+            )
           }
 
-          control.touchCommit(nextSeq())
+          $scope.control.touchUp(nextSeq(), 0)
 
+          if (fakePinch) {
+            $scope.control.touchUp(nextSeq(), 1)
+          }
+
+          $scope.control.touchCommit(nextSeq())
           deactivateFinger(0)
 
           if (fakePinch) {
@@ -746,7 +872,7 @@ module.exports = function DeviceScreenDirective(
          *     <input id="focusable" type="text" />
          *
          *     <script>
-         *     let touchable = document.getElementById('touchable')
+         *     var touchable = document.getElementById('touchable')
          *       , focusable = document.getElementById('focusable')
          *       , counter = 0
          *
@@ -781,16 +907,16 @@ module.exports = function DeviceScreenDirective(
         }
 
         function startMousing() {
-          control.gestureStart(nextSeq())
-          input[0].focus()
+          $scope.control.gestureStart(nextSeq())
+          input.focus()
         }
 
         function stopMousing() {
-          element.unbind('mousemove', mouseMoveListener)
+          $element.unbind('mousemove', mouseMoveListener)
           $document.unbind('mouseup', mouseUpListener)
           $document.unbind('mouseleave', mouseUpListener)
           deactivateFingers()
-          control.gestureStop(nextSeq())
+          $scope.control.gestureStop(nextSeq())
         }
 
         function touchStartListener(event) {
@@ -808,10 +934,9 @@ module.exports = function DeviceScreenDirective(
             startTouching()
           }
 
-          let currentTouches = Object.create(null)
-          let i, l
+          const currentTouches = Object.create(null)
 
-          for (i = 0, l = e.touches.length; i < l; ++i) {
+          for (let i = 0, l = e.touches.length; i < l; ++i) {
             currentTouches[e.touches[i].identifier] = 1
           }
 
@@ -819,16 +944,17 @@ module.exports = function DeviceScreenDirective(
             return !(id in currentTouches)
           }
 
-          // We might have lost a touchend event due to letious edge cases
+          // We might have lost a touchend event due to various edge cases
           // (literally) such as dragging from the bottom of the screen so that
           // the control center appears. If so, let's ask for a reset.
           if (Object.keys(slotted).some(maybeLostTouchEnd)) {
-            Object.keys(slotted).forEach(function(id) {
-              slots.push(slotted[id])
-              delete slotted[id]
-            })
+            Object.keys(slotted)
+              .forEach((id) => {
+                slots.push(slotted[id])
+                delete slotted[id]
+              })
             slots.sort().reverse()
-            control.touchReset(nextSeq())
+            $scope.control.touchReset(nextSeq())
             deactivateFingers()
           }
 
@@ -837,44 +963,35 @@ module.exports = function DeviceScreenDirective(
             throw new Error('Ran out of multitouch slots')
           }
 
-          for (i = 0, l = e.changedTouches.length; i < l; ++i) {
-            let touch = e.changedTouches[i]
-            let slot = slots.pop()
-            let x = touch.pageX - screen.bounds.x
-            let y = touch.pageY - screen.bounds.y
-            let pressure = touch.force || 0.5
-            let scaled = scaler.coords(
-                  screen.bounds.w
-                , screen.bounds.h
-                , x
-                , y
-                , screen.rotation
-                )
+          for (let i = 0, l = e.changedTouches.length; i < l; ++i) {
+            const touch = e.changedTouches[i]
+            const slot = slots.pop()
+            const x = touch.pageX - screen.bounds.x
+            const y = touch.pageY - screen.bounds.y
+            const pressure = touch.force || 0.5
+            const scaled = scaler.coords(
+              screen.bounds.w,
+              screen.bounds.h,
+              x,
+              y,
+              screen.rotation,
+              $scope.device.ios,
+            )
 
             slotted[touch.identifier] = slot
-            control.touchDown(nextSeq(), slot, scaled.xP, scaled.yP, pressure)
+            if ($scope.device.ios && $scope.device.ios === true) { // TODO: can be non boolean?
+              $scope.control.touchDownIos(nextSeq(), slot, scaled.xP, scaled.yP, pressure)
+            } else {
+              $scope.control.touchDown(nextSeq(), slot, scaled.xP, scaled.yP, pressure)
+            }
             activateFinger(slot, x, y, pressure)
           }
 
-          element.bind('touchmove', touchMoveListener)
+          $element.bind('touchmove', touchMoveListener)
           $document.bind('touchend', touchEndListener)
           $document.bind('touchleave', touchEndListener)
 
-          control.touchCommit(nextSeq())
-        }
-
-        function scrollListener(event) {
-
-          const sc = {x: 1000, y: 1000} // start coordinates
-          if (Math.abs(scroll) > 200) {
-            if (scroll > 0) {
-              control.shell(`input swipe ${sc.x} ${sc.y} ${sc.x} ${sc.y + 100} 30`)
-            }
-            if (scroll < 0) {
-              control.shell(`input swipe ${sc.x} ${sc.y} ${sc.x} ${sc.y - 100} 30`)
-            }
-            scroll = 0
-          }
+          $scope.control.touchCommit(nextSeq())
         }
 
         function touchMoveListener(event) {
@@ -886,28 +1003,31 @@ module.exports = function DeviceScreenDirective(
           }
 
           for (let i = 0, l = e.changedTouches.length; i < l; ++i) {
-            let touch = e.changedTouches[i]
-            let slot = slotted[touch.identifier]
-            let x = touch.pageX - screen.bounds.x
-            let y = touch.pageY - screen.bounds.y
-            let pressure = touch.force || 0.5
-            let scaled = scaler.coords(
-                  screen.bounds.w
-                , screen.bounds.h
-                , x
-                , y
-                , screen.rotation
-                )
+            const touch = e.changedTouches[i]
+            const slot = slotted[touch.identifier]
+            const x = touch.pageX - screen.bounds.x
+            const y = touch.pageY - screen.bounds.y
+            const pressure = touch.force || 0.5
+            const scaled = scaler.coords(
+              screen.bounds.w,
+              screen.bounds.h,
+              x,
+              y,
+              screen.rotation,
+              $scope.device.ios
+            )
 
-            control.touchMove(nextSeq(), slot, scaled.xP, scaled.yP, pressure)
+            $scope.control.touchMove(nextSeq(), slot, scaled.xP, scaled.yP, pressure)
+            //$scope.control.touchMoveIos(nextSeq(), slot, scaled.xP, scaled.yP, pressure)
             activateFinger(slot, x, y, pressure)
           }
 
-          control.touchCommit(nextSeq())
+          $scope.control.touchCommit(nextSeq())
         }
 
         function touchEndListener(event) {
           let e = event
+
           if (e.originalEvent) {
             e = e.originalEvent
           }
@@ -915,8 +1035,9 @@ module.exports = function DeviceScreenDirective(
           let foundAny = false
 
           for (let i = 0, l = e.changedTouches.length; i < l; ++i) {
-            let touch = e.changedTouches[i]
-            let slot = slotted[touch.identifier]
+            const touch = e.changedTouches[i]
+            const slot = slotted[touch.identifier]
+
             if (typeof slot === 'undefined') {
               // We've already disposed of the contact. We may have gotten a
               // touchend event for the same contact twice.
@@ -924,13 +1045,13 @@ module.exports = function DeviceScreenDirective(
             }
             delete slotted[touch.identifier]
             slots.push(slot)
-            control.touchUp(nextSeq(), slot)
+            $scope.control.touchUp(nextSeq(), slot)
             deactivateFinger(slot)
             foundAny = true
           }
 
           if (foundAny) {
-            control.touchCommit(nextSeq())
+            $scope.control.touchCommit(nextSeq())
             if (!e.touches.length) {
               stopTouching()
             }
@@ -938,26 +1059,23 @@ module.exports = function DeviceScreenDirective(
         }
 
         function startTouching() {
-          control.gestureStart(nextSeq())
+          $scope.control.gestureStart(nextSeq())
         }
 
         function stopTouching() {
-          element.unbind('touchmove', touchMoveListener)
+          $element.unbind('touchmove', touchMoveListener)
           $document.unbind('touchend', touchEndListener)
           $document.unbind('touchleave', touchEndListener)
           deactivateFingers()
-          control.gestureStop(nextSeq())
+          $scope.control.gestureStop(nextSeq())
         }
 
-        element.on('touchstart', touchStartListener)
-        element.on('mousedown', mouseDownListener)
-        element.on('mouseup', mouseUpBugWorkaroundListener)
-        element.on('mousewheel', (e) => {
-          scroll += -(e.deltaY)
-        })
-        setInterval(() => scrollListener(), 1000)
+        $element.on('touchstart', touchStartListener)
+        $element.on('mousedown', mouseDownListener)
+        $element.on('mouseup', mouseUpBugWorkaroundListener)
+
         createSlots()
-      })()
+      }
     }
   }
 }

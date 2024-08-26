@@ -2503,6 +2503,11 @@ paths:
           description: device model
           type: string
           required: false
+        - name: type
+          in: query
+          description: device type
+          type: string
+          required: false
         - name: version
           in: query
           description: device os version

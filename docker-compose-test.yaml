@@ -48,6 +48,7 @@ services:
   devicehub:
     container_name: devicehub
     build: .
+    image: devicehub
     ports:
       - "7100:7100"
       - "7110:7110"
