@@ -5,6 +5,8 @@
 module.exports = function MenuCtrl(
   $scope
 , $rootScope
+, UsersService
+, AppState
 , SettingsService
 , $location
 , $http
@@ -79,4 +81,42 @@ module.exports = function MenuCtrl(
   else {
     logo.classList.add('emulatorhub-logo')
   }
+
+  $scope.alertMessage = {
+    activation: 'False'
+  , data: ''
+  , level: ''
+  }
+
+  if (AppState.user.privilege === 'admin' && AppState.user.name === 'administrator') {
+    $scope.alertMessage = SettingsService.get('alertMessage')
+  }
+  else {
+    UsersService.getUsersAlertMessage().then(function(response) {
+      $scope.alertMessage = response.data.alertMessage
+      SettingsService.set('alertMessage', response.data.alertMessage)
+    })
+  }
+
+  $scope.isAlertMessageActive = function() {
+    return $scope.alertMessage.activation === 'True'
+  }
+
+  $scope.isInformationAlert = function() {
+    return $scope.alertMessage.level === 'Information'
+  }
+
+  $scope.isWarningAlert = function() {
+    return $scope.alertMessage.level === 'Warning'
+  }
+
+  $scope.isCriticalAlert = function() {
+    return $scope.alertMessage.level === 'Critical'
+  }
+
+  $scope.$on('user.menu.users.updated', function(event, message) {
+    if (message.user.privilege === 'admin') {
+      $scope.alertMessage = message.user.settings.alertMessage
+    }
+  })
 }

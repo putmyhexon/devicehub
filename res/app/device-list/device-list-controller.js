@@ -199,8 +199,8 @@ module.exports = function DeviceListCtrl(
   let defaultSort = {
     fixed: [
       {
-        name: 'default'
-        , order: 'none'
+        name: 'state'
+        , order: 'asc'
       }
     ],
     user: [
