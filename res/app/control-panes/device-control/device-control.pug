@@ -25,7 +25,7 @@
             a.stf-vnc-device-name.pointer.unselectable(uib-dropdown-toggle)
               p
                 .device-small-image
-                  img(ng-src='/static/app/devices/icon/x24/{{ device.image || "_default.jpg" }}')
+                  img(ng-src='/static/app/devices/icon/x24/{{ device.image || "_default.svg" }}')
                 span.device-name-text(ng-if='!device.ios') {{device.manufacturer + ' ' + device.marketName}}
                 span.device-name-text(ng-if='device.ios') {{device.model}}
 
