@@ -31,10 +31,13 @@ module.exports = function DeviceColumnService($filter, gettext, SettingsService,
         return $filter('translate')(device.enhancedStateAction)
       }
     })
-  , group: TextCell({
+  , group: LinkCell({
       title: gettext('Group Name')
     , value: function(device) {
         return $filter('translate')(device.group.name)
+      }
+    , link: function(device) {
+        return device.group.runUrl
       }
     })
   , groupSchedule: TextCell({
@@ -578,11 +581,13 @@ function LinkCell(options) {
       var href = options.link(item)
       if (href) {
         a.setAttribute('href', href)
+        a.target = options.target || ''
       }
       else {
-        a.removeAttribute('href')
+        td.removeChild(a)
+        td.appendChild(document.createTextNode(''))
+        t = td.firstChild
       }
-      a.target = options.target || ''
       t.nodeValue = options.value(item)
       return td
     }

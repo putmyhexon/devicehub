@@ -5,7 +5,8 @@ services:
     image: mongo:6.0.10
     hostname: mongo1
     container_name: mongo1
-    entrypoint: ["mongod", "--replSet", "myReplicaSet", "--bind_ip", "localhost,mongo1"]
+    entrypoint:
+      ["mongod", "--replSet", "myReplicaSet", "--bind_ip", "localhost,mongo1"]
     networks:
       default:
         ipv4_address: 172.88.0.2
@@ -13,7 +14,8 @@ services:
     image: mongo:6.0.10
     hostname: mongo2
     container_name: mongo2
-    entrypoint: ["mongod", "--replSet", "myReplicaSet", "--bind_ip", "localhost,mongo2"]
+    entrypoint:
+      ["mongod", "--replSet", "myReplicaSet", "--bind_ip", "localhost,mongo2"]
     networks:
       default:
         ipv4_address: 172.88.0.3
@@ -21,7 +23,8 @@ services:
     image: mongo:6.0.10
     hostname: mongo3
     container_name: mongo3
-    entrypoint: ["mongod", "--replSet", "myReplicaSet", "--bind_ip", "localhost,mongo3"]
+    entrypoint:
+      ["mongod", "--replSet", "myReplicaSet", "--bind_ip", "localhost,mongo3"]
     networks:
       default:
         ipv4_address: 172.88.0.4
@@ -34,7 +37,7 @@ services:
     volumes:
       - ./scripts/mongo_setup.sh:/scripts/mongo_setup.sh
     restart: "no"
-    entrypoint: [ "bash", "/scripts/mongo_setup.sh"]
+    entrypoint: ["bash", "/scripts/mongo_setup.sh"]
   adb:
     container_name: adb
     image: devicefarmer/adb:latest

@@ -99,19 +99,19 @@ module.exports = function MenuCtrl(
   }
 
   $scope.isAlertMessageActive = function() {
-    return $scope.alertMessage.activation === 'True'
+    return $scope.alertMessage?.activation === 'True'
   }
 
   $scope.isInformationAlert = function() {
-    return $scope.alertMessage.level === 'Information'
+    return $scope.alertMessage?.level === 'Information'
   }
 
   $scope.isWarningAlert = function() {
-    return $scope.alertMessage.level === 'Warning'
+    return $scope.alertMessage?.level === 'Warning'
   }
 
   $scope.isCriticalAlert = function() {
-    return $scope.alertMessage.level === 'Critical'
+    return $scope.alertMessage?.level === 'Critical'
   }
 
   $scope.$on('user.menu.users.updated', function(event, message) {
