@@ -35,7 +35,7 @@ static BOOL FBShouldRespectSystemAlerts = NO;
 
 static NSUInteger FBMjpegScalingFactor = 100;
 static BOOL FBMjpegShouldFixOrientation = NO;
-static NSUInteger FBMjpegServerScreenshotQuality = 20;
+static NSUInteger FBMjpegServerScreenshotQuality = 25;
 static NSUInteger FBMjpegServerFramerate = 10;
 
 // Session-specific settings
@@ -43,7 +43,7 @@ static BOOL FBShouldTerminateApp;
 static NSNumber* FBMaxTypingFrequency;
 static NSUInteger FBScreenshotQuality;
 static NSTimeInterval FBCustomSnapshotTimeout;
-static BOOL FBShouldUseFirstMatch = YES;
+static BOOL FBShouldUseFirstMatch;
 static BOOL FBShouldBoundElementsByIndex;
 static BOOL FBIncludeNonModalElements;
 static NSString *FBAcceptAlertButtonSelector;

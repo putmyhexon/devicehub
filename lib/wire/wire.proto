@@ -207,8 +207,11 @@ message DeviceProviderField {
 }
 
 message DeviceGroupField {
-  optional string origin = 1;
-  optional string originName = 2;
+  optional string id = 1;
+  optional string name = 2;
+  optional string origin = 3;
+  optional string originName = 4;
+  optional GroupOwnerField owner = 5;
 }
 
 message DeviceField {

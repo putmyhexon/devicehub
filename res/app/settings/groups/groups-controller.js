@@ -778,7 +778,7 @@ module.exports = function GroupsCtrl(
           getAvailableGroupDevices(group)
         }
       }
-      if (isChangedSchedule && group.state !== 'pending') {
+      if (isChangedSchedule) {
         $scope.initTemporarySchedule(group)
       }
       if (doGetDevices) {
