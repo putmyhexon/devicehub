@@ -19,7 +19,7 @@ To add the devices you will need a running provider instance and one or multiple
 The easiest way to run the provider is to do
 1) npm ci
 2) npm link --force
-3) stf provider --connect-sub "tcp://localhost:7250" --connect-push "tcp://localhost:7270" --storage-url "http://localhost:8082"
+3) MONGODB_PORT_27017_TCP=mongodb://localhost:27017 stf provider --connect-sub "tcp://localhost:7250" --connect-push "tcp://localhost:7270" --storage-url "http://localhost:8082"
 
 Note: some features require direct access to the provider instance from the browser, so if you are running the provider on a different machine - make sure you pass accessible url to the --public-ip.
 
