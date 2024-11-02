@@ -22,9 +22,10 @@ VK DeviceHub - это форк проекта DeviceFarmer/stf, разработ
 Для этого нужно запустить провайдер и иметь работающее adb соединение с устройством.
 Самый простой способ это:
 1) Убедиться что установлен питон и в нём установлен setuptools (нужен для одной из наших npm зависимостей)
-2) `npm ci` - скачать и установить зависимости
-3) `npm link --force` - Добавить исполняемый файл в текущий PATH
-4) `MONGODB_PORT_27017_TCP=mongodb://localhost:27017 stf provider --connect-sub "tcp://localhost:7250" --connect-push "tcp://localhost:7270" --storage-url "http://localhost:8082"`
+2) Установить npm версии не меньше 20.17 (рекомендуем nvm)
+3) `npm ci` - скачать и установить зависимости
+4) `npm link --force` - Добавить исполняемый файл в текущий PATH
+5) `MONGODB_PORT_27017_TCP=mongodb://localhost:27017 stf provider --connect-sub "tcp://localhost:7250" --connect-push "tcp://localhost:7270" --storage-url "http://localhost:8082"`
 
 Замечание:
 Некоторый функционал требует наличия прямого доступа до провайдера из браузера. Поэтому в случае сложных инсталляций не забудьте передать внешнедоступный url в параметр --public-url
