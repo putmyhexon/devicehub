@@ -20,7 +20,16 @@ updates:
       - dependency-type: 'direct'
     reviewers:
       - 'VKCOM/vk-sec'
-      
+
+  - package-ecosystem: 'pip'
+    directory: '/test/api'
+    schedule:
+      interval: 'daily'
+    allow:
+      - dependency-type: 'direct'
+    reviewers:
+      - 'VKCOM/vk-sec'
+
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
@@ -54,5 +63,5 @@ updates:
           - 'prettier'
           - '@vkontakte/prettier-config'
     reviewers:
-      - 'VKCOM/vk-sec' 
+      - 'VKCOM/vk-sec'
       - 'VKCOM/qa'

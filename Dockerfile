@@ -1,5 +1,11 @@
 FROM node:20.18.0-bullseye-slim
 
+LABEL org.opencontainers.image.source=https://github.com/VKCOM/devicehub
+LABEL org.opencontainers.image.title=DeviceHub
+LABEL org.opencontainers.image.vendor=VKCOM
+LABEL org.opencontainers.image.description="Control and manage Android and iOS devices from your browser."
+LABEL org.opencontainers.image.licenses=Apache-2.0
+
 ENV PATH=/app/bin:$PATH \
     DEBIAN_FRONTEND=noninteractive \
     BUNDLETOOL_REL=1.8.2
@@ -65,4 +71,4 @@ RUN set -x && \
 USER stf
 
 # Show help by default.
-CMD stf --help
+CMD ["stf", "--help"]

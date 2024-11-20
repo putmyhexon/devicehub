@@ -8,8 +8,8 @@ ADMIN_EMAIL = 'administrator@fakedomain.com'
 ADMIN_NAME = 'administrator'
 ADMIN_PRIVILEGE = 'admin'
 
-
-BASE_URL = 'http://localhost:7100/api/v1'
+BASE_HOST = 'localhost'
+BASE_URL = f'http://{BASE_HOST}:7100/api/v1'
 
 
 def pytest_addoption(parser):
