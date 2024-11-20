@@ -3,7 +3,7 @@ name: Create and publish a Docker image
 
 on:
   push:
-    branches: ['release']
+    branches: ['release', 'master']
     tags: ['v1.*','v2.*']
 
 env:
