@@ -1,5 +1,5 @@
 # Welcome to VK DeviceHub!
-<img src="res/common/logo/exports/readmeLogo.svg" style="width:300px;height:100px;" alt="VK Devicehub">
+<img src="https://raw.githubusercontent.com/VKCOM/devicehub/refs/heads/master/res/common/logo/exports/readmeLogo.svg" style="width:300px;height:100px;" alt="VK Devicehub">
 
 ## About Project
 
@@ -9,7 +9,7 @@ If you have ideas, suggestions, or would like to participate in development, we 
 
 You can watch a presentation about our product at the Heisenbug 2024 conference by following this link:
 [Presentation at Heisenbug 2024 conference](https://heisenbug.ru/talks/cee3ec59796e43f6a3d4ae508db157d3/?referer=/schedule/days/)
-<img src="doc/showcase.png" alt="VK Devicehub">
+<img src="https://raw.githubusercontent.com/VKCOM/devicehub/refs/heads/master/doc/showcase.png" alt="VK Devicehub">
 
 ## How to run
 Run `docker compose -f docker-compose-prod.yaml --env-file scripts/variables.env up` and a local production-like installation of DeviceHub will be launched on your computer on port 8082. See [docker-compose-prod.yaml](./docker-compose-prod.yaml) for more information.
