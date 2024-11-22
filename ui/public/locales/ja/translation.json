@@ -329,5 +329,6 @@
   "Empty": "空の",
   "Something went wrong": "何か問題が発生しました",
   "Groups": "グループ",
-  "Users": "ユーザー"
+  "Users": "ユーザー",
+  "Current rotation:": "現在の回転数:"
 }

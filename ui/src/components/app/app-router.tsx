@@ -19,7 +19,7 @@ export const appRouter = createHashRouter(
     <Route element={<MainLayout />}>
       <Route element={<DevicesPage />} path={getMainRoute()} />
       <Route element={<DevicesPage />} path={getDevicesRoute()} />
-      <Route element={<ControlPage />} path={getControlRoute(':deviceSerial')} />
+      <Route element={<ControlPage />} path={getControlRoute(':serial')} />
       <Route element={<SettingsPage />} path={getSettingsRoute()}>
         <Route element={<SettingsPage />} path='keys' />
         <Route element={<SettingsPage />} path='groups' />

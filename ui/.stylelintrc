@@ -14,7 +14,10 @@
   },
   "overrides": [
     {
-      "files": ["src/components/views/settings-page/settings-page.module.css"],
+      "files": [
+        "src/components/views/settings-page/settings-page.module.css",
+        "src/components/views/control-page/control-page.module.css"
+      ],
       "rules": {
         "selector-class-pattern": null
       }

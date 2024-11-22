@@ -26,3 +26,6 @@ dist-ssr
 
 tsconfig.app.tsbuildinfo
 tsconfig.node.tsbuildinfo
+
+.env.production
+.env.staging

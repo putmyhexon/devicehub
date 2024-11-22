@@ -1,6 +1,6 @@
 export const getMainRoute = () => '/' as const
 export const getDevicesRoute = () => '/devices' as const
-export const getControlRoute = (deviceSerial: string) => `/control/${deviceSerial}` as const
+export const getControlRoute = (serial: string) => `/control/${serial}` as const
 export const getSettingsRoute = () => '/settings' as const
 export const getSettingsKeysRoute = () => '/settings/keys' as const
 export const getSettingsGroupsRoute = () => '/settings/groups' as const

@@ -8,12 +8,10 @@ ADMIN_EMAIL = 'administrator@fakedomain.com'
 ADMIN_NAME = 'administrator'
 ADMIN_PRIVILEGE = 'admin'
 
-BASE_HOST = 'localhost'
-BASE_URL = f'http://{BASE_HOST}:7100/api/v1'
-
 
 def pytest_addoption(parser):
     parser.addoption("--token", action="store")
+    parser.addoption("--base-host-name", action="store")
 
 
 @pytest.fixture(scope='session')
@@ -24,16 +22,32 @@ def token(request):
     return token_value
 
 
+@pytest.fixture(scope='module')
+def base_host(request):
+    host = request.config.option.base_host_name
+    if host is None:
+        pytest.fail(reason='Missed base host')
+    return host
+
+
+@pytest.fixture(scope='module')
+def base_url(request):
+    url = request.config.option.base_host_name
+    if url is None:
+        pytest.fail(reason='Missed rul')
+    return f'http://{url}/api/v1'
+
+
 @pytest.fixture(scope="module")
-def api_client(token):
-    api_client = AuthenticatedClient(base_url=BASE_URL,
+def api_client(token, base_url):
+    api_client = AuthenticatedClient(base_url=base_url,
                                      token=token)
     return api_client
 
 
 @pytest.fixture(scope="module")
-def api_client_with_bad_token():
-    api_client = AuthenticatedClient(base_url=BASE_URL, token='bad_token')
+def api_client_with_bad_token(base_url):
+    api_client = AuthenticatedClient(base_url=base_url, token='bad_token')
     return api_client
 
 
@@ -50,11 +64,6 @@ class User:
 @pytest.fixture(scope="module")
 def admin_user():
     return User(email=ADMIN_EMAIL, name=ADMIN_NAME, privilege=ADMIN_PRIVILEGE)
-
-
-@pytest.fixture(scope="module")
-def base_host():
-    return BASE_HOST
 
 
 @pytest.fixture(scope="module")

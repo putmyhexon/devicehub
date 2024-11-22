@@ -306,5 +306,6 @@
   "Empty": "Пусто",
   "Something went wrong": "Что-то пошло не так",
   "Booked before": "Забронировано до",
-  "Users": "Пользователи"
+  "Users": "Пользователи",
+  "Current rotation:": "Текущая ротация:"
 }
