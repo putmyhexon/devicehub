@@ -10,6 +10,8 @@ import { TableColumnVisibility } from '@/components/ui/table-column-visibility'
 
 import { deviceListStore } from '@/store/device-list-store'
 
+import styles from './devices-page.module.css'
+
 import type { Device } from '@/generated/types'
 
 export const DevicesPage = observer(() => {
@@ -23,7 +25,7 @@ export const DevicesPage = observer(() => {
 
   return (
     <View activePanel='main'>
-      <Panel id='main'>
+      <Panel className={styles.devicesPage} id='main'>
         <DeviceStatistics />
         <Group header={<Header mode='secondary'>{t('Devices')}</Header>}>
           <Flex align='center'>

@@ -340,5 +340,6 @@
   "Empty": "비어 있는",
   "Something went wrong": "문제가 발생했습니다.",
   "Groups": "여러 떼",
-  "Users": "사용자"
+  "Users": "사용자",
+  "Current rotation:": "현재 회전:"
 }

@@ -201,5 +201,7 @@
   "Something went wrong": "Coś poszło nie tak",
   "Groups": "Grupy",
   "Users": "Użytkownicy",
-  "Shell": "Powłoka"
+  "Shell": "Powłoka",
+  "Landscape": "Krajobraz",
+  "Current rotation:": "Obecna rotacja:"
 }
