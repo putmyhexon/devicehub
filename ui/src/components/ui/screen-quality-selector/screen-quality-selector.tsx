@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Flex, Caption, ToolButton } from '@vkontakte/vkui'
-import { Icon16Connection, Icon24Connection } from '@vkontakte/icons'
+import { Flex, Caption, Button } from '@vkontakte/vkui'
+import { Icon16Connection } from '@vkontakte/icons'
 
 import { MarkedSliderRange } from '@/components/lib/marked-slider-range'
 import { PopoverContainer } from '@/components/lib/popover-container'
@@ -50,12 +50,11 @@ export const ScreenQualitySelector = observer(() => {
         </>
       )}
     >
-      <ToolButton
-        activeClassName='active'
+      <Button
         appearance='neutral'
+        before={<Icon16Connection height={24} width={24} />}
         borderRadiusMode='inherit'
-        IconCompact={() => <Icon16Connection height={24} width={24} />}
-        IconRegular={Icon24Connection}
+        className={styles.qualityButton}
         mode='tertiary'
         title={t('Quality')}
       />

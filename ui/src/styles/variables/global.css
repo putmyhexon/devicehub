@@ -4,4 +4,6 @@
 
   /* Цвета */
   --light-gray: #cfcfcf;
+  --slider-mark-outline: #828282;
+  --slider-mark-background: #e2e3e6;
 }

@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import cn from 'classnames'
 import { useParams } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
-import { ButtonGroup, EllipsisText, Flex, Spinner, ToolButton } from '@vkontakte/vkui'
+import { Button, ButtonGroup, EllipsisText, Flex, Spinner } from '@vkontakte/vkui'
 import { Icon24VerticalRectangle9x16Outline, Icon28DevicesOutline } from '@vkontakte/icons'
 import { useTranslation } from 'react-i18next'
 
@@ -39,13 +39,12 @@ export const DeviceScreen = observer(() => {
           <EllipsisText>{deviceTitle}</EllipsisText>
         </Flex>
         <ButtonGroup align='center' gap='none' mode='horizontal'>
-          <ToolButton
-            activeClassName='active'
+          <Button
             appearance='neutral'
+            before={<Icon24VerticalRectangle9x16Outline />}
             borderRadiusMode='inherit'
+            className={styles.screenRotationButton}
             disabled={!deviceScreenStore.isScreenRotated}
-            IconCompact={Icon24VerticalRectangle9x16Outline}
-            IconRegular={Icon24VerticalRectangle9x16Outline}
             mode='tertiary'
             title={`${t('Portrait')} (${currentRotation})`}
             onClick={() => {
@@ -54,13 +53,12 @@ export const DeviceScreen = observer(() => {
               deviceControlStore.tryToRotate(serial, 'portrait')
             }}
           />
-          <ToolButton
+          <Button
             appearance='neutral'
+            before={<Icon24VerticalRectangle9x16Outline />}
             borderRadiusMode='inherit'
-            className={styles.landscape}
+            className={cn(styles.screenRotationButton, styles.landscape)}
             disabled={deviceScreenStore.isScreenRotated}
-            IconCompact={Icon24VerticalRectangle9x16Outline}
-            IconRegular={Icon24VerticalRectangle9x16Outline}
             mode='tertiary'
             title={`${t('Landscape')} (${currentRotation})`}
             onClick={() => {
