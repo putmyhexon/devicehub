@@ -7,6 +7,7 @@ import { Icon24VerticalRectangle9x16Outline, Icon28DevicesOutline } from '@vkont
 import { useTranslation } from 'react-i18next'
 
 import { ConditionalRender } from '@/components/lib/conditional-render'
+import { ScreenQualitySelector } from '@/components/ui/screen-quality-selector'
 
 import { deviceScreenStore } from '@/store/device-screen-store/device-screen-store'
 import { useScreenAutoQuality } from '@/lib/hooks/use-screen-auto-quality.hook'
@@ -37,7 +38,7 @@ export const DeviceScreen = observer(() => {
           <Icon28DevicesOutline className={styles.icon} height={25} width={25} />
           <EllipsisText>{deviceTitle}</EllipsisText>
         </Flex>
-        <ButtonGroup gap='none' mode='horizontal'>
+        <ButtonGroup align='center' gap='none' mode='horizontal'>
           <ToolButton
             activeClassName='active'
             appearance='neutral'
@@ -68,6 +69,9 @@ export const DeviceScreen = observer(() => {
               deviceControlStore.tryToRotate(serial, 'landscape')
             }}
           />
+          <ConditionalRender conditions={[!deviceScreenStore.getDevice?.ios]}>
+            <ScreenQualitySelector />
+          </ConditionalRender>
         </ButtonGroup>
       </Flex>
       <div ref={canvasWrapperRef} className={styles.deviceScreen}>

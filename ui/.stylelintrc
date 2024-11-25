@@ -16,7 +16,8 @@
     {
       "files": [
         "src/components/views/settings-page/settings-page.module.css",
-        "src/components/views/control-page/control-page.module.css"
+        "src/components/views/control-page/control-page.module.css",
+        "src/components/lib/marked-slider-range/marked-slider-range.module.css"
       ],
       "rules": {
         "selector-class-pattern": null

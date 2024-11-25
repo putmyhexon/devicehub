@@ -1,3 +1,7 @@
 .devicesPage {
   padding: 0 10px;
+
+  @media (width <= 767px) {
+    padding: 0;
+  }
 }

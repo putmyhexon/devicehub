@@ -1,19 +1,16 @@
-import { useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Button, Card, Checkbox, Flex, FormItem, FormLayoutGroup } from '@vkontakte/vkui'
-import { Icon24Filter } from '@vkontakte/icons'
 import { observer } from 'mobx-react-lite'
+import { useTranslation } from 'react-i18next'
+import { Icon24Filter } from '@vkontakte/icons'
+import { Button, Checkbox, Flex, FormItem, FormLayoutGroup } from '@vkontakte/vkui'
 
-import { ConditionalRender } from '@/components/lib/conditional-render'
 import { COLUMN_VISIBILITY_DEFAULT } from '@/components/ui/device-table/constants'
 import { DEVICE_COLUMNS } from '@/components/ui/device-table/columns'
+import { PopoverContainer } from '@/components/lib/popover-container'
 
-import { useClickOutside } from '@/lib/hooks/use-click-outside.hook'
 import { deviceTableState } from '@/store/device-table-state'
 
 import styles from './table-column-visibility.module.css'
 
-import type { MouseEvent } from 'react'
 import type { ArrayType } from '@/types/array-type.type'
 
 const COLUMNS_BY_GROUP = Object.groupBy(DEVICE_COLUMNS, (column) => column.meta?.columnGroup || 'Other')
@@ -51,28 +48,18 @@ const RowsGroup = observer(({ columns, groupName }: RowsGroupProps) => {
 })
 
 export const TableColumnVisibility = observer(() => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const cardRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
 
-  useClickOutside(cardRef, () => setIsMenuOpen(false))
-
-  const onMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation()
-
-    setIsMenuOpen((isOpen) => !isOpen)
-  }
-
-  const onResetClick = () => {
+  const onResetClick = (onClose: () => void) => {
     deviceTableState.setColumnVisibility(COLUMN_VISIBILITY_DEFAULT)
 
-    setIsMenuOpen(false)
+    onClose()
   }
 
   return (
-    <div className={styles.tableColumnVisibility}>
-      <ConditionalRender conditions={[isMenuOpen]}>
-        <Card className={styles.menu} getRootRef={cardRef} mode='shadow'>
+    <PopoverContainer
+      content={(onClose) => (
+        <>
           <Flex>
             <div>
               {FIRST_THREE_COLUMN_GROUPS.map(([group, columns]) => (
@@ -85,14 +72,15 @@ export const TableColumnVisibility = observer(() => {
               ))}
             </div>
           </Flex>
-          <Button className={styles.resetButton} size='s' onClick={onResetClick}>
+          <Button className={styles.resetButton} size='s' onClick={() => onResetClick(onClose)}>
             {t('Reset')}
           </Button>
-        </Card>
-      </ConditionalRender>
-      <Button before={<Icon24Filter />} mode='tertiary' size='m' onClick={onMenuOpen}>
+        </>
+      )}
+    >
+      <Button before={<Icon24Filter />} mode='tertiary' size='m'>
         {t('Customize')}
       </Button>
-    </div>
+    </PopoverContainer>
   )
 })

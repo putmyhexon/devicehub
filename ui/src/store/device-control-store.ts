@@ -7,10 +7,16 @@ import { deviceListStore } from './device-list-store'
 import type { EffectiveConnectionType } from '@/vite-env'
 
 class DeviceControlStore {
-  private currentNetworkType: EffectiveConnectionType = '4g'
+  private currentNetworkType: EffectiveConnectionType = '3g'
+
+  currentQuality = 20
 
   constructor() {
     makeAutoObservable(this)
+  }
+
+  setCurrentQuality(quality: number): void {
+    this.currentQuality = quality
   }
 
   tryToRotate(serial: string, rotation: 'portrait' | 'landscape'): void {
@@ -73,6 +79,8 @@ class DeviceControlStore {
     if (!device) return
 
     controlService.changeQuality(device, quality)
+
+    this.setCurrentQuality(quality)
   }
 
   autoQuality(serial: string): void {
@@ -90,27 +98,31 @@ class DeviceControlStore {
     switch (this.currentNetworkType) {
       case 'slow-2g': {
         controlService.changeQuality(device, 10)
+        this.setCurrentQuality(10)
         break
       }
 
       case '2g': {
         controlService.changeQuality(device, 20)
+        this.setCurrentQuality(20)
         break
       }
 
       case '3g': {
         controlService.changeQuality(device, 60)
+        this.setCurrentQuality(60)
         break
       }
 
       case '4g': {
         controlService.changeQuality(device, 80)
+        this.setCurrentQuality(80)
         break
       }
 
       default: {
         controlService.changeQuality(device, 80)
-        break
+        this.setCurrentQuality(80)
       }
     }
   }

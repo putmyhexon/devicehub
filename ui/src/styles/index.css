@@ -4,8 +4,4 @@
 .pageWrapper {
   height: 100%;
   padding-top: var(--vkui_internal--panel_header_height);
-
-  @media (width <= 767px) {
-    padding: 0;
-  }
 }
