@@ -9,7 +9,7 @@ import type { EffectiveConnectionType } from '@/vite-env'
 class DeviceControlStore {
   private currentNetworkType: EffectiveConnectionType = '3g'
 
-  currentQuality = 20
+  currentQuality = 60
 
   constructor() {
     makeAutoObservable(this)
