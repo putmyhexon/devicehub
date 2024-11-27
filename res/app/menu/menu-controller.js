@@ -45,7 +45,7 @@ module.exports = function MenuCtrl(
     $scope.logout = function() {
         $http.get('/app/api/v1/auth_url').then(function(response) {
             let authUrl = response.data.authUrl
-            if (!authUrl.includes('mock') && !authUrl.includes('ldap')) {
+            if (authUrl.includes('openid')) {
                 GenericModalService.open({
                     message: 'Вы авторизованы через способ, когда вход происходит автоматически'
                     , type: 'Warning'
@@ -65,7 +65,8 @@ module.exports = function MenuCtrl(
                 $cookies.remove('XSRF-TOKEN', {path: '/'})
                 $cookies.remove('ssid', {path: '/'})
                 $cookies.remove('ssid.sig', {path: '/'})
-                $window.location = '/'
+                $cookies.remove('token', {path: '/'})
+                $window.location = '/auth'
                 setTimeout(function() {
                     socket.disconnect()
                 }, 100)
