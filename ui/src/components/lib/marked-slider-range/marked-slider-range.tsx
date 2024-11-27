@@ -4,14 +4,14 @@ import styles from './marked-slider-range.module.css'
 
 type MarkedSliderRangeProps = {
   value: number
-  onChange: (value: number) => void
+  onAfterChange: (value: number) => void
   marks: number[]
   min?: number
   max?: number
   step?: number
 }
 
-export const MarkedSliderRange = ({ min, max, step, value, marks, onChange }: MarkedSliderRangeProps) => (
+export const MarkedSliderRange = ({ min, max, step, value, marks, onAfterChange }: MarkedSliderRangeProps) => (
   <div className={styles.sliderWrapper}>
     <ReactSlider
       className={styles.slider}
@@ -23,7 +23,7 @@ export const MarkedSliderRange = ({ min, max, step, value, marks, onChange }: Ma
       thumbClassName={styles.sliderThumb}
       trackClassName='sliderTrack'
       value={value}
-      onChange={onChange}
+      onAfterChange={onAfterChange}
     />
   </div>
 )

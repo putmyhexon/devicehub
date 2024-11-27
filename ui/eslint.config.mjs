@@ -357,5 +357,11 @@ export default tseslint.config(
     rules: {
       'max-params': 'off',
     },
+  },
+  {
+    files: ['src/lib/utils/debounce.util.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
   }
 )
