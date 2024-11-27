@@ -307,5 +307,7 @@
   "Something went wrong": "Что-то пошло не так",
   "Booked before": "Забронировано до",
   "Users": "Пользователи",
-  "Current rotation:": "Текущая ротация:"
+  "Current rotation:": "Текущая ротация:",
+  "Speed": "Скорость",
+  "Quality": "Качество"
 }

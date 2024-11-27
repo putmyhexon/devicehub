@@ -291,5 +291,7 @@
   "Something went wrong": "algo salió mal",
   "Groups": "Grupos",
   "Users": "Usuarios",
-  "Landscape": "Paisaje"
+  "Landscape": "Paisaje",
+  "Speed": "Velocidad",
+  "Quality": "Calidad"
 }

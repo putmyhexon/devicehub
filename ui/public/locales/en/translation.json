@@ -291,5 +291,7 @@
   "Something went wrong": "Something went wrong",
   "Groups": "Groups",
   "Users": "Users",
-  "Landscape": "Landscape"
+  "Landscape": "Landscape",
+  "Speed": "Speed",
+  "Quality": "Quality"
 }

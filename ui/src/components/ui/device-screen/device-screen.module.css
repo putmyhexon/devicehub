@@ -12,6 +12,11 @@
   }
 }
 
+.screenRotationButton {
+  width: 40px;
+  height: 40px;
+}
+
 .landscape {
   transform: rotate(90deg);
 }
