@@ -58,7 +58,7 @@ export const DeviceControlPanel = () => {
         content: <Div />,
       },
     ],
-    []
+    [t]
   )
 
   const [selectedTab, setSelectedTab] = useState(tabsContent[0].id)

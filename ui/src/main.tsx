@@ -1,9 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { AdaptivityProvider, ConfigProvider } from '@vkontakte/vkui'
 import { QueryClientProvider } from '@tanstack/react-query'
 
 import { App } from '@/components/app/app'
+import { ThemeProvider } from '@/components/app/providers/theme-provider'
 
 import { queryClient } from '@/config/queries/query-client'
 
@@ -17,13 +17,11 @@ import '@/config/i18n/i18n'
 enableMocking().then(() => {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
-      <ConfigProvider platform='vkcom'>
-        <AdaptivityProvider>
-          <QueryClientProvider client={queryClient}>
-            <App />
-          </QueryClientProvider>
-        </AdaptivityProvider>
-      </ConfigProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </QueryClientProvider>
     </StrictMode>
   )
 })
