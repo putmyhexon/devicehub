@@ -205,5 +205,13 @@
   "Landscape": "Krajobraz",
   "Current rotation:": "Obecna rotacja:",
   "Speed": "Prędkość",
-  "Quality": "Jakość"
+  "Quality": "Jakość",
+  "Device Buttons": "Przyciski urządzenia",
+  "Copy link": "Skopiuj link",
+  "Run the following on your command line to debug the device from your IDE": "Uruchom następujące polecenie w wierszu poleceń, aby debugować urządzenie z poziomu IDE",
+  "Remote debug": "Zdalne debugowanie",
+  "Reset all browser settings": "Zresetuj wszystkie ustawienia przeglądarki",
+  "Open link or deeplink": "Otwórz link lub głęboki link",
+  "Extend booking": "Przedłuż rezerwację",
+  "Device booking": "Rezerwacja urządzenia"
 }

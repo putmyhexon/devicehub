@@ -332,5 +332,10 @@
   "Users": "ユーザー",
   "Current rotation:": "現在の回転数:",
   "Speed": "スピード",
-  "Quality": "品質"
+  "Quality": "品質",
+  "Device Buttons": "デバイスのボタン",
+  "Copy link": "リンクをコピー",
+  "Open link or deeplink": "オープンリンクまたはディープリンク",
+  "Extend booking": "予約の延長",
+  "Device booking": "デバイスの予約"
 }

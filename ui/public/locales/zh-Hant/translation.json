@@ -274,5 +274,12 @@
   "Users": "使用者",
   "Shell": "殼",
   "Speed": "速度",
-  "Quality": "品質"
+  "Quality": "品質",
+  "Device Buttons": "設備按鈕",
+  "Copy link": "複製連結",
+  "Run the following on your command line to debug the device from your IDE": "在命令列上執行以下命令以從 IDE 偵錯設備",
+  "Open link or deeplink": "打開鏈接或深層鏈接",
+  "Executes remote shell commands": "執行遠端 shell 命令",
+  "Extend booking": "延長預訂",
+  "Device booking": "設備預訂"
 }

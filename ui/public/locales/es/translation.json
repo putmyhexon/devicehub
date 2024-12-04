@@ -293,5 +293,11 @@
   "Users": "Usuarios",
   "Landscape": "Paisaje",
   "Speed": "Velocidad",
-  "Quality": "Calidad"
+  "Quality": "Calidad",
+  "Device Buttons": "Botones del dispositivo",
+  "Copy link": "Copiar enlace",
+  "Run the following on your command line to debug the device from your IDE": "Ejecute lo siguiente en su línea de comando para depurar el dispositivo desde su IDE",
+  "Open link or deeplink": "Abrir enlace o enlace profundo",
+  "Extend booking": "Ampliar reserva",
+  "Device booking": "Reserva de dispositivos"
 }
