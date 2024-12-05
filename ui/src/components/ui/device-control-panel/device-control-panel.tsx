@@ -11,6 +11,8 @@ import {
 
 import { TabsPanel } from '@/components/lib/tabs-panel'
 
+import { DashboardTab } from './tabs/dashboard-tab'
+
 import styles from './device-control-panel.module.css'
 
 import type { TabsContent } from '@/components/lib/tabs-panel'
@@ -25,7 +27,7 @@ export const DeviceControlPanel = () => {
         title: t('Dashboard'),
         before: <Icon16Square4Outline height={17} width={17} />,
         ariaControls: 'tab-content-dashboard',
-        content: <Div />,
+        content: <DashboardTab />,
       },
       {
         id: 'tab-logs',

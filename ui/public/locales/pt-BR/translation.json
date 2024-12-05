@@ -375,5 +375,10 @@
   "Groups": "Grupos",
   "Users": "Usuários",
   "Speed": "Velocidade",
-  "Quality": "Qualidade"
+  "Quality": "Qualidade",
+  "Device Buttons": "Botões do dispositivo",
+  "Copy link": "Copiar link",
+  "Open link or deeplink": "Abrir link ou link direto",
+  "Extend booking": "Estender reserva",
+  "Device booking": "Reserva de dispositivos"
 }
