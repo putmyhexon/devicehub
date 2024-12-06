@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeSelect } from '@vkontakte/vkui'
+
+import { BaseSelect } from '@/components/lib/base-select'
 
 import { SUPPORTED_LANGUAGES } from '@/config/i18n/i18n'
 
-import styles from './lang-switcher.module.css'
-
-import type { ChangeEvent } from 'react'
+import type { SelectOption } from '@/components/lib/base-select'
 
 type SupportedLanguages = (typeof SUPPORTED_LANGUAGES)[number]
 
@@ -25,31 +24,24 @@ const OPTION_NAMES: Record<SupportedLanguages, string> = {
   ['zh-Hant']: '繁體中文',
 }
 
-const LANGUAGES_OPTIONS = SUPPORTED_LANGUAGES.map((language) => ({
-  id: language,
+const LANGUAGES_OPTIONS: SelectOption<SupportedLanguages>[] = SUPPORTED_LANGUAGES.map((language) => ({
+  value: language,
   name: OPTION_NAMES[language],
 }))
 
 export const LangSwitcher = () => {
   const { i18n } = useTranslation()
 
-  const defaultLanguage = LANGUAGES_OPTIONS.find((option) => option.id === i18n.language)?.id || LANGUAGES_OPTIONS[0].id
+  const defaultLanguage =
+    LANGUAGES_OPTIONS.find((option) => option.value === i18n.language)?.value || LANGUAGES_OPTIONS[0].value
 
   const [currentLanguage, setCurrentLanguage] = useState(defaultLanguage)
 
-  const onSwitcherChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setCurrentLanguage(event.target.value as SupportedLanguages)
+  const onSwitcherChange = (value: string) => {
+    setCurrentLanguage(value as SupportedLanguages)
 
-    i18n.changeLanguage(event.target.value)
+    i18n.changeLanguage(value)
   }
 
-  return (
-    <NativeSelect className={styles.langSwitcher} value={currentLanguage} onChange={onSwitcherChange}>
-      {LANGUAGES_OPTIONS.map((option) => (
-        <option key={option.id} value={option.id}>
-          {option.name}
-        </option>
-      ))}
-    </NativeSelect>
-  )
+  return <BaseSelect options={LANGUAGES_OPTIONS} value={currentLanguage} onChange={onSwitcherChange} />
 }

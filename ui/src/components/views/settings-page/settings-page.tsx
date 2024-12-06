@@ -61,7 +61,7 @@ export const SettingsPage = () => {
         content: <Div />,
       },
     ],
-    []
+    [t]
   )
 
   return (
