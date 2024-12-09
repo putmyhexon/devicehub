@@ -1,9 +1,10 @@
 import { makeAutoObservable } from 'mobx'
 
 import { scalingService } from '@/services/scaling-service/scaling-service'
-import { controlService } from '@/services/core/control-service/control-service'
+import { DeviceControlService } from '@/services/core/device-control-service/device-control-service'
+import { serviceLocator } from '@/services/service-locator'
 
-import { deviceScreenStore } from '@/store/device-screen-store/device-screen-store'
+import { DeviceScreenStore } from '@/store/device-screen-store/device-screen-store'
 import { deviceBySerialStore } from '@/store/device-by-serial-store'
 
 import type {
@@ -19,11 +20,13 @@ import type {
 } from './types'
 import type { MouseEvent as ReactMouseEvent } from 'react'
 
-class TouchService {
+export class TouchService {
+  private readonly cycle = 100
+  private readonly deviceControlService: DeviceControlService
+  private readonly deviceScreenStore: DeviceScreenStore
   private prevCoords: { x: number; y: number } = { x: 0, y: 0 }
   private slotted: Record<string, number> = {}
   private seq = -1
-  private cycle = 100
   private fakePinch = false
   private lastPossiblyBuggyMouseUpEvent: MouseEvent | null = null
   private isMouseDown = false
@@ -38,6 +41,8 @@ class TouchService {
 
   constructor() {
     makeAutoObservable(this)
+    this.deviceControlService = serviceLocator.get<DeviceControlService>(DeviceControlService.name)
+    this.deviceScreenStore = serviceLocator.get<DeviceScreenStore>(DeviceScreenStore.name)
   }
 
   mouseUpBugWorkaroundListener(event: ReactMouseEvent): void {
@@ -60,14 +65,13 @@ class TouchService {
 
     const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
 
-    if (!device?.channel || !device.display?.width || !device.display?.height || !deviceScreenStore.getCanvasWrapper)
-      return
+    if (!device?.display?.width || !device.display?.height || !this.deviceScreenStore.getCanvasWrapper) return
 
     this.fakePinch = isAltKeyPressed
 
-    const screenBoundingRect = deviceScreenStore.getCanvasWrapper.getBoundingClientRect()
+    const screenBoundingRect = this.deviceScreenStore.getCanvasWrapper.getBoundingClientRect()
 
-    this.startMousing(device.channel, focusInput)
+    this.startMousing(focusInput)
 
     const scaled = this.getScaledCoords({
       displayWidth: device.display.width,
@@ -85,8 +89,7 @@ class TouchService {
 
     const pressure = 0.5
 
-    controlService.touchDown({
-      deviceChannel: device.channel,
+    this.deviceControlService.touchDown({
       seq: this.nextSeq(),
       contact: 0,
       x: scaled.coords.xP,
@@ -95,8 +98,7 @@ class TouchService {
     })
 
     if (this.fakePinch) {
-      controlService.touchDown({
-        deviceChannel: device.channel,
+      this.deviceControlService.touchDown({
         seq: this.nextSeq(),
         contact: 1,
         x: 1 - scaled.coords.xP,
@@ -105,7 +107,7 @@ class TouchService {
       })
     }
 
-    controlService.touchCommit(device.channel, this.nextSeq())
+    this.deviceControlService.touchCommit(this.nextSeq())
 
     this.setFinger({ index: 0, x: scaled.x, y: scaled.y, pressure })
 
@@ -143,10 +145,9 @@ class TouchService {
 
     const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
 
-    if (!device?.channel || !device.display?.width || !device.display?.height || !deviceScreenStore.getCanvasWrapper)
-      return
+    if (!device?.display?.width || !device.display?.height || !this.deviceScreenStore.getCanvasWrapper) return
 
-    const screenBoundingRect = deviceScreenStore.getCanvasWrapper.getBoundingClientRect()
+    const screenBoundingRect = this.deviceScreenStore.getCanvasWrapper.getBoundingClientRect()
 
     const scaled = this.getScaledCoords({
       displayWidth: device.display.width,
@@ -164,8 +165,7 @@ class TouchService {
         Math.abs(this.prevCoords.y - scaled.coords.yP) >= 0.1) &&
       !!device.ios
     ) {
-      controlService.touchMoveIos({
-        deviceChannel: device.channel,
+      this.deviceControlService.touchMoveIos({
         x: scaled.coords.xP,
         y: scaled.coords.yP,
         pX: this.prevCoords.x,
@@ -176,13 +176,13 @@ class TouchService {
       })
     }
 
-    controlService.touchUp(device.channel, this.nextSeq(), 0)
+    this.deviceControlService.touchUp(this.nextSeq(), 0)
 
     if (this.fakePinch) {
-      controlService.touchUp(device.channel, this.nextSeq(), 1)
+      this.deviceControlService.touchUp(this.nextSeq(), 1)
     }
 
-    controlService.touchCommit(device.channel, this.nextSeq())
+    this.deviceControlService.touchCommit(this.nextSeq())
 
     this.removeFinger(0)
 
@@ -190,7 +190,7 @@ class TouchService {
       this.removeFinger(1)
     }
 
-    this.stopMousing(device.channel)
+    this.stopMousing()
   }
 
   mouseMoveListener({
@@ -207,10 +207,9 @@ class TouchService {
 
     const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
 
-    if (!device?.channel || !device.display?.width || !device.display?.height || !deviceScreenStore.getCanvasWrapper)
-      return
+    if (!device?.display?.width || !device.display?.height || !this.deviceScreenStore.getCanvasWrapper) return
 
-    const screenBoundingRect = deviceScreenStore.getCanvasWrapper.getBoundingClientRect()
+    const screenBoundingRect = this.deviceScreenStore.getCanvasWrapper.getBoundingClientRect()
 
     const scaled = this.getScaledCoords({
       displayWidth: device.display.width,
@@ -228,8 +227,7 @@ class TouchService {
 
     const pressure = 0.5
 
-    controlService.touchMove({
-      deviceChannel: device.channel,
+    this.deviceControlService.touchMove({
       seq: this.nextSeq(),
       contact: 0,
       x: scaled.coords.xP,
@@ -239,12 +237,11 @@ class TouchService {
 
     if (addGhostFinger && !!device.ios) {
       // TODO: implement touchDownIos
-      // controlService.touchDownIos(this.nextSeq(), 1, 1 - scaled.coords.xP, 1 - scaled.coords.yP, pressure)
+      // this.deviceControlService.touchDownIos(this.nextSeq(), 1, 1 - scaled.coords.xP, 1 - scaled.coords.yP, pressure)
     }
 
     if (addGhostFinger && !device.ios) {
-      controlService.touchDown({
-        deviceChannel: device.channel,
+      this.deviceControlService.touchDown({
         seq: this.nextSeq(),
         contact: 1,
         x: 1 - scaled.coords.xP,
@@ -254,12 +251,11 @@ class TouchService {
     }
 
     if (!addGhostFinger && deleteGhostFinger) {
-      controlService.touchUp(device.channel, this.nextSeq(), 1)
+      this.deviceControlService.touchUp(this.nextSeq(), 1)
     }
 
     if (!addGhostFinger && !deleteGhostFinger && this.fakePinch) {
-      controlService.touchMove({
-        deviceChannel: device.channel,
+      this.deviceControlService.touchMove({
         seq: this.nextSeq(),
         contact: 1,
         x: 1 - scaled.coords.xP,
@@ -268,7 +264,7 @@ class TouchService {
       })
     }
 
-    controlService.touchCommit(device.channel, this.nextSeq())
+    this.deviceControlService.touchCommit(this.nextSeq())
 
     this.setFinger({ index: 0, x: scaled.x, y: scaled.y, pressure })
 
@@ -291,13 +287,12 @@ class TouchService {
 
     const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
 
-    if (!device?.channel || !device.display?.width || !device.display?.height || !deviceScreenStore.getCanvasWrapper)
-      return
+    if (!device?.display?.width || !device.display?.height || !this.deviceScreenStore.getCanvasWrapper) return
 
-    const screenBoundingRect = deviceScreenStore.getCanvasWrapper.getBoundingClientRect()
+    const screenBoundingRect = this.deviceScreenStore.getCanvasWrapper.getBoundingClientRect()
 
     if (touches.length === changedTouches.length) {
-      this.startTouching(device.channel)
+      this.startTouching()
     }
 
     const currentTouches: Record<string, number> = {}
@@ -323,7 +318,7 @@ class TouchService {
 
       this.slots.sort().reverse()
 
-      controlService.touchReset(device.channel, this.nextSeq())
+      this.deviceControlService.touchReset(this.nextSeq())
 
       this.removeAllFingers()
     }
@@ -355,8 +350,7 @@ class TouchService {
       const pressure = touch.force || 0.5
 
       if (!device.ios) {
-        controlService.touchDown({
-          deviceChannel: device.channel,
+        this.deviceControlService.touchDown({
           seq: this.nextSeq(),
           contact: slot,
           x: scaled.coords.xP,
@@ -368,7 +362,7 @@ class TouchService {
       this.setFinger({ index: slot, x: scaled.x, y: scaled.y, pressure })
     }
 
-    controlService.touchCommit(device.channel, this.nextSeq())
+    this.deviceControlService.touchCommit(this.nextSeq())
   }
 
   touchMoveListener({ serial, changedTouches }: TouchMoveListenerArgs): void {
@@ -376,10 +370,9 @@ class TouchService {
 
     const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
 
-    if (!device?.channel || !device.display?.width || !device.display?.height || !deviceScreenStore.getCanvasWrapper)
-      return
+    if (!device?.display?.width || !device.display?.height || !this.deviceScreenStore.getCanvasWrapper) return
 
-    const screenBoundingRect = deviceScreenStore.getCanvasWrapper.getBoundingClientRect()
+    const screenBoundingRect = this.deviceScreenStore.getCanvasWrapper.getBoundingClientRect()
 
     for (let i = 0, l = changedTouches.length; i < l; ++i) {
       const touch = changedTouches[i]
@@ -396,8 +389,7 @@ class TouchService {
 
       const pressure = touch.force || 0.5
 
-      controlService.touchMove({
-        deviceChannel: device.channel,
+      this.deviceControlService.touchMove({
         seq: this.nextSeq(),
         contact: slot,
         x: scaled.coords.xP,
@@ -408,17 +400,13 @@ class TouchService {
       this.setFinger({ index: slot, x: scaled.x, y: scaled.y, pressure })
     }
 
-    controlService.touchCommit(device.channel, this.nextSeq())
+    this.deviceControlService.touchCommit(this.nextSeq())
   }
 
-  touchEndListener({ serial, touches, changedTouches }: TouchStartEndListenerArgs): void {
+  touchEndListener({ touches, changedTouches }: TouchStartEndListenerArgs): void {
     if (!this.isTouching) return
 
     this.isTouching = false
-
-    const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
-
-    if (!device?.channel) return
 
     let foundAny = false
 
@@ -437,7 +425,7 @@ class TouchService {
 
       this.slots.push(slot)
 
-      controlService.touchUp(device.channel, this.nextSeq(), slot)
+      this.deviceControlService.touchUp(this.nextSeq(), slot)
 
       this.removeFinger(slot)
 
@@ -445,10 +433,10 @@ class TouchService {
     }
 
     if (foundAny) {
-      controlService.touchCommit(device.channel, this.nextSeq())
+      this.deviceControlService.touchCommit(this.nextSeq())
 
       if (!touches.length) {
-        this.stopTouching(device.channel)
+        this.stopTouching()
       }
     }
   }
@@ -474,16 +462,16 @@ class TouchService {
     this.fingers = {}
   }
 
-  private startMousing(deviceChannel: string, focusInput: () => void): void {
-    controlService.gestureStart(deviceChannel, this.nextSeq())
+  private startMousing(focusInput: () => void): void {
+    this.deviceControlService.gestureStart(this.nextSeq())
 
     focusInput()
   }
 
-  private stopMousing(deviceChannel: string): void {
+  private stopMousing(): void {
     this.removeAllFingers()
 
-    controlService.gestureStop(deviceChannel, this.nextSeq())
+    this.deviceControlService.gestureStop(this.nextSeq())
   }
 
   private getScaledCoords({
@@ -503,7 +491,7 @@ class TouchService {
       boundingHeight: screenBoundingRect.height,
       relX: x,
       relY: y,
-      rotation: deviceScreenStore.getScreenRotation,
+      rotation: this.deviceScreenStore.getScreenRotation,
       isIosDevice: !!isIosDevice,
     })
 
@@ -514,15 +502,13 @@ class TouchService {
     }
   }
 
-  private startTouching(deviceChannel: string): void {
-    controlService.gestureStart(deviceChannel, this.nextSeq())
+  private startTouching(): void {
+    this.deviceControlService.gestureStart(this.nextSeq())
   }
 
-  private stopTouching(deviceChannel: string): void {
+  private stopTouching(): void {
     this.removeAllFingers()
 
-    controlService.gestureStop(deviceChannel, this.nextSeq())
+    this.deviceControlService.gestureStop(this.nextSeq())
   }
 }
-
-export const touchService = new TouchService()

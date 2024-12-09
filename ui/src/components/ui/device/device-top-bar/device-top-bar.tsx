@@ -8,20 +8,23 @@ import { Icon24VerticalRectangle9x16Outline, Icon28DevicesOutline } from '@vkont
 import { ConditionalRender } from '@/components/lib/conditional-render'
 import { ScreenQualitySelector } from '@/components/ui/screen-quality-selector'
 
-import { deviceScreenStore } from '@/store/device-screen-store/device-screen-store'
+import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
+import { DeviceScreenStore } from '@/store/device-screen-store/device-screen-store'
 import { deviceBySerialStore } from '@/store/device-by-serial-store'
-import { deviceControlStore } from '@/store/device-control-store'
+import { DeviceControlStore } from '@/store/device-control-store'
 
 import styles from './device-top-bar.module.css'
 
 export const DeviceTopBar = observer(() => {
   const { t } = useTranslation()
   const { serial } = useParams()
+  const deviceScreenStore = useServiceLocator<DeviceScreenStore>(DeviceScreenStore.name)
+  const deviceControlStore = useServiceLocator<DeviceControlStore>(DeviceControlStore.name)
 
   const { data: device } = deviceBySerialStore.deviceQueryResult(serial || '')
 
   const deviceTitle = !device?.ios ? `${device?.manufacturer || ''} ${device?.marketName || ''}` : device?.model || ''
-  const currentRotation = `${t('Current rotation:')} ${deviceScreenStore.getScreenRotation}°`
+  const currentRotation = `${t('Current rotation:')} ${deviceScreenStore?.getScreenRotation}°`
 
   return (
     <Flex align='center' className={styles.deviceHeader} justify='space-between'>
@@ -35,13 +38,13 @@ export const DeviceTopBar = observer(() => {
           before={<Icon24VerticalRectangle9x16Outline />}
           borderRadiusMode='inherit'
           className={styles.screenRotationButton}
-          disabled={!deviceScreenStore.isScreenRotated}
+          disabled={!deviceScreenStore?.isScreenRotated}
           mode='tertiary'
           title={`${t('Portrait')} (${currentRotation})`}
           onClick={() => {
             if (!serial) return
 
-            deviceControlStore.tryToRotate(serial, 'portrait')
+            deviceControlStore?.tryToRotate(serial, 'portrait')
           }}
         />
         <Button
@@ -49,13 +52,13 @@ export const DeviceTopBar = observer(() => {
           before={<Icon24VerticalRectangle9x16Outline />}
           borderRadiusMode='inherit'
           className={cn(styles.screenRotationButton, styles.landscape)}
-          disabled={deviceScreenStore.isScreenRotated}
+          disabled={deviceScreenStore?.isScreenRotated}
           mode='tertiary'
           title={`${t('Landscape')} (${currentRotation})`}
           onClick={() => {
             if (!serial) return
 
-            deviceControlStore.tryToRotate(serial, 'landscape')
+            deviceControlStore?.tryToRotate(serial, 'landscape')
           }}
         />
         <ConditionalRender conditions={[!device?.ios]}>

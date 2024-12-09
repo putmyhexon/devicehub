@@ -6,13 +6,13 @@ import { Spinner } from '@vkontakte/vkui'
 
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
-import { touchService } from '@/services/touch-service/touch-service'
-import { keyboardService } from '@/services/keyboard-service/keyboard-service'
+import { TouchService } from '@/services/touch-service/touch-service'
+import { KeyboardService } from '@/services/keyboard-service/keyboard-service'
 
-import { deviceScreenStore } from '@/store/device-screen-store/device-screen-store'
+import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
+import { DeviceScreenStore } from '@/store/device-screen-store/device-screen-store'
 import { useScreenAutoQuality } from '@/lib/hooks/use-screen-auto-quality.hook'
 import { useScreenStreaming } from '@/lib/hooks/use-screen-streaming.hook'
-import { deviceBySerialStore } from '@/store/device-by-serial-store'
 
 import styles from './device-screen.module.css'
 
@@ -23,8 +23,9 @@ export const DeviceScreen = observer(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const { serial } = useParams()
-
-  const { data: device } = deviceBySerialStore.deviceQueryResult(serial || '')
+  const deviceScreenStore = useServiceLocator<DeviceScreenStore>(DeviceScreenStore.name)
+  const touchService = useServiceLocator<TouchService>(TouchService.name)
+  const keyboardService = useServiceLocator<KeyboardService>(KeyboardService.name)
 
   useScreenStreaming({ canvasRef, canvasWrapperRef, serial })
   useScreenAutoQuality(serial)
@@ -34,7 +35,7 @@ export const DeviceScreen = observer(() => {
 
     event.preventDefault()
 
-    touchService.mouseDownListener({
+    touchService?.mouseDownListener({
       serial,
       mousePageX: event.pageX,
       mousePageY: event.pageY,
@@ -50,7 +51,7 @@ export const DeviceScreen = observer(() => {
 
     event.preventDefault()
 
-    touchService.mouseMoveListener({
+    touchService?.mouseMoveListener({
       serial,
       mousePageX: event.pageX,
       mousePageY: event.pageY,
@@ -64,20 +65,20 @@ export const DeviceScreen = observer(() => {
 
     event.preventDefault()
 
-    touchService.mouseUpListener({
+    touchService?.mouseUpListener({
       serial,
       mousePageX: event.pageX,
       mousePageY: event.pageY,
       isRightButtonPressed: event.button === 2,
     })
 
-    touchService.mouseUpBugWorkaroundListener(event)
+    touchService?.mouseUpBugWorkaroundListener(event)
   }
 
   const onTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
     if (!serial) return
 
-    touchService.touchEndListener({
+    touchService?.touchEndListener({
       serial,
       touches: event.nativeEvent.touches,
       changedTouches: event.nativeEvent.changedTouches,
@@ -87,13 +88,13 @@ export const DeviceScreen = observer(() => {
   const onTouchMove = (event: TouchEvent<HTMLDivElement>) => {
     if (!serial) return
 
-    touchService.touchMoveListener({ serial, changedTouches: event.nativeEvent.changedTouches })
+    touchService?.touchMoveListener({ serial, changedTouches: event.nativeEvent.changedTouches })
   }
 
   const onTouchStart = (event: TouchEvent<HTMLDivElement>) => {
     if (!serial) return
 
-    touchService.touchStartListener({
+    touchService?.touchStartListener({
       serial,
       touches: event.nativeEvent.touches,
       changedTouches: event.nativeEvent.changedTouches,
@@ -101,10 +102,7 @@ export const DeviceScreen = observer(() => {
   }
 
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (!device?.channel) return
-
-    keyboardService.changeListener({
-      deviceChannel: device.channel,
+    keyboardService?.changeListener({
       value: event.target.value,
       clearInput: () => {
         if (inputRef.current) {
@@ -115,30 +113,21 @@ export const DeviceScreen = observer(() => {
   }
 
   const onCopy = (event: ClipboardEvent) => {
-    if (!device?.channel) return
-
-    keyboardService.copyListener({
-      deviceChannel: device.channel,
-      isDeviceIos: !!device.ios,
+    keyboardService?.copyListener({
       preventDefault: event.preventDefault,
       setClipboardData: (content) => event.clipboardData.setData('text/plain', content),
     })
   }
 
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (!device?.channel) return
-
-    keyboardService.keyDownListener({
+    keyboardService?.keyDownListener({
       key: event.key,
-      deviceChannel: device.channel,
       preventDefault: event.preventDefault,
     })
   }
 
   const onKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (!device?.channel) return
-
-    keyboardService.keyUpListener(device.channel, {
+    keyboardService?.keyUpListener({
       code: event.code,
       key: event.key,
       keyCode: event.keyCode,
@@ -148,11 +137,7 @@ export const DeviceScreen = observer(() => {
   }
 
   const onPaste = (event: ClipboardEvent<HTMLInputElement>) => {
-    if (!device?.channel) return
-
-    keyboardService.pasteListener({
-      deviceChannel: device.channel,
-      isDeviceIos: !!device.ios,
+    keyboardService?.pasteListener({
       preventDefault: event.preventDefault,
       getClipboardData: () => event.clipboardData.getData('text/plain'),
     })
@@ -174,9 +159,9 @@ export const DeviceScreen = observer(() => {
         <div className={styles.canvasWrapper}>
           <canvas
             ref={canvasRef}
-            className={cn(styles.canvas, { [styles.rotated]: deviceScreenStore.isScreenRotated })}
+            className={cn(styles.canvas, { [styles.rotated]: !!deviceScreenStore?.isScreenRotated })}
           />
-          {touchService.slots.map((value, index) => (
+          {touchService?.slots.map((value, index) => (
             <span
               key={value}
               className={cn(styles.finger, { [styles.activeFinger]: touchService.fingers[index] })}
@@ -189,7 +174,7 @@ export const DeviceScreen = observer(() => {
               }
             />
           ))}
-          <ConditionalRender conditions={[deviceScreenStore.isScreenLoading]}>
+          <ConditionalRender conditions={[!!deviceScreenStore?.isScreenLoading]}>
             <Spinner className={styles.spinner} size='large' />
           </ConditionalRender>
         </div>

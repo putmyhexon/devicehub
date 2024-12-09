@@ -1,5 +1,4 @@
 export type TouchDownArgs = {
-  deviceChannel: string
   seq: number
   contact: number
   x: number
@@ -8,7 +7,6 @@ export type TouchDownArgs = {
 }
 
 export type TouchMoveIosArgs = {
-  deviceChannel: string
   x: number
   y: number
   pX: number
@@ -19,17 +17,9 @@ export type TouchMoveIosArgs = {
 }
 
 export type TouchMoveArgs = {
-  deviceChannel: string
   seq: number
   contact: number
   x: number
   y: number
   pressure: number
-}
-
-export type SendTwoWayArgs<T> = {
-  deviceChannel: string
-  isDeviceIos: boolean
-  action: string
-  data?: T
 }

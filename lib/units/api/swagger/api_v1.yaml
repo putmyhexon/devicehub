@@ -3213,6 +3213,8 @@ components:
               type: string
           description: Owner of the group in conflict
     Device:
+      required:
+      - serial
       type: object
       properties:
         _id:

@@ -5,7 +5,7 @@ import { deviceBySerialStore } from '@/store/device-by-serial-store'
 import type { ElementBoundSize, StartScreenStreamingMessage } from './types'
 import type { Device } from '@/generated/types'
 
-class DeviceScreenStore {
+export class DeviceScreenStore {
   private websocket: WebSocket | null = null
   private context: ImageBitmapRenderingContext | null = null
   private canvasWrapper: HTMLDivElement | null = null
@@ -103,8 +103,6 @@ class DeviceScreenStore {
     return Boolean(
       // NO if the user has disabled the screen.
       this.showScreen &&
-        // NO if we're not even using the device anymore.
-        // $scope.device.using &&
         // NO if the page is not visible (e.g. background tab).
         document.visibilityState === 'visible' &&
         // NO if we don't have a connection yet.
@@ -251,5 +249,3 @@ class DeviceScreenStore {
     // TODO: Reconnect
   }
 }
-
-export const deviceScreenStore = new DeviceScreenStore()

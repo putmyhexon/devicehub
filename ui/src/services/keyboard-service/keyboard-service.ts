@@ -1,4 +1,5 @@
-import { controlService } from '@/services/core/control-service/control-service'
+import { DeviceControlService } from '@/services/core/device-control-service/device-control-service'
+import { serviceLocator } from '@/services/service-locator'
 
 import type {
   ChangeListenerArgs,
@@ -8,7 +9,13 @@ import type {
   PasteListenerArgs,
 } from './types'
 
-class KeyboardService {
+export class KeyboardService {
+  private readonly deviceControlService: DeviceControlService
+
+  constructor() {
+    this.deviceControlService = serviceLocator.get<DeviceControlService>(DeviceControlService.name)
+  }
+
   isChangeCharsetKey({ code, key, keyCode, charCode }: KeyUpListenerArgs): boolean {
     // NOTE: Add any special key here for changing charset
 
@@ -38,11 +45,11 @@ class KeyboardService {
     return false
   }
 
-  handleSpecialKeys(deviceChannel: string, args: KeyUpListenerArgs): boolean {
+  handleSpecialKeys(args: KeyUpListenerArgs): boolean {
     if (this.isChangeCharsetKey(args)) {
       args.preventDefault()
 
-      controlService.switchCharset(deviceChannel)
+      this.deviceControlService.switchCharset()
 
       return true
     }
@@ -50,36 +57,36 @@ class KeyboardService {
     return false
   }
 
-  keyUpListener(deviceChannel: string, args: KeyUpListenerArgs): void {
-    if (!this.handleSpecialKeys(deviceChannel, args)) {
-      controlService.keyUp(deviceChannel)(args.key)
+  keyUpListener(args: KeyUpListenerArgs): void {
+    if (!this.handleSpecialKeys(args)) {
+      this.deviceControlService.keyUp(args.key)
     }
   }
 
-  keyDownListener({ deviceChannel, key, preventDefault }: KeyDownListenerArgs): void {
+  keyDownListener({ key, preventDefault }: KeyDownListenerArgs): void {
     // NOTE: Prevent tab from switching focus to the next element, we only want that to happen on the device side.
     if (key === 'Tab') preventDefault()
 
-    controlService.keyDown(deviceChannel)(key)
+    this.deviceControlService.keyDown(key)
   }
 
-  changeListener({ deviceChannel, value, clearInput }: ChangeListenerArgs): void {
-    controlService.type(deviceChannel, value)
+  changeListener({ value, clearInput }: ChangeListenerArgs): void {
+    this.deviceControlService.type(value)
 
     clearInput()
   }
 
-  pasteListener({ deviceChannel, isDeviceIos, getClipboardData, preventDefault }: PasteListenerArgs): void {
+  pasteListener({ getClipboardData, preventDefault }: PasteListenerArgs): void {
     /* NOTE: Prevent value change or the input event sees it. This way we get
       the real value instead of any "\n" -> " " conversions we might see
       in the input value. 
     */
     preventDefault()
 
-    controlService.paste(deviceChannel, isDeviceIos, getClipboardData())
+    this.deviceControlService.paste(getClipboardData())
   }
 
-  copyListener({ deviceChannel, isDeviceIos, setClipboardData, preventDefault }: CopyListenerArgs): void {
+  copyListener({ setClipboardData, preventDefault }: CopyListenerArgs): void {
     /* NOTE: This is asynchronous and by the time it returns we will no longer
       have access to setData(). In other words it doesn't work. Currently
       what happens is that on the first copy, it will attempt to fetch
@@ -88,12 +95,10 @@ class KeyboardService {
     */
     preventDefault()
 
-    controlService.copy(deviceChannel, isDeviceIos).then((clipboardContent) => {
+    this.deviceControlService.copy().then((clipboardContent) => {
       if (clipboardContent && typeof clipboardContent === 'string') {
         setClipboardData(clipboardContent)
       }
     })
   }
 }
-
-export const keyboardService = new KeyboardService()

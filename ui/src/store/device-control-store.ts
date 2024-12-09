@@ -1,60 +1,59 @@
 import { makeAutoObservable } from 'mobx'
 
-import { controlService } from '@/services/core/control-service/control-service'
+import { DeviceControlService } from '@/services/core/device-control-service/device-control-service'
+import { serviceLocator } from '@/services/service-locator'
 
 import { deviceBySerialStore } from './device-by-serial-store'
 
 import type { EffectiveConnectionType } from '@/vite-env'
 
-class DeviceControlStore {
+export class DeviceControlStore {
   private currentNetworkType: EffectiveConnectionType = '3g'
+  private readonly deviceControlService: DeviceControlService
 
   currentQuality = 60
 
   constructor() {
     makeAutoObservable(this)
+    this.deviceControlService = serviceLocator.get<DeviceControlService>(DeviceControlService.name)
   }
 
   setCurrentQuality(quality: number): void {
     this.currentQuality = quality
   }
 
-  goHome(deviceChannel: string): void {
-    controlService.home(deviceChannel)
+  goHome(): void {
+    this.deviceControlService.home()
   }
 
-  openMenu(deviceChannel: string): void {
-    controlService.menu(deviceChannel)
+  openMenu(): void {
+    this.deviceControlService.menu()
   }
 
-  openAppSwitch(deviceChannel: string): void {
-    controlService.appSwitch(deviceChannel)
+  openAppSwitch(): void {
+    this.deviceControlService.appSwitch()
   }
 
-  goBack(deviceChannel: string): void {
-    controlService.back(deviceChannel)
+  goBack(): void {
+    this.deviceControlService.back()
   }
 
   tryToRotate(serial: string, rotation: 'portrait' | 'landscape'): void {
-    const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
-
-    if (!device?.channel) return
-
     if (rotation === 'portrait') {
-      controlService.rotate(device.channel, 0)
+      this.deviceControlService.rotate(0)
 
       setTimeout(() => {
-        if (device.serial && this.isLandscape(device.serial)) {
+        if (serial && this.isLandscape(serial)) {
           console.info('tryToRotate but it still landscape')
         }
       }, 400)
     }
 
     if (rotation === 'landscape') {
-      controlService.rotate(device.channel, 90)
+      this.deviceControlService.rotate(90)
 
       setTimeout(() => {
-        if (device.serial && this.isPortrait(device.serial)) {
+        if (serial && this.isPortrait(serial)) {
           console.info('tryToRotate but it still portrait')
         }
       }, 400)
@@ -64,42 +63,38 @@ class DeviceControlStore {
   rotateLeft(serial: string): void {
     const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
 
-    if (!device?.display?.rotation || !device.channel) return
+    if (!device?.display?.rotation) return
 
     if (device.display.rotation === 0) {
-      controlService.rotate(device.channel, 270)
+      this.deviceControlService.rotate(270)
 
       return
     }
 
-    controlService.rotate(device.channel, device.display.rotation - 90)
+    this.deviceControlService.rotate(device.display.rotation - 90)
   }
 
   rotateRight(serial: string): void {
     const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
 
-    if (!device?.display?.rotation || !device.channel) return
+    if (!device?.display?.rotation) return
 
     if (device.display.rotation === 270) {
-      controlService.rotate(device.channel, 0)
+      this.deviceControlService.rotate(0)
 
       return
     }
 
-    controlService.rotate(device.channel, device.display.rotation + 90)
+    this.deviceControlService.rotate(device.display.rotation + 90)
   }
 
-  changeDeviceQuality(serial: string, quality: number): void {
-    const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
-
-    if (!device?.channel) return
-
-    controlService.changeQuality(device.channel, quality)
+  changeDeviceQuality(quality: number): void {
+    this.deviceControlService.changeQuality(quality)
 
     this.setCurrentQuality(quality)
   }
 
-  autoQuality(serial: string): void {
+  autoQuality(): void {
     // NOTE: Limited browser availability
     const networkType = navigator.connection?.effectiveType || '4g'
 
@@ -107,37 +102,33 @@ class DeviceControlStore {
 
     this.currentNetworkType = networkType
 
-    const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
-
-    if (!device?.channel) return
-
     switch (this.currentNetworkType) {
       case 'slow-2g': {
-        controlService.changeQuality(device.channel, 10)
+        this.deviceControlService.changeQuality(10)
         this.setCurrentQuality(10)
         break
       }
 
       case '2g': {
-        controlService.changeQuality(device.channel, 20)
+        this.deviceControlService.changeQuality(20)
         this.setCurrentQuality(20)
         break
       }
 
       case '3g': {
-        controlService.changeQuality(device.channel, 60)
+        this.deviceControlService.changeQuality(60)
         this.setCurrentQuality(60)
         break
       }
 
       case '4g': {
-        controlService.changeQuality(device.channel, 80)
+        this.deviceControlService.changeQuality(80)
         this.setCurrentQuality(80)
         break
       }
 
       default: {
-        controlService.changeQuality(device.channel, 80)
+        this.deviceControlService.changeQuality(80)
         this.setCurrentQuality(80)
       }
     }
@@ -155,5 +146,3 @@ class DeviceControlStore {
     return device?.display?.rotation === 90 || device?.display?.rotation === 270
   }
 }
-
-export const deviceControlStore = new DeviceControlStore()

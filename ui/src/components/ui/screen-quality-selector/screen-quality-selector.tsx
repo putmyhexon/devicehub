@@ -1,5 +1,4 @@
 import { observer } from 'mobx-react-lite'
-import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Flex, Caption, Button } from '@vkontakte/vkui'
 import { Icon16Connection } from '@vkontakte/icons'
@@ -7,7 +6,8 @@ import { Icon16Connection } from '@vkontakte/icons'
 import { MarkedSliderRange } from '@/components/lib/marked-slider-range'
 import { PopoverContainer } from '@/components/lib/popover-container'
 
-import { deviceControlStore } from '@/store/device-control-store'
+import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
+import { DeviceControlStore } from '@/store/device-control-store'
 
 import styles from './screen-quality-selector.module.css'
 
@@ -15,15 +15,13 @@ const QUALITY_OPTIONS = [10, 20, 30, 40, 50, 60, 70, 80]
 
 export const ScreenQualitySelector = observer(() => {
   const { t } = useTranslation()
-  const { serial } = useParams()
+  const deviceControlStore = useServiceLocator<DeviceControlStore>(DeviceControlStore.name)
 
   const onAfterSliderChange = (quality: number) => {
-    if (!serial) return
-
-    deviceControlStore.changeDeviceQuality(serial, quality)
+    deviceControlStore?.changeDeviceQuality(quality)
   }
 
-  const sliderValue = deviceControlStore.currentQuality
+  const sliderValue = deviceControlStore?.currentQuality
 
   return (
     <PopoverContainer
@@ -35,7 +33,7 @@ export const ScreenQualitySelector = observer(() => {
             max={80}
             min={10}
             step={10}
-            value={sliderValue}
+            value={sliderValue || 10}
             onAfterChange={onAfterSliderChange}
           />
           <Flex justify='space-between'>

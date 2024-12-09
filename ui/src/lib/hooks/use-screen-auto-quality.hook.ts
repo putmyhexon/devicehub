@@ -1,13 +1,17 @@
 import { useEffect } from 'react'
 
-import { deviceControlStore } from '@/store/device-control-store'
+import { DeviceControlStore } from '@/store/device-control-store'
+
+import { useServiceLocator } from './use-service-locator.hook'
 
 export const useScreenAutoQuality = (serial?: string): void => {
+  const deviceControlStore = useServiceLocator<DeviceControlStore>(DeviceControlStore.name)
+
   useEffect(() => {
     if (!serial) return undefined
 
     const intervalId = setInterval(() => {
-      deviceControlStore.autoQuality(serial)
+      deviceControlStore?.autoQuality()
     }, 5000)
 
     return (): void => {

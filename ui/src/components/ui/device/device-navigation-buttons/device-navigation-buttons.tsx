@@ -2,19 +2,22 @@ import { Flex } from '@vkontakte/vkui'
 import { Icon24SquareOutline, Icon28ArrowUturnLeftOutline, Icon28HomeOutline, Icon28Menu } from '@vkontakte/icons'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
+import { observer } from 'mobx-react-lite'
 
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
-import { deviceControlStore } from '@/store/device-control-store'
+import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
+import { DeviceControlStore } from '@/store/device-control-store'
 import { deviceBySerialStore } from '@/store/device-by-serial-store'
 
 import { NavigationButton } from './navigation-button'
 
 import styles from './device-navigation-buttons.module.css'
 
-export const DeviceNavigationButtons = () => {
+export const DeviceNavigationButtons = observer(() => {
   const { t } = useTranslation()
   const { serial } = useParams()
+  const deviceControlStore = useServiceLocator<DeviceControlStore>(DeviceControlStore.name)
 
   const { data: device } = deviceBySerialStore.deviceQueryResult(serial || '')
 
@@ -25,9 +28,7 @@ export const DeviceNavigationButtons = () => {
           beforeIcon={<Icon24SquareOutline />}
           title={`${t('Home')}`}
           onClick={() => {
-            if (!device?.channel) return
-
-            deviceControlStore.goHome(device.channel)
+            deviceControlStore?.goHome()
           }}
         />
       </ConditionalRender>
@@ -36,39 +37,31 @@ export const DeviceNavigationButtons = () => {
           beforeIcon={<Icon28Menu />}
           title={`${t('Menu')}`}
           onClick={() => {
-            if (!device?.channel) return
-
-            deviceControlStore.openMenu(device.channel)
+            deviceControlStore?.openMenu()
           }}
         />
         <NavigationButton
           beforeIcon={<Icon28HomeOutline />}
           title={`${t('Home')}`}
           onClick={() => {
-            if (!device?.channel) return
-
-            deviceControlStore.goHome(device.channel)
+            deviceControlStore?.goHome()
           }}
         />
         <NavigationButton
           beforeIcon={<Icon24SquareOutline height={28} width={28} />}
           title={`${t('App switch')}`}
           onClick={() => {
-            if (!device?.channel) return
-
-            deviceControlStore.openAppSwitch(device.channel)
+            deviceControlStore?.openAppSwitch()
           }}
         />
         <NavigationButton
           beforeIcon={<Icon28ArrowUturnLeftOutline />}
           title={`${t('Back')}`}
           onClick={() => {
-            if (!device?.channel) return
-
-            deviceControlStore.goBack(device.channel)
+            deviceControlStore?.goBack()
           }}
         />
       </ConditionalRender>
     </Flex>
   )
-}
+})
