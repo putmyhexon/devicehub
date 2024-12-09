@@ -1,11 +1,11 @@
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, runInAction } from 'mobx'
 
-import { deviceListStore } from '@/store/device-list-store'
+import { deviceBySerialStore } from '@/store/device-by-serial-store'
 
 import type { ElementBoundSize, StartScreenStreamingMessage } from './types'
 import type { Device } from '@/generated/types'
 
-class DeviceScreenStore {
+export class DeviceScreenStore {
   private websocket: WebSocket | null = null
   private context: ImageBitmapRenderingContext | null = null
   private canvasWrapper: HTMLDivElement | null = null
@@ -22,8 +22,8 @@ class DeviceScreenStore {
     height: 0,
   }
   private screenRotation = 0
+  private isScreenStreamingJustStarted = false
 
-  isScreenStreamingJustStarted = false
   isScreenLoading = false
   isScreenRotated = false
 
@@ -39,6 +39,10 @@ class DeviceScreenStore {
     return this.device
   }
 
+  get getCanvasWrapper(): HTMLDivElement | null {
+    return this.canvasWrapper
+  }
+
   get getScreenRotation(): number {
     return this.screenRotation
   }
@@ -47,10 +51,12 @@ class DeviceScreenStore {
     this.isScreenLoading = value
   }
 
-  startScreenStreaming(serial: string, canvas: HTMLCanvasElement, canvasWrapper: HTMLDivElement): void {
-    this.setIsScreenLoading(true)
+  async startScreenStreaming(serial: string, canvas: HTMLCanvasElement, canvasWrapper: HTMLDivElement): Promise<void> {
+    runInAction(() => {
+      this.setIsScreenLoading(true)
+    })
 
-    const device = deviceListStore.deviceBySerial(serial)
+    const device = await deviceBySerialStore.fetch(serial)
 
     if (!device?.display?.url) return
 
@@ -97,8 +103,6 @@ class DeviceScreenStore {
     return Boolean(
       // NO if the user has disabled the screen.
       this.showScreen &&
-        // NO if we're not even using the device anymore.
-        // $scope.device.using &&
         // NO if the page is not visible (e.g. background tab).
         document.visibilityState === 'visible' &&
         // NO if we don't have a connection yet.
@@ -245,5 +249,3 @@ class DeviceScreenStore {
     // TODO: Reconnect
   }
 }
-
-export const deviceScreenStore = new DeviceScreenStore()

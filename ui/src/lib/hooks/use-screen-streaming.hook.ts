@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
 
-import { deviceScreenStore } from '@/store/device-screen-store/device-screen-store'
+import { DeviceScreenStore } from '@/store/device-screen-store/device-screen-store'
 import { debounce } from '@/lib/utils/debounce.util'
+
+import { useServiceLocator } from './use-service-locator.hook'
 
 import type { RefObject } from 'react'
 
@@ -12,18 +14,20 @@ type UseScreenStreamingArgs = {
 }
 
 export const useScreenStreaming = ({ canvasRef, canvasWrapperRef, serial }: UseScreenStreamingArgs): void => {
+  const deviceScreenStore = useServiceLocator<DeviceScreenStore>(DeviceScreenStore.name)
+
   useEffect(() => {
-    if (!canvasRef.current || !canvasWrapperRef.current || !serial) return undefined
+    if (!canvasRef.current || !canvasWrapperRef.current || !serial || !deviceScreenStore) return undefined
 
     deviceScreenStore.startScreenStreaming(serial, canvasRef.current, canvasWrapperRef.current)
 
     return (): void => {
       deviceScreenStore.stopScreenStreaming()
     }
-  }, [])
+  }, [deviceScreenStore])
 
   useEffect(() => {
-    if (!canvasWrapperRef.current) return undefined
+    if (!canvasWrapperRef.current || !deviceScreenStore) return undefined
 
     const debouncedUpdateBounds = debounce(deviceScreenStore.updateBounds, 1000)
 
@@ -40,5 +44,5 @@ export const useScreenStreaming = ({ canvasRef, canvasWrapperRef, serial }: UseS
 
       return undefined
     }
-  }, [])
+  }, [deviceScreenStore])
 }

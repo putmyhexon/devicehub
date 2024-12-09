@@ -55,7 +55,7 @@ export interface Device {
   remoteConnectUrl?: string | null
   reverseForwards?: DeviceReverseForwardsItem[]
   sdk?: string
-  serial?: string
+  serial: string
   service?: DeviceService
   status?: number
   statusChangedAt?: string
