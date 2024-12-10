@@ -3,11 +3,11 @@ import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Div, Panel, View } from '@vkontakte/vkui'
 import {
-  Icon16Square4Outline,
-  Icon20FolderSimpleArrowUpOutline,
-  Icon20LightbulbStarOutline,
-  Icon20SubtitlesOutline,
+  Icon20HomeOutline,
+  Icon20FlashOutline,
   Icon24InfoCircleOutline,
+  Icon20ArticleBoxOutline,
+  Icon20FolderSimpleOutline,
 } from '@vkontakte/icons'
 
 import { TabsPanel } from '@/components/lib/tabs-panel'
@@ -35,28 +35,28 @@ export const DeviceControlPanel = () => {
       {
         id: getControlRoute(serial || ''),
         title: t('Dashboard'),
-        before: <Icon16Square4Outline height={17} width={17} />,
+        before: <Icon20HomeOutline height={17} width={17} />,
         ariaControls: 'tab-content-dashboard',
         content: <DashboardTab />,
       },
       {
         id: getControlLogsRoute(serial || ''),
         title: t('Logs'),
-        before: <Icon20SubtitlesOutline height={17} width={17} />,
+        before: <Icon20ArticleBoxOutline height={17} width={17} />,
         ariaControls: 'tab-content-logs',
         content: <Div />,
       },
       {
         id: getControlAdvancedRoute(serial || ''),
         title: t('Advanced'),
-        before: <Icon20LightbulbStarOutline height={17} width={17} />,
+        before: <Icon20FlashOutline height={17} width={17} />,
         ariaControls: 'tab-content-advanced',
         content: <Div />,
       },
       {
         id: getControlFileExplorerRoute(serial || ''),
         title: t('File Explorer'),
-        before: <Icon20FolderSimpleArrowUpOutline height={17} width={17} />,
+        before: <Icon20FolderSimpleOutline height={17} width={17} />,
         ariaControls: 'tab-content-explorer',
         content: <Div />,
       },

@@ -45,6 +45,7 @@ export const TabsPanel = <T extends boolean = false>({
             <TabsItem
               key={tab.id}
               aria-controls={tab.ariaControls}
+              before={tab.before}
               id={tab.id}
               selected={tab.id === selectedId}
               onClick={() => onTabClick(tab.id)}
