@@ -1,15 +1,24 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
+import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Div, Panel, View } from '@vkontakte/vkui'
 import {
-  Icon16Square4Outline,
-  Icon20FolderSimpleArrowUpOutline,
-  Icon20LightbulbStarOutline,
-  Icon20SubtitlesOutline,
+  Icon20HomeOutline,
+  Icon20FlashOutline,
   Icon24InfoCircleOutline,
+  Icon20ArticleBoxOutline,
+  Icon20FolderSimpleOutline,
 } from '@vkontakte/icons'
 
 import { TabsPanel } from '@/components/lib/tabs-panel'
+
+import {
+  getControlRoute,
+  getControlLogsRoute,
+  getControlInfoRoute,
+  getControlAdvancedRoute,
+  getControlFileExplorerRoute,
+} from '@/constants/route-paths'
 
 import { DashboardTab } from './tabs/dashboard-tab'
 
@@ -19,54 +28,53 @@ import type { TabsContent } from '@/components/lib/tabs-panel'
 
 export const DeviceControlPanel = () => {
   const { t } = useTranslation()
+  const { serial } = useParams()
 
   const tabsContent = useMemo<TabsContent[]>(
     () => [
       {
-        id: 'tab-dashboard',
+        id: getControlRoute(serial || ''),
         title: t('Dashboard'),
-        before: <Icon16Square4Outline height={17} width={17} />,
+        before: <Icon20HomeOutline height={17} width={17} />,
         ariaControls: 'tab-content-dashboard',
         content: <DashboardTab />,
       },
       {
-        id: 'tab-logs',
+        id: getControlLogsRoute(serial || ''),
         title: t('Logs'),
-        before: <Icon20SubtitlesOutline height={17} width={17} />,
+        before: <Icon20ArticleBoxOutline height={17} width={17} />,
         ariaControls: 'tab-content-logs',
         content: <Div />,
       },
       {
-        id: 'tab-advanced',
+        id: getControlAdvancedRoute(serial || ''),
         title: t('Advanced'),
-        before: <Icon20LightbulbStarOutline height={17} width={17} />,
+        before: <Icon20FlashOutline height={17} width={17} />,
         ariaControls: 'tab-content-advanced',
         content: <Div />,
       },
       {
-        id: 'tab-explorer',
+        id: getControlFileExplorerRoute(serial || ''),
         title: t('File Explorer'),
-        before: <Icon20FolderSimpleArrowUpOutline height={17} width={17} />,
+        before: <Icon20FolderSimpleOutline height={17} width={17} />,
         ariaControls: 'tab-content-explorer',
         content: <Div />,
       },
       {
-        id: 'tab-info',
+        id: getControlInfoRoute(serial || ''),
         title: t('Info'),
         before: <Icon24InfoCircleOutline height={17} width={17} />,
         ariaControls: 'tab-content-info',
         content: <Div />,
       },
     ],
-    [t]
+    [t, serial]
   )
-
-  const [selectedTab, setSelectedTab] = useState(tabsContent[0].id)
 
   return (
     <View activePanel='control'>
       <Panel className={styles.deviceControlPanel} id='control'>
-        <TabsPanel content={tabsContent} selectedTabId={selectedTab} onChange={setSelectedTab} />
+        <TabsPanel content={tabsContent} routeSync />
       </Panel>
     </View>
   )
