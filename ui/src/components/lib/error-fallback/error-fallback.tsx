@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Icon20SquareStackUpOutline, Icon24ErrorCircleFillRed } from '@vkontakte/icons'
-import { Accordion, Button, Div, Gradient, Paragraph, Placeholder, Spacing } from '@vkontakte/vkui'
+import { Accordion, Button, Gradient, Paragraph, Placeholder, Spacing } from '@vkontakte/vkui'
 
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
@@ -18,7 +18,7 @@ export const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
         icon={<Icon24ErrorCircleFillRed height={56} width={56} />}
         action={
           <Button appearance='accent-invariable' mode='outline' size='m' onClick={resetErrorBoundary}>
-            {t('Reset')}
+            {t('Retry')}
           </Button>
         }
         stretched
@@ -31,7 +31,7 @@ export const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
               {t('Stack trace')}
             </Accordion.Summary>
             <Accordion.Content className={styles.accordionContent}>
-              <Div>{error?.stack}</Div>
+              <pre className={styles.stack}>{error?.stack}</pre>
             </Accordion.Content>
           </Accordion>
         </ConditionalRender>

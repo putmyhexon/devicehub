@@ -4,5 +4,11 @@
 }
 
 .accordionContent {
-  max-width: 700px;
+  max-width: 1000px;
+}
+
+.stack {
+  word-break: keep-all;
+  word-wrap: break-word;
+  white-space: pre-wrap;
 }

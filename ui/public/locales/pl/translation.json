@@ -220,5 +220,6 @@
   "Extend booking": "Przedłuż rezerwację",
   "Device booking": "Rezerwacja urządzenia",
   "Reset": "Nastawić",
-  "Stack trace": "Ślad stosu"
+  "Stack trace": "Ślad stosu",
+  "Retry": "Spróbować ponownie"
 }
