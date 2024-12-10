@@ -325,9 +325,7 @@ export class TouchService {
 
     if (!this.slots.length) {
       // NOTE: This should never happen but who knows...
-      console.error('Ran out of multitouch slots')
-
-      return
+      throw new Error('Ran out of multitouch slots')
     }
 
     for (let i = 0, l = changedTouches.length; i < l; ++i) {

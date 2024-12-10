@@ -81,9 +81,7 @@ export class DeviceScreenStore {
 
   updateBounds(): void {
     if (!this.canvasWrapper || !this.canvasWrapper.offsetWidth || !this.canvasWrapper.offsetHeight) {
-      console.error('Unable to read bounds; container must have dimensions')
-
-      return
+      throw new Error('Unable to read bounds; container must have dimensions')
     }
 
     const newAdjustedBoundSize = this.getNewAdjustedBoundSize(
@@ -133,7 +131,9 @@ export class DeviceScreenStore {
   }
 
   private adjustBoundedSize(width: number, height: number): ElementBoundSize {
-    if (!this.device?.display?.width || !this.device?.display?.height) return { width, height }
+    if (!this.device?.display?.width || !this.device?.display?.height) {
+      throw new Error('No display width or height')
+    }
 
     const scaledWidth = this.device.display.width * this.options.minScale
     const scaledHeight = this.device.display.height * this.options.minScale
@@ -176,7 +176,9 @@ export class DeviceScreenStore {
   }
 
   private updateImageArea(imageWidth: number, imageHeight: number): void {
-    if (!this.context) return
+    if (!this.context) {
+      throw new Error('Context is not set')
+    }
 
     if (this.options.autoScaleForRetina) {
       this.context.canvas.width = imageWidth * (devicePixelRatio || 1)
@@ -213,7 +215,9 @@ export class DeviceScreenStore {
   private messageListener(message: MessageEvent<Blob | string>): void {
     if (message.data instanceof Blob) {
       createImageBitmap(message.data).then((image) => {
-        if (!this.context) return
+        if (!this.context) {
+          throw new Error('Context is not set')
+        }
 
         if (this.isScreenStreamingJustStarted) {
           this.updateImageArea(image.width, image.height)
