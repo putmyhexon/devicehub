@@ -178,7 +178,7 @@ export const DeviceScreen = observer(() => {
             />
           ))}
           <ConditionalRender conditions={[!!deviceScreenStore?.isScreenLoading]}>
-            <Spinner className={styles.spinner} size='large' />
+            <Spinner className={styles.spinner} size='xl' />
           </ConditionalRender>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { Button, Tappable, useAppearance } from '@vkontakte/vkui'
+import { Button, Tappable, useColorScheme } from '@vkontakte/vkui'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import cn from 'classnames'
@@ -21,7 +21,7 @@ import styles from './header.module.css'
 
 export const Header = () => {
   const { t } = useTranslation()
-  const appearance = useAppearance()
+  const colorScheme = useColorScheme()
   const { data: authDocs } = useGetAuthDocs()
   const { data: authContact } = useGetAuthContact()
 
@@ -30,7 +30,7 @@ export const Header = () => {
       <div className={styles.leftSide}>
         <Link className={styles.logoLink} to={getMainRoute()}>
           <Tappable activeMode='opacity' focusVisibleMode='outside' hoverMode='opacity' onClick={() => {}}>
-            <DeviceHubIcon className={cn({ [styles.logo]: appearance === 'dark' })} />
+            <DeviceHubIcon className={cn({ [styles.logo]: colorScheme === 'dark' })} />
           </Tappable>
         </Link>
         <Link className={styles.navLink} to={getDevicesRoute()}>

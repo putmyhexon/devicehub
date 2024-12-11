@@ -1,3 +1,3 @@
-import type { AppearanceType } from '@vkontakte/vkui'
+import type { ColorSchemeType } from '@vkontakte/vkui'
 
-export type Theme = AppearanceType | 'system'
+export type Theme = ColorSchemeType | 'system'

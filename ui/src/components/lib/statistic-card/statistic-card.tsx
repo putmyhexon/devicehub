@@ -48,7 +48,7 @@ export const StatisticCard = ({
     </ConditionalRender>
     <Spacing />
     <ConditionalRender conditions={[value !== undefined]}>
-      <Counter mode='secondary' size='s'>
+      <Counter appearance='neutral' mode='primary' size='s'>
         {value}
       </Counter>
     </ConditionalRender>

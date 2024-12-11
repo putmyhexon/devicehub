@@ -1,0 +1,10 @@
+.tabsPanel {
+  :global(._in_sa4kt_20) {
+    justify-content: flex-start;
+  }
+
+  :global(.vkuiInternalPanelHeader__before) {
+    flex-grow: 0;
+    padding: 5px;
+  }
+}
