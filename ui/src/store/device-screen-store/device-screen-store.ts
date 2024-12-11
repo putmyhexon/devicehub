@@ -6,7 +6,13 @@ import type { ElementBoundSize, StartScreenStreamingMessage } from './types'
 import type { Device } from '@/generated/types'
 
 export class DeviceScreenStore {
+  private readonly websocketReconnectionInterval = 5000 // NOTE: 5s
+  private readonly websocketReconnectionMaxAttempts = 3 // NOTE: 5s * 3 -> 15s total delay
   private websocket: WebSocket | null = null
+  private websocketReconnecting = false
+  private websocketReconnectionAttempt = 0
+  private websocketReconnectionTimeoutID: ReturnType<typeof setTimeout> | null = null
+
   private context: ImageBitmapRenderingContext | null = null
   private canvasWrapper: HTMLDivElement | null = null
   private device: Device | null = null
@@ -58,25 +64,15 @@ export class DeviceScreenStore {
 
     const device = await deviceBySerialStore.fetch(serial)
 
-    if (!device?.display?.url) {
-      throw new Error('No display url')
-    }
-
     this.device = device
     this.context = canvas.getContext('bitmaprenderer')
     this.canvasWrapper = canvasWrapper
 
-    this.websocket = new WebSocket(device.display.url)
-
-    this.websocket.binaryType = 'blob'
-    this.websocket.onopen = this.openListener
-    this.websocket.onmessage = this.messageListener
-    this.websocket.onerror = this.errorListener
-    this.websocket.onclose = this.closeListener
+    this.connectWebsocket()
   }
 
   stopScreenStreaming(): void {
-    this.websocket?.close()
+    this.stopWebsocket()
   }
 
   updateBounds(): void {
@@ -201,7 +197,42 @@ export class DeviceScreenStore {
     }
   }
 
+  private connectWebsocket(): void {
+    if (!this.device?.display?.url) {
+      throw new Error('No display url')
+    }
+
+    this.websocket = new WebSocket(this.device.display.url)
+
+    this.websocket.binaryType = 'blob'
+    this.websocket.onopen = this.openListener.bind(this)
+    this.websocket.onmessage = this.messageListener.bind(this)
+    this.websocket.onerror = this.errorListener.bind(this)
+    this.websocket.onclose = this.closeListener.bind(this)
+  }
+
+  private stopWebsocket(): void {
+    if (this.websocket) {
+      this.websocket.close()
+      this.websocket = null
+    }
+  }
+
+  private reconnectWebsocket(): void {
+    // NOTE: No need reconnect if it is already in progress
+    if (this.websocketReconnecting || this.websocketReconnectionTimeoutID) return
+
+    this.websocketReconnecting = true
+    this.websocketReconnectionAttempt += 1
+    this.connectWebsocket()
+  }
+
   private openListener(): void {
+    if (this.websocketReconnecting) {
+      this.websocketReconnecting = false
+      this.websocketReconnectionAttempt = 0
+    }
+
     if (this.shouldUpdateScreen()) {
       this.updateBounds()
       this.onScreenInterestGained()
@@ -252,6 +283,18 @@ export class DeviceScreenStore {
 
   private errorListener(): void {}
   private closeListener(): void {
-    // TODO: Reconnect
+    this.websocketReconnecting = false
+
+    if (this.websocketReconnectionAttempt < this.websocketReconnectionMaxAttempts) {
+      this.websocketReconnectionTimeoutID = setTimeout(() => {
+        this.websocketReconnectionTimeoutID = null
+        this.reconnectWebsocket()
+      }, this.websocketReconnectionInterval)
+
+      return
+    }
+
+    // TODO: Show modal with message: 'Service is currently unavailable! Try your attempt later.'
+    this.setIsScreenLoading(false)
   }
 }
