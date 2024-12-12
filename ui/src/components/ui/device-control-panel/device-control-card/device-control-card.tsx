@@ -39,14 +39,14 @@ export const DeviceControlCard = ({
           </Flex>
           <Flex align='center'>
             <ConditionalRender conditions={[!!helpTooltipText]}>
-              <Tooltip appearance='accent' placement='left' text={helpTooltipText}>
+              <Tooltip appearance='accent' description={helpTooltipText} placement='left'>
                 <Button appearance='neutral' before={<Icon20HelpOutline />} mode='tertiary' />
               </Tooltip>
             </ConditionalRender>
             <Tooltip
               appearance='accent'
+              description={afterTooltipText}
               shown={!!afterTooltipText && isAfterButtonTooltipShown}
-              text={afterTooltipText}
               onShownChange={setIsAfterButtonTooltipShown}
             >
               {after}

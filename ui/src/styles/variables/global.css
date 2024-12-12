@@ -1,6 +1,6 @@
 :root {
   /* z-index */
-  --header-z-index: 150;
+  --header-z-index: 99;
   --screen-input-z-index: 10;
 
   /* Colors */

@@ -14,8 +14,8 @@ export const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   return (
     <Gradient className={styles.gradient} mode='tint'>
       <Placeholder
-        header={t('Something went wrong')}
         icon={<Icon24ErrorCircleFillRed height={56} width={56} />}
+        title={t('Something went wrong')}
         action={
           <Button appearance='accent-invariable' mode='outline' size='m' onClick={resetErrorBoundary}>
             {t('Retry')}

@@ -1,8 +1,11 @@
 import { useLocation, useNavigate } from 'react-router'
+import cn from 'classnames'
 import { useTranslation } from 'react-i18next'
 import { Group, PanelHeader, Tabs, TabsItem } from '@vkontakte/vkui'
 
 import { ConditionalRender } from '@/components/lib/conditional-render'
+
+import styles from './tabs-panel.module.css'
 
 import type { TabsContent } from './types'
 
@@ -39,7 +42,7 @@ export const TabsPanel = <T extends boolean = false>({
 
   return (
     <>
-      <PanelHeader className={className}>
+      <PanelHeader className={cn(styles.tabsPanel, className)}>
         <Tabs>
           {content.map((tab) => (
             <TabsItem

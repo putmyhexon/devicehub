@@ -9,7 +9,7 @@ export const App = () => {
   const { theme } = useTheme()
 
   return (
-    <ConfigProvider appearance={theme === 'system' ? undefined : theme} platform='vkcom'>
+    <ConfigProvider colorScheme={theme === 'system' ? undefined : theme} platform='vkcom'>
       <AdaptivityProvider>
         <AppRoot>
           <RouterProvider router={appRouter} />

@@ -1,7 +1,7 @@
-import { View, Panel, Group, CustomScrollView, Header, Flex } from '@vkontakte/vkui'
-import { useTranslation } from 'react-i18next'
 import { useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
+import { useTranslation } from 'react-i18next'
+import { View, Panel, Group, CustomScrollView, Header, Flex } from '@vkontakte/vkui'
 
 import { DeviceTable } from '@/components/ui/device-table'
 import { SearchDevice } from '@/components/ui/search-device'
@@ -27,12 +27,12 @@ export const DevicesPage = observer(() => {
     <View activePanel='main'>
       <Panel className={styles.devicesPage} id='main'>
         <DeviceStatistics />
-        <Group header={<Header mode='secondary'>{t('Devices')}</Header>}>
+        <Group header={<Header size='s'>{t('Devices')}</Header>}>
           <Flex align='center'>
             <SearchDevice />
             <TableColumnVisibility />
           </Flex>
-          <CustomScrollView enableHorizontalScroll={true} windowResize={true}>
+          <CustomScrollView enableHorizontalScroll={true}>
             <DeviceTable
               data={displayData}
               isError={devicesQueryResult.isError}
