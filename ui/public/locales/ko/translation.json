@@ -327,7 +327,7 @@
   "Volume": "음량",
   "Volume Down": "음량 줄이기",
   "Volume Up": "음량 올리기",
-  "Warning:": "경고",
+  "Warning": "경고",
   "Web": "웹",
   "Width": "너비",
   "WiFi": "WiFi",
@@ -354,5 +354,6 @@
   "Open link or deeplink": "링크 또는 딥링크 열기",
   "Extend booking": "예약 연장",
   "Device booking": "기기 예약",
-  "Stack trace": "스택 추적"
+  "Stack trace": "스택 추적",
+  "Are you sure? Device will be cleaned": "정말로 장치를 해제하시겠습니까? \n장치 목록으로 돌아가기 전에 장치가 지워집니다."
 }

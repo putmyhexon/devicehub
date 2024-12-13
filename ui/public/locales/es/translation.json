@@ -281,7 +281,7 @@
   "Volume": "Volumen",
   "Volume Down": "Bajar volumen",
   "Volume Up": "Subir volumen",
-  "Warning:": "Atención:",
+  "Warning": "Advertencia",
   "Web": "Web",
   "WiFi": "WIFI",
   "Width": "Ancho",
@@ -305,5 +305,7 @@
   "Open link or deeplink": "Abrir enlace o enlace profundo",
   "Extend booking": "Ampliar reserva",
   "Device booking": "Reserva de dispositivos",
-  "Stack trace": "Seguimiento de pila"
+  "Stack trace": "Seguimiento de pila",
+  "Are you sure? Device will be cleaned": "¿Estás seguro de que quieres liberar el dispositivo? \nEl dispositivo se borrará antes de volver a la lista de dispositivos.",
+  "Stop Using": "dejar de usar"
 }
