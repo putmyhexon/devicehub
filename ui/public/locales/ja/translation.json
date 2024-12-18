@@ -316,7 +316,7 @@
   "Volume": "音量",
   "Volume Down": "音量↓",
   "Volume Up": "音量↑",
-  "Warning:": "注意:",
+  "Warning": "警告",
   "Web": "Web",
   "Width": "幅",
   "WiFi": "無線LAN",
@@ -343,5 +343,6 @@
   "Open link or deeplink": "オープンリンクまたはディープリンク",
   "Extend booking": "予約の延長",
   "Device booking": "デバイスの予約",
-  "Stack trace": "スタックトレース"
+  "Stack trace": "スタックトレース",
+  "Are you sure? Device will be cleaned": "デバイスを解放してもよろしいですか?\nデバイスはデバイスリストに戻る前にクリアされます。"
 }

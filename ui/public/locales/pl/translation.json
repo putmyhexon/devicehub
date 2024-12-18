@@ -221,5 +221,8 @@
   "Device booking": "Rezerwacja urządzenia",
   "Reset": "Nastawić",
   "Stack trace": "Ślad stosu",
-  "Retry": "Spróbować ponownie"
+  "Retry": "Spróbować ponownie",
+  "Are you sure? Device will be cleaned": "Czy na pewno chcesz zwolnić urządzenie? \nUrządzenie zostanie wyczyszczone przed powrotem do listy urządzeń",
+  "Warning": "Ostrzeżenie",
+  "Stop Using": "Przestań używać"
 }

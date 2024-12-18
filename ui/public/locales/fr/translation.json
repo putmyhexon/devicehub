@@ -359,7 +359,7 @@
   "Volume": "Volume",
   "Volume Down": "Baisser le Volume",
   "Volume Up": "Augmenter le Volume",
-  "Warning:": "Avertissement:",
+  "Warning": "Avertissement",
   "Web": "Web",
   "WiFi": "Wifi",
   "WiMAX": "WiMax",
@@ -386,5 +386,6 @@
   "Open link or deeplink": "Lien ouvert ou lien profond",
   "Extend booking": "Prolonger la réservation",
   "Device booking": "Réservation d'appareil",
-  "Stack trace": "Trace de pile"
+  "Stack trace": "Trace de pile",
+  "Are you sure? Device will be cleaned": "Êtes-vous sûr de vouloir libérer l'appareil ? \nL'appareil sera effacé avant de revenir à la liste des appareils"
 }

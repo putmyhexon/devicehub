@@ -45,12 +45,18 @@ class DeviceConnection {
     }
   }
 
-  stopUsingDevice(serial: string): void {
+  stopUsingDevice(serial: string): Promise<unknown> | undefined {
     const device = deviceListStore.deviceBySerial(serial)
 
-    if (!device) return
+    if (!device) return undefined
 
-    groupService.kick(device)
+    serviceLocator.unregister(DeviceControlService.name)
+    serviceLocator.unregister(DeviceScreenStore.name)
+    serviceLocator.unregister(DeviceControlStore.name)
+    serviceLocator.unregister(KeyboardService.name)
+    serviceLocator.unregister(TouchService.name)
+
+    return groupService.kick(device)
   }
 }
 

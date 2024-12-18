@@ -1,5 +1,5 @@
 {
-  "Are you sure? Device will be cleaned": "Сіз қалаймыз ба? Құрылғы жойылады",
+  "Are you sure? Device will be cleaned": "Сез җайланманы чыгарырга телисезме? \nDeviceайланма җайланма исемлегенә кире кайтканчы чистартылачак",
   "Device search": "Құрылғыны іздеу",
   "A new version of STF is available": "VK DeviceHub жаңартылған нұсқасы қолжетімді",
   "A package is already installed with the same name.": "Бұл атаумен алдын ала орнатылған пакет бар",
@@ -317,5 +317,6 @@
   "Extend booking": "Броньны киңәйтегез",
   "Device booking": "Iceайланма броньлау",
   "Something went wrong": "Нәрсәдер дөрес булмаган",
-  "Stack trace": "Стек эзе"
+  "Stack trace": "Стек эзе",
+  "Warning": "Кисәтү"
 }

@@ -356,7 +356,7 @@
   "Volume": "音量",
   "Volume Down": "减小音量",
   "Volume Up": "增加音量",
-  "Warning:": "警告：",
+  "Warning": "警告",
   "Web": "Web",
   "Width": "宽度",
   "WiFi": "WiFi",
@@ -382,5 +382,6 @@
   "Open link or deeplink": "打开链接或深层链接",
   "Extend booking": "延长预订",
   "Device booking": "设备预订",
-  "Stack trace": "堆栈跟踪"
+  "Stack trace": "堆栈跟踪",
+  "Are you sure? Device will be cleaned": "您确定要释放该设备吗？\n返回设备列表之前，设备将被清除"
 }

@@ -11,7 +11,7 @@ type ModalProps = {
   title: string
   description?: string
   isCancelShown?: boolean
-  onOk?: () => void
+  onOk?: () => Promise<void>
   onClose: () => void
 }
 

@@ -261,7 +261,7 @@
   "Volume": "音量",
   "Volume Down": "降低音量",
   "Volume Up": "提高音量",
-  "Warning:": "警告：",
+  "Warning": "警告",
   "Web": "網頁",
   "Width": "寬度",
   "WiFi": "WiFi",
@@ -288,5 +288,6 @@
   "Executes remote shell commands": "執行遠端 shell 命令",
   "Extend booking": "延長預訂",
   "Device booking": "設備預訂",
-  "Stack trace": "堆疊追蹤"
+  "Stack trace": "堆疊追蹤",
+  "Are you sure? Device will be cleaned": "您確定要釋放該設備嗎？\n在返回設備清單之前，設備將被清除"
 }

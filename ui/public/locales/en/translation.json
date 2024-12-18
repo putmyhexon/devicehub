@@ -281,7 +281,7 @@
   "Volume": "Volume",
   "Volume Down": "Volume Down",
   "Volume Up": "Volume Up",
-  "Warning:": "Warning:",
+  "Warning": "Warning",
   "Web": "Web",
   "WiFi": "WiFi",
   "Width": "Width",
@@ -305,5 +305,7 @@
   "Open link or deeplink": "Open link or deeplink",
   "Extend booking": "Extend booking",
   "Device booking": "Device booking",
-  "Stack trace": "Stack trace"
+  "Stack trace": "Stack trace",
+  "Are you sure? Device will be cleaned": "Are you sure you want to release the device? The device will be cleared before returning to the device list",
+  "Stop Using": "Stop Using"
 }

@@ -29,6 +29,10 @@ class ServiceLocator {
     this.map.set(key, instance)
   }
 
+  unregister(key: PropertyKey): void {
+    this.map.delete(key)
+  }
+
   clear(): void {
     this.map.clear()
   }

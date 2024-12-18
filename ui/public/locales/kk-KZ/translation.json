@@ -1,5 +1,5 @@
 {
-  "Are you sure? Device will be cleaned": "Сіз қазіргі уақытта осы құрылғыны босатып қойғыңыз келе ме? Құрылғы қайтадан құрылғылардың тізіміне қайта оралғанда тазартылады",
+  "Are you sure? Device will be cleaned": "Құрылғыны шығарғыңыз келетініне сенімдісіз бе? \nҚұрылғылар тізіміне оралмас бұрын құрылғы тазаланады",
   "Device search": "Құрылғыларды іздеу",
   "A new version of STF is available": "VK DeviceHub үшін жаңа нұсқа қол жетімді",
   "A package is already installed with the same name.": "Осы атаумен басқа да пакет бар",
@@ -317,5 +317,6 @@
   "Extend booking": "Брондау мерзімін ұзарту",
   "Device booking": "Құрылғыны брондау",
   "Something went wrong": "Бірдеңе дұрыс болмады",
-  "Stack trace": "Стек ізі"
+  "Stack trace": "Стек ізі",
+  "Warning": "Ескерту"
 }
