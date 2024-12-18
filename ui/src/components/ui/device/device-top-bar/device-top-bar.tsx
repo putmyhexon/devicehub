@@ -105,12 +105,12 @@ export const DeviceTopBar = observer(() => {
         onClose={() => {
           setIsConfirmationOpen(false)
         }}
-        onOk={() => {
+        onOk={async () => {
           if (!serial) return
 
-          deviceConnection.stopUsingDevice(serial)?.then(() => {
-            navigate(getMainRoute(), { replace: true })
-          })
+          await deviceConnection.stopUsingDevice(serial)
+
+          navigate(getMainRoute(), { replace: true })
         }}
       />
     </Flex>
