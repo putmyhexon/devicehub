@@ -1368,8 +1368,9 @@ paths:
         description: Means the device will be automatically removed from the user
           control if it is kept idle for this period (in milliseconds); default value
           is provided by the provider 'group timeout'
+        required: true
         schema:
-          minimum: 0
+          minimum: 120
           type: integer
       responses:
         "200":
