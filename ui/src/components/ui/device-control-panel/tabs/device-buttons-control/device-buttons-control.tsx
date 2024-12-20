@@ -43,7 +43,7 @@ export const DeviceButtonsControl = observer(() => {
             icon={<Icon24OnOffOutline />}
             tooltipText={t('Power')}
             onClick={() => {
-              deviceControlStore?.pressPower()
+              deviceControlStore?.power()
             }}
           />
           <ButtonControl
@@ -56,7 +56,7 @@ export const DeviceButtonsControl = observer(() => {
           <ButtonControl
             icon={<Icon24CameraOutline />}
             tooltipText={t('Camera')}
-            onClick={() => deviceControlStore?.useCamera()}
+            onClick={() => deviceControlStore?.camera()}
           />
           <ButtonControl
             icon={<Icon28TextOutline />}
@@ -66,7 +66,7 @@ export const DeviceButtonsControl = observer(() => {
           <ButtonControl
             icon={<Icon24Search />}
             tooltipText={t('Search')}
-            onClick={() => deviceControlStore?.openSearch()}
+            onClick={() => deviceControlStore?.search()}
           />
         </div>
       </FormItem>
@@ -126,7 +126,7 @@ export const DeviceButtonsControl = observer(() => {
           <ButtonControl
             icon={<Icon20TextTtOutline />}
             tooltipText={t('Change language')}
-            onClick={() => deviceControlStore?.changeLanguage()}
+            onClick={() => deviceControlStore?.openLanguageChange()}
           />
         </div>
       </FormItem>
