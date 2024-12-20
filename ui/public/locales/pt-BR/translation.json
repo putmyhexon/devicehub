@@ -388,6 +388,7 @@
   "Device booking": "Reserva de dispositivos",
   "Stack trace": "Rastreamento de pilha",
   "Are you sure? Device will be cleaned": "Tem certeza de que deseja liberar o dispositivo? \nO dispositivo será limpo antes de retornar à lista de dispositivos",
+  "Booked before": "Reservado antes",
   "Unlock device": "Desbloquear dispositivo",
   "Special actions": "Ações especiais",
   "Set Light Theme": "Definir tema claro",
