@@ -1,7 +1,6 @@
 import { Flex } from '@vkontakte/vkui'
 import { Icon24SquareOutline, Icon28ArrowUturnLeftOutline, Icon28HomeOutline, Icon28Menu } from '@vkontakte/icons'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router'
 import { observer } from 'mobx-react-lite'
 
 import { ConditionalRender } from '@/components/lib/conditional-render'
@@ -9,6 +8,7 @@ import { ConditionalRender } from '@/components/lib/conditional-render'
 import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
 import { DeviceControlStore } from '@/store/device-control-store'
 import { deviceBySerialStore } from '@/store/device-by-serial-store'
+import { useDeviceSerial } from '@/lib/hooks/use-device-serial.hook'
 
 import { NavigationButton } from './navigation-button'
 
@@ -16,10 +16,10 @@ import styles from './device-navigation-buttons.module.css'
 
 export const DeviceNavigationButtons = observer(() => {
   const { t } = useTranslation()
-  const { serial } = useParams()
+  const serial = useDeviceSerial()
   const deviceControlStore = useServiceLocator<DeviceControlStore>(DeviceControlStore.name)
 
-  const { data: device } = deviceBySerialStore.deviceQueryResult(serial || '')
+  const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
 
   return (
     <Flex align='center' className={styles.deviceNavigationButtons} justify='space-around'>

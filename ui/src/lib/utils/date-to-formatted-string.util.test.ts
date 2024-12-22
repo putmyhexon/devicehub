@@ -1,8 +1,18 @@
 import { dateToFormattedString } from './date-to-formatted-string.util'
 
 describe('dateToFormattedString util', () => {
+  afterEach(() => {
+    localStorage.clear()
+  })
+
   test('only date', () => {
     expect(dateToFormattedString({ value: '2024-12-19T08:09:59.291Z' })).toBe('19 December 2024')
+  })
+
+  test('only date with locale', () => {
+    localStorage.setItem('i18nextLng', 'ru-RU')
+
+    expect(dateToFormattedString({ value: '2024-12-19T08:09:59.291Z' })).toBe('19 декабря 2024')
   })
 
   test('needTime arg', () => {

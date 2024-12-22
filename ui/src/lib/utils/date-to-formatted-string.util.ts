@@ -1,15 +1,19 @@
-import { format } from 'date-fns'
+import { formatDateWithLocale } from './format-date-with-locale.util'
 
-type DateToFormattedString = {
+type DateToFormattedStringOptions = {
   value: Date | string
   needTime?: boolean
   onlyTime?: boolean
 }
 
-export const dateToFormattedString = ({ value, needTime = false, onlyTime = false }: DateToFormattedString): string => {
+export const dateToFormattedString = ({
+  value,
+  needTime = false,
+  onlyTime = false,
+}: DateToFormattedStringOptions): string => {
   if (!value) return ''
 
-  if (onlyTime) return format(value, 'HH:mm')
+  if (onlyTime) return formatDateWithLocale(value, 'HH:mm')
 
-  return format(value, needTime ? 'dd MMMM yyyy HH:mm' : 'dd MMMM yyyy')
+  return formatDateWithLocale(value, needTime ? 'dd MMMM yyyy HH:mm' : 'dd MMMM yyyy')
 }

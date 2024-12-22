@@ -14,21 +14,23 @@ export class BookingService {
   }
 
   async init(serial: string): Promise<void> {
-    const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
+    const device = await deviceBySerialStore.fetch(serial)
 
-    if (device?.statusChangedAt && device.bookedBefore) {
-      this.setTime(device.statusChangedAt, device.bookedBefore)
+    if (device?.statusChangedAt) {
+      this.setTime(device.statusChangedAt, device?.bookedBefore || 0)
     }
   }
 
-  async reBookDevice(serial: string): Promise<void> {
-    const device = await deviceBySerialStore.fetch(serial)
+  async reBookDevice(): Promise<void> {
+    const { data: device } = await deviceBySerialStore.refetch()
 
-    groupService.invite(device).then(() => {
-      if (device.statusChangedAt && device.bookedBefore) {
-        this.setTime(device.statusChangedAt, device.bookedBefore)
-      }
-    })
+    if (!device) return
+
+    await groupService.invite(device)
+
+    if (device.statusChangedAt) {
+      this.setTime(device.statusChangedAt, device?.bookedBefore || 0)
+    }
   }
 
   async setTime(statusChangedAt: string, bookedBefore: number): Promise<void> {

@@ -11,7 +11,6 @@ import {
   Icon20AddSquareOutline,
   Icon20ChevronRightOutline,
 } from '@vkontakte/icons'
-import { useParams } from 'react-router'
 import { observer } from 'mobx-react-lite'
 
 import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
@@ -25,7 +24,6 @@ import { DeviceBookingControl } from './device-booking-control'
 
 export const DashboardTab = observer(() => {
   const { t } = useTranslation()
-  const { serial } = useParams()
 
   const bookingService = useServiceLocator<BookingService>(BookingService.name)
 
@@ -79,9 +77,7 @@ export const DashboardTab = observer(() => {
             before={<Icon20AddSquareOutline />}
             mode='tertiary'
             onClick={() => {
-              if (!serial) return
-
-              bookingService?.reBookDevice(serial)
+              bookingService?.reBookDevice()
             }}
           />
         }

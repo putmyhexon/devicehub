@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router'
+import { useNavigate } from 'react-router'
 import cn from 'classnames'
 import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
@@ -15,6 +15,7 @@ import { DeviceScreenStore } from '@/store/device-screen-store/device-screen-sto
 import { deviceBySerialStore } from '@/store/device-by-serial-store'
 import { DeviceControlStore } from '@/store/device-control-store'
 import { deviceConnection } from '@/store/device-connection'
+import { useDeviceSerial } from '@/lib/hooks/use-device-serial.hook'
 
 import { getMainRoute } from '@/constants/route-paths'
 
@@ -22,13 +23,13 @@ import styles from './device-top-bar.module.css'
 
 export const DeviceTopBar = observer(() => {
   const { t } = useTranslation()
-  const { serial } = useParams()
+  const serial = useDeviceSerial()
   const navigate = useNavigate()
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
   const deviceScreenStore = useServiceLocator<DeviceScreenStore>(DeviceScreenStore.name)
   const deviceControlStore = useServiceLocator<DeviceControlStore>(DeviceControlStore.name)
 
-  const { data: device } = deviceBySerialStore.deviceQueryResult(serial || '')
+  const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
 
   const deviceTitle = !device?.ios ? `${device?.manufacturer || ''} ${device?.marketName || ''}` : device?.model || ''
   const currentRotation = `${t('Current rotation:')} ${deviceScreenStore?.getScreenRotation}°`
@@ -64,8 +65,6 @@ export const DeviceTopBar = observer(() => {
           mode='tertiary'
           title={`${t('Portrait')} (${currentRotation})`}
           onClick={() => {
-            if (!serial) return
-
             deviceControlStore?.tryToRotate(serial, 'portrait')
           }}
         />
@@ -78,8 +77,6 @@ export const DeviceTopBar = observer(() => {
           mode='tertiary'
           title={`${t('Landscape')} (${currentRotation})`}
           onClick={() => {
-            if (!serial) return
-
             deviceControlStore?.tryToRotate(serial, 'landscape')
           }}
         />
@@ -106,8 +103,6 @@ export const DeviceTopBar = observer(() => {
           setIsConfirmationOpen(false)
         }}
         onOk={async () => {
-          if (!serial) return
-
           await deviceConnection.stopUsingDevice(serial)
 
           navigate(getMainRoute(), { replace: true })

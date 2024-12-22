@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 import { App } from '@/components/app/app'
 import { ThemeProvider } from '@/components/app/providers/theme-provider'
@@ -21,6 +22,7 @@ enableMocking().then(() => {
         <ThemeProvider>
           <App />
         </ThemeProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </StrictMode>
   )

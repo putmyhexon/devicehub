@@ -11,7 +11,7 @@ import type { RefObject } from 'react'
 type UseScreenStreamingArgs = {
   canvasRef: RefObject<HTMLCanvasElement>
   canvasWrapperRef: RefObject<HTMLDivElement>
-  serial?: string
+  serial: string
 }
 
 export const useScreenStreaming = ({ canvasRef, canvasWrapperRef, serial }: UseScreenStreamingArgs): void => {
@@ -19,12 +19,12 @@ export const useScreenStreaming = ({ canvasRef, canvasWrapperRef, serial }: UseS
   const { showBoundary } = useErrorBoundary()
 
   useEffect(() => {
-    if (!canvasRef.current || !canvasWrapperRef.current || !serial || !deviceScreenStore) return undefined
+    if (!canvasRef.current || !canvasWrapperRef.current) return undefined
 
-    deviceScreenStore.startScreenStreaming(serial, canvasRef.current, canvasWrapperRef.current).catch(showBoundary)
+    deviceScreenStore?.startScreenStreaming(serial, canvasRef.current, canvasWrapperRef.current).catch(showBoundary)
 
     return (): void => {
-      deviceScreenStore.stopScreenStreaming()
+      deviceScreenStore?.stopScreenStreaming()
     }
   }, [deviceScreenStore])
 

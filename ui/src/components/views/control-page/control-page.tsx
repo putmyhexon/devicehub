@@ -3,6 +3,8 @@ import Split from 'react-split'
 import { Device } from '@/components/ui/device'
 import { DeviceControlPanel } from '@/components/ui/device-control-panel'
 
+import { DeviceSerialProvider } from './device-serial-provider'
+
 import styles from './control-page.module.css'
 
 export const ControlPage = () => (
@@ -14,7 +16,9 @@ export const ControlPage = () => (
     sizes={[30, 70]}
     snapOffset={10}
   >
-    <Device />
-    <DeviceControlPanel />
+    <DeviceSerialProvider>
+      <Device />
+      <DeviceControlPanel />
+    </DeviceSerialProvider>
   </Split>
 )
