@@ -11,7 +11,7 @@ import type { QueryObserverResult } from '@tanstack/react-query'
 
 class DeviceBySerialStore {
   private deviceQuery = new MobxQuery(
-    () => ({ ...queries.devices.bySerial(this.serial), enabled: !!this.serial }),
+    () => ({ ...queries.devices.bySerial(this.serial), staleTime: 3 * (60 * 1000), enabled: !!this.serial }),
     queryClient
   )
 
@@ -37,6 +37,10 @@ class DeviceBySerialStore {
     this.setSerial(serial)
 
     return this.deviceQuery.fetch()
+  }
+
+  refetch(): Promise<QueryObserverResult<Device, AxiosError>> {
+    return this.deviceQuery.refetch()
   }
 }
 

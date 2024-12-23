@@ -38,6 +38,10 @@ export class MobxQuery<
     return this.queryClient.fetchQuery(this.defaultQueryOptions)
   }
 
+  refetch(): Promise<QueryObserverResult<TData, TError>> {
+    return this.queryObserver.refetch()
+  }
+
   get result(): QueryObserverResult<TData, TError> {
     this.atom.reportObserved()
     this.queryObserver.setOptions(this.defaultQueryOptions)

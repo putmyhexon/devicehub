@@ -1,6 +1,5 @@
 import { useRef } from 'react'
 import cn from 'classnames'
-import { useParams } from 'react-router'
 import { observer } from 'mobx-react-lite'
 import { Spinner } from '@vkontakte/vkui'
 
@@ -14,6 +13,7 @@ import { DeviceScreenStore } from '@/store/device-screen-store/device-screen-sto
 import { useScreenAutoQuality } from '@/lib/hooks/use-screen-auto-quality.hook'
 import { useScreenStreaming } from '@/lib/hooks/use-screen-streaming.hook'
 import { useCallbackWithErrorHandling } from '@/lib/hooks/use-callback-with-error-handling.hook'
+import { useDeviceSerial } from '@/lib/hooks/use-device-serial.hook'
 
 import styles from './device-screen.module.css'
 
@@ -23,17 +23,15 @@ export const DeviceScreen = observer(() => {
   const canvasWrapperRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const { serial } = useParams()
+  const serial = useDeviceSerial()
   const deviceScreenStore = useServiceLocator<DeviceScreenStore>(DeviceScreenStore.name)
   const touchService = useServiceLocator<TouchService>(TouchService.name)
   const keyboardService = useServiceLocator<KeyboardService>(KeyboardService.name)
 
   useScreenStreaming({ canvasRef, canvasWrapperRef, serial })
-  useScreenAutoQuality(serial)
+  useScreenAutoQuality()
 
   const onMouseDown = useCallbackWithErrorHandling((event: MouseEvent<HTMLDivElement>) => {
-    if (!serial) return
-
     event.preventDefault()
 
     touchService?.mouseDownListener({
@@ -48,8 +46,6 @@ export const DeviceScreen = observer(() => {
   })
 
   const onMouseMove = useCallbackWithErrorHandling((event: MouseEvent<HTMLDivElement>) => {
-    if (!serial) return
-
     event.preventDefault()
 
     touchService?.mouseMoveListener({
@@ -62,8 +58,6 @@ export const DeviceScreen = observer(() => {
   })
 
   const onMouseUp = useCallbackWithErrorHandling((event: MouseEvent<HTMLDivElement>) => {
-    if (!serial) return
-
     event.preventDefault()
 
     touchService?.mouseUpListener({
@@ -77,8 +71,6 @@ export const DeviceScreen = observer(() => {
   })
 
   const onTouchEnd = useCallbackWithErrorHandling((event: TouchEvent<HTMLDivElement>) => {
-    if (!serial) return
-
     touchService?.touchEndListener({
       serial,
       touches: event.nativeEvent.touches,
@@ -87,14 +79,10 @@ export const DeviceScreen = observer(() => {
   })
 
   const onTouchMove = useCallbackWithErrorHandling((event: TouchEvent<HTMLDivElement>) => {
-    if (!serial) return
-
     touchService?.touchMoveListener({ serial, changedTouches: event.nativeEvent.changedTouches })
   })
 
   const onTouchStart = useCallbackWithErrorHandling((event: TouchEvent<HTMLDivElement>) => {
-    if (!serial) return
-
     touchService?.touchStartListener({
       serial,
       touches: event.nativeEvent.touches,

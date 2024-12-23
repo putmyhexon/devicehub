@@ -306,7 +306,7 @@ export const DEVICE_COLUMNS = [
     })
   ),
   columnHelper.accessor(
-    (row) => row.group?.lifeTime?.start && dateToFormattedString(row.group.lifeTime.start, true),
+    (row) => row.group?.lifeTime?.start && dateToFormattedString({ value: row.group.lifeTime.start, needTime: true }),
     textColumnDef({
       columnId: DeviceTableColumnIds.GROUP_STARTING_DATE,
       columnName: 'Group Starting Date',
@@ -314,7 +314,7 @@ export const DEVICE_COLUMNS = [
     })
   ),
   columnHelper.accessor(
-    (row) => row.group?.lifeTime?.stop && dateToFormattedString(row.group.lifeTime.stop, true),
+    (row) => row.group?.lifeTime?.stop && dateToFormattedString({ value: row.group.lifeTime.stop, needTime: true }),
     textColumnDef({
       columnId: DeviceTableColumnIds.GROUP_EXPIRATION_DATE,
       columnName: 'Group Expiration Date',
@@ -371,7 +371,7 @@ export const DEVICE_COLUMNS = [
   }),
   // TODO: Add released date
   columnHelper.accessor(
-    (row) => row.createdAt && dateToFormattedString(row.createdAt),
+    (row) => row.createdAt && dateToFormattedString({ value: row.createdAt }),
     textColumnDef({
       columnId: DeviceTableColumnIds.RELEASED,
       columnName: 'Released',

@@ -290,6 +290,7 @@
   "Device booking": "設備預訂",
   "Stack trace": "堆疊追蹤",
   "Are you sure? Device will be cleaned": "您確定要釋放該設備嗎？\n在返回設備清單之前，設備將被清除",
+  "Booked before": "之前預訂過",
   "Unlock device": "解鎖裝置",
   "Special actions": "特別行動",
   "Set Light Theme": "設定淺色主題",

@@ -30,8 +30,6 @@ export const DeviceStatusCell = memo(
     const usable = isDeviceUsable({ status, present, ready, using, hasOwner })
 
     const onStopUsing = () => {
-      if (!serial) return
-
       deviceConnection.stopUsingDevice(serial)
     }
 

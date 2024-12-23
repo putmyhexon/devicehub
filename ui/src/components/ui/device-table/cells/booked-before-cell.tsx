@@ -20,7 +20,7 @@ export const BookedBeforeCell = memo(({ bookedBefore, statusChangedAt }: BookedB
   return (
     <EllipsisText>
       {bookedBefore && statusChangedAt
-        ? dateToFormattedString(getExpireTime(statusChangedAt, bookedBefore), true)
+        ? dateToFormattedString({ value: getExpireTime(statusChangedAt, bookedBefore), needTime: true })
         : t('Not booked')}
     </EllipsisText>
   )

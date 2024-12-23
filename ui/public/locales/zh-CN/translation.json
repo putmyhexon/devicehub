@@ -384,6 +384,7 @@
   "Device booking": "设备预订",
   "Stack trace": "堆栈跟踪",
   "Are you sure? Device will be cleaned": "您确定要释放该设备吗？\n返回设备列表之前，设备将被清除",
+  "Booked before": "之前预订过",
   "Unlock device": "解锁设备",
   "Special actions": "特别行动",
   "Set Light Theme": "设置浅色主题",
