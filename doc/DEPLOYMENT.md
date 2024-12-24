@@ -11,6 +11,8 @@ STF consists of multiple independent processes communicating via [ZeroMQ](http:/
 
 Each unit and its function will be explained later in the document.
 
+Market name(on UI) for device take from device's settings(if vendor's market name reachable by command `settings get global device_name`), if you would like to have other market name just change settings.
+
 ## Assumptions
 
 For this example deployment, the following assumptions will be made. You will need to adjust them as you see fit. Note that this deployment was designed to be relatively easy to set up without external tools, and may not be optimal. They're also configured so that you can run everything on a single host if required.
