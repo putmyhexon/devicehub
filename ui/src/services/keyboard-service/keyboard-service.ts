@@ -92,7 +92,7 @@ export class KeyboardService {
       the clipboard contents. Only on the second copy will it actually
       copy that to the clipboard. 
     */
-    this.deviceControlStore.copy().then((clipboardContent) => {
+    this.deviceControlStore.copy().promise.then((clipboardContent) => {
       if (clipboardContent && typeof clipboardContent === 'string') {
         setClipboardData(clipboardContent)
       }

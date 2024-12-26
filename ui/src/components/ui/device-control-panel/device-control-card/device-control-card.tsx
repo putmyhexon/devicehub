@@ -12,7 +12,8 @@ type DeviceControlCardProps = {
   title: string
   children: ReactNode
   before?: ReactNode
-  after?: ReactElement
+  afterButtonIcon?: ReactElement
+  onAfterButtonClick?: () => void
   afterTooltipText?: string
   helpTooltipText?: string
 }
@@ -21,7 +22,8 @@ export const DeviceControlCard = ({
   title,
   children,
   before,
-  after,
+  afterButtonIcon,
+  onAfterButtonClick,
   afterTooltipText,
   helpTooltipText,
 }: DeviceControlCardProps) => {
@@ -49,7 +51,7 @@ export const DeviceControlCard = ({
               shown={!!afterTooltipText && isAfterButtonTooltipShown}
               onShownChange={setIsAfterButtonTooltipShown}
             >
-              {after}
+              <Button appearance='neutral' before={afterButtonIcon} mode='tertiary' onClick={onAfterButtonClick} />
             </Tooltip>
           </Flex>
         </Flex>

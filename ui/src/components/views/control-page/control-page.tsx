@@ -8,17 +8,17 @@ import { DeviceSerialProvider } from './device-serial-provider'
 import styles from './control-page.module.css'
 
 export const ControlPage = () => (
-  <Split
-    className={styles.split}
-    direction='horizontal'
-    gutterSize={4}
-    minSize={[200, 0]}
-    sizes={[30, 70]}
-    snapOffset={10}
-  >
-    <DeviceSerialProvider>
+  <DeviceSerialProvider>
+    <Split
+      className={styles.split}
+      direction='horizontal'
+      gutterSize={4}
+      minSize={[200, 0]}
+      sizes={[30, 70]}
+      snapOffset={10}
+    >
       <Device />
       <DeviceControlPanel />
-    </DeviceSerialProvider>
-  </Split>
+    </Split>
+  </DeviceSerialProvider>
 )

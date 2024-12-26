@@ -4,6 +4,7 @@ import { TransactionService } from '@/services/core/transaction-service/transact
 import { KEYBOARD_KEYS_MAP } from '@/constants/keyboard-keys-map'
 
 import type { TouchDownArgs, TouchMoveArgs, TouchMoveIosArgs } from './types'
+import type { InitializeTransactionReturn, InstallOptions } from '@/services/core/transaction-service/types'
 
 export class DeviceControlService {
   constructor(
@@ -93,7 +94,7 @@ export class DeviceControlService {
     })
   }
 
-  copy(): Promise<unknown> {
+  copy(): InitializeTransactionReturn {
     return this.sendTwoWay('clipboard.copy')
   }
 
@@ -118,7 +119,25 @@ export class DeviceControlService {
     })
   }
 
-  startRemoteConnect(): Promise<unknown> {
+  install(options: InstallOptions): InitializeTransactionReturn {
+    return this.sendTwoWay('device.install', options)
+  }
+
+  installIos(options: InstallOptions): InitializeTransactionReturn {
+    return this.sendTwoWay('deviceIos.install', options)
+  }
+
+  uninstall(packageName: string): InitializeTransactionReturn {
+    return this.sendTwoWay('device.uninstall', {
+      packageName,
+    })
+  }
+
+  reboot(): InitializeTransactionReturn {
+    return this.sendTwoWay('device.reboot')
+  }
+
+  startRemoteConnect(): InitializeTransactionReturn {
     return this.sendTwoWay('connect.start')
   }
 
@@ -141,8 +160,8 @@ export class DeviceControlService {
   mediaFastForward = this.keyPress('media_fast_forward')
 
   async unlockDevice(): Promise<void> {
-    await this.shell('input text 1452')
-    await this.shell('input keyevent 66')
+    await this.shell('input text 1452').promise
+    await this.shell('input keyevent 66').promise
   }
 
   setLightTheme(): void {
@@ -178,7 +197,7 @@ export class DeviceControlService {
     this.shell(`settings put system font_scale ${value}`)
   }
 
-  private shell(command: string): Promise<unknown> {
+  shell(command: string): InitializeTransactionReturn {
     return this.sendTwoWay('shell.command', {
       command,
       timeout: 10000,
@@ -189,15 +208,15 @@ export class DeviceControlService {
     socket.emit(action, this.deviceChannel, data)
   }
 
-  private sendTwoWay<T>(action: string, data?: T): Promise<unknown> {
+  private sendTwoWay<T>(action: string, data?: T): InitializeTransactionReturn {
     const transaction = new TransactionService()
-    const { channel: transactionChannel, promise: transactionEndPromise } = transaction.initializeTransaction()
+    const initializeTransaction = transaction.initializeTransaction()
 
     const platformSpecificAction = this.isDeviceIos ? `${action}Ios` : action
 
-    socket.emit(platformSpecificAction, this.deviceChannel, transactionChannel, data)
+    socket.emit(platformSpecificAction, this.deviceChannel, initializeTransaction.channel, data)
 
-    return transactionEndPromise
+    return initializeTransaction
   }
 
   private keySender(type: string, key: string): void {

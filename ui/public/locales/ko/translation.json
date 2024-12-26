@@ -367,5 +367,9 @@
   "Font size": "글꼴 크기",
   "Small": "작은",
   "Normal": "정상",
-  "Big": "큰"
+  "Big": "큰",
+  "Supported extensions": "지원되는 확장",
+  "Please type or select value": "값을 입력하거나 선택하세요.",
+  "Show Manifest": "매니페스트 표시",
+  "Hide Manifest": "매니페스트 숨기기"
 }

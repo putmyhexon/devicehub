@@ -1,3 +1,5 @@
+import type { Manifest } from '@/types/manifest.type'
+
 export type TransactionDoneListenerMessage = {
   body: unknown | null
   data: string
@@ -6,8 +8,24 @@ export type TransactionDoneListenerMessage = {
   success: boolean
 }
 
+export type TransactionProgressListenerMessage = {
+  data: string
+  progress: number
+  seq: number
+  source: string
+}
+
+export type ProgressFn = (progress: number, status: string) => void
+
 export type InitializeTransactionReturn = {
   channel: string
   promise: Promise<unknown>
   abort: (reason?: string) => void
+  subscribeToProgress: (progressFn: ProgressFn) => () => void
+}
+
+export type InstallOptions = {
+  href: string
+  manifest: Manifest
+  launch: boolean
 }

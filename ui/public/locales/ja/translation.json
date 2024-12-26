@@ -356,5 +356,9 @@
   "Font size": "フォントサイズ",
   "Small": "小さい",
   "Normal": "普通",
-  "Big": "大きい"
+  "Big": "大きい",
+  "Supported extensions": "サポートされている拡張子",
+  "Please type or select value": "値を入力または選択してください",
+  "Show Manifest": "マニフェストの表示",
+  "Hide Manifest": "マニフェストを隠す"
 }
