@@ -19,6 +19,7 @@ import { BookingService } from '@/services/booking-service'
 
 import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
 
+import { ClipboardControl } from './clipboard-control'
 import { DeviceButtonsControl } from './device-buttons-control'
 import { DeviceBookingControl } from './device-booking-control'
 
@@ -65,7 +66,7 @@ export const DashboardTab = observer(() => {
         Stub
       </DeviceControlCard>
       <DeviceControlCard before={<Icon20CopyOutline />} title={t('Clipboard')}>
-        Stub
+        <ClipboardControl />
       </DeviceControlCard>
       <DeviceControlCard
         afterTooltipText={t('Extend booking')}

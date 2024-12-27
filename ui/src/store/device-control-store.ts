@@ -19,6 +19,22 @@ export class DeviceControlStore extends DeviceControlService {
     })
   }
 
+  async getClipboardContent(): Promise<string> {
+    try {
+      const data = await this.copy()
+
+      if (typeof data === 'string') {
+        return data
+      }
+
+      return 'No clipboard data'
+    } catch (error) {
+      console.error(error)
+
+      return 'Error while getting data'
+    }
+  }
+
   setCurrentQuality(quality: number): void {
     this.currentQuality = quality
   }
