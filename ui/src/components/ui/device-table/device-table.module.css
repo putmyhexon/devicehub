@@ -4,7 +4,7 @@
 }
 
 .table {
-  table-layout: auto;
+  table-layout: fixed;
   border-collapse: collapse;
   width: 100%;
 
@@ -30,7 +30,7 @@
 
   th,
   td {
-    max-width: 250px;
+    width: 200px;
     padding: 8px 8px 8px 15px;
     text-align: left;
     white-space: nowrap;

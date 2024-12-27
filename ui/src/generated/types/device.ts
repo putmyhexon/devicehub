@@ -7,8 +7,10 @@
  */
 import type { DeviceBattery } from './deviceBattery'
 import type { DeviceBrowser } from './deviceBrowser'
+import type { DeviceCpu } from './deviceCpu'
 import type { DeviceDisplay } from './deviceDisplay'
 import type { DeviceGroup } from './deviceGroup'
+import type { DeviceMemory } from './deviceMemory'
 import type { DeviceNetwork } from './deviceNetwork'
 import type { DeviceOwner } from './deviceOwner'
 import type { DevicePhone } from './devicePhone'
@@ -25,20 +27,28 @@ export interface Device {
   bookedBefore?: number
   browser?: DeviceBrowser
   channel?: string
+  connectPort?: number
+  cpu?: DeviceCpu
   cpuPlatform?: string
   createdAt?: string
+  deviceType?: string
   display?: DeviceDisplay
   group?: DeviceGroup
+  image?: string
   ios?: boolean
+  iosClientChannel?: string
   logs_enabled?: boolean
   macAddress?: string
   manufacturer?: string
   marketName?: string
+  memory?: DeviceMemory
   model?: string
+  name?: string
   network?: DeviceNetwork
   notes?: string
   openGLESVersion?: string
-  operator?: string
+  /** @nullable */
+  operator?: string | null
   /** @nullable */
   owner?: DeviceOwner
   phone?: DevicePhone
@@ -50,10 +60,12 @@ export interface Device {
   provider?: DeviceProvider
   ram?: string
   ready?: boolean
+  releasedAt?: string
   remoteConnect?: boolean
   /** @nullable */
   remoteConnectUrl?: string | null
   reverseForwards?: DeviceReverseForwardsItem[]
+  screenPort?: number
   sdk?: string
   serial: string
   service?: DeviceService

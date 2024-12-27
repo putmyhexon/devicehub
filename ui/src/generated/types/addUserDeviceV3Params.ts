@@ -10,5 +10,5 @@ export type AddUserDeviceV3Params = {
   /**
    * Means the device will be automatically removed from the user control if it is kept idle for this period (in milliseconds); default value is provided by the provider 'group timeout'
    */
-  timeout?: number
+  timeout: number
 }
