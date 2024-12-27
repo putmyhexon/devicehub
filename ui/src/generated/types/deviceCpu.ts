@@ -6,12 +6,8 @@
  * OpenAPI spec version: 2.4.3
  */
 
-export type DeviceNetwork = {
-  connected?: boolean
-  failover?: boolean
-  roaming?: boolean
-  /** @nullable */
-  subtype?: string | null
-  /** @nullable */
-  type?: string | null
+export type DeviceCpu = {
+  cores?: number
+  freq?: number
+  name?: string
 }

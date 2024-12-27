@@ -3232,6 +3232,8 @@ components:
               type: string
             name:
               type: string
+            screenWsUrlPattern:
+              type: string
         owner:
           type: object
           properties:
@@ -3326,8 +3328,10 @@ components:
               type: boolean
             type:
               type: string
+              nullable: true
             subtype:
               type: string
+              nullable: true
             failover:
               type: boolean
             roaming:
@@ -3357,6 +3361,10 @@ components:
               type: string
             size:
               type: number
+            inches:
+              type: number
+            scale:
+              type: number
         airplaneMode:
           type: boolean
         battery:
@@ -3373,7 +3381,9 @@ components:
             scale:
               type: integer
             temp:
-              type: integer
+              oneOf:
+                - type: number
+                - type: string
             voltage:
               type: integer
         browser:
@@ -3421,6 +3431,7 @@ components:
           type: string
         operator:
           type: string
+          nullable: true
         phone:
           type: object
           properties:
@@ -3440,6 +3451,8 @@ components:
               nullable: true
         platform:
           type: string
+        iosClientChannel:
+          type: string
         ios:
           type: boolean
         product:
@@ -3458,6 +3471,35 @@ components:
         place:
           type: string
         storageId:
+          type: string
+        screenPort:
+          type: number
+        connectPort:
+          type: number
+        cpu:
+          type: object
+          properties:
+            cores:
+              type: integer
+            freq:
+              type: integer
+            name:
+              type: string
+        memory:
+          type: object
+          properties:
+            ram:
+              type: integer
+            rom:
+              type: integer
+        image:
+          type: string
+        releasedAt:
+          type: string
+          format: date-time
+        name:
+          type: string
+        deviceType:
           type: string
         using:
           type: boolean

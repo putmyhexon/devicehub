@@ -11,7 +11,9 @@ export type DeviceDisplay = {
   fps?: number
   height?: number
   id?: number
+  inches?: number
   rotation?: number
+  scale?: number
   secure?: boolean
   size?: number
   url?: string

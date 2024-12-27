@@ -9,4 +9,5 @@
 export type DeviceProvider = {
   channel?: string
   name?: string
+  screenWsUrlPattern?: string
 }
