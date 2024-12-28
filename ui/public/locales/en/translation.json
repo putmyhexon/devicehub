@@ -322,5 +322,9 @@
   "Small": "Small",
   "Normal": "Normal",
   "Big": "Big",
-  "Rewind": "Rewind"
+  "Rewind": "Rewind",
+  "Supported extensions": "Supported extensions",
+  "Please type or select value": "Please type or select value",
+  "Show Manifest": "Show Manifest",
+  "Hide Manifest": "Hide Manifest"
 }

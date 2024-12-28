@@ -329,5 +329,9 @@
   "Font size": "Шрифт зурлыгы",
   "Small": "Кечкенә",
   "Normal": "Нормаль",
-  "Big": "Зур"
+  "Big": "Зур",
+  "Supported extensions": "Ярдәмле киңәйтүләр",
+  "Please type or select value": "Зинһар, кыйммәтне языгыз яки сайлагыз",
+  "Show Manifest": "Манифестны күрсәт",
+  "Hide Manifest": "Манифестны яшер"
 }

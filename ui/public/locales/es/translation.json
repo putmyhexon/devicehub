@@ -322,5 +322,9 @@
   "Small": "Pequeño",
   "Normal": "Normal",
   "Big": "Grande",
-  "Rewind": "Rebobinar"
+  "Rewind": "Rebobinar",
+  "Supported extensions": "Extensiones compatibles",
+  "Please type or select value": "Por favor escriba o seleccione valor",
+  "Show Manifest": "Mostrar manifiesto",
+  "Hide Manifest": "Ocultar manifiesto"
 }

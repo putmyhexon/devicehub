@@ -301,5 +301,9 @@
   "Font size": "字體大小",
   "Small": "小的",
   "Normal": "普通的",
-  "Big": "大的"
+  "Big": "大的",
+  "Supported extensions": "支援的擴展",
+  "Please type or select value": "請輸入或選擇數值",
+  "Show Manifest": "顯示清單",
+  "Hide Manifest": "隱藏清單"
 }

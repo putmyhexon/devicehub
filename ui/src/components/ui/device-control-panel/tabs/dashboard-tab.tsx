@@ -1,4 +1,4 @@
-import { Button, SimpleGrid } from '@vkontakte/vkui'
+import { SimpleGrid } from '@vkontakte/vkui'
 import { useTranslation } from 'react-i18next'
 import {
   Icon24Upload,
@@ -16,9 +16,11 @@ import { observer } from 'mobx-react-lite'
 import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
 
 import { BookingService } from '@/services/booking-service'
+import { ApplicationInstallationService } from '@/services/application-installation/application-installation-service'
 
 import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
 
+import { AppUploadControl } from './app-upload-control'
 import { ClipboardControl } from './clipboard-control'
 import { DeviceButtonsControl } from './device-buttons-control'
 import { DeviceBookingControl } from './device-booking-control'
@@ -27,6 +29,9 @@ export const DashboardTab = observer(() => {
   const { t } = useTranslation()
 
   const bookingService = useServiceLocator<BookingService>(BookingService.name)
+  const applicationInstallationService = useServiceLocator<ApplicationInstallationService>(
+    ApplicationInstallationService.name
+  )
 
   return (
     <SimpleGrid columns={2} gap='l'>
@@ -34,7 +39,7 @@ export const DashboardTab = observer(() => {
         <DeviceButtonsControl />
       </DeviceControlCard>
       <DeviceControlCard
-        after={<Button appearance='neutral' before={<Icon20CopyOutline />} mode='tertiary' />}
+        afterButtonIcon={<Icon20CopyOutline />}
         afterTooltipText={t('Copy link')}
         before={<Icon20BugOutline />}
         helpTooltipText={t('Run the following on your command line to debug the device from your IDE')}
@@ -43,14 +48,15 @@ export const DashboardTab = observer(() => {
         Stub
       </DeviceControlCard>
       <DeviceControlCard
-        after={<Button appearance='neutral' before={<Icon20DeleteOutline />} mode='tertiary' />}
+        afterButtonIcon={<Icon20DeleteOutline />}
         before={<Icon24Upload height={20} width={20} />}
         title={t('App Upload')}
+        onAfterButtonClick={() => applicationInstallationService?.clear()}
       >
-        Stub
+        <AppUploadControl />
       </DeviceControlCard>
       <DeviceControlCard
-        after={<Button appearance='neutral' before={<Icon20DeleteOutline />} mode='tertiary' />}
+        afterButtonIcon={<Icon20DeleteOutline />}
         afterTooltipText={t('Reset all browser settings')}
         before={<Icon20GlobeOutline />}
         title={t('Open link or deeplink')}
@@ -58,7 +64,7 @@ export const DashboardTab = observer(() => {
         Stub
       </DeviceControlCard>
       <DeviceControlCard
-        after={<Button appearance='neutral' before={<Icon20DeleteOutline />} mode='tertiary' />}
+        afterButtonIcon={<Icon20DeleteOutline />}
         before={<Icon20ChevronRightOutline />}
         helpTooltipText={t('Executes remote shell commands')}
         title={t('Shell')}
@@ -69,19 +75,13 @@ export const DashboardTab = observer(() => {
         <ClipboardControl />
       </DeviceControlCard>
       <DeviceControlCard
+        afterButtonIcon={<Icon20AddSquareOutline />}
         afterTooltipText={t('Extend booking')}
         before={<Icon28StopwatchOutline height={20} width={20} />}
         title={t('Device booking')}
-        after={
-          <Button
-            appearance='neutral'
-            before={<Icon20AddSquareOutline />}
-            mode='tertiary'
-            onClick={() => {
-              bookingService?.reBookDevice()
-            }}
-          />
-        }
+        onAfterButtonClick={() => {
+          bookingService?.reBookDevice()
+        }}
       >
         <DeviceBookingControl />
       </DeviceControlCard>

@@ -399,5 +399,9 @@
   "Font size": "Taille de la police",
   "Small": "Petit",
   "Normal": "Normale",
-  "Big": "Grand"
+  "Big": "Grand",
+  "Supported extensions": "Extensions prises en charge",
+  "Please type or select value": "Veuillez saisir ou sélectionner une valeur",
+  "Show Manifest": "Afficher le manifeste",
+  "Hide Manifest": "Masquer le manifeste"
 }

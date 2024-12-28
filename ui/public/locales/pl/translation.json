@@ -245,5 +245,9 @@
   "Big": "Duży",
   "Rewind": "Przewijać",
   "Play/Pause": "Odtwórz/Wstrzymaj",
-  "Stop": "Zatrzymywać się"
+  "Stop": "Zatrzymywać się",
+  "Supported extensions": "Obsługiwane rozszerzenia",
+  "Please type or select value": "Wpisz lub wybierz wartość",
+  "Show Manifest": "Pokaż manifest",
+  "Hide Manifest": "Ukryj manifest"
 }

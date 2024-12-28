@@ -329,5 +329,9 @@
   "Font size": "Қаріп өлшемі",
   "Small": "Кішкентай",
   "Normal": "Қалыпты",
-  "Big": "Үлкен"
+  "Big": "Үлкен",
+  "Supported extensions": "Қолдау көрсетілетін кеңейтімдер",
+  "Please type or select value": "Мәнді теріңіз немесе таңдаңыз",
+  "Show Manifest": "Манифест көрсету",
+  "Hide Manifest": "Манифестті жасыру"
 }

@@ -1,8 +1,9 @@
 import { createQueryKeyStore } from '@lukemorales/query-key-factory'
 
-import { getAuthContact, getAuthDocs } from '@/api/openstf'
+import { getAuthContact, getAuthDocs, getManifest } from '@/api/openstf'
 import { getCurrentUserProfile, getDeviceBySerial, getDevices } from '@/api/openstf-api'
 
+import type { GetManifestResponse } from '@/api/openstf/types'
 import type { Device } from '@/generated/types'
 
 export const queries = createQueryKeyStore({
@@ -31,5 +32,11 @@ export const queries = createQueryKeyStore({
       queryKey: null,
       queryFn: () => getAuthContact(),
     },
+  },
+  s: {
+    apk: (href: string) => ({
+      queryKey: [href],
+      queryFn: (): Promise<GetManifestResponse> => getManifest(href),
+    }),
   },
 })

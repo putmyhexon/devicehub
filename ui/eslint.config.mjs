@@ -325,7 +325,10 @@ export default tseslint.config(
       'no-await-in-loop': 'error',
       'no-shadow': 'off',
       'no-continue': 'off',
-      'i18next/no-literal-string': ['error', { words: { exclude: ['%', 'Stub', 'OK', 'DKA'] } }],
+      'i18next/no-literal-string': [
+        'error',
+        { words: { exclude: ['%', 'Stub', 'OK', 'DKA', '.apk', 'aab', '.ipa', '\\)', '\\(', '%', '.', '%\\)'] } },
+      ],
     },
   },
   {
