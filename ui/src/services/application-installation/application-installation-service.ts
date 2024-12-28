@@ -13,7 +13,7 @@ import { deviceBySerialStore } from '@/store/device-by-serial-store'
 import type { Manifest } from '@/types/manifest.type'
 import type { ActivityOptions, ActivityOptionsSet, RunActivityArgs, SelectOption } from './types'
 import type { AxiosError } from 'axios'
-import type { ErrorResponse } from '@/generated/types'
+import type { Device, ErrorResponse } from '@/generated/types'
 import type { QueryObserverResult } from '@tanstack/react-query'
 import type { GetManifestResponse, UploadFileResponse } from '@/api/openstf/types'
 
@@ -25,6 +25,7 @@ export class ApplicationInstallationService {
   progress = 0
   isInstalling = false
   isInstalled = false
+  device: Device | undefined = undefined
 
   uploadFileMutate = new MobxMutation<UploadFileResponse, ErrorResponse, { type: string; file: File }>(
     { mutationFn: (data): Promise<UploadFileResponse> => uploadFile(data.type, data.file) },
@@ -33,10 +34,17 @@ export class ApplicationInstallationService {
 
   private readonly deviceControlStore: DeviceControlStore
 
-  constructor() {
+  constructor(serial: string) {
     makeAutoObservable(this)
 
     this.deviceControlStore = serviceLocator.get<DeviceControlStore>(DeviceControlStore.name)
+    this.init(serial)
+  }
+
+  async init(serial: string): Promise<void> {
+    const device = await deviceBySerialStore.fetch(serial)
+
+    this.device = device
   }
 
   get manifestQueryResult(): QueryObserverResult<GetManifestResponse, AxiosError> {
@@ -142,7 +150,25 @@ export class ApplicationInstallationService {
     this.deviceControlStore.shell(command)
   }
 
-  async installFile(serial: string, file: File): Promise<void> {
+  clear(): void {
+    queryClient.resetQueries({ queryKey: queries.s.apk(this.href).queryKey, exact: true })
+
+    this.progress = 0
+    this.isInstalling = false
+    this.isInstalled = false
+    this.status = ''
+    this.href = ''
+  }
+
+  allowedFileExtensions(): string[] {
+    if (this.device?.ios) {
+      return ['.ipa', 'application/octet-stream']
+    }
+
+    return ['.apk', '.aab', 'application/x-authorware-bin', 'application/vnd.android.package-archive']
+  }
+
+  async installFile(file: File): Promise<void> {
     this.isInstalling = true
 
     const type = file.name.split('.').pop() || 'apk'
@@ -157,9 +183,7 @@ export class ApplicationInstallationService {
 
     this.href = data.resources.file.href
 
-    const device = await deviceBySerialStore.fetch(serial)
-
-    if (device.ios) {
+    if (this.device?.ios) {
       this.deviceControlStore.installIos({
         href: this.href,
         manifest: { application: { activities: {} } } as unknown as Manifest,
@@ -235,15 +259,5 @@ export class ApplicationInstallationService {
     await this.deviceControlStore.uninstall(packageName).promise
 
     this.clear()
-  }
-
-  clear(): void {
-    queryClient.resetQueries({ queryKey: queries.s.apk(this.href).queryKey, exact: true })
-
-    this.progress = 0
-    this.isInstalling = false
-    this.isInstalled = false
-    this.status = ''
-    this.href = ''
   }
 }

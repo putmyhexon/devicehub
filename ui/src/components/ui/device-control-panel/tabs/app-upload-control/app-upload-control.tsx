@@ -10,13 +10,12 @@ import { ConditionalRender } from '@/components/lib/conditional-render'
 import { ApplicationInstallationService } from '@/services/application-installation/application-installation-service'
 
 import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
-import { useDeviceSerial } from '@/lib/hooks/use-device-serial.hook'
 
 import { ActivityLauncher } from './activity-launcher'
 
 export const AppUploadControl = observer(() => {
   const { t } = useTranslation()
-  const serial = useDeviceSerial()
+
   const [fileInputError, setFileInputError] = useState('')
   const applicationInstallationService = useServiceLocator<ApplicationInstallationService>(
     ApplicationInstallationService.name
@@ -25,18 +24,11 @@ export const AppUploadControl = observer(() => {
   return (
     <>
       <FileInput
-        accept={[
-          '.apk',
-          '.aab',
-          '.ipa',
-          'application/octet-stream',
-          'application/x-authorware-bin',
-          'application/vnd.android.package-archive',
-        ]}
+        accept={applicationInstallationService?.allowedFileExtensions()}
         onError={(message) => setFileInputError(message)}
         onChange={(file) => {
           if (file) {
-            applicationInstallationService?.installFile(serial, file)
+            applicationInstallationService?.installFile(file)
           }
         }}
       />

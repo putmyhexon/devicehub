@@ -36,7 +36,7 @@ class DeviceConnection {
 
       serviceLocator.register(DeviceScreenStore.name, new DeviceScreenStore())
       serviceLocator.register(BookingService.name, new BookingService(serial))
-      serviceLocator.register(ApplicationInstallationService.name, new ApplicationInstallationService())
+      serviceLocator.register(ApplicationInstallationService.name, new ApplicationInstallationService(serial))
       serviceLocator.register(KeyboardService.name, new KeyboardService())
       serviceLocator.register(TouchService.name, new TouchService())
 
