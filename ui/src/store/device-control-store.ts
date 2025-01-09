@@ -21,7 +21,7 @@ export class DeviceControlStore extends DeviceControlService {
 
   async getClipboardContent(): Promise<string> {
     try {
-      const data = await this.copy()
+      const data = await this.copy().promise
 
       if (typeof data === 'string') {
         return data

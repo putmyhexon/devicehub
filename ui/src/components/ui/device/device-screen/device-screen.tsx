@@ -150,7 +150,7 @@ export const DeviceScreen = observer(() => {
         <div className={styles.canvasWrapper}>
           <canvas
             ref={canvasRef}
-            className={cn(styles.canvas, { [styles.rotated]: !!deviceScreenStore?.isScreenRotated })}
+            className={cn(styles.canvas, { [styles.letterbox]: !!deviceScreenStore?.isAspectRatioModeLetterbox })}
           />
           {touchService?.slots.map((value, index) => (
             <span
