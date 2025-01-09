@@ -34,6 +34,8 @@ export const useScreenStreaming = ({ canvasRef, canvasWrapperRef, serial }: UseS
     const debouncedUpdateBounds = debounce(deviceScreenStore.updateBounds, 1000)
 
     const resizeObserver = new ResizeObserver(() => {
+      deviceScreenStore.determineAspectRatioMode()
+
       debouncedUpdateBounds()
     })
 

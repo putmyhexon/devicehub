@@ -20,8 +20,6 @@
   inset: 0;
   transform: rotate(0deg);
 
-  container-type: size;
-
   height: 100%;
   margin: auto;
 }
@@ -43,11 +41,6 @@
   vertical-align: baseline;
 
   transition: transform 250ms ease-in-out;
-
-  @container (max-aspect-ratio: 9 / 16) {
-    width: 100%;
-    height: auto;
-  }
 }
 
 .screenInput {
@@ -62,14 +55,9 @@
   outline: none;
 }
 
-.rotated {
+.letterbox {
   width: 100%;
   height: auto;
-
-  @container (min-aspect-ratio: 16 / 9) {
-    width: auto;
-    height: 100%;
-  }
 }
 
 .spinner {

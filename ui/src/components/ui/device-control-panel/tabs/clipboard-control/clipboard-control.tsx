@@ -27,11 +27,12 @@ export const ClipboardControl = observer(() => {
       value={t(clipboardContent)}
       after={
         <Tooltip appearance='accent' description={t('Get clipboard contents')}>
-          <IconButton hoverMode='opacity' onClick={() => onGetClipboardContent()}>
+          <IconButton hoverMode='opacity' label='Get clipboard content button' onClick={() => onGetClipboardContent()}>
             <Icon20RefreshOutline />
           </IconButton>
         </Tooltip>
       }
+      onChange={() => {}}
     />
   )
 })

@@ -29,6 +29,7 @@ export class DeviceScreenStore {
   private screenRotation = 0
   private isScreenStreamingJustStarted = false
 
+  isAspectRatioModeLetterbox = false
   isScreenLoading = false
   isScreenRotated = false
 
@@ -75,7 +76,7 @@ export class DeviceScreenStore {
   }
 
   updateBounds(): void {
-    if (!this.canvasWrapper || !this.canvasWrapper.offsetWidth || !this.canvasWrapper.offsetHeight) {
+    if (!this.canvasWrapper) {
       throw new Error('Unable to read bounds; container must have dimensions')
     }
 
@@ -91,6 +92,15 @@ export class DeviceScreenStore {
     ) {
       this.adjustedBoundSize = newAdjustedBoundSize
       this.onScreenInterestAreaChanged()
+    }
+  }
+
+  determineAspectRatioMode(): void {
+    if (this.canvasWrapper && this.context) {
+      const canvasAspect = this.context.canvas.width / this.context.canvas.height
+      const canvasWrapperAspect = this.canvasWrapper.offsetWidth / this.canvasWrapper.offsetHeight
+
+      this.isAspectRatioModeLetterbox = canvasWrapperAspect < canvasAspect
     }
   }
 
@@ -194,6 +204,8 @@ export class DeviceScreenStore {
     if (!isRotated) {
       this.isScreenRotated = false
     }
+
+    this.determineAspectRatioMode()
   }
 
   private connectWebsocket(): void {
