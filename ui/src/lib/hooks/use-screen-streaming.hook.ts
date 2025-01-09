@@ -34,6 +34,10 @@ export const useScreenStreaming = ({ canvasRef, canvasWrapperRef, serial }: UseS
     const debouncedUpdateBounds = debounce(deviceScreenStore.updateBounds, 1000)
 
     const resizeObserver = new ResizeObserver(() => {
+      /* NOTE: This is not debounced because it needs to respond to all resize events immediately 
+        to detect when the device has a wider aspect ratio than the wrapper element (and vice versa)
+        and to change the aspect ratio mode accordingly
+      */
       deviceScreenStore.determineAspectRatioMode()
 
       debouncedUpdateBounds()
