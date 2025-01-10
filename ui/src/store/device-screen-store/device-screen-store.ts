@@ -244,6 +244,8 @@ export class DeviceScreenStore {
       this.websocketReconnectionAttempt = 0
     }
 
+    this.isScreenStreamingJustStarted = true
+
     if (this.shouldUpdateScreen()) {
       this.updateBounds()
       this.onScreenInterestGained()
@@ -286,12 +288,13 @@ export class DeviceScreenStore {
       const startData: StartScreenStreamingMessage = JSON.parse(message.data.replace(startRegex, ''))
 
       this.screenRotation = startData.orientation
-
-      this.isScreenStreamingJustStarted = true
     }
   }
 
-  private errorListener(): void {}
+  private errorListener(): void {
+    this.setIsScreenLoading(false)
+  }
+
   private closeListener(): void {
     this.websocketReconnecting = false
 
