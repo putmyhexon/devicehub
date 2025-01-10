@@ -24,10 +24,6 @@ class DeviceListStore {
     this.addDeviceChangeListener()
   }
 
-  deviceBySerial(serial: string): Device | undefined {
-    return this.devicesQuery.data?.find((item) => item.serial === serial)
-  }
-
   addDeviceChangeListener(): void {
     socket.on('device.change', this.onDeviceChange)
   }
@@ -63,9 +59,11 @@ class DeviceListStore {
     return this.devicesQuery.data?.reduce((accumulator, item) => (item.using ? accumulator + 1 : accumulator), 0)
   }
 
-  private onDeviceChange({ data: changedData }: DeviceChangeMessage<Partial<Device>>): void {
+  private async onDeviceChange({ data: changedData }: DeviceChangeMessage<Partial<Device>>): Promise<void> {
+    const deviceList = await queryClient.ensureQueryData({ ...queries.devices.all })
+
     queryClient.setQueryData<Device[]>(queries.devices.all.queryKey, (oldData) => {
-      if (!oldData) return []
+      if (!oldData) return deviceList
 
       return oldData.map((item) => {
         if (item.serial === changedData.serial) {
