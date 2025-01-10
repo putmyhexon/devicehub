@@ -1,6 +1,5 @@
-import { useState } from 'react'
-import { Button, Card, Div, Flex, Headline, Tooltip } from '@vkontakte/vkui'
 import { Icon20HelpOutline } from '@vkontakte/icons'
+import { Button, Card, Div, Flex, Headline, Tooltip } from '@vkontakte/vkui'
 
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
@@ -26,31 +25,24 @@ export const DeviceControlCard = ({
   onAfterButtonClick,
   afterTooltipText,
   helpTooltipText,
-}: DeviceControlCardProps) => {
-  const [isAfterButtonTooltipShown, setIsAfterButtonTooltipShown] = useState(false)
-
-  return (
-    <Card className={styles.deviceControlCard} mode='tint'>
-      <Div>
-        <Flex align='center' className={styles.cardHeader} justify='space-between'>
-          <Flex align='center'>
-            {before}
-            <Headline className={styles.cardTitle} level='1'>
-              {title}
-            </Headline>
-          </Flex>
-          <Flex align='center'>
-            <ConditionalRender conditions={[!!helpTooltipText]}>
-              <Tooltip appearance='accent' description={helpTooltipText} placement='left'>
-                <Button appearance='neutral' aria-label='Help button' before={<Icon20HelpOutline />} mode='tertiary' />
-              </Tooltip>
-            </ConditionalRender>
-            <Tooltip
-              appearance='accent'
-              description={afterTooltipText}
-              shown={!!afterTooltipText && isAfterButtonTooltipShown}
-              onShownChange={setIsAfterButtonTooltipShown}
-            >
+}: DeviceControlCardProps) => (
+  <Card className={styles.deviceControlCard} mode='tint'>
+    <Div>
+      <Flex align='center' className={styles.cardHeader} justify='space-between' noWrap>
+        <Flex align='center' noWrap>
+          {before}
+          <Headline className={styles.cardTitle} level='1'>
+            {title}
+          </Headline>
+        </Flex>
+        <Flex align='center'>
+          <ConditionalRender conditions={[!!helpTooltipText]}>
+            <Tooltip appearance='accent' description={helpTooltipText} placement='left'>
+              <Button appearance='neutral' aria-label='Help button' before={<Icon20HelpOutline />} mode='tertiary' />
+            </Tooltip>
+          </ConditionalRender>
+          <ConditionalRender conditions={[!!onAfterButtonClick]}>
+            <Tooltip appearance='accent' description={afterTooltipText}>
               <Button
                 appearance='neutral'
                 aria-label='Control action button'
@@ -59,10 +51,10 @@ export const DeviceControlCard = ({
                 onClick={onAfterButtonClick}
               />
             </Tooltip>
-          </Flex>
+          </ConditionalRender>
         </Flex>
-        <div>{children}</div>
-      </Div>
-    </Card>
-  )
-}
+      </Flex>
+      <div>{children}</div>
+    </Div>
+  </Card>
+)
