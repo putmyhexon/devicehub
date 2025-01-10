@@ -14,6 +14,8 @@ import { DeviceControlStore } from './device-control-store'
 import { DeviceScreenStore } from './device-screen-store/device-screen-store'
 
 class DeviceConnection {
+  debugCommand: string = ''
+
   constructor() {
     makeAutoObservable(this)
   }
@@ -27,12 +29,15 @@ class DeviceConnection {
       const deviceControlStore = new DeviceControlStore(device.channel, !!device.ios)
       serviceLocator.register(DeviceControlStore.name, deviceControlStore)
 
-      const connectToDevice = await Promise.all([
-        deviceControlStore.startRemoteConnect().promise,
-        groupService.invite(device),
-      ])
+      deviceControlStore.startRemoteConnect().promise.then((connectToDeviceData) => {
+        const debugCommand = `adb connect ${connectToDeviceData}`
 
-      console.info(`adb connect ${connectToDevice[0]}`)
+        this.debugCommand = debugCommand
+
+        console.info(debugCommand)
+      })
+
+      await groupService.invite(device)
 
       serviceLocator.register(DeviceScreenStore.name, new DeviceScreenStore())
       serviceLocator.register(BookingService.name, new BookingService(serial))
