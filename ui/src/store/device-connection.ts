@@ -8,7 +8,6 @@ import { KeyboardService } from '@/services/keyboard-service/keyboard-service'
 import { BookingService } from '@/services/booking-service'
 import { ApplicationInstallationService } from '@/services/application-installation/application-installation-service'
 
-import { deviceListStore } from './device-list-store'
 import { deviceBySerialStore } from './device-by-serial-store'
 import { DeviceControlStore } from './device-control-store'
 import { DeviceScreenStore } from './device-screen-store/device-screen-store'
@@ -52,10 +51,8 @@ class DeviceConnection {
     }
   }
 
-  stopUsingDevice(serial: string): Promise<unknown> | undefined {
-    const device = deviceListStore.deviceBySerial(serial)
-
-    if (!device) return undefined
+  async stopUsingDevice(serial: string): Promise<unknown> {
+    const device = await deviceBySerialStore.fetch(serial)
 
     serviceLocator.unregister(DeviceControlStore.name)
     serviceLocator.unregister(BookingService.name)
