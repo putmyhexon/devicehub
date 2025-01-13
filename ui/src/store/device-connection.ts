@@ -11,6 +11,7 @@ import { ApplicationInstallationService } from '@/services/application-installat
 import { deviceBySerialStore } from './device-by-serial-store'
 import { DeviceControlStore } from './device-control-store'
 import { DeviceScreenStore } from './device-screen-store/device-screen-store'
+import { ShellControlStore } from './shell-control-store'
 
 class DeviceConnection {
   debugCommand: string = ''
@@ -40,6 +41,7 @@ class DeviceConnection {
 
       serviceLocator.register(DeviceScreenStore.name, new DeviceScreenStore())
       serviceLocator.register(BookingService.name, new BookingService(serial))
+      serviceLocator.register(ShellControlStore.name, new ShellControlStore())
       serviceLocator.register(ApplicationInstallationService.name, new ApplicationInstallationService(serial))
       serviceLocator.register(KeyboardService.name, new KeyboardService())
       serviceLocator.register(TouchService.name, new TouchService())
@@ -56,6 +58,7 @@ class DeviceConnection {
 
     serviceLocator.unregister(DeviceControlStore.name)
     serviceLocator.unregister(BookingService.name)
+    serviceLocator.unregister(ShellControlStore.name)
     serviceLocator.unregister(ApplicationInstallationService.name)
     serviceLocator.unregister(DeviceScreenStore.name)
     serviceLocator.unregister(KeyboardService.name)

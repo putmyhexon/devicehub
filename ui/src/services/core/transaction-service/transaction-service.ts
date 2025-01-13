@@ -54,6 +54,8 @@ export class TransactionService {
   }
 
   cleanUpTransaction(): void {
+    this.progressFn = null
+
     socket.off('tx.done', this.transactionDoneListener)
     socket.emit('tx.cleanup', this.channel)
   }
