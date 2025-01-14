@@ -65,8 +65,8 @@ export const DashboardTab = observer(() => {
         </ConditionalRender>
         <DeviceControlCard
           afterButtonIcon={<Icon20DeleteOutline />}
-          before={<Icon24Upload height={20} width={20} />}
           afterTooltipText={t('Clear')}
+          before={<Icon24Upload height={20} width={20} />}
           title={t('App Upload')}
           onAfterButtonClick={() => applicationInstallationService?.clear()}
         >

@@ -2,7 +2,7 @@ import { IconButton, Input } from '@vkontakte/vkui'
 import { Icon20Play } from '@vkontakte/icons'
 import { observer } from 'mobx-react-lite'
 
-import { OutputArea } from '@/components/lib/output-area'
+import { OutputLogArea } from '@/components/lib/output-log-area'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
 import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
@@ -16,12 +16,12 @@ export const ShellControl = observer(() => {
   return (
     <>
       <Input
-        value={shellControlStore?.command}
+        value={shellControlStore?.command || ''}
         after={
           <IconButton
             disabled={!shellControlStore?.command}
-            label='send shell command'
-            onClick={shellControlStore?.runShellCommand}
+            label='run shell command'
+            onClick={() => shellControlStore?.runShellCommand()}
           >
             <Icon20Play />
           </IconButton>
@@ -29,7 +29,7 @@ export const ShellControl = observer(() => {
         onChange={(event) => shellControlStore?.setCommand(event.target.value)}
       />
       <ConditionalRender conditions={[!!shellControlStore?.shellResult]}>
-        <OutputArea className={styles.shellResult} text={shellControlStore?.shellResult || ''} />
+        <OutputLogArea className={styles.shellResult} text={shellControlStore?.shellResult || ''} />
       </ConditionalRender>
     </>
   )
