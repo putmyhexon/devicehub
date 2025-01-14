@@ -287,6 +287,8 @@ export class DeviceScreenStore {
     if (startRegex.test(message.data)) {
       const startData: StartScreenStreamingMessage = JSON.parse(message.data.replace(startRegex, ''))
 
+      this.isScreenStreamingJustStarted = true
+
       this.screenRotation = startData.orientation
     }
   }

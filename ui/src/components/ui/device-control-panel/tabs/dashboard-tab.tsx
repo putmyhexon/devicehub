@@ -1,4 +1,3 @@
-import { SimpleGrid } from '@vkontakte/vkui'
 import { useTranslation } from 'react-i18next'
 import {
   Icon24Upload,
@@ -11,22 +10,32 @@ import {
   Icon20AddSquareOutline,
   Icon20ChevronRightOutline,
 } from '@vkontakte/icons'
+import { Flex } from '@vkontakte/vkui'
 import { observer } from 'mobx-react-lite'
 
 import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
+import { ConditionalRender } from '@/components/lib/conditional-render'
 
 import { BookingService } from '@/services/booking-service'
 import { ApplicationInstallationService } from '@/services/application-installation/application-installation-service'
 
 import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
+import { deviceConnection } from '@/store/device-connection'
+import { deviceBySerialStore } from '@/store/device-by-serial-store'
+import { useDeviceSerial } from '@/lib/hooks/use-device-serial.hook'
 
-import { AppUploadControl } from './app-upload-control'
 import { ClipboardControl } from './clipboard-control'
+import { AppUploadControl } from './app-upload-control'
+import { RemoteDebugControl } from './remote-debug-control'
 import { DeviceButtonsControl } from './device-buttons-control'
 import { DeviceBookingControl } from './device-booking-control'
 
+import styles from './dashboard-tab.module.css'
+
 export const DashboardTab = observer(() => {
   const { t } = useTranslation()
+  const serial = useDeviceSerial()
+  const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
 
   const bookingService = useServiceLocator<BookingService>(BookingService.name)
   const applicationInstallationService = useServiceLocator<ApplicationInstallationService>(
@@ -34,57 +43,64 @@ export const DashboardTab = observer(() => {
   )
 
   return (
-    <SimpleGrid columns={2} gap='l'>
-      <DeviceControlCard before={<Icon28SettingsOutline height={20} width={20} />} title={t('Device Buttons')}>
-        <DeviceButtonsControl />
-      </DeviceControlCard>
-      <DeviceControlCard
-        afterButtonIcon={<Icon20CopyOutline />}
-        afterTooltipText={t('Copy link')}
-        before={<Icon20BugOutline />}
-        helpTooltipText={t('Run the following on your command line to debug the device from your IDE')}
-        title={t('Remote debug')}
-      >
-        Stub
-      </DeviceControlCard>
-      <DeviceControlCard
-        afterButtonIcon={<Icon20DeleteOutline />}
-        before={<Icon24Upload height={20} width={20} />}
-        title={t('App Upload')}
-        onAfterButtonClick={() => applicationInstallationService?.clear()}
-      >
-        <AppUploadControl />
-      </DeviceControlCard>
-      <DeviceControlCard
-        afterButtonIcon={<Icon20DeleteOutline />}
-        afterTooltipText={t('Reset all browser settings')}
-        before={<Icon20GlobeOutline />}
-        title={t('Open link or deeplink')}
-      >
-        Stub
-      </DeviceControlCard>
-      <DeviceControlCard
-        afterButtonIcon={<Icon20DeleteOutline />}
-        before={<Icon20ChevronRightOutline />}
-        helpTooltipText={t('Executes remote shell commands')}
-        title={t('Shell')}
-      >
-        Stub
-      </DeviceControlCard>
-      <DeviceControlCard before={<Icon20CopyOutline />} title={t('Clipboard')}>
-        <ClipboardControl />
-      </DeviceControlCard>
-      <DeviceControlCard
-        afterButtonIcon={<Icon20AddSquareOutline />}
-        afterTooltipText={t('Extend booking')}
-        before={<Icon28StopwatchOutline height={20} width={20} />}
-        title={t('Device booking')}
-        onAfterButtonClick={() => {
-          bookingService?.reBookDevice()
-        }}
-      >
-        <DeviceBookingControl />
-      </DeviceControlCard>
-    </SimpleGrid>
+    <Flex className={styles.dashboardTab} gap='l'>
+      <div className={styles.columnControl}>
+        <DeviceControlCard before={<Icon28SettingsOutline height={20} width={20} />} title={t('Device Buttons')}>
+          <DeviceButtonsControl />
+        </DeviceControlCard>
+        <ConditionalRender conditions={[!device?.ios]}>
+          <DeviceControlCard
+            afterButtonIcon={<Icon20CopyOutline />}
+            afterTooltipText={t('Copy link')}
+            before={<Icon20BugOutline />}
+            helpTooltipText={t('Run the following on your command line to debug the device from your IDE')}
+            title={t('Remote debug')}
+            onAfterButtonClick={() => navigator.clipboard.writeText(deviceConnection.debugCommand)}
+          >
+            <RemoteDebugControl />
+          </DeviceControlCard>
+        </ConditionalRender>
+        <DeviceControlCard
+          afterButtonIcon={<Icon20DeleteOutline />}
+          before={<Icon24Upload height={20} width={20} />}
+          title={t('App Upload')}
+          onAfterButtonClick={() => applicationInstallationService?.clear()}
+        >
+          <AppUploadControl />
+        </DeviceControlCard>
+      </div>
+      <div className={styles.columnControl}>
+        <DeviceControlCard
+          afterButtonIcon={<Icon20DeleteOutline />}
+          afterTooltipText={t('Reset all browser settings')}
+          before={<Icon20GlobeOutline />}
+          title={t('Open link or deeplink')}
+        >
+          Stub
+        </DeviceControlCard>
+        <DeviceControlCard
+          afterButtonIcon={<Icon20DeleteOutline />}
+          before={<Icon20ChevronRightOutline />}
+          helpTooltipText={t('Executes remote shell commands')}
+          title={t('Shell')}
+        >
+          Stub
+        </DeviceControlCard>
+        <DeviceControlCard before={<Icon20CopyOutline />} title={t('Clipboard')}>
+          <ClipboardControl />
+        </DeviceControlCard>
+        <DeviceControlCard
+          afterButtonIcon={<Icon20AddSquareOutline />}
+          afterTooltipText={t('Extend booking')}
+          before={<Icon28StopwatchOutline height={20} width={20} />}
+          title={t('Device booking')}
+          onAfterButtonClick={() => {
+            bookingService?.reBookDevice()
+          }}
+        >
+          <DeviceBookingControl />
+        </DeviceControlCard>
+      </div>
+    </Flex>
   )
 })
