@@ -23,10 +23,12 @@ import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
 import { deviceConnection } from '@/store/device-connection'
 import { deviceBySerialStore } from '@/store/device-by-serial-store'
 import { useDeviceSerial } from '@/lib/hooks/use-device-serial.hook'
+import { ShellControlStore } from '@/store/shell-control-store'
 
 import { ClipboardControl } from './clipboard-control'
 import { AppUploadControl } from './app-upload-control'
 import { RemoteDebugControl } from './remote-debug-control'
+import { ShellControl } from './shell-control'
 import { DeviceButtonsControl } from './device-buttons-control'
 import { DeviceBookingControl } from './device-booking-control'
 
@@ -38,6 +40,7 @@ export const DashboardTab = observer(() => {
   const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
 
   const bookingService = useServiceLocator<BookingService>(BookingService.name)
+  const shellControlStore = useServiceLocator<ShellControlStore>(ShellControlStore.name)
   const applicationInstallationService = useServiceLocator<ApplicationInstallationService>(
     ApplicationInstallationService.name
   )
@@ -62,6 +65,7 @@ export const DashboardTab = observer(() => {
         </ConditionalRender>
         <DeviceControlCard
           afterButtonIcon={<Icon20DeleteOutline />}
+          afterTooltipText={t('Clear')}
           before={<Icon24Upload height={20} width={20} />}
           title={t('App Upload')}
           onAfterButtonClick={() => applicationInstallationService?.clear()}
@@ -78,14 +82,18 @@ export const DashboardTab = observer(() => {
         >
           Stub
         </DeviceControlCard>
-        <DeviceControlCard
-          afterButtonIcon={<Icon20DeleteOutline />}
-          before={<Icon20ChevronRightOutline />}
-          helpTooltipText={t('Executes remote shell commands')}
-          title={t('Shell')}
-        >
-          Stub
-        </DeviceControlCard>
+        <ConditionalRender conditions={[!device?.ios]}>
+          <DeviceControlCard
+            afterButtonIcon={<Icon20DeleteOutline />}
+            afterTooltipText={t('Clear')}
+            before={<Icon20ChevronRightOutline />}
+            helpTooltipText={t('Executes remote shell commands')}
+            title={t('Shell')}
+            onAfterButtonClick={() => shellControlStore?.clear()}
+          >
+            <ShellControl />
+          </DeviceControlCard>
+        </ConditionalRender>
         <DeviceControlCard before={<Icon20CopyOutline />} title={t('Clipboard')}>
           <ClipboardControl />
         </DeviceControlCard>

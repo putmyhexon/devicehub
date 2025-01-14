@@ -11,6 +11,7 @@ import {
 } from '@vkontakte/icons'
 
 import { ConditionalRender } from '@/components/lib/conditional-render'
+import { OutputLogArea } from '@/components/lib/output-log-area'
 
 import { ApplicationInstallationService } from '@/services/application-installation/application-installation-service'
 
@@ -150,9 +151,10 @@ export const ActivityLauncher = observer(() => {
               {t('Launch Activity')}
             </Button>
             <ConditionalRender conditions={[isManifestShown]}>
-              <pre className={styles.manifest}>
-                {JSON.stringify(applicationInstallationService?.manifestQueryResult.data?.manifest, null, ' ')}
-              </pre>
+              <OutputLogArea
+                className={styles.manifest}
+                text={JSON.stringify(applicationInstallationService?.manifestQueryResult.data?.manifest, null, ' ')}
+              />
             </ConditionalRender>
           </Flex>
         </Div>

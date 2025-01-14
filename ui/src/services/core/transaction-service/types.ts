@@ -15,7 +15,7 @@ export type TransactionProgressListenerMessage = {
   source: string
 }
 
-export type ProgressFn = (progress: number, status: string) => void
+export type ProgressFn = (progress: number, data: string) => void
 
 export type InitializeTransactionReturn = {
   channel: string
