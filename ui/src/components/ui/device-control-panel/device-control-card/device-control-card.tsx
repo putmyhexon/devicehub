@@ -1,4 +1,5 @@
 import { Icon20HelpOutline } from '@vkontakte/icons'
+import cn from 'classnames'
 import { Button, Card, Div, Flex, Headline, Tooltip } from '@vkontakte/vkui'
 
 import { ConditionalRender } from '@/components/lib/conditional-render'
@@ -15,6 +16,7 @@ type DeviceControlCardProps = {
   onAfterButtonClick?: () => void
   afterTooltipText?: string
   helpTooltipText?: string
+  className?: string
 }
 
 export const DeviceControlCard = ({
@@ -25,9 +27,10 @@ export const DeviceControlCard = ({
   onAfterButtonClick,
   afterTooltipText,
   helpTooltipText,
+  className,
 }: DeviceControlCardProps) => (
-  <Card className={styles.deviceControlCard} mode='tint'>
-    <Div>
+  <Card className={cn(styles.deviceControlCard, className)} mode='tint'>
+    <Div className={styles.cardContent}>
       <Flex align='center' className={styles.cardHeader} justify='space-between' noWrap>
         <Flex align='center' noWrap>
           {before}
@@ -54,7 +57,7 @@ export const DeviceControlCard = ({
           </ConditionalRender>
         </Flex>
       </Flex>
-      <div>{children}</div>
+      <div className={styles.cardBody}>{children}</div>
     </Div>
   </Card>
 )

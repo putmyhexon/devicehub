@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, runInAction } from 'mobx'
 
 import { serviceLocator } from '@/services/service-locator'
 
@@ -28,9 +28,13 @@ export class ShellControlStore {
   runShellCommand(): void {
     const data = this.deviceControlStore.shell(this.command)
 
+    this.clear()
+
     data.subscribeToProgress((_, result) => {
       if (result) {
-        this.shellResult = result
+        runInAction(() => {
+          this.shellResult += result
+        })
       }
 
       if (!result) {

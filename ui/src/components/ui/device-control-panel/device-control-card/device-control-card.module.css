@@ -2,8 +2,16 @@
   overflow: hidden;
 }
 
+.cardContent {
+  height: 100%;
+}
+
 .cardHeader {
   padding-bottom: 20px;
+}
+
+.cardBody {
+  height: 100%;
 }
 
 .cardTitle {

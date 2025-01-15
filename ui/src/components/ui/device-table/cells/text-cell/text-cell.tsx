@@ -1,5 +1,5 @@
-import { Tappable, EllipsisText } from '@vkontakte/vkui'
 import { memo } from 'react'
+import { Tappable, EllipsisText } from '@vkontakte/vkui'
 
 import styles from './text-cell.module.css'
 
