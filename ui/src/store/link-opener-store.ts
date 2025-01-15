@@ -1,4 +1,5 @@
-import { makeAutoObservable } from 'mobx'
+import { action, makeAutoObservable, runInAction } from 'mobx'
+import { makePersistable } from 'mobx-persist-store'
 
 import { serviceLocator } from '@/services/service-locator'
 
@@ -12,6 +13,17 @@ export class LinkOpenerStore {
 
   constructor(serial: string) {
     makeAutoObservable(this)
+    makePersistable(this, {
+      name: 'currentBrowserId',
+      properties: ['currentBrowserId'],
+      storage: window.localStorage,
+    }).then(
+      action((persistStore) => {
+        if (persistStore.isHydrated && !this.currentBrowserId) {
+          this.init(serial)
+        }
+      })
+    )
 
     this.deviceControlStore = serviceLocator.get<DeviceControlStore>(DeviceControlStore.name)
 
@@ -28,7 +40,9 @@ export class LinkOpenerStore {
       const defaultBrowser = browser.apps.find((app) => app.selected)
 
       if (defaultBrowser) {
-        this.currentBrowserId = defaultBrowser.id
+        runInAction(() => {
+          this.currentBrowserId = defaultBrowser.id
+        })
 
         return
       }
@@ -37,12 +51,18 @@ export class LinkOpenerStore {
     const defaultBrowser = browser.apps.find((app) => app.name === 'Browser')
 
     if (defaultBrowser) {
-      this.currentBrowserId = defaultBrowser.id
+      runInAction(() => {
+        this.currentBrowserId = defaultBrowser.id
+      })
 
       return
     }
 
-    this.currentBrowserId = browser.apps[0].id
+    const firstBrowser = browser.apps[0].id
+
+    runInAction(() => {
+      this.currentBrowserId = firstBrowser
+    })
   }
 
   setCurrentBrowserId(id: string): void {
@@ -50,10 +70,22 @@ export class LinkOpenerStore {
   }
 
   addHttpToUrl(url: string): string {
-    /* NOTE: Check for '://' because a protocol-less URL might include a username:password combination
+    try {
+      return new URL(url).toString()
+    } catch (error) {
+      console.error(error)
+
+      /* NOTE: Check for '://' because a protocol-less URL might include a username:password combination
       Ignores also any query parameter because it may contain a http:// inside
     */
-    return (url.replace(/\?.*/, '').indexOf('://') === -1 ? 'http://' : '') + url
+      const hasProtocol = /^(https?):\/\//.test(url.replace(/\?.*/, ''))
+
+      if (!hasProtocol) {
+        return this.addHttpToUrl(`https://${url}`)
+      }
+
+      return url
+    }
   }
 
   openUrl(url: string): void {

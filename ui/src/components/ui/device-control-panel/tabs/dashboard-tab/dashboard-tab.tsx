@@ -9,6 +9,7 @@ import {
   Icon28StopwatchOutline,
   Icon20AddSquareOutline,
   Icon20ChevronRightOutline,
+  Icon20ClearDataOutline,
 } from '@vkontakte/icons'
 import { observer } from 'mobx-react-lite'
 
@@ -81,7 +82,7 @@ export const DashboardTab = observer(() => {
           <AppUploadControl />
         </DeviceControlCard>
         <DeviceControlCard
-          afterButtonIcon={<Icon20DeleteOutline />}
+          afterButtonIcon={<Icon20ClearDataOutline />}
           afterTooltipText={t('Reset all browser settings')}
           before={<Icon20GlobeOutline />}
           className={styles.linkOpener}

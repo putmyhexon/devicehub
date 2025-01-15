@@ -23,7 +23,7 @@ export const ClipboardControl = observer(() => {
   return (
     <OutputField
       afterButtonClick={onGetClipboardContent}
-      text={t(clipboardContent || 'Get clipboard contents')}
+      text={t(clipboardContent)}
       tooltipText={t('Get clipboard contents')}
     />
   )

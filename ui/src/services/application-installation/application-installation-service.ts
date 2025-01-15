@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, runInAction } from 'mobx'
 
 import { uploadFile } from '@/api/openstf'
 import { serviceLocator } from '@/services/service-locator'
@@ -44,7 +44,9 @@ export class ApplicationInstallationService {
   async init(serial: string): Promise<void> {
     const device = await deviceBySerialStore.fetch(serial)
 
-    this.device = device
+    runInAction(() => {
+      this.device = device
+    })
   }
 
   get manifestQueryResult(): QueryObserverResult<GetManifestResponse, AxiosError> {

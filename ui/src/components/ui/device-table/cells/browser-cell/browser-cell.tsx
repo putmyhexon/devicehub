@@ -12,7 +12,7 @@ type BrowserCellProps = {
 export const BrowserCell = memo(({ apps }: BrowserCellProps) => (
   <Flex>
     {apps?.map(({ id, type }) => (
-      <Image key={id} alt={type} size={24} src={type && BROWSER_ICON_MAP[type]} title={type} />
+      <Image key={id} alt={type} size={24} src={type && BROWSER_ICON_MAP[type]} title={type} noBorder />
     ))}
   </Flex>
 ))

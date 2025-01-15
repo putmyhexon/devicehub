@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Icon24OpenIn } from '@vkontakte/icons'
 import { useTranslation } from 'react-i18next'
@@ -13,16 +13,33 @@ import { BROWSER_ICON_MAP } from '@/constants/browser-icon-map'
 
 import styles from './link-opener-control.module.css'
 
+import type { KeyboardEvent } from 'react'
+import type { SegmentedControlValue } from '@vkontakte/vkui'
+
 export const LinkOpenerControl = observer(() => {
   const { t } = useTranslation()
   const serial = useDeviceSerial()
   const [url, setUrl] = useState('')
+  const textInput = useRef<HTMLInputElement>(null)
   const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
   const linkOpenerStore = useServiceLocator<LinkOpenerStore>(LinkOpenerStore.name)
+
+  const onPressEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      linkOpenerStore?.openUrl(url)
+    }
+  }
+
+  const onBrowserChange = (value: SegmentedControlValue) => {
+    if (typeof value === 'string') linkOpenerStore?.setCurrentBrowserId(value)
+
+    textInput.current?.focus()
+  }
 
   return (
     <>
       <Input
+        getRef={textInput}
         placeholder='https://vk.com'
         value={url}
         after={
@@ -33,19 +50,18 @@ export const LinkOpenerControl = observer(() => {
           </Tooltip>
         }
         onChange={(event) => setUrl(event.target.value)}
+        onKeyDown={onPressEnter}
       />
       {device?.browser?.apps?.length && (
         <SegmentedControl
           className={styles.browserList}
           value={linkOpenerStore?.currentBrowserId}
           options={device.browser.apps.map(({ id, type, name }) => ({
-            label: <Image alt={name} size={20} src={type && BROWSER_ICON_MAP[type]} title={type} />,
+            label: <Image alt={name} size={20} src={type && BROWSER_ICON_MAP[type]} title={type} noBorder />,
             value: id,
             ['aria-label']: name,
           }))}
-          onChange={(value) => {
-            if (typeof value === 'string') linkOpenerStore?.setCurrentBrowserId(value)
-          }}
+          onChange={onBrowserChange}
         />
       )}
     </>
