@@ -1,5 +1,6 @@
 .dashboardTabContainer {
   container-type: inline-size;
+  contain: layout;
 }
 
 .dashboardTab {
