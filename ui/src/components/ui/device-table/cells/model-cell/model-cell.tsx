@@ -1,5 +1,5 @@
-import { EllipsisText } from '@vkontakte/vkui'
 import { memo } from 'react'
+import { EllipsisText } from '@vkontakte/vkui'
 import { Icon56AndroidDeviceOutline, Icon56AppleDeviceOutline, Icon56DevicesOutline } from '@vkontakte/icons'
 
 import styles from './model-cell.module.css'

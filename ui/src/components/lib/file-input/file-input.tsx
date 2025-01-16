@@ -49,6 +49,8 @@ export const FileInput = ({ onChange, onError, accept }: FileInputProps) => {
     }
   }
 
+  const supportedExtensions = accept?.filter((item) => item.startsWith('.')).join(', ')
+
   return (
     <DropZone
       className={styles.fileInput}
@@ -69,7 +71,7 @@ export const FileInput = ({ onChange, onError, accept }: FileInputProps) => {
             <Icon24Upload fill={active ? 'var(--vkui--color_icon_accent)' : undefined} height={56} width={56} />
           </Placeholder.Icon>
           <Placeholder.Title>{t('Drop file to upload')}</Placeholder.Title>
-          <Placeholder.Description>{`${t('Supported extensions')}: .apk .aab .ipa`}</Placeholder.Description>
+          <Placeholder.Description>{`${t('Supported extensions')}: ${supportedExtensions}`}</Placeholder.Description>
         </Placeholder.Container>
       )}
     </DropZone>
