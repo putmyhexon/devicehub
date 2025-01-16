@@ -10,8 +10,16 @@ import { ShellControlStore } from '@/store/shell-control-store'
 
 import styles from './shell-control.module.css'
 
+import type { KeyboardEvent } from 'react'
+
 export const ShellControl = observer(() => {
   const shellControlStore = useServiceLocator<ShellControlStore>(ShellControlStore.name)
+
+  const onPressEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      shellControlStore?.runShellCommand()
+    }
+  }
 
   return (
     <>
@@ -27,6 +35,7 @@ export const ShellControl = observer(() => {
           </IconButton>
         }
         onChange={(event) => shellControlStore?.setCommand(event.target.value)}
+        onKeyDown={onPressEnter}
       />
       <ConditionalRender conditions={[!!shellControlStore?.shellResult]}>
         <OutputLogArea className={styles.shellResult} text={shellControlStore?.shellResult || ''} />

@@ -92,7 +92,7 @@ export const DeviceButtonsControl = observer(() => {
       <FormItem top={t('Special actions')}>
         <div className={styles.buttonsContainer}>
           <ButtonControl
-            icon={<Icon24SunOutline color='#F5D76E' />}
+            icon={<Icon24SunOutline color='#fac60a' />}
             tooltipText={t('Set Light Theme')}
             onClick={() => deviceControlStore?.setLightTheme()}
           />

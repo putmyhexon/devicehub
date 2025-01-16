@@ -197,6 +197,19 @@ export class DeviceControlService {
     this.shell(`settings put system font_scale ${value}`)
   }
 
+  openBrowser(url: string, browserId?: string): InitializeTransactionReturn {
+    return this.sendTwoWay('browser.open', {
+      url,
+      browser: browserId || null,
+    })
+  }
+
+  clearBrowser(browserId?: string): InitializeTransactionReturn {
+    return this.sendTwoWay('browser.clear', {
+      browser: browserId || null,
+    })
+  }
+
   shell(command: string): InitializeTransactionReturn {
     return this.sendTwoWay('shell.command', {
       command,

@@ -9,6 +9,7 @@ import {
   Icon28StopwatchOutline,
   Icon20AddSquareOutline,
   Icon20ChevronRightOutline,
+  Icon20ClearDataOutline,
 } from '@vkontakte/icons'
 import { observer } from 'mobx-react-lite'
 
@@ -23,6 +24,7 @@ import { deviceConnection } from '@/store/device-connection'
 import { deviceBySerialStore } from '@/store/device-by-serial-store'
 import { useDeviceSerial } from '@/lib/hooks/use-device-serial.hook'
 import { ShellControlStore } from '@/store/shell-control-store'
+import { LinkOpenerStore } from '@/store/link-opener-store'
 
 import { ClipboardControl } from './clipboard-control'
 import { AppUploadControl } from './app-upload-control'
@@ -30,6 +32,7 @@ import { RemoteDebugControl } from './remote-debug-control'
 import { ShellControl } from './shell-control'
 import { DeviceButtonsControl } from './device-buttons-control'
 import { DeviceBookingControl } from './device-booking-control'
+import { LinkOpenerControl } from './link-opener-control'
 
 import styles from './dashboard-tab.module.css'
 
@@ -40,6 +43,7 @@ export const DashboardTab = observer(() => {
 
   const bookingService = useServiceLocator<BookingService>(BookingService.name)
   const shellControlStore = useServiceLocator<ShellControlStore>(ShellControlStore.name)
+  const linkOpenerStore = useServiceLocator<LinkOpenerStore>(LinkOpenerStore.name)
   const applicationInstallationService = useServiceLocator<ApplicationInstallationService>(
     ApplicationInstallationService.name
   )
@@ -78,13 +82,14 @@ export const DashboardTab = observer(() => {
           <AppUploadControl />
         </DeviceControlCard>
         <DeviceControlCard
-          afterButtonIcon={<Icon20DeleteOutline />}
+          afterButtonIcon={<Icon20ClearDataOutline />}
           afterTooltipText={t('Reset all browser settings')}
           before={<Icon20GlobeOutline />}
           className={styles.linkOpener}
           title={t('Open link or deeplink')}
+          onAfterButtonClick={() => linkOpenerStore?.clearBrowser()}
         >
-          Stub
+          <LinkOpenerControl />
         </DeviceControlCard>
         <ConditionalRender conditions={[!device?.ios]}>
           <DeviceControlCard
