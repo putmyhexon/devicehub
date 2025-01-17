@@ -403,5 +403,6 @@
   "Supported extensions": "Extensions prises en charge",
   "Please type or select value": "Veuillez saisir ou sélectionner une valeur",
   "Show Manifest": "Afficher le manifeste",
-  "Hide Manifest": "Masquer le manifeste"
+  "Hide Manifest": "Masquer le manifeste",
+  "Unhealthy": "Malsain"
 }

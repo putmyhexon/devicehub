@@ -333,5 +333,7 @@
   "Supported extensions": "Ярдәмле киңәйтүләр",
   "Please type or select value": "Зинһар, кыйммәтне языгыз яки сайлагыз",
   "Show Manifest": "Манифестны күрсәт",
-  "Hide Manifest": "Манифестны яшер"
+  "Hide Manifest": "Манифестны яшер",
+  "Stop Automation": "Автоматизацияне туктатыгыз",
+  "Unhealthy": "Сәламәт түгел"
 }

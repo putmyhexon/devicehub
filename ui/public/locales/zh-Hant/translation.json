@@ -305,5 +305,7 @@
   "Supported extensions": "支援的擴展",
   "Please type or select value": "請輸入或選擇數值",
   "Show Manifest": "顯示清單",
-  "Hide Manifest": "隱藏清單"
+  "Hide Manifest": "隱藏清單",
+  "Stop Automation": "停止自動化",
+  "Unhealthy": "不良"
 }

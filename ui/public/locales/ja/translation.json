@@ -360,5 +360,7 @@
   "Supported extensions": "サポートされている拡張子",
   "Please type or select value": "値を入力または選択してください",
   "Show Manifest": "マニフェストの表示",
-  "Hide Manifest": "マニフェストを隠す"
+  "Hide Manifest": "マニフェストを隠す",
+  "Stop Automation": "自動化の停止",
+  "Unhealthy": "不健康"
 }

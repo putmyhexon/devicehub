@@ -399,5 +399,7 @@
   "Supported extensions": "支持的扩展",
   "Please type or select value": "请输入或选择值",
   "Show Manifest": "显示清单",
-  "Hide Manifest": "隐藏清单"
+  "Hide Manifest": "隐藏清单",
+  "Stop Automation": "停止自动化",
+  "Unhealthy": "不良"
 }

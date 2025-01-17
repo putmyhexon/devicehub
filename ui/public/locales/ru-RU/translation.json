@@ -333,5 +333,7 @@
   "Supported extensions": "Поддерживаемые расширения",
   "Please type or select value": "Пожалуйста, введите или выберите значение",
   "Show Manifest": "Показать манифест",
-  "Hide Manifest": "Скрыть манифест"
+  "Hide Manifest": "Скрыть манифест",
+  "Stop Automation": "Остановить автоматизацию",
+  "Unhealthy": "Нездоровый"
 }

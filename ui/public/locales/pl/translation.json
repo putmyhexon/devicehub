@@ -249,5 +249,8 @@
   "Supported extensions": "Obsługiwane rozszerzenia",
   "Please type or select value": "Wpisz lub wybierz wartość",
   "Show Manifest": "Pokaż manifest",
-  "Hide Manifest": "Ukryj manifest"
+  "Hide Manifest": "Ukryj manifest",
+  "Try to reconnect": "Spróbuj połączyć się ponownie",
+  "Stop Automation": "Zatrzymaj automatyzację",
+  "Unhealthy": "Niezdrowy"
 }
