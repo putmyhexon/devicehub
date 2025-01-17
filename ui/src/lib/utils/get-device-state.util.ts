@@ -1,5 +1,7 @@
 import { DeviceState } from '@/types/enums/device-state.enum'
 
+import { isDeviceUsable } from './is-device-usable.util'
+
 import type { Device } from '@/generated/types'
 
 export const getDeviceState = (data: Device): DeviceState => {
@@ -19,19 +21,33 @@ export const getDeviceState = (data: Device): DeviceState => {
     return DeviceState.PREPARING
   }
 
-  if (data.status === 3 && data.ready && !data.using && data.owner) {
+  const deviceUsable = isDeviceUsable({
+    present: data.present,
+    status: data.status,
+    ready: data.ready,
+    using: data.using,
+    hasOwner: !!data.owner,
+  })
+
+  // NOTE: Make sure we don't mistakenly think we still have the device
+  const isDeviceUsedByMistake = !deviceUsable || !data.owner
+
+  if (data.status === 3 && data.ready && (!data.using || isDeviceUsedByMistake) && data.owner) {
     return DeviceState.BUSY
   }
 
-  if ((data.status === 3 && data.ready && !data.using && !data.owner) || (data.status === 6 && data.ios)) {
+  if (
+    (data.status === 3 && data.ready && (!data.using || isDeviceUsedByMistake) && !data.owner) ||
+    (data.status === 6 && data.ios)
+  ) {
     return DeviceState.AVAILABLE
   }
 
-  if (data.status === 3 && data.ready && data.using && data.usage === 'automation') {
+  if (data.status === 3 && data.ready && data.using && !isDeviceUsedByMistake && data.usage === 'automation') {
     return DeviceState.AUTOMATION
   }
 
-  if (data.status === 3 && data.ready && data.using && data.usage !== 'automation') {
+  if (data.status === 3 && data.ready && data.using && !isDeviceUsedByMistake && data.usage !== 'automation') {
     return DeviceState.USING
   }
 

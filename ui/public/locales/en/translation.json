@@ -63,10 +63,10 @@
   "Device Photo": "Device Photo",
   "Device Settings": "Device Settings",
   "Device cannot get kicked from the group": "Device cannot get kicked from the group",
-  "Device is not present anymore for some reason.": "Device is not present anymore for some reason.",
-  "Device is present but offline.": "Device is present but offline.",
+  "Device is not present anymore for some reason": "Device is not present anymore for some reason",
+  "Device is present but offline": "Device is present but offline",
   "Device was disconnected": "Device was disconnected",
-  "Device was kicked by automatic timeout.": "Device was kicked by automatic timeout.",
+  "Device was kicked by automatic timeout": "Device was kicked by automatic timeout",
   "Devices": "Devices",
   "Disable WiFi": "Disable WiFi",
   "Discharging": "Discharging",
@@ -232,7 +232,7 @@
   "Silent Mode": "Silent Mode",
   "Size": "Size",
   "Socket connection was lost": "Socket connection was lost",
-  "Someone stole your device.": "Someone stole your device.",
+  "Someone stole your device": "Someone stole your device",
   "Special Keys": "Special Keys",
   "Status": "Status",
   "Stop": "Stop",
@@ -328,5 +328,7 @@
   "Show Manifest": "Show Manifest",
   "Hide Manifest": "Hide Manifest",
   "Stop Automation": "Stop Automation",
-  "Unhealthy": "Unhealthy"
+  "Unhealthy": "Unhealthy",
+  "You (or someone else) kicked the device": "You (or someone else) kicked the device",
+  "Service is currently unavailable": "Service is currently unavailable! Try your attempt later"
 }

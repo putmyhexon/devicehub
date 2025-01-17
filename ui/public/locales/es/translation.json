@@ -63,10 +63,10 @@
   "Device Photo": "Foto de dispositivo",
   "Device Settings": "Configuración de Dispositivo",
   "Device cannot get kicked from the group": "El dispositivo no puede ser expulsado del grupo",
-  "Device is not present anymore for some reason.": "Por algún motivo el dispositivo ya no está presente",
-  "Device is present but offline.": "El dispositivo está presente pero no disponible",
+  "Device is not present anymore for some reason": "Por algún motivo el dispositivo ya no está presente",
+  "Device is present but offline": "El dispositivo está presente pero no disponible",
   "Device was disconnected": "El dispositivo se ha desconectado",
-  "Device was kicked by automatic timeout.": "El dispositivo fue expulsado por un exceso de tiempo automático",
+  "Device was kicked by automatic timeout": "El dispositivo fue expulsado por un exceso de tiempo automático",
   "Devices": "Dispositivos",
   "Disable WiFi": "Deshabilitar WIFI",
   "Discharging": "Descargando",
@@ -232,7 +232,7 @@
   "Silent Mode": "Modo silencio",
   "Size": "Tamaño",
   "Socket connection was lost": "Se perdió la conexión con el socket",
-  "Someone stole your device.": "Alguien robó tu dispositivo",
+  "Someone stole your device": "Alguien robó tu dispositivo",
   "Special Keys": "Teclas especiales",
   "Status": "Estado",
   "Stop": "Parar",
@@ -328,5 +328,7 @@
   "Show Manifest": "Mostrar manifiesto",
   "Hide Manifest": "Ocultar manifiesto",
   "Stop Automation": "Detener la automatización",
-  "Unhealthy": "Malsano"
+  "Unhealthy": "Malsano",
+  "You (or someone else) kicked the device": "Tú (u otra persona) pateaste el dispositivo",
+  "Service is currently unavailable": "¡El servicio no está disponible actualmente! \nPrueba tu intento más tarde"
 }

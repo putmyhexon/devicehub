@@ -7,6 +7,8 @@ import { ErrorFallback } from '@/components/lib/error-fallback'
 
 import { deviceConnection } from '@/store/device-connection'
 import { useDeviceSerial } from '@/lib/hooks/use-device-serial.hook'
+import { deviceBySerialStore } from '@/store/device-by-serial-store'
+import { deviceErrorModalStore } from '@/store/device-error-modal-store'
 
 import { DeviceTopBar } from './device-top-bar'
 import { DeviceScreen } from './device-screen'
@@ -17,6 +19,12 @@ export const Device = observer(() => {
 
   useEffect(() => {
     deviceConnection.useDevice(serial)
+    deviceBySerialStore.addDeviceChangeListener()
+
+    return () => {
+      deviceBySerialStore.removeDeviceChangeListener()
+      deviceErrorModalStore.clearError()
+    }
   }, [])
 
   return (

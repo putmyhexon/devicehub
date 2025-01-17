@@ -21,6 +21,8 @@ class DeviceListStore {
   constructor() {
     makeAutoObservable(this)
 
+    this.onDeviceChange = this.onDeviceChange.bind(this)
+
     this.addDeviceChangeListener()
   }
 

@@ -202,7 +202,7 @@
   "SIM": "SIM",
   "Size": "尺寸",
   "Socket connection was lost": "Socket 失去連線",
-  "Someone stole your device.": "別人偷了你的裝置.",
+  "Someone stole your device": "別人偷了你的裝置",
   "Special Keys": "特殊按鍵",
   "Start/Stop Logging": "開始 / 停止 紀錄",
   "Status": "狀態",
@@ -266,7 +266,7 @@
   "Width": "寬度",
   "WiFi": "WiFi",
   "WiMAX": "WiMAX",
-  "You (or someone else) kicked the device.": "你 (或別人) 把裝置踢掉了.",
+  "You (or someone else) kicked the device": "你 (或別人) 把裝置踢掉了",
   "Empty": "空的",
   "Something went wrong": "出了點問題",
   "Keys": "按鍵",
@@ -307,5 +307,8 @@
   "Show Manifest": "顯示清單",
   "Hide Manifest": "隱藏清單",
   "Stop Automation": "停止自動化",
-  "Unhealthy": "不良"
+  "Unhealthy": "不良",
+  "Device was kicked by automatic timeout": "設備被自動超時踢出",
+  "Device is present but offline": "設備存在但離線",
+  "Service is currently unavailable": "目前無法提供服務！\n稍後再嘗試"
 }

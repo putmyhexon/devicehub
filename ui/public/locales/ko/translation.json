@@ -68,12 +68,12 @@
   "Details": "세부 정보",
   "Developer": "개발자 옵션",
   "Device": "단말기",
-  "Device is not present anymore for some reason.": "더이상 단말기가 존재하지 않습니다.",
-  "Device is present but offline.": "장치가 연결되어 있지만 오프라인 상태입니다.",
+  "Device is not present anymore for some reason": "더이상 단말기가 존재하지 않습니다",
+  "Device is present but offline": "장치가 연결되어 있지만 오프라인 상태입니다",
   "Device Photo": "단말기 사진",
   "Device Settings": "단말기 설정",
   "Device was disconnected": "연결이 끊어졌습니다",
-  "Device was kicked by automatic timeout.": "시간초과로 인해 단말기 사용이 종료되었습니다.",
+  "Device was kicked by automatic timeout": "시간초과로 인해 단말기 사용이 종료되었습니다",
   "Devices": "단말기 리스트",
   "Disable WiFi": "WiFi 비활성화",
   "Discharging": "충전중이 아님",
@@ -336,7 +336,7 @@
   "X DPI": "X DPI",
   "Y DPI": "Y DPI",
   "Yes": "네",
-  "You (or someone else) kicked the device.": "당신(혹은 다른 누군가)이 단말기를 사용 종료 하였습니다.",
+  "You (or someone else) kicked the device": "당신(혹은 다른 누군가)이 단말기를 사용 종료 하였습니다",
   "Empty": "비어 있는",
   "Something went wrong": "문제가 발생했습니다.",
   "Groups": "여러 떼",
@@ -373,5 +373,7 @@
   "Show Manifest": "매니페스트 표시",
   "Hide Manifest": "매니페스트 숨기기",
   "Stop Automation": "자동화 중지",
-  "Unhealthy": "위험한"
+  "Unhealthy": "위험한",
+  "Someone stole your device": "누군가가 귀하의 기기를 훔쳤습니다.",
+  "Service is currently unavailable": "현재 서비스를 이용할 수 없습니다! \n나중에 시도해 보세요."
 }

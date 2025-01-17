@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { ButtonGroup, EllipsisText, Flex, Button } from '@vkontakte/vkui'
 import { Icon24CancelOutline, Icon24VerticalRectangle9x16Outline, Icon28DevicesOutline } from '@vkontakte/icons'
 
-import { Modal } from '@/components/lib/modal'
+import { WarningModal } from '@/components/ui/modals'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 import { ScreenQualitySelector } from '@/components/ui/screen-quality-selector'
 
@@ -95,7 +95,7 @@ export const DeviceTopBar = observer(() => {
           }}
         />
       </ButtonGroup>
-      <Modal
+      <WarningModal
         description={t('Are you sure? Device will be cleaned')}
         isOpen={isConfirmationOpen}
         title={t('Warning')}
