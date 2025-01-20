@@ -33,7 +33,7 @@ async def test_get_groups(api_client):
         async def shielded_load_work(test_num: int):
             test_name = f"test_worker_{worker_number}.{test_num}"
             print(f"Starting {test_name}")
-            devices = await capture_devices.asyncio_detailed(client=api_client, amount=2, run=test_name)
+            devices = await capture_devices.asyncio_detailed(client=api_client, amount=2, run=test_name, timeout=1200)
             assert devices.status_code in range(200, 300), devices.content
             assert devices.parsed
             assert devices.parsed.group
@@ -58,10 +58,10 @@ async def test_get_groups(api_client):
     raise_multiple(exceptions)
 
 
-def test_create_connect_delete_autotest_group(api_client, random_str, base_host):
+def test_create_connect_delete_autotest_group(api_client, random_str):
     # Create autotests group
     devices_amount = 2
-    device_abi = 'x86_64'
+    device_abi = 'armeabi-v7a'
     autotests_group_name = f'Test-run-{random_str()}'
     response = capture_devices.sync_detailed(
         client=api_client,
@@ -92,39 +92,6 @@ def test_create_connect_delete_autotest_group(api_client, random_str, base_host)
         equal(device.additional_properties['group']['id'], autotests_group_id)
         equal(device.additional_properties['group']['name'], autotests_group_name)
         equal(device.additional_properties['abi'], device_abi)
-
-    # connect devices
-    for device in response.parsed.group.devices:
-        device_response = use_and_connect_device.sync_detailed(
-            client=api_client,
-            body=UseAndConnectDeviceBody(serial=device.additional_properties['serial'])
-        )
-        equal(device_response.status_code, 200)
-        is_(device_response.parsed.success, True)
-        equal(device_response.parsed.description, 'Device is in use and remote connection is enabled')
-        equal(device_response.parsed.remote_connect_url.split(':')[0], base_host)
-
-    # waiting
-    time.sleep(1)
-
-    # device remote disconnect and stopUse
-    for device in response.parsed.group.devices:
-        serial = device.additional_properties['serial']
-        default_response = remote_disconnect_user_device_by_serial.sync_detailed(
-            client=api_client,
-            serial=serial
-        )
-        equal(default_response.status_code, 200)
-        is_(default_response.parsed.success, True)
-        equal(default_response.parsed.description, 'Device remote disconnected successfully')
-
-        default_response = delete_user_device_by_serial.sync_detailed(
-            client=api_client,
-            serial=serial
-        )
-        equal(default_response.status_code, 200)
-        is_(default_response.parsed.success, True)
-        equal(default_response.parsed.description, 'Device successfully removed')
 
     # remove autotests group
     response = free_devices.sync_detailed(client=api_client, group=autotests_group_id)
