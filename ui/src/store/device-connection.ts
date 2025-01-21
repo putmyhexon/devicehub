@@ -28,7 +28,6 @@ class DeviceConnection {
 
     try {
       const deviceControlStore = new DeviceControlStore(device.channel, !!device.ios)
-      serviceLocator.register(DeviceControlStore.name, deviceControlStore)
 
       deviceControlStore.startRemoteConnect().promise.then((connectToDeviceData) => {
         const debugCommand = `adb connect ${connectToDeviceData}`
@@ -40,6 +39,9 @@ class DeviceConnection {
 
       await groupService.invite(device)
 
+      settingsService.setLastUsedDevice(serial)
+
+      serviceLocator.register(DeviceControlStore.name, deviceControlStore)
       serviceLocator.register(DeviceScreenStore.name, new DeviceScreenStore())
       serviceLocator.register(BookingService.name, new BookingService(serial))
       serviceLocator.register(ShellControlStore.name, new ShellControlStore())
@@ -47,8 +49,6 @@ class DeviceConnection {
       serviceLocator.register(ApplicationInstallationService.name, new ApplicationInstallationService(serial))
       serviceLocator.register(KeyboardService.name, new KeyboardService())
       serviceLocator.register(TouchService.name, new TouchService())
-
-      settingsService.setLastUsedDevice(serial)
     } catch (error) {
       // TODO: Обработать ошибку, показать toast
       console.error(error)

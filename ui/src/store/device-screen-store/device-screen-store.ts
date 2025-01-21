@@ -1,6 +1,8 @@
+import { t } from 'i18next'
 import { makeAutoObservable, runInAction } from 'mobx'
 
 import { deviceBySerialStore } from '@/store/device-by-serial-store'
+import { deviceErrorModalStore } from '@/store/device-error-modal-store'
 
 import type { ElementBoundSize, StartScreenStreamingMessage } from './types'
 import type { Device } from '@/generated/types'
@@ -293,11 +295,10 @@ export class DeviceScreenStore {
     }
   }
 
-  private errorListener(): void {
-    this.setIsScreenLoading(false)
-  }
+  private errorListener(): void {}
 
   private closeListener(): void {
+    this.setIsScreenLoading(true)
     this.websocketReconnecting = false
 
     if (this.websocketReconnectionAttempt < this.websocketReconnectionMaxAttempts) {
@@ -309,7 +310,6 @@ export class DeviceScreenStore {
       return
     }
 
-    // TODO: Show modal with message: 'Service is currently unavailable! Try your attempt later.'
-    this.setIsScreenLoading(false)
+    deviceErrorModalStore.setError(t('Service is currently unavailable'))
   }
 }

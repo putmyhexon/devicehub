@@ -63,7 +63,6 @@
 .spinner {
   position: absolute;
   inset: 0;
-  background-color: var(--vkui--color_background_content);
   backdrop-filter: blur(3px);
 }
 

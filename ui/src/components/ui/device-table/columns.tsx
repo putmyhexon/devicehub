@@ -105,19 +105,9 @@ export const DEVICE_COLUMNS = [
     filterFn: startsWithFilter,
     sortingFn: deviceStatusSorting,
     cell: ({ getValue, row }) => {
-      const { present, ready, owner, using, serial, status } = row.original
+      const { serial } = row.original
 
-      return (
-        <DeviceStatusCell
-          deviceState={getValue()}
-          hasOwner={!!owner}
-          present={present}
-          ready={ready}
-          serial={serial}
-          status={status}
-          using={using}
-        />
-      )
+      return <DeviceStatusCell deviceState={getValue()} serial={serial} />
     },
   }),
   /* NOTE: OS & Hardware Group */

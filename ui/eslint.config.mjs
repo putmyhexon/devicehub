@@ -98,7 +98,7 @@ export default tseslint.config(
         {
           html: 'ignore',
           custom: 'enforce',
-          exceptions: [],
+          exceptions: ['BaseModal'],
         },
       ],
       'react/jsx-filename-extension': [
@@ -350,7 +350,11 @@ export default tseslint.config(
     },
   },
   {
-    files: ['src/__mocks__/**', 'src/constants/keyboard-keys-map.ts'],
+    files: [
+      'src/__mocks__/**',
+      'src/constants/keyboard-keys-map.ts',
+      'src/constants/device-likely-leave-reason-map.ts',
+    ],
     rules: {
       '@typescript-eslint/naming-convention': 'off',
     },

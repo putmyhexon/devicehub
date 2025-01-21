@@ -69,12 +69,12 @@
   "Developer": "Developer",
   "Device": "Urządzenie",
   "Device cannot get kicked from the group": "Urządzenie nie może zostać wyrzucone z grupy",
-  "Device is not present anymore for some reason.": "Urządzenie z jakiegoś powodu nie jest już dostępne",
-  "Device is present but offline.": "Urządzenie jest dostępne, lecz jest offline.",
+  "Device is not present anymore for some reason": "Urządzenie z jakiegoś powodu nie jest już dostępne",
+  "Device is present but offline": "Urządzenie jest dostępne, lecz jest offline",
   "Device Photo": "Zdjęcie urządzenia",
   "Device Settings": "Ustawienia urządzenia",
   "Device was disconnected": "Urządzenie zostało odłączone",
-  "Device was kicked by automatic timeout.": "Urządzenie zostało wyrzucone z powodu braku aktywności.",
+  "Device was kicked by automatic timeout": "Urządzenie zostało wyrzucone z powodu braku aktywności",
   "Devices": "Urządzenia",
   "Disable WiFi": "Wyłącz WiFi",
   "Discharging": "Rozładowywanie",
@@ -249,5 +249,11 @@
   "Supported extensions": "Obsługiwane rozszerzenia",
   "Please type or select value": "Wpisz lub wybierz wartość",
   "Show Manifest": "Pokaż manifest",
-  "Hide Manifest": "Ukryj manifest"
+  "Hide Manifest": "Ukryj manifest",
+  "Try to reconnect": "Spróbuj połączyć się ponownie",
+  "Stop Automation": "Zatrzymaj automatyzację",
+  "Unhealthy": "Niezdrowy",
+  "Someone stole your device": "Ktoś ukradł Twoje urządzenie",
+  "You (or someone else) kicked the device": "Ty (lub ktoś inny) kopnąłeś urządzenie",
+  "Service is currently unavailable": "Usługa jest chwilowo niedostępna! \nSpróbuj później"
 }
