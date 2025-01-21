@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
+import { useInjection } from 'inversify-react'
 import { Button, CustomSelect, Div, EllipsisText, Flex, FormItem, Separator, Spacing } from '@vkontakte/vkui'
 import {
   Icon28PlayOutline,
@@ -13,9 +14,7 @@ import {
 import { ConditionalRender } from '@/components/lib/conditional-render'
 import { OutputLogArea } from '@/components/lib/output-log-area'
 
-import { ApplicationInstallationService } from '@/services/application-installation/application-installation-service'
-
-import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import styles from './activity-launcher.module.css'
 
@@ -29,14 +28,13 @@ export const ActivityLauncher = observer(() => {
   const [selectedAction, setSelectedAction] = useState<string | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [selectedData, setSelectedData] = useState<string | null>(null)
-  const applicationInstallationService = useServiceLocator<ApplicationInstallationService>(
-    ApplicationInstallationService.name
-  )
+
+  const applicationInstallationService = useInjection(CONTAINER_IDS.applicationInstallationService)
 
   const onRunActivity = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    applicationInstallationService?.runActivity({
+    applicationInstallationService.runActivity({
       selectedAction,
       selectedCategory,
       selectedData,
@@ -45,7 +43,7 @@ export const ActivityLauncher = observer(() => {
     })
   }
 
-  const { manifest } = applicationInstallationService?.manifestQueryResult.data || {}
+  const { manifest } = applicationInstallationService.manifestQueryResult.data || {}
 
   return (
     <>
@@ -61,7 +59,7 @@ export const ActivityLauncher = observer(() => {
           onClick={() => {
             if (!manifest?.package) return
 
-            applicationInstallationService?.uninstall(manifest.package)
+            applicationInstallationService.uninstall(manifest.package)
           }}
         >
           {t('Uninstall')}
@@ -74,7 +72,7 @@ export const ActivityLauncher = observer(() => {
           <CustomSelect
             emptyText={t('Empty')}
             id='appSelectSearchable'
-            options={applicationInstallationService?.packageOptions || []}
+            options={applicationInstallationService.packageOptions}
             placeholder={t('Please, type or select value')}
             value={selectedPackageName}
             allowClearButton
@@ -86,7 +84,7 @@ export const ActivityLauncher = observer(() => {
           <CustomSelect
             emptyText={t('Empty')}
             id='activitySelectSearchable'
-            options={applicationInstallationService?.activityOptions?.activityNames || []}
+            options={applicationInstallationService.activityOptions.activityNames}
             placeholder={t('Please, type or select value')}
             value={selectedActivityName}
             allowClearButton
@@ -98,7 +96,7 @@ export const ActivityLauncher = observer(() => {
           <CustomSelect
             emptyText={t('Empty')}
             id='actionSelectSearchable'
-            options={applicationInstallationService?.activityOptions?.activityActions || []}
+            options={applicationInstallationService.activityOptions.activityActions}
             placeholder={t('Please, type or select value')}
             value={selectedAction}
             allowClearButton
@@ -110,7 +108,7 @@ export const ActivityLauncher = observer(() => {
           <CustomSelect
             emptyText={t('Empty')}
             id='categorySelectSearchable'
-            options={applicationInstallationService?.activityOptions?.activityCategories || []}
+            options={applicationInstallationService.activityOptions.activityCategories}
             placeholder={t('Please, type or select value')}
             value={selectedCategory}
             allowClearButton
@@ -122,7 +120,7 @@ export const ActivityLauncher = observer(() => {
           <CustomSelect
             emptyText={t('Empty')}
             id='dataSelectSearchable'
-            options={applicationInstallationService?.activityOptions?.activityData || []}
+            options={applicationInstallationService.activityOptions.activityData}
             placeholder={t('Please, type or select value')}
             value={selectedData}
             allowClearButton
@@ -153,7 +151,7 @@ export const ActivityLauncher = observer(() => {
             <ConditionalRender conditions={[isManifestShown]}>
               <OutputLogArea
                 className={styles.manifest}
-                text={JSON.stringify(applicationInstallationService?.manifestQueryResult.data?.manifest, null, ' ')}
+                text={JSON.stringify(applicationInstallationService.manifestQueryResult.data?.manifest, null, ' ')}
               />
             </ConditionalRender>
           </Flex>

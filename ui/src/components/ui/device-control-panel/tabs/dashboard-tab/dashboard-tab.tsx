@@ -12,19 +12,12 @@ import {
   Icon20ClearDataOutline,
 } from '@vkontakte/icons'
 import { observer } from 'mobx-react-lite'
+import { useInjection } from 'inversify-react'
 
 import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
-import { BookingService } from '@/services/booking-service'
-import { ApplicationInstallationService } from '@/services/application-installation/application-installation-service'
-
-import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
-import { deviceConnection } from '@/store/device-connection'
-import { deviceBySerialStore } from '@/store/device-by-serial-store'
-import { useDeviceSerial } from '@/lib/hooks/use-device-serial.hook'
-import { ShellControlStore } from '@/store/shell-control-store'
-import { LinkOpenerStore } from '@/store/link-opener-store'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import { ClipboardControl } from './clipboard-control'
 import { AppUploadControl } from './app-upload-control'
@@ -38,15 +31,14 @@ import styles from './dashboard-tab.module.css'
 
 export const DashboardTab = observer(() => {
   const { t } = useTranslation()
-  const serial = useDeviceSerial()
-  const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
+  const bookingService = useInjection(CONTAINER_IDS.bookingService)
+  const deviceConnection = useInjection(CONTAINER_IDS.deviceConnection)
+  const shellControlStore = useInjection(CONTAINER_IDS.shellControlStore)
+  const deviceBySerialStore = useInjection(CONTAINER_IDS.deviceBySerialStore)
+  const applicationInstallationService = useInjection(CONTAINER_IDS.applicationInstallationService)
+  const linkOpenerStore = useInjection(CONTAINER_IDS.linkOpenerStore)
 
-  const bookingService = useServiceLocator<BookingService>(BookingService.name)
-  const shellControlStore = useServiceLocator<ShellControlStore>(ShellControlStore.name)
-  const linkOpenerStore = useServiceLocator<LinkOpenerStore>(LinkOpenerStore.name)
-  const applicationInstallationService = useServiceLocator<ApplicationInstallationService>(
-    ApplicationInstallationService.name
-  )
+  const { data: device } = deviceBySerialStore.deviceQueryResult()
 
   return (
     <div className={styles.dashboardTabContainer}>

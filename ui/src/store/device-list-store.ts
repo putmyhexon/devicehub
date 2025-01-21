@@ -1,3 +1,4 @@
+import { inject, injectable } from 'inversify'
 import { makeAutoObservable } from 'mobx'
 
 import { socket } from '@/api/socket'
@@ -7,19 +8,25 @@ import { queryClient } from '@/config/queries/query-client'
 import { DeviceState } from '@/types/enums/device-state.enum'
 import { getDeviceState } from '@/lib/utils/get-device-state.util'
 import { isDeviceUsable } from '@/lib/utils/is-device-usable.util'
-
-import { MobxQuery } from './mobx-query'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import type { AxiosError } from 'axios'
 import type { Device } from '@/generated/types'
 import type { QueryObserverResult } from '@tanstack/react-query'
+import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 import type { DeviceChangeMessage } from '@/types/device-change-message.type'
 
-class DeviceListStore {
-  private devicesQuery = new MobxQuery(() => ({ ...queries.devices.all, staleTime: Infinity }), queryClient)
+@injectable()
+export class DeviceListStore {
+  private devicesQuery
 
-  constructor() {
+  constructor(@inject(CONTAINER_IDS.factoryMobxQuery) mobxQueryFactory: MobxQueryFactory) {
     makeAutoObservable(this)
+
+    this.devicesQuery = mobxQueryFactory(() => ({
+      ...queries.devices.all,
+      staleTime: Infinity,
+    }))
 
     this.onDeviceChange = this.onDeviceChange.bind(this)
 
@@ -77,5 +84,3 @@ class DeviceListStore {
     })
   }
 }
-
-export const deviceListStore = new DeviceListStore()

@@ -1,5 +1,6 @@
-import { serviceLocator } from '@/services/service-locator'
+import { inject, injectable } from 'inversify'
 
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { DeviceControlStore } from '@/store/device-control-store'
 
 import type {
@@ -10,12 +11,9 @@ import type {
   PasteListenerArgs,
 } from './types'
 
+@injectable()
 export class KeyboardService {
-  private readonly deviceControlStore: DeviceControlStore
-
-  constructor() {
-    this.deviceControlStore = serviceLocator.get<DeviceControlStore>(DeviceControlStore.name)
-  }
+  constructor(@inject(CONTAINER_IDS.deviceControlStore) private deviceControlStore: DeviceControlStore) {}
 
   isChangeCharsetKey({ code, key, keyCode, charCode }: KeyUpListenerArgs): boolean {
     // NOTE: Add any special key here for changing charset

@@ -1,39 +1,46 @@
 import { makeAutoObservable } from 'mobx'
+import { inject, injectable } from 'inversify'
 
-import { deviceBySerialStore } from '@/store/device-by-serial-store'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+import { DeviceBySerialStore } from '@/store/device-by-serial-store'
 
-import { groupService } from './group-service'
+import { GroupService } from './group-service'
 
+@injectable()
 export class BookingService {
-  bookedBeforeTime: string | undefined
+  bookedBeforeTime = ''
 
-  constructor(serial: string) {
+  constructor(
+    @inject(CONTAINER_IDS.groupService) private groupService: GroupService,
+    @inject(CONTAINER_IDS.deviceBySerialStore) private deviceBySerialStore: DeviceBySerialStore
+  ) {
     makeAutoObservable(this)
 
-    this.init(serial)
+    this.init()
   }
 
-  async init(serial: string): Promise<void> {
-    const device = await deviceBySerialStore.fetch(serial)
+  async init(): Promise<void> {
+    const device = await this.deviceBySerialStore.fetch()
 
-    if (device?.statusChangedAt) {
-      this.setTime(device.statusChangedAt, device?.bookedBefore || 0)
+    if (device.statusChangedAt) {
+      // `TODO: runInAction?
+      this.setTime(device.statusChangedAt, device.bookedBefore || 0)
     }
   }
 
   async reBookDevice(): Promise<void> {
-    const { data: device } = await deviceBySerialStore.refetch()
+    const { data: device } = await this.deviceBySerialStore.refetch()
 
-    if (!device) return
+    if (!device || !device.channel) return
 
-    await groupService.invite(device)
+    await this.groupService.invite(device.serial, device.channel, device.group)
 
     if (device.statusChangedAt) {
       this.setTime(device.statusChangedAt, device?.bookedBefore || 0)
     }
   }
 
-  async setTime(statusChangedAt: string, bookedBefore: number): Promise<void> {
+  setTime(statusChangedAt: string, bookedBefore: number): void {
     const expireTime = new Date(new Date(statusChangedAt).getTime() + bookedBefore)
 
     this.bookedBeforeTime = expireTime.toISOString()

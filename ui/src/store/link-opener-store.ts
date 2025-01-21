@@ -1,17 +1,20 @@
 import { action, makeAutoObservable, runInAction } from 'mobx'
 import { makePersistable } from 'mobx-persist-store'
+import { inject, injectable } from 'inversify'
 
-import { serviceLocator } from '@/services/service-locator'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import { DeviceControlStore } from './device-control-store'
-import { deviceBySerialStore } from './device-by-serial-store'
+import { DeviceBySerialStore } from './device-by-serial-store'
 
+@injectable()
 export class LinkOpenerStore {
   currentBrowserId: string | undefined
 
-  private readonly deviceControlStore: DeviceControlStore
-
-  constructor(serial: string) {
+  constructor(
+    @inject(CONTAINER_IDS.deviceControlStore) private deviceControlStore: DeviceControlStore,
+    @inject(CONTAINER_IDS.deviceBySerialStore) private deviceBySerialStore: DeviceBySerialStore
+  ) {
     makeAutoObservable(this)
     makePersistable(this, {
       name: 'currentBrowserId',
@@ -20,18 +23,14 @@ export class LinkOpenerStore {
     }).then(
       action((persistStore) => {
         if (persistStore.isHydrated && !this.currentBrowserId) {
-          this.init(serial)
+          this.init()
         }
       })
     )
-
-    this.deviceControlStore = serviceLocator.get<DeviceControlStore>(DeviceControlStore.name)
-
-    this.init(serial)
   }
 
-  async init(serial: string): Promise<void> {
-    const device = await deviceBySerialStore.fetch(serial)
+  async init(): Promise<void> {
+    const device = await this.deviceBySerialStore.fetch()
     const browser = device.browser
 
     if (!browser?.apps?.length) return

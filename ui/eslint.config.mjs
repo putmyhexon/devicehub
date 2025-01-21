@@ -366,7 +366,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['src/components/ui/device-table/helpers.tsx'],
+    files: ['src/components/ui/device-table/helpers.tsx', 'src/services/**/*.ts', 'src/store/**/*.ts'],
     rules: {
       'max-params': 'off',
     },

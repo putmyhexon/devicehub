@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router'
 import cn from 'classnames'
+import { useNavigate } from 'react-router'
 import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
+import { useInjection } from 'inversify-react'
 import { ButtonGroup, EllipsisText, Flex, Button } from '@vkontakte/vkui'
 import { Icon24CancelOutline, Icon24VerticalRectangle9x16Outline, Icon28DevicesOutline } from '@vkontakte/icons'
 
@@ -10,12 +11,7 @@ import { WarningModal } from '@/components/ui/modals'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 import { ScreenQualitySelector } from '@/components/ui/screen-quality-selector'
 
-import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
-import { DeviceScreenStore } from '@/store/device-screen-store/device-screen-store'
-import { deviceBySerialStore } from '@/store/device-by-serial-store'
-import { DeviceControlStore } from '@/store/device-control-store'
-import { deviceConnection } from '@/store/device-connection'
-import { useDeviceSerial } from '@/lib/hooks/use-device-serial.hook'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import { getMainRoute } from '@/constants/route-paths'
 
@@ -23,16 +19,18 @@ import styles from './device-top-bar.module.css'
 
 export const DeviceTopBar = observer(() => {
   const { t } = useTranslation()
-  const serial = useDeviceSerial()
   const navigate = useNavigate()
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
-  const deviceScreenStore = useServiceLocator<DeviceScreenStore>(DeviceScreenStore.name)
-  const deviceControlStore = useServiceLocator<DeviceControlStore>(DeviceControlStore.name)
 
-  const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
+  const deviceScreenStore = useInjection(CONTAINER_IDS.deviceScreenStore)
+  const deviceControlStore = useInjection(CONTAINER_IDS.deviceControlStore)
+  const deviceBySerialStore = useInjection(CONTAINER_IDS.deviceBySerialStore)
+  const deviceDisconnection = useInjection(CONTAINER_IDS.deviceDisconnection)
+
+  const { data: device } = deviceBySerialStore.deviceQueryResult()
 
   const deviceTitle = !device?.ios ? `${device?.manufacturer || ''} ${device?.marketName || ''}` : device?.model || ''
-  const currentRotation = `${t('Current rotation:')} ${deviceScreenStore?.getScreenRotation}°`
+  const currentRotation = `${t('Current rotation:')} ${deviceScreenStore.getScreenRotation}°`
 
   useEffect(() => {
     const onPopState = () => {
@@ -61,11 +59,11 @@ export const DeviceTopBar = observer(() => {
           before={<Icon24VerticalRectangle9x16Outline />}
           borderRadiusMode='inherit'
           className={styles.topButton}
-          disabled={!deviceScreenStore?.isScreenRotated}
+          disabled={!deviceScreenStore.isScreenRotated}
           mode='tertiary'
           title={`${t('Portrait')} (${currentRotation})`}
           onClick={() => {
-            deviceControlStore?.tryToRotate(serial, 'portrait')
+            deviceControlStore.tryToRotate('portrait')
           }}
         />
         <Button
@@ -73,11 +71,11 @@ export const DeviceTopBar = observer(() => {
           before={<Icon24VerticalRectangle9x16Outline />}
           borderRadiusMode='inherit'
           className={cn(styles.topButton, styles.landscape)}
-          disabled={deviceScreenStore?.isScreenRotated}
+          disabled={deviceScreenStore.isScreenRotated}
           mode='tertiary'
           title={`${t('Landscape')} (${currentRotation})`}
           onClick={() => {
-            deviceControlStore?.tryToRotate(serial, 'landscape')
+            deviceControlStore.tryToRotate('landscape')
           }}
         />
         <ConditionalRender conditions={[!device?.ios]}>
@@ -103,7 +101,9 @@ export const DeviceTopBar = observer(() => {
           setIsConfirmationOpen(false)
         }}
         onOk={async () => {
-          await deviceConnection.stopUsingDevice(serial)
+          if (!device?.channel) return
+
+          await deviceDisconnection.stopUsingDevice(device.serial, device.channel)
 
           navigate(getMainRoute(), { replace: true })
         }}

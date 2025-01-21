@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
-import { Icon20ErrorCircleFillRed } from '@vkontakte/icons'
+import { useInjection } from 'inversify-react'
 import { Button, ButtonGroup } from '@vkontakte/vkui'
+import { Icon20ErrorCircleFillRed } from '@vkontakte/icons'
 
 import { BaseModal } from '@/components/lib/base-modal'
 
-import { deviceConnection } from '@/store/device-connection'
-import { useDeviceSerial } from '@/lib/hooks/use-device-serial.hook'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import { getDevicesRoute } from '@/constants/route-paths'
 
@@ -17,7 +17,11 @@ import type { BaseModalProps } from '@/components/lib/base-modal'
 export const ErrorModal = ({ ...props }: Omit<BaseModalProps, 'actions' | 'icon'>) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const serial = useDeviceSerial()
+
+  const deviceBySerialStore = useInjection(CONTAINER_IDS.deviceBySerialStore)
+  const deviceDisconnection = useInjection(CONTAINER_IDS.deviceDisconnection)
+
+  const { data: device } = deviceBySerialStore.deviceQueryResult()
 
   return (
     <BaseModal
@@ -33,7 +37,9 @@ export const ErrorModal = ({ ...props }: Omit<BaseModalProps, 'actions' | 'icon'
             size='l'
             stretched
             onClick={() => {
-              deviceConnection.stopUsingDevice(serial)
+              if (!device?.channel) return
+
+              deviceDisconnection.stopUsingDevice(device.serial, device.channel)
 
               navigate(getDevicesRoute(), { replace: true })
             }}

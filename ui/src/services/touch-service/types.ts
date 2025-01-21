@@ -15,7 +15,6 @@ export type SetFingerArgs = {
 }
 
 export type MouseDownListenerArgs = {
-  serial: string
   mousePageX: number
   mousePageY: number
   eventTimestamp: number
@@ -25,14 +24,12 @@ export type MouseDownListenerArgs = {
 }
 
 export type MouseUpListener = {
-  serial: string
   mousePageX: number
   mousePageY: number
   isRightButtonPressed: boolean
 }
 
 export type MouseMoveListener = {
-  serial: string
   mousePageX: number
   mousePageY: number
   isRightButtonPressed: boolean
@@ -40,13 +37,11 @@ export type MouseMoveListener = {
 }
 
 export type TouchStartEndListenerArgs = {
-  serial: string
   touches: TouchList
   changedTouches: TouchList
 }
 
 export type TouchMoveListenerArgs = {
-  serial: string
   changedTouches: TouchList
 }
 

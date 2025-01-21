@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { Div, Panel, View } from '@vkontakte/vkui'
 import {
@@ -10,8 +11,6 @@ import {
 } from '@vkontakte/icons'
 
 import { TabsPanel } from '@/components/lib/tabs-panel'
-
-import { useDeviceSerial } from '@/lib/hooks/use-device-serial.hook'
 
 import {
   getControlRoute,
@@ -29,7 +28,7 @@ import type { TabsContent } from '@/components/lib/tabs-panel'
 
 export const DeviceControlPanel = () => {
   const { t } = useTranslation()
-  const serial = useDeviceSerial()
+  const { serial = '' } = useParams()
 
   const tabsContent = useMemo<TabsContent[]>(
     () => [

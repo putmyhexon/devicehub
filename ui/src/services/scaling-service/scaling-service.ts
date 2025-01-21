@@ -41,9 +41,12 @@
  * |--------------|------|---------|---------|---------|
  */
 
+import { injectable } from 'inversify'
+
 import type { Coordinator, Coords, CoordsArgs, Size } from './types'
 
-class ScalingService {
+@injectable()
+export class ScalingService {
   coordinator(realWidth: number, realHeight: number): Coordinator {
     const realRatio = realWidth / realHeight
 
@@ -221,5 +224,3 @@ class ScalingService {
     }
   }
 }
-
-export const scalingService = new ScalingService()

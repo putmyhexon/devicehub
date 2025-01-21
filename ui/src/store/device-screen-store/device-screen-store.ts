@@ -1,12 +1,15 @@
 import { t } from 'i18next'
 import { makeAutoObservable, runInAction } from 'mobx'
+import { inject, injectable } from 'inversify'
 
-import { deviceBySerialStore } from '@/store/device-by-serial-store'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+import { DeviceBySerialStore } from '@/store/device-by-serial-store'
 import { deviceErrorModalStore } from '@/store/device-error-modal-store'
 
 import type { ElementBoundSize, StartScreenStreamingMessage } from './types'
 import type { Device } from '@/generated/types'
 
+@injectable()
 export class DeviceScreenStore {
   private readonly websocketReconnectionInterval = 5000 // NOTE: 5s
   private readonly websocketReconnectionMaxAttempts = 3 // NOTE: 5s * 3 -> 15s total delay
@@ -35,7 +38,7 @@ export class DeviceScreenStore {
   isScreenLoading = false
   isScreenRotated = false
 
-  constructor() {
+  constructor(@inject(CONTAINER_IDS.deviceBySerialStore) private deviceBySerialStore: DeviceBySerialStore) {
     this.updateBounds = this.updateBounds.bind(this)
     this.messageListener = this.messageListener.bind(this)
     this.openListener = this.openListener.bind(this)
@@ -59,12 +62,12 @@ export class DeviceScreenStore {
     this.isScreenLoading = value
   }
 
-  async startScreenStreaming(serial: string, canvas: HTMLCanvasElement, canvasWrapper: HTMLDivElement): Promise<void> {
+  async startScreenStreaming(canvas: HTMLCanvasElement, canvasWrapper: HTMLDivElement): Promise<void> {
     runInAction(() => {
       this.setIsScreenLoading(true)
     })
 
-    const device = await deviceBySerialStore.fetch(serial)
+    const device = await this.deviceBySerialStore.fetch()
 
     this.device = device
     this.context = canvas.getContext('bitmaprenderer')

@@ -1,12 +1,13 @@
 import { memo } from 'react'
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
+import { useInjection } from 'inversify-react'
 import { Button } from '@vkontakte/vkui'
 
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
 import { DeviceState } from '@/types/enums/device-state.enum'
-import { deviceConnection } from '@/store/device-connection'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import { getControlRoute } from '@/constants/route-paths'
 
@@ -14,14 +15,19 @@ import type { Device } from '@/generated/types'
 
 type DeviceStatusCellProps = {
   serial: Device['serial']
+  channel: Device['channel']
   deviceState: DeviceState
 }
 
-export const DeviceStatusCell = memo(({ serial, deviceState }: DeviceStatusCellProps) => {
+export const DeviceStatusCell = memo(({ serial, channel, deviceState }: DeviceStatusCellProps) => {
   const { t } = useTranslation()
 
+  const deviceDisconnection = useInjection(CONTAINER_IDS.deviceDisconnection)
+
   const onStopUsing = () => {
-    deviceConnection.stopUsingDevice(serial)
+    if (!channel) return
+
+    deviceDisconnection.stopUsingDevice(serial, channel)
   }
 
   return (

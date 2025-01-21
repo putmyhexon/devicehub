@@ -1,4 +1,6 @@
 import Split from 'react-split'
+import { useParams } from 'react-router'
+import { Provider as DIContainerProvider } from 'inversify-react'
 import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
 
@@ -7,16 +9,16 @@ import { DeviceControlPanel } from '@/components/ui/device-control-panel'
 import { ErrorModal } from '@/components/ui/modals'
 
 import { deviceErrorModalStore } from '@/store/device-error-modal-store'
-
-import { DeviceSerialProvider } from './device-serial-provider'
+import { createDeviceContainer } from '@/config/inversify/create-device-container'
 
 import styles from './control-page.module.css'
 
 export const ControlPage = observer(() => {
   const { t } = useTranslation()
+  const { serial = '' } = useParams()
 
   return (
-    <DeviceSerialProvider>
+    <DIContainerProvider container={() => createDeviceContainer(serial)}>
       <Split
         className={styles.split}
         direction='horizontal'
@@ -34,6 +36,6 @@ export const ControlPage = observer(() => {
         title={t('Device was disconnected')}
         onClose={() => deviceErrorModalStore.closeModal()}
       />
-    </DeviceSerialProvider>
+    </DIContainerProvider>
   )
 })

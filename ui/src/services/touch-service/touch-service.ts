@@ -1,11 +1,12 @@
 import { makeAutoObservable } from 'mobx'
+import { inject, injectable } from 'inversify'
 
-import { scalingService } from '@/services/scaling-service/scaling-service'
-import { serviceLocator } from '@/services/service-locator'
+import { ScalingService } from '@/services/scaling-service/scaling-service'
 
-import { DeviceScreenStore } from '@/store/device-screen-store/device-screen-store'
-import { deviceBySerialStore } from '@/store/device-by-serial-store'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { DeviceControlStore } from '@/store/device-control-store'
+import { DeviceBySerialStore } from '@/store/device-by-serial-store'
+import { DeviceScreenStore } from '@/store/device-screen-store/device-screen-store'
 
 import type {
   Finger,
@@ -20,10 +21,9 @@ import type {
 } from './types'
 import type { MouseEvent as ReactMouseEvent } from 'react'
 
+@injectable()
 export class TouchService {
   private readonly cycle = 100
-  private readonly deviceControlStore: DeviceControlStore
-  private readonly deviceScreenStore: DeviceScreenStore
   private prevCoords: { x: number; y: number } = { x: 0, y: 0 }
   private slotted: Record<string, number> = {}
   private seq = -1
@@ -39,10 +39,13 @@ export class TouchService {
   slots = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
   fingers: Record<number, Finger> = {}
 
-  constructor() {
+  constructor(
+    @inject(CONTAINER_IDS.scalingService) private scalingService: ScalingService,
+    @inject(CONTAINER_IDS.deviceScreenStore) private deviceScreenStore: DeviceScreenStore,
+    @inject(CONTAINER_IDS.deviceControlStore) private deviceControlStore: DeviceControlStore,
+    @inject(CONTAINER_IDS.deviceBySerialStore) private deviceBySerialStore: DeviceBySerialStore
+  ) {
     makeAutoObservable(this)
-    this.deviceControlStore = serviceLocator.get<DeviceControlStore>(DeviceControlStore.name)
-    this.deviceScreenStore = serviceLocator.get<DeviceScreenStore>(DeviceScreenStore.name)
   }
 
   mouseUpBugWorkaroundListener(event: ReactMouseEvent): void {
@@ -50,7 +53,6 @@ export class TouchService {
   }
 
   mouseDownListener({
-    serial,
     mousePageX,
     mousePageY,
     eventTimestamp,
@@ -63,7 +65,7 @@ export class TouchService {
     // NOTE: Skip right button click
     if (isRightButtonPressed) return
 
-    const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
+    const { data: device } = this.deviceBySerialStore.deviceQueryResult()
 
     if (!device?.display?.width || !device.display?.height || !this.deviceScreenStore.getCanvasWrapper) return
 
@@ -123,7 +125,6 @@ export class TouchService {
     if (this.lastPossiblyBuggyMouseUpEvent && this.lastPossiblyBuggyMouseUpEvent.timeStamp > eventTimestamp) {
       // NOTE: We got mouseup before mousedown. See mouseUpBugWorkaroundListener for details.
       this.mouseUpListener({
-        serial,
         mousePageX: this.lastPossiblyBuggyMouseUpEvent.pageX,
         mousePageY: this.lastPossiblyBuggyMouseUpEvent.pageY,
         isRightButtonPressed: this.lastPossiblyBuggyMouseUpEvent.button === 2,
@@ -135,7 +136,7 @@ export class TouchService {
     this.lastPossiblyBuggyMouseUpEvent = null
   }
 
-  mouseUpListener({ serial, isRightButtonPressed, mousePageX, mousePageY }: MouseUpListener): void {
+  mouseUpListener({ isRightButtonPressed, mousePageX, mousePageY }: MouseUpListener): void {
     if (!this.isMouseDown) return
 
     this.isMouseDown = false
@@ -143,7 +144,7 @@ export class TouchService {
     // NOTE: Skip right button click
     if (isRightButtonPressed) return
 
-    const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
+    const { data: device } = this.deviceBySerialStore.deviceQueryResult()
 
     if (!device?.display?.width || !device.display?.height || !this.deviceScreenStore.getCanvasWrapper) return
 
@@ -193,19 +194,13 @@ export class TouchService {
     this.stopMousing()
   }
 
-  mouseMoveListener({
-    serial,
-    isRightButtonPressed,
-    mousePageX,
-    mousePageY,
-    isAltKeyPressed,
-  }: MouseMoveListener): void {
+  mouseMoveListener({ isRightButtonPressed, mousePageX, mousePageY, isAltKeyPressed }: MouseMoveListener): void {
     if (!this.isMouseDown) return
 
     // NOTE: Skip right button click
     if (isRightButtonPressed) return
 
-    const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
+    const { data: device } = this.deviceBySerialStore.deviceQueryResult()
 
     if (!device?.display?.width || !device.display?.height || !this.deviceScreenStore.getCanvasWrapper) return
 
@@ -282,10 +277,10 @@ export class TouchService {
     }
   }
 
-  touchStartListener({ serial, touches, changedTouches }: TouchStartEndListenerArgs): void {
+  touchStartListener({ touches, changedTouches }: TouchStartEndListenerArgs): void {
     this.isTouching = true
 
-    const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
+    const { data: device } = this.deviceBySerialStore.deviceQueryResult()
 
     if (!device?.display?.width || !device.display?.height || !this.deviceScreenStore.getCanvasWrapper) return
 
@@ -363,10 +358,10 @@ export class TouchService {
     this.deviceControlStore.touchCommit(this.nextSeq())
   }
 
-  touchMoveListener({ serial, changedTouches }: TouchMoveListenerArgs): void {
+  touchMoveListener({ changedTouches }: TouchMoveListenerArgs): void {
     if (!this.isTouching) return
 
-    const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
+    const { data: device } = this.deviceBySerialStore.deviceQueryResult()
 
     if (!device?.display?.width || !device.display?.height || !this.deviceScreenStore.getCanvasWrapper) return
 
@@ -483,7 +478,7 @@ export class TouchService {
     const x = mousePageX - screenBoundingRect.x
     const y = mousePageY - screenBoundingRect.y
 
-    const scaler = scalingService.coordinator(displayWidth, displayHeight)
+    const scaler = this.scalingService.coordinator(displayWidth, displayHeight)
     const scaled = scaler.coords({
       boundingWidth: screenBoundingRect.width,
       boundingHeight: screenBoundingRect.height,

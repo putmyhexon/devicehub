@@ -1,15 +1,14 @@
 import { useEffect } from 'react'
+import { useInjection } from 'inversify-react'
 
-import { DeviceControlStore } from '@/store/device-control-store'
-
-import { useServiceLocator } from './use-service-locator.hook'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 export const useScreenAutoQuality = (): void => {
-  const deviceControlStore = useServiceLocator<DeviceControlStore>(DeviceControlStore.name)
+  const deviceControlStore = useInjection(CONTAINER_IDS.deviceControlStore)
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      deviceControlStore?.autoQuality()
+      deviceControlStore.autoQuality()
     }, 5000)
 
     return (): void => {
