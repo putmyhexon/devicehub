@@ -11,12 +11,12 @@ import type { DeviceDisconnection } from '@/store/device-disconnection'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 import type { DeviceBySerialStore } from '@/store/device-by-serial-store'
 import type { TouchService } from '@/services/touch-service/touch-service'
+import type { TransactionFactory } from '@/types/transaction-factory.type'
 import type { MobxMutationFactory } from '@/types/mobx-mutation-factory.type'
 import type { ScalingService } from '@/services/scaling-service/scaling-service'
 import type { CurrentUserProfileStore } from '@/store/current-user-profile-store'
 import type { KeyboardService } from '@/services/keyboard-service/keyboard-service'
 import type { DeviceScreenStore } from '@/store/device-screen-store/device-screen-store'
-import type { TransactionService } from '@/services/core/transaction-service/transaction-service'
 import type { ApplicationInstallationService } from '@/services/application-installation/application-installation-service'
 
 export const CONTAINER_IDS = {
@@ -37,9 +37,9 @@ export const CONTAINER_IDS = {
   deviceBySerialStore: Symbol.for('DeviceBySerialStore') as interfaces.ServiceIdentifier<DeviceBySerialStore>,
   deviceDisconnection: Symbol.for('DeviceDisconnection') as interfaces.ServiceIdentifier<DeviceDisconnection>,
   factoryMobxMutation: Symbol.for('Factory<MobxMutation>') as interfaces.ServiceIdentifier<MobxMutationFactory>,
-  factoryTransactionService: Symbol.for('Factory<TransactionService>') as interfaces.ServiceIdentifier<
-    () => TransactionService
-  >,
+  factoryTransactionService: Symbol.for(
+    'Factory<TransactionService>'
+  ) as interfaces.ServiceIdentifier<TransactionFactory>,
   currentUserProfileStore: Symbol.for(
     'CurrentUserProfileStore'
   ) as interfaces.ServiceIdentifier<CurrentUserProfileStore>,

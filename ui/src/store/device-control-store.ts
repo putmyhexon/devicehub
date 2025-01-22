@@ -1,7 +1,6 @@
 import { makeObservable, observable } from 'mobx'
 import { inject, injectable } from 'inversify'
 
-import { TransactionService } from '@/services/core/transaction-service/transaction-service'
 import { DeviceControlService } from '@/services/core/device-control-service/device-control-service'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
@@ -9,6 +8,7 @@ import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { DeviceBySerialStore } from './device-by-serial-store'
 
 import type { EffectiveConnectionType } from '@/vite-env'
+import type { TransactionFactory } from '@/types/transaction-factory.type'
 
 @injectable()
 export class DeviceControlStore extends DeviceControlService {
@@ -18,7 +18,7 @@ export class DeviceControlStore extends DeviceControlService {
 
   constructor(
     @inject(CONTAINER_IDS.deviceBySerialStore) deviceBySerialStore: DeviceBySerialStore,
-    @inject(CONTAINER_IDS.factoryTransactionService) transactionServiceFactory: () => TransactionService
+    @inject(CONTAINER_IDS.factoryTransactionService) transactionServiceFactory: TransactionFactory
   ) {
     super(deviceBySerialStore, transactionServiceFactory)
 

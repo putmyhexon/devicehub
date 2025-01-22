@@ -27,27 +27,21 @@ export const createDeviceContainer = (serial: string): Container => {
     This means that if the device container lacks bindings, it passes the request up to its parent
     container (in our case, globalContainer)
   */
-  const deviceContainer = new Container()
+  const deviceContainer = new Container({ defaultScope: 'Singleton' })
 
   deviceContainer.bind<string>(CONTAINER_IDS.deviceSerial).toConstantValue(serial)
 
-  deviceContainer.bind<TouchService>(CONTAINER_IDS.touchService).to(TouchService).inSingletonScope()
-  deviceContainer.bind<ScalingService>(CONTAINER_IDS.scalingService).to(ScalingService).inSingletonScope()
-  deviceContainer.bind<BookingService>(CONTAINER_IDS.bookingService).to(BookingService).inSingletonScope()
-  deviceContainer.bind<LinkOpenerStore>(CONTAINER_IDS.linkOpenerStore).to(LinkOpenerStore).inSingletonScope()
-  deviceContainer.bind<KeyboardService>(CONTAINER_IDS.keyboardService).to(KeyboardService).inSingletonScope()
-  deviceContainer.bind<DeviceConnection>(CONTAINER_IDS.deviceConnection).to(DeviceConnection).inSingletonScope()
-  deviceContainer.bind<ShellControlStore>(CONTAINER_IDS.shellControlStore).to(ShellControlStore).inSingletonScope()
-  deviceContainer.bind<DeviceScreenStore>(CONTAINER_IDS.deviceScreenStore).to(DeviceScreenStore).inSingletonScope()
-  deviceContainer.bind<DeviceControlStore>(CONTAINER_IDS.deviceControlStore).to(DeviceControlStore).inSingletonScope()
-  deviceContainer
-    .bind<DeviceBySerialStore>(CONTAINER_IDS.deviceBySerialStore)
-    .to(DeviceBySerialStore)
-    .inSingletonScope()
-  deviceContainer
-    .bind<ApplicationInstallationService>(CONTAINER_IDS.applicationInstallationService)
-    .to(ApplicationInstallationService)
-    .inSingletonScope()
+  deviceContainer.bind(CONTAINER_IDS.touchService).to(TouchService)
+  deviceContainer.bind(CONTAINER_IDS.scalingService).to(ScalingService)
+  deviceContainer.bind(CONTAINER_IDS.bookingService).to(BookingService)
+  deviceContainer.bind(CONTAINER_IDS.linkOpenerStore).to(LinkOpenerStore)
+  deviceContainer.bind(CONTAINER_IDS.keyboardService).to(KeyboardService)
+  deviceContainer.bind(CONTAINER_IDS.deviceConnection).to(DeviceConnection)
+  deviceContainer.bind(CONTAINER_IDS.shellControlStore).to(ShellControlStore)
+  deviceContainer.bind(CONTAINER_IDS.deviceScreenStore).to(DeviceScreenStore)
+  deviceContainer.bind(CONTAINER_IDS.deviceControlStore).to(DeviceControlStore)
+  deviceContainer.bind(CONTAINER_IDS.deviceBySerialStore).to(DeviceBySerialStore)
+  deviceContainer.bind(CONTAINER_IDS.applicationInstallationService).to(ApplicationInstallationService)
 
   return deviceContainer
 }

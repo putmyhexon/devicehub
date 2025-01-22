@@ -15,16 +15,13 @@ import { CurrentUserProfileStore } from '@/store/current-user-profile-store'
 import type { interfaces } from 'inversify'
 import type { MutationObserverOptions, QueryObserverOptions } from '@tanstack/react-query'
 
-export const globalContainer = new Container()
+export const globalContainer = new Container({ defaultScope: 'Singleton' })
 
-globalContainer.bind<DeviceDisconnection>(CONTAINER_IDS.deviceDisconnection).to(DeviceDisconnection).inSingletonScope()
-globalContainer.bind<SettingsService>(CONTAINER_IDS.settingsService).to(SettingsService).inSingletonScope()
-globalContainer.bind<DeviceListStore>(CONTAINER_IDS.deviceListStore).to(DeviceListStore).inSingletonScope()
-globalContainer.bind<GroupService>(CONTAINER_IDS.groupService).to(GroupService).inSingletonScope()
-globalContainer
-  .bind<CurrentUserProfileStore>(CONTAINER_IDS.currentUserProfileStore)
-  .to(CurrentUserProfileStore)
-  .inSingletonScope()
+globalContainer.bind(CONTAINER_IDS.groupService).to(GroupService)
+globalContainer.bind(CONTAINER_IDS.deviceListStore).to(DeviceListStore)
+globalContainer.bind(CONTAINER_IDS.settingsService).to(SettingsService)
+globalContainer.bind(CONTAINER_IDS.deviceDisconnection).to(DeviceDisconnection)
+globalContainer.bind(CONTAINER_IDS.currentUserProfileStore).to(CurrentUserProfileStore)
 
 globalContainer
   .bind<interfaces.Factory<MobxQuery>>(CONTAINER_IDS.factoryMobxQuery)

@@ -1,19 +1,17 @@
 import { inject, injectable } from 'inversify'
 
 import { socket } from '@/api/socket'
-import { TransactionService } from '@/services/core/transaction-service/transaction-service'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import type { DeviceGroup } from '@/generated/types'
+import type { TransactionFactory } from '@/types/transaction-factory.type'
 
 const MILLISECONDS_IN_MINUTE = 1000 * 60
 
 @injectable()
 export class GroupService {
-  constructor(
-    @inject(CONTAINER_IDS.factoryTransactionService) private transactionServiceFactory: () => TransactionService
-  ) {}
+  constructor(@inject(CONTAINER_IDS.factoryTransactionService) private transactionServiceFactory: TransactionFactory) {}
 
   invite(serial: string, channel: string, deviceGroup?: DeviceGroup): Promise<unknown> {
     /* NOTE: 1 for Infinity */

@@ -166,7 +166,7 @@ export class ApplicationInstallationService {
     this.progress = 0
     this.isInstalling = false
     this.isInstalled = false
-    this.status = ''
+    this.status = 'Initialization'
     this.href = ''
   }
 

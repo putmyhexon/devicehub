@@ -23,7 +23,6 @@ export class BookingService {
     const device = await this.deviceBySerialStore.fetch()
 
     if (device.statusChangedAt) {
-      // `TODO: runInAction?
       this.setTime(device.statusChangedAt, device.bookedBefore || 0)
     }
   }

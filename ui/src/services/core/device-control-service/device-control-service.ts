@@ -2,7 +2,7 @@ import { socket } from '@/api/socket'
 
 import { KEYBOARD_KEYS_MAP } from '@/constants/keyboard-keys-map'
 
-import type { TransactionService } from '@/services/core/transaction-service/transaction-service'
+import type { TransactionFactory } from '@/types/transaction-factory.type'
 import type { DeviceBySerialStore } from '@/store/device-by-serial-store'
 import type { TouchDownArgs, TouchMoveArgs, TouchMoveIosArgs } from './types'
 import type { InitializeTransactionReturn, InstallOptions } from '@/services/core/transaction-service/types'
@@ -10,7 +10,7 @@ import type { InitializeTransactionReturn, InstallOptions } from '@/services/cor
 export class DeviceControlService {
   constructor(
     protected deviceBySerialStore: DeviceBySerialStore,
-    private transactionServiceFactory: () => TransactionService
+    private transactionServiceFactory: TransactionFactory
   ) {}
 
   gestureStart(seq: number): void {
