@@ -3,6 +3,7 @@
 
 import '@tanstack/react-query'
 import '@tanstack/react-table'
+import 'reflect-metadata'
 
 import type { ColumnGroup } from '@/types/column-group.type'
 

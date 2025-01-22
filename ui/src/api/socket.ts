@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client'
 
-import { variablesConfig } from '@/config/variables-config'
+import { variablesConfig } from '@/config/variables.config'
 
 export const socket = io(variablesConfig[import.meta.env.MODE].websocketUrl, {
   autoConnect: true,

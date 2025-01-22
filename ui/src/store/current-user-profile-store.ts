@@ -1,24 +1,28 @@
 import { makeAutoObservable } from 'mobx'
+import { inject, injectable } from 'inversify'
 
 import { queries } from '@/config/queries/query-key-store'
-import { queryClient } from '@/config/queries/query-client'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
-import { MobxQuery } from './mobx-query'
-
+import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 import type { AxiosError } from 'axios'
 import type { UserResponseUser } from '@/generated/types'
 import type { QueryObserverResult } from '@tanstack/react-query'
 
-class CurrentUserProfileStore {
-  private profileQuery = new MobxQuery(() => ({ ...queries.user.profile, staleTime: Infinity }), queryClient)
+@injectable()
+export class CurrentUserProfileStore {
+  private profileQuery
 
-  constructor() {
+  constructor(@inject(CONTAINER_IDS.factoryMobxQuery) mobxQueryFactory: MobxQueryFactory) {
     makeAutoObservable(this)
+
+    this.profileQuery = mobxQueryFactory(() => ({
+      ...queries.user.profile,
+      staleTime: Infinity,
+    }))
   }
 
   get profileQueryResult(): QueryObserverResult<UserResponseUser, AxiosError> {
     return this.profileQuery.result
   }
 }
-
-export const currentUserProfileStore = new CurrentUserProfileStore()

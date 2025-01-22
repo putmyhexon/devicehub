@@ -1,6 +1,9 @@
+import { injectable } from 'inversify'
+
 import { socket } from '@/api/socket'
 
-class SettingsService {
+@injectable()
+export class SettingsService {
   updateUserSettings(data: Record<string, unknown>): void {
     socket.emit('user.settings.update', data)
   }
@@ -9,5 +12,3 @@ class SettingsService {
     this.updateUserSettings({ lastUsedDevice: value })
   }
 }
-
-export const settingsService = new SettingsService()

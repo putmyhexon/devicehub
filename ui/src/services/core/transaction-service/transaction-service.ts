@@ -1,3 +1,4 @@
+import { injectable } from 'inversify'
 import { makeAutoObservable } from 'mobx'
 
 import { socket } from '@/api/socket'
@@ -11,6 +12,7 @@ import type {
   TransactionProgressListenerMessage,
 } from './types'
 
+@injectable()
 export class TransactionService {
   private channel = ''
   private abortController

@@ -3,11 +3,9 @@ import { observer } from 'mobx-react-lite'
 import { Icon24OpenIn } from '@vkontakte/icons'
 import { useTranslation } from 'react-i18next'
 import { IconButton, Image, Input, SegmentedControl, Tooltip } from '@vkontakte/vkui'
+import { useInjection } from 'inversify-react'
 
-import { deviceBySerialStore } from '@/store/device-by-serial-store'
-import { useDeviceSerial } from '@/lib/hooks/use-device-serial.hook'
-import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
-import { LinkOpenerStore } from '@/store/link-opener-store'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import { BROWSER_ICON_MAP } from '@/constants/browser-icon-map'
 
@@ -18,11 +16,13 @@ import type { SegmentedControlValue } from '@vkontakte/vkui'
 
 export const LinkOpenerControl = observer(() => {
   const { t } = useTranslation()
-  const serial = useDeviceSerial()
   const [url, setUrl] = useState('')
   const textInput = useRef<HTMLInputElement>(null)
-  const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
-  const linkOpenerStore = useServiceLocator<LinkOpenerStore>(LinkOpenerStore.name)
+
+  const linkOpenerStore = useInjection(CONTAINER_IDS.linkOpenerStore)
+  const deviceBySerialStore = useInjection(CONTAINER_IDS.deviceBySerialStore)
+
+  const { data: device } = deviceBySerialStore.deviceQueryResult()
 
   const onPressEnter = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {

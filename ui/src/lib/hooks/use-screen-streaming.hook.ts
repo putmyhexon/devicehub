@@ -1,30 +1,29 @@
 import { useEffect } from 'react'
+import { useInjection } from 'inversify-react'
 import { useErrorBoundary } from 'react-error-boundary'
 
-import { DeviceScreenStore } from '@/store/device-screen-store/device-screen-store'
 import { debounce } from '@/lib/utils/debounce.util'
-
-import { useServiceLocator } from './use-service-locator.hook'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import type { RefObject } from 'react'
 
 type UseScreenStreamingArgs = {
   canvasRef: RefObject<HTMLCanvasElement>
   canvasWrapperRef: RefObject<HTMLDivElement>
-  serial: string
 }
 
-export const useScreenStreaming = ({ canvasRef, canvasWrapperRef, serial }: UseScreenStreamingArgs): void => {
-  const deviceScreenStore = useServiceLocator<DeviceScreenStore>(DeviceScreenStore.name)
+export const useScreenStreaming = ({ canvasRef, canvasWrapperRef }: UseScreenStreamingArgs): void => {
   const { showBoundary } = useErrorBoundary()
+
+  const deviceScreenStore = useInjection(CONTAINER_IDS.deviceScreenStore)
 
   useEffect(() => {
     if (!canvasRef.current || !canvasWrapperRef.current) return undefined
 
-    deviceScreenStore?.startScreenStreaming(serial, canvasRef.current, canvasWrapperRef.current).catch(showBoundary)
+    deviceScreenStore.startScreenStreaming(canvasRef.current, canvasWrapperRef.current).catch(showBoundary)
 
     return (): void => {
-      deviceScreenStore?.stopScreenStreaming()
+      deviceScreenStore.stopScreenStreaming()
     }
   }, [deviceScreenStore])
 

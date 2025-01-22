@@ -1,35 +1,37 @@
 import { makeAutoObservable } from 'mobx'
+import { inject, injectable } from 'inversify'
 
-import { groupService } from '@/services/group-service'
-import { settingsService } from '@/services/settings-service'
-import { serviceLocator } from '@/services/service-locator'
-import { TouchService } from '@/services/touch-service/touch-service'
-import { KeyboardService } from '@/services/keyboard-service/keyboard-service'
-import { BookingService } from '@/services/booking-service'
-import { ApplicationInstallationService } from '@/services/application-installation/application-installation-service'
+import { GroupService } from '@/services/group-service'
+import { SettingsService } from '@/services/settings-service'
 
-import { deviceBySerialStore } from './device-by-serial-store'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
+
 import { DeviceControlStore } from './device-control-store'
-import { DeviceScreenStore } from './device-screen-store/device-screen-store'
-import { ShellControlStore } from './shell-control-store'
-import { LinkOpenerStore } from './link-opener-store'
+import { DeviceBySerialStore } from './device-by-serial-store'
 
-class DeviceConnection {
+@injectable()
+@deviceConnectionRequired()
+export class DeviceConnection {
   debugCommand: string = ''
 
-  constructor() {
+  constructor(
+    @inject(CONTAINER_IDS.deviceSerial) private serial: string,
+    @inject(CONTAINER_IDS.groupService) private groupService: GroupService,
+    @inject(CONTAINER_IDS.settingsService) private settingsService: SettingsService,
+    @inject(CONTAINER_IDS.deviceControlStore) private deviceControlStore: DeviceControlStore,
+    @inject(CONTAINER_IDS.deviceBySerialStore) private deviceBySerialStore: DeviceBySerialStore
+  ) {
     makeAutoObservable(this)
   }
 
-  async useDevice(serial: string): Promise<void> {
-    const device = await deviceBySerialStore.fetch(serial)
+  async useDevice(): Promise<void> {
+    const device = await this.deviceBySerialStore.fetch()
 
     if (!device?.channel) return
 
     try {
-      const deviceControlStore = new DeviceControlStore(device.channel, !!device.ios)
-
-      deviceControlStore.startRemoteConnect().promise.then((connectToDeviceData) => {
+      this.deviceControlStore.startRemoteConnect().promise.then((connectToDeviceData) => {
         const debugCommand = `adb connect ${connectToDeviceData}`
 
         this.debugCommand = debugCommand
@@ -37,38 +39,12 @@ class DeviceConnection {
         console.info(debugCommand)
       })
 
-      await groupService.invite(device)
+      await this.groupService.invite(this.serial, device.channel, device.group)
 
-      settingsService.setLastUsedDevice(serial)
-
-      serviceLocator.register(DeviceControlStore.name, deviceControlStore)
-      serviceLocator.register(DeviceScreenStore.name, new DeviceScreenStore())
-      serviceLocator.register(BookingService.name, new BookingService(serial))
-      serviceLocator.register(ShellControlStore.name, new ShellControlStore())
-      serviceLocator.register(LinkOpenerStore.name, new LinkOpenerStore(serial))
-      serviceLocator.register(ApplicationInstallationService.name, new ApplicationInstallationService(serial))
-      serviceLocator.register(KeyboardService.name, new KeyboardService())
-      serviceLocator.register(TouchService.name, new TouchService())
+      this.settingsService.setLastUsedDevice(this.serial)
     } catch (error) {
       // TODO: Обработать ошибку, показать toast
       console.error(error)
     }
   }
-
-  async stopUsingDevice(serial: string): Promise<unknown> {
-    const device = await deviceBySerialStore.fetch(serial)
-
-    serviceLocator.unregister(DeviceControlStore.name)
-    serviceLocator.unregister(BookingService.name)
-    serviceLocator.unregister(ShellControlStore.name)
-    serviceLocator.unregister(LinkOpenerStore.name)
-    serviceLocator.unregister(ApplicationInstallationService.name)
-    serviceLocator.unregister(DeviceScreenStore.name)
-    serviceLocator.unregister(KeyboardService.name)
-    serviceLocator.unregister(TouchService.name)
-
-    return groupService.kick(device)
-  }
 }
-
-export const deviceConnection = new DeviceConnection()

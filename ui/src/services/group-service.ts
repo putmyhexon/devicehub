@@ -1,30 +1,37 @@
-import { socket } from '@/api/socket'
-import { TransactionService } from '@/services/core/transaction-service/transaction-service'
+import { inject, injectable } from 'inversify'
 
-import type { Device } from '@/generated/types'
+import { socket } from '@/api/socket'
+
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+
+import type { DeviceGroup } from '@/generated/types'
+import type { TransactionFactory } from '@/types/transaction-factory.type'
 
 const MILLISECONDS_IN_MINUTE = 1000 * 60
 
-class GroupService {
-  invite(device: Device): Promise<unknown> {
+@injectable()
+export class GroupService {
+  constructor(@inject(CONTAINER_IDS.factoryTransactionService) private transactionServiceFactory: TransactionFactory) {}
+
+  invite(serial: string, channel: string, deviceGroup?: DeviceGroup): Promise<unknown> {
     /* NOTE: 1 for Infinity */
     let timeout = 1
 
-    if (device.group?.id === device.group?.origin) {
+    if (deviceGroup?.id === deviceGroup?.origin) {
       timeout = MILLISECONDS_IN_MINUTE * 15
     }
 
-    if (device.group?.class === 'once') {
+    if (deviceGroup?.class === 'once') {
       timeout = MILLISECONDS_IN_MINUTE * 40
     }
 
-    const transaction = new TransactionService()
+    const transaction = this.transactionServiceFactory()
     const { channel: transactionChannel, promise: transactionEndPromise } = transaction.initializeTransaction()
 
-    socket.emit('group.invite', device.channel, transactionChannel, {
+    socket.emit('group.invite', channel, transactionChannel, {
       requirements: {
         serial: {
-          value: device.serial,
+          value: serial,
           match: 'exact',
         },
       },
@@ -34,14 +41,14 @@ class GroupService {
     return transactionEndPromise
   }
 
-  kick(device: Device): Promise<unknown> {
-    const transaction = new TransactionService()
+  kick(serial: string, channel: string): Promise<unknown> {
+    const transaction = this.transactionServiceFactory()
     const { channel: transactionChannel, promise: transactionEndPromise } = transaction.initializeTransaction()
 
-    socket.emit('group.kick', device.channel, transactionChannel, {
+    socket.emit('group.kick', channel, transactionChannel, {
       requirements: {
         serial: {
-          value: device.serial,
+          value: serial,
           match: 'exact',
         },
       },
@@ -50,5 +57,3 @@ class GroupService {
     return transactionEndPromise
   }
 }
-
-export const groupService = new GroupService()

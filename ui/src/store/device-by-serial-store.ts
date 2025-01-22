@@ -1,34 +1,41 @@
-import { action, makeAutoObservable } from 'mobx'
+import { makeAutoObservable } from 'mobx'
+import { inject, injectable } from 'inversify'
 
 import { socket } from '@/api/socket'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { getDeviceState } from '@/lib/utils/get-device-state.util'
 import { DeviceState } from '@/types/enums/device-state.enum'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
 import { DEVICE_LIKELY_LEAVE_REASON } from '@/constants/device-likely-leave-reason-map'
 
-import { MobxQuery } from './mobx-query'
 import { deviceErrorModalStore } from './device-error-modal-store'
 
 import type { AxiosError } from 'axios'
 import type { Device } from '@/generated/types'
 import type { QueryObserverResult } from '@tanstack/react-query'
+import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 import type { DeviceChangeMessage } from '@/types/device-change-message.type'
 
-class DeviceBySerialStore {
-  private deviceQuery = new MobxQuery(
-    () => ({ ...queries.devices.bySerial(this.serial), staleTime: 3 * (60 * 1000), enabled: !!this.serial }),
-    queryClient
-  )
+@injectable()
+@deviceConnectionRequired()
+export class DeviceBySerialStore {
+  private deviceQuery
 
-  serial = ''
+  constructor(
+    @inject(CONTAINER_IDS.deviceSerial) private serial: string,
+    @inject(CONTAINER_IDS.factoryMobxQuery) mobxQueryFactory: MobxQueryFactory
+  ) {
+    makeAutoObservable(this)
 
-  constructor() {
-    makeAutoObservable(this, {
-      setSerial: action,
-    })
+    this.deviceQuery = mobxQueryFactory(() => ({
+      ...queries.devices.bySerial(serial),
+      staleTime: 3 * (60 * 1000),
+      enabled: !!serial,
+    }))
 
     this.onDeviceChange = this.onDeviceChange.bind(this)
   }
@@ -76,19 +83,11 @@ class DeviceBySerialStore {
     })
   }
 
-  setSerial(serial: string): void {
-    this.serial = serial
-  }
-
-  deviceQueryResult(serial: string): QueryObserverResult<Device, AxiosError> {
-    this.setSerial(serial)
-
+  deviceQueryResult(): QueryObserverResult<Device, AxiosError> {
     return this.deviceQuery.result
   }
 
-  fetch(serial: string): Promise<Device> {
-    this.setSerial(serial)
-
+  fetch(): Promise<Device> {
     return this.deviceQuery.fetch()
   }
 
@@ -96,5 +95,3 @@ class DeviceBySerialStore {
     return this.deviceQuery.refetch()
   }
 }
-
-export const deviceBySerialStore = new DeviceBySerialStore()

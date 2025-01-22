@@ -1,19 +1,19 @@
 import { makeAutoObservable, runInAction } from 'mobx'
+import { inject, injectable } from 'inversify'
 
-import { serviceLocator } from '@/services/service-locator'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
 import { DeviceControlStore } from './device-control-store'
 
+@injectable()
+@deviceConnectionRequired()
 export class ShellControlStore {
   command = ''
   shellResult = ''
 
-  private readonly deviceControlStore: DeviceControlStore
-
-  constructor() {
+  constructor(@inject(CONTAINER_IDS.deviceControlStore) private deviceControlStore: DeviceControlStore) {
     makeAutoObservable(this)
-
-    this.deviceControlStore = serviceLocator.get<DeviceControlStore>(DeviceControlStore.name)
   }
 
   setCommand(command: string): void {

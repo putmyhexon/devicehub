@@ -1,44 +1,44 @@
 import { IconButton, Input } from '@vkontakte/vkui'
+import { useInjection } from 'inversify-react'
 import { Icon20Play } from '@vkontakte/icons'
 import { observer } from 'mobx-react-lite'
 
 import { OutputLogArea } from '@/components/lib/output-log-area'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
-import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
-import { ShellControlStore } from '@/store/shell-control-store'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import styles from './shell-control.module.css'
 
 import type { KeyboardEvent } from 'react'
 
 export const ShellControl = observer(() => {
-  const shellControlStore = useServiceLocator<ShellControlStore>(ShellControlStore.name)
+  const shellControlStore = useInjection(CONTAINER_IDS.shellControlStore)
 
   const onPressEnter = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      shellControlStore?.runShellCommand()
+      shellControlStore.runShellCommand()
     }
   }
 
   return (
     <>
       <Input
-        value={shellControlStore?.command || ''}
+        value={shellControlStore.command}
         after={
           <IconButton
-            disabled={!shellControlStore?.command}
+            disabled={!shellControlStore.command}
             label='run shell command'
-            onClick={() => shellControlStore?.runShellCommand()}
+            onClick={() => shellControlStore.runShellCommand()}
           >
             <Icon20Play />
           </IconButton>
         }
-        onChange={(event) => shellControlStore?.setCommand(event.target.value)}
+        onChange={(event) => shellControlStore.setCommand(event.target.value)}
         onKeyDown={onPressEnter}
       />
-      <ConditionalRender conditions={[!!shellControlStore?.shellResult]}>
-        <OutputLogArea className={styles.shellResult} text={shellControlStore?.shellResult || ''} />
+      <ConditionalRender conditions={[!!shellControlStore.shellResult]}>
+        <OutputLogArea className={styles.shellResult} text={shellControlStore.shellResult} />
       </ConditionalRender>
     </>
   )

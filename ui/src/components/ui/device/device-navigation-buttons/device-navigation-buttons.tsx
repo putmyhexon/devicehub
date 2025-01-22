@@ -1,14 +1,12 @@
 import { Flex } from '@vkontakte/vkui'
-import { Icon24SquareOutline, Icon28ArrowUturnLeftOutline, Icon28HomeOutline, Icon28Menu } from '@vkontakte/icons'
-import { useTranslation } from 'react-i18next'
 import { observer } from 'mobx-react-lite'
+import { useInjection } from 'inversify-react'
+import { useTranslation } from 'react-i18next'
+import { Icon24SquareOutline, Icon28ArrowUturnLeftOutline, Icon28HomeOutline, Icon28Menu } from '@vkontakte/icons'
 
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
-import { useServiceLocator } from '@/lib/hooks/use-service-locator.hook'
-import { DeviceControlStore } from '@/store/device-control-store'
-import { deviceBySerialStore } from '@/store/device-by-serial-store'
-import { useDeviceSerial } from '@/lib/hooks/use-device-serial.hook'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import { NavigationButton } from './navigation-button'
 
@@ -16,10 +14,11 @@ import styles from './device-navigation-buttons.module.css'
 
 export const DeviceNavigationButtons = observer(() => {
   const { t } = useTranslation()
-  const serial = useDeviceSerial()
-  const deviceControlStore = useServiceLocator<DeviceControlStore>(DeviceControlStore.name)
 
-  const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
+  const deviceControlStore = useInjection(CONTAINER_IDS.deviceControlStore)
+  const deviceBySerialStore = useInjection(CONTAINER_IDS.deviceBySerialStore)
+
+  const { data: device } = deviceBySerialStore.deviceQueryResult()
 
   return (
     <Flex align='center' className={styles.deviceNavigationButtons} justify='space-around'>
@@ -28,7 +27,7 @@ export const DeviceNavigationButtons = observer(() => {
           beforeIcon={<Icon24SquareOutline />}
           title={`${t('Home')}`}
           onClick={() => {
-            deviceControlStore?.home()
+            deviceControlStore.home()
           }}
         />
       </ConditionalRender>
@@ -37,28 +36,28 @@ export const DeviceNavigationButtons = observer(() => {
           beforeIcon={<Icon28Menu />}
           title={`${t('Menu')}`}
           onClick={() => {
-            deviceControlStore?.menu()
+            deviceControlStore.menu()
           }}
         />
         <NavigationButton
           beforeIcon={<Icon28HomeOutline />}
           title={`${t('Home')}`}
           onClick={() => {
-            deviceControlStore?.home()
+            deviceControlStore.home()
           }}
         />
         <NavigationButton
           beforeIcon={<Icon24SquareOutline height={28} width={28} />}
           title={`${t('App switch')}`}
           onClick={() => {
-            deviceControlStore?.appSwitch()
+            deviceControlStore.appSwitch()
           }}
         />
         <NavigationButton
           beforeIcon={<Icon28ArrowUturnLeftOutline />}
           title={`${t('Back')}`}
           onClick={() => {
-            deviceControlStore?.back()
+            deviceControlStore.back()
           }}
         />
       </ConditionalRender>

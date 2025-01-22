@@ -1,18 +1,20 @@
 import { Flex } from '@vkontakte/vkui'
 import { useTranslation } from 'react-i18next'
 import { observer } from 'mobx-react-lite'
+import { useInjection } from 'inversify-react'
 
 import { StatisticCard } from '@/components/lib/statistic-card'
 import { StatisticCardIcon } from '@/components/lib/statistic-card/types'
 
-import { deviceListStore } from '@/store/device-list-store'
-import { currentUserProfileStore } from '@/store/current-user-profile-store'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import styles from './device-statistics.module.css'
 
 export const DeviceStatistics = observer(() => {
   const { t } = useTranslation()
-  const { profileQueryResult } = currentUserProfileStore
+
+  const deviceListStore = useInjection(CONTAINER_IDS.deviceListStore)
+  const { profileQueryResult } = useInjection(CONTAINER_IDS.currentUserProfileStore)
 
   return (
     <Flex align='center' justify='space-between'>

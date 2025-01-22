@@ -1,48 +1,58 @@
 import { makeAutoObservable, runInAction } from 'mobx'
+import { inject, injectable } from 'inversify'
 
 import { uploadFile } from '@/api/openstf'
-import { serviceLocator } from '@/services/service-locator'
 
-import { MobxQuery } from '@/store/mobx-query'
-import { MobxMutation } from '@/store/mobx-mutation'
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { DeviceControlStore } from '@/store/device-control-store'
-import { deviceBySerialStore } from '@/store/device-by-serial-store'
+import { DeviceBySerialStore } from '@/store/device-by-serial-store'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
-import type { Manifest } from '@/types/manifest.type'
-import type { ActivityOptions, ActivityOptionsSet, RunActivityArgs, SelectOption } from './types'
 import type { AxiosError } from 'axios'
+import type { Manifest } from '@/types/manifest.type'
 import type { Device, ErrorResponse } from '@/generated/types'
+import type { ActivityOptions, ActivityOptionsSet, RunActivityArgs, SelectOption } from './types'
 import type { QueryObserverResult } from '@tanstack/react-query'
+import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
+import type { MobxMutationFactory } from '@/types/mobx-mutation-factory.type'
 import type { GetManifestResponse, UploadFileResponse } from '@/api/openstf/types'
 
+@injectable()
+@deviceConnectionRequired()
 export class ApplicationInstallationService {
-  private manifestQuery = new MobxQuery(() => ({ ...queries.s.apk(this.href), enabled: !!this.href }), queryClient)
+  private manifestQuery
+  private uploadFileMutate
 
   href = ''
-  status = ''
+  status = 'Initialization'
   progress = 0
   isInstalling = false
   isInstalled = false
   device: Device | undefined = undefined
 
-  uploadFileMutate = new MobxMutation<UploadFileResponse, ErrorResponse, { type: string; file: File }>(
-    { mutationFn: (data): Promise<UploadFileResponse> => uploadFile(data.type, data.file) },
-    queryClient
-  )
-
-  private readonly deviceControlStore: DeviceControlStore
-
-  constructor(serial: string) {
+  constructor(
+    @inject(CONTAINER_IDS.factoryMobxQuery) mobxQueryFactory: MobxQueryFactory,
+    @inject(CONTAINER_IDS.factoryMobxMutation) mobxMutationFactory: MobxMutationFactory,
+    @inject(CONTAINER_IDS.deviceControlStore) private deviceControlStore: DeviceControlStore,
+    @inject(CONTAINER_IDS.deviceBySerialStore) private deviceBySerialStore: DeviceBySerialStore
+  ) {
     makeAutoObservable(this)
 
-    this.deviceControlStore = serviceLocator.get<DeviceControlStore>(DeviceControlStore.name)
-    this.init(serial)
+    this.manifestQuery = mobxQueryFactory(() => ({
+      ...queries.s.apk(this.href),
+      enabled: !!this.href,
+    }))
+    this.uploadFileMutate = mobxMutationFactory<UploadFileResponse, ErrorResponse, { type: string; file: File }>({
+      mutationFn: ({ type, file }): Promise<UploadFileResponse> => uploadFile(type, file),
+    })
+
+    this.init()
   }
 
-  async init(serial: string): Promise<void> {
-    const device = await deviceBySerialStore.fetch(serial)
+  async init(): Promise<void> {
+    const device = await this.deviceBySerialStore.fetch()
 
     runInAction(() => {
       this.device = device
@@ -158,7 +168,7 @@ export class ApplicationInstallationService {
     this.progress = 0
     this.isInstalling = false
     this.isInstalled = false
-    this.status = ''
+    this.status = 'Initialization'
     this.href = ''
   }
 

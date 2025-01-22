@@ -41,9 +41,15 @@
  * |--------------|------|---------|---------|---------|
  */
 
+import { injectable } from 'inversify'
+
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
+
 import type { Coordinator, Coords, CoordsArgs, Size } from './types'
 
-class ScalingService {
+@injectable()
+@deviceConnectionRequired()
+export class ScalingService {
   coordinator(realWidth: number, realHeight: number): Coordinator {
     const realRatio = realWidth / realHeight
 
@@ -221,5 +227,3 @@ class ScalingService {
     }
   }
 }
-
-export const scalingService = new ScalingService()

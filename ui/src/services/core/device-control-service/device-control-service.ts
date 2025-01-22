@@ -1,15 +1,16 @@
 import { socket } from '@/api/socket'
-import { TransactionService } from '@/services/core/transaction-service/transaction-service'
 
 import { KEYBOARD_KEYS_MAP } from '@/constants/keyboard-keys-map'
 
+import type { TransactionFactory } from '@/types/transaction-factory.type'
+import type { DeviceBySerialStore } from '@/store/device-by-serial-store'
 import type { TouchDownArgs, TouchMoveArgs, TouchMoveIosArgs } from './types'
 import type { InitializeTransactionReturn, InstallOptions } from '@/services/core/transaction-service/types'
 
 export class DeviceControlService {
   constructor(
-    private deviceChannel: string,
-    private isDeviceIos: boolean
+    protected deviceBySerialStore: DeviceBySerialStore,
+    private transactionServiceFactory: TransactionFactory
   ) {}
 
   gestureStart(seq: number): void {
@@ -218,16 +219,20 @@ export class DeviceControlService {
   }
 
   private sendOneWay<T>(action: string, data?: T): void {
-    socket.emit(action, this.deviceChannel, data)
+    const { data: device } = this.deviceBySerialStore.deviceQueryResult()
+
+    socket.emit(action, device?.channel, data)
   }
 
   private sendTwoWay<T>(action: string, data?: T): InitializeTransactionReturn {
-    const transaction = new TransactionService()
+    const transaction = this.transactionServiceFactory()
     const initializeTransaction = transaction.initializeTransaction()
 
-    const platformSpecificAction = this.isDeviceIos ? `${action}Ios` : action
+    const { data: device } = this.deviceBySerialStore.deviceQueryResult()
 
-    socket.emit(platformSpecificAction, this.deviceChannel, initializeTransaction.channel, data)
+    const platformSpecificAction = device?.ios ? `${action}Ios` : action
+
+    socket.emit(platformSpecificAction, device?.channel, initializeTransaction.channel, data)
 
     return initializeTransaction
   }

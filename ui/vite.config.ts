@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react-swc'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
-  plugins: [react(), tsconfigPaths(), svgr()],
+  plugins: [react({ tsDecorators: true }), tsconfigPaths(), svgr()],
   resolve: {
     alias: [{ find: /^@vkontakte\/vkui$/, replacement: '@vkontakte/vkui/dist/cssm' }],
   },

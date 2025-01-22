@@ -1,18 +1,28 @@
 import { makeObservable, observable } from 'mobx'
+import { inject, injectable } from 'inversify'
 
 import { DeviceControlService } from '@/services/core/device-control-service/device-control-service'
 
-import { deviceBySerialStore } from './device-by-serial-store'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
+
+import { DeviceBySerialStore } from './device-by-serial-store'
 
 import type { EffectiveConnectionType } from '@/vite-env'
+import type { TransactionFactory } from '@/types/transaction-factory.type'
 
+@injectable()
+@deviceConnectionRequired()
 export class DeviceControlStore extends DeviceControlService {
   private currentNetworkType: EffectiveConnectionType = '3g'
 
   currentQuality = 60
 
-  constructor(deviceChannel: string, isDeviceIos: boolean) {
-    super(deviceChannel, isDeviceIos)
+  constructor(
+    @inject(CONTAINER_IDS.deviceBySerialStore) deviceBySerialStore: DeviceBySerialStore,
+    @inject(CONTAINER_IDS.factoryTransactionService) transactionServiceFactory: TransactionFactory
+  ) {
+    super(deviceBySerialStore, transactionServiceFactory)
 
     makeObservable(this, {
       currentQuality: observable,
@@ -51,12 +61,12 @@ export class DeviceControlStore extends DeviceControlService {
     this.fontChange(1.3)
   }
 
-  tryToRotate(serial: string, rotation: 'portrait' | 'landscape'): void {
+  tryToRotate(rotation: 'portrait' | 'landscape'): void {
     if (rotation === 'portrait') {
       this.rotate(0)
 
       setTimeout(() => {
-        if (serial && this.isLandscape(serial)) {
+        if (this.isLandscape()) {
           console.info('tryToRotate but it still landscape')
         }
       }, 400)
@@ -66,15 +76,15 @@ export class DeviceControlStore extends DeviceControlService {
       this.rotate(90)
 
       setTimeout(() => {
-        if (serial && this.isPortrait(serial)) {
+        if (this.isPortrait()) {
           console.info('tryToRotate but it still portrait')
         }
       }, 400)
     }
   }
 
-  rotateLeft(serial: string): void {
-    const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
+  rotateLeft(): void {
+    const { data: device } = this.deviceBySerialStore.deviceQueryResult()
 
     if (!device?.display?.rotation) return
 
@@ -87,8 +97,8 @@ export class DeviceControlStore extends DeviceControlService {
     this.rotate(device.display.rotation - 90)
   }
 
-  rotateRight(serial: string): void {
-    const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
+  rotateRight(): void {
+    const { data: device } = this.deviceBySerialStore.deviceQueryResult()
 
     if (!device?.display?.rotation) return
 
@@ -147,14 +157,14 @@ export class DeviceControlStore extends DeviceControlService {
     }
   }
 
-  private isPortrait(serial: string): boolean {
-    const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
+  private isPortrait(): boolean {
+    const { data: device } = this.deviceBySerialStore.deviceQueryResult()
 
     return device?.display?.rotation === 0 || device?.display?.rotation === 180
   }
 
-  private isLandscape(serial: string): boolean {
-    const { data: device } = deviceBySerialStore.deviceQueryResult(serial)
+  private isLandscape(): boolean {
+    const { data: device } = this.deviceBySerialStore.deviceQueryResult()
 
     return device?.display?.rotation === 90 || device?.display?.rotation === 270
   }
