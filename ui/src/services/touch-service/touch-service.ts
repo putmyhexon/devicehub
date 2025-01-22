@@ -7,6 +7,7 @@ import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { DeviceControlStore } from '@/store/device-control-store'
 import { DeviceBySerialStore } from '@/store/device-by-serial-store'
 import { DeviceScreenStore } from '@/store/device-screen-store/device-screen-store'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
 import type {
   Finger,
@@ -22,6 +23,7 @@ import type {
 import type { MouseEvent as ReactMouseEvent } from 'react'
 
 @injectable()
+@deviceConnectionRequired()
 export class TouchService {
   private readonly cycle = 100
   private prevCoords: { x: number; y: number } = { x: 0, y: 0 }

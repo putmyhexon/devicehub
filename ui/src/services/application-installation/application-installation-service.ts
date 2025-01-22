@@ -8,6 +8,7 @@ import { queryClient } from '@/config/queries/query-client'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { DeviceControlStore } from '@/store/device-control-store'
 import { DeviceBySerialStore } from '@/store/device-by-serial-store'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
 import type { AxiosError } from 'axios'
 import type { Manifest } from '@/types/manifest.type'
@@ -19,6 +20,7 @@ import type { MobxMutationFactory } from '@/types/mobx-mutation-factory.type'
 import type { GetManifestResponse, UploadFileResponse } from '@/api/openstf/types'
 
 @injectable()
+@deviceConnectionRequired()
 export class ApplicationInstallationService {
   private manifestQuery
   private uploadFileMutate

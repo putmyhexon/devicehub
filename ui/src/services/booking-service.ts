@@ -3,10 +3,12 @@ import { inject, injectable } from 'inversify'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { DeviceBySerialStore } from '@/store/device-by-serial-store'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
 import { GroupService } from './group-service'
 
 @injectable()
+@deviceConnectionRequired()
 export class BookingService {
   bookedBeforeTime = ''
 

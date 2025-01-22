@@ -2,10 +2,12 @@ import { makeAutoObservable, runInAction } from 'mobx'
 import { inject, injectable } from 'inversify'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
 import { DeviceControlStore } from './device-control-store'
 
 @injectable()
+@deviceConnectionRequired()
 export class ShellControlStore {
   command = ''
   shellResult = ''

@@ -5,11 +5,13 @@ import { inject, injectable } from 'inversify'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { DeviceBySerialStore } from '@/store/device-by-serial-store'
 import { deviceErrorModalStore } from '@/store/device-error-modal-store'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
 import type { ElementBoundSize, StartScreenStreamingMessage } from './types'
 import type { Device } from '@/generated/types'
 
 @injectable()
+@deviceConnectionRequired()
 export class DeviceScreenStore {
   private readonly websocketReconnectionInterval = 5000 // NOTE: 5s
   private readonly websocketReconnectionMaxAttempts = 3 // NOTE: 5s * 3 -> 15s total delay

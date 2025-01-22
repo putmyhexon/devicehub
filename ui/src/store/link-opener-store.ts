@@ -3,11 +3,13 @@ import { makePersistable } from 'mobx-persist-store'
 import { inject, injectable } from 'inversify'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
 import { DeviceControlStore } from './device-control-store'
 import { DeviceBySerialStore } from './device-by-serial-store'
 
 @injectable()
+@deviceConnectionRequired()
 export class LinkOpenerStore {
   currentBrowserId: string | undefined
 

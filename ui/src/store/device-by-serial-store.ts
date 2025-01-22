@@ -8,18 +8,20 @@ import { queryClient } from '@/config/queries/query-client'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { getDeviceState } from '@/lib/utils/get-device-state.util'
 import { DeviceState } from '@/types/enums/device-state.enum'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
 import { DEVICE_LIKELY_LEAVE_REASON } from '@/constants/device-likely-leave-reason-map'
 
 import { deviceErrorModalStore } from './device-error-modal-store'
 
-import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 import type { AxiosError } from 'axios'
 import type { Device } from '@/generated/types'
 import type { QueryObserverResult } from '@tanstack/react-query'
+import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 import type { DeviceChangeMessage } from '@/types/device-change-message.type'
 
 @injectable()
+@deviceConnectionRequired()
 export class DeviceBySerialStore {
   private deviceQuery
 

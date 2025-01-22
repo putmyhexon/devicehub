@@ -4,6 +4,7 @@ import { inject, injectable } from 'inversify'
 import { DeviceControlService } from '@/services/core/device-control-service/device-control-service'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
 import { DeviceBySerialStore } from './device-by-serial-store'
 
@@ -11,6 +12,7 @@ import type { EffectiveConnectionType } from '@/vite-env'
 import type { TransactionFactory } from '@/types/transaction-factory.type'
 
 @injectable()
+@deviceConnectionRequired()
 export class DeviceControlStore extends DeviceControlService {
   private currentNetworkType: EffectiveConnectionType = '3g'
 

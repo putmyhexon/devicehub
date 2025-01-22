@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { DeviceControlStore } from '@/store/device-control-store'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
 import type {
   ChangeListenerArgs,
@@ -12,6 +13,7 @@ import type {
 } from './types'
 
 @injectable()
+@deviceConnectionRequired()
 export class KeyboardService {
   constructor(@inject(CONTAINER_IDS.deviceControlStore) private deviceControlStore: DeviceControlStore) {}
 

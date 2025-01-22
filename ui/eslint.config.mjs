@@ -372,7 +372,11 @@ export default tseslint.config(
     },
   },
   {
-    files: ['src/lib/utils/debounce.util.ts', 'src/lib/hooks/use-callback-with-error-handling.hook.ts'],
+    files: [
+      'src/lib/utils/debounce.util.ts',
+      'src/lib/hooks/use-callback-with-error-handling.hook.ts',
+      'src/config/inversify/decorators.ts',
+    ],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
     },

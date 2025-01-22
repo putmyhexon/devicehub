@@ -5,11 +5,13 @@ import { GroupService } from '@/services/group-service'
 import { SettingsService } from '@/services/settings-service'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
 import { DeviceControlStore } from './device-control-store'
 import { DeviceBySerialStore } from './device-by-serial-store'
 
 @injectable()
+@deviceConnectionRequired()
 export class DeviceConnection {
   debugCommand: string = ''
 
