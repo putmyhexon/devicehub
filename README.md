@@ -25,6 +25,12 @@ The easiest way to run the provider is to do
 
 Note: some features require direct access to the provider instance from the browser, so if you are running the provider on a different machine - make sure you pass accessible url to the --public-ip.
 
+For iOS support:
+1) You need to set up macOS node (for example we use Mac Mini on Intel Processor)
+2) Then clone and build this repo
+3) Also, you need to install pymobiledevice3
+4) Now see [run-wda.sh](./lib/cli/ios-device/run-wda.sh) Note: You need to create you own provisioning profile in XCode
+
 ## Features
 
 ### Database
