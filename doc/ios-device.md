@@ -1,16 +1,17 @@
-# iOS device launch via run-wda.sh
+# Adding an iOS device to DeviceHub
 
-This script is designed to set up and run WebDriverAgent on an iOS device using `idb` and `pymobiledevice3`. It also sets up port forwarding for interacting with the device via `stf`.
+See [lib/cli/ios-device/run-wda.sh](../lib/cli/ios-device/run-wda.sh)
+This script is designed to set up and run WebDriverAgent on an iOS device using `idb` and `pymobiledevice3`. It also sets up port forwarding that is needed for the ios-provider.
 
 ## Requirements
 
 - Installed `git`
 - Installed `idb`
-- Installed `pymobiledevice3`
+- Installed `pymobiledevice3` (use our fork [https://github.com/irdkwmnsb/pymobiledevice3](https://github.com/irdkwmnsb/pymobiledevice3))
 - Installed `xcodebuild`
-- Installed `stf`
+- Installed the `stf` command from this repository (clone this repository and do `npm ci` followed by `npm link`)
 - Access to MongoDB which used by stf
-  Note: You need to create you own provisioning profile in XCode
+  Note: You need to create you own provisioning profile in XCode for the [WebDriverAgent project](../WebDriverAgent)
 ## Usage
 
 ```bash
