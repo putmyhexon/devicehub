@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import { Placeholder } from '@vkontakte/vkui'
 import { useInjection } from 'inversify-react'
 import { useTranslation } from 'react-i18next'
-import { Icon28HourglassOutline, Icon28RectrangleHandPointUp } from '@vkontakte/icons'
+import { Icon28HourglassOutline, Icon28InboxOutline, Icon28RectrangleHandPointUp } from '@vkontakte/icons'
 import { flexRender, getCoreRowModel, getFilteredRowModel, useReactTable } from '@tanstack/react-table'
 
 import { fuzzyFilter } from '@/components/ui/device-table/helpers'
@@ -103,7 +103,16 @@ export const LogsTable = observer(() => {
       <ConditionalRender
         conditions={[logcatService.visibleDeviceLogs.length === 0 && !logcatService.isDeviceLogcatStarted]}
       >
-        <Placeholder icon={<Icon28RectrangleHandPointUp />}>{t('Click the start button')}</Placeholder>
+        <Placeholder className={styles.placeholder} icon={<Icon28RectrangleHandPointUp />}>
+          {t('Click the start button')}
+        </Placeholder>
+      </ConditionalRender>
+      <ConditionalRender
+        conditions={[table.getRowModel().rows.length === 0 && logcatService.visibleDeviceLogs.length > 0]}
+      >
+        <Placeholder className={styles.placeholder} icon={<Icon28InboxOutline />}>
+          {t('Empty')}
+        </Placeholder>
       </ConditionalRender>
     </div>
   )

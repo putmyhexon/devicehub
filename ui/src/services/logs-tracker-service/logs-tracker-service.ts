@@ -10,7 +10,7 @@ import type { DeviceLogs } from './types'
 
 @injectable()
 export class LogsTrackerService {
-  private batchLogsSize = 30
+  private batchLogsSize = 25
 
   /* NOTE: Do not mutate this object to ensure stable references for React Table.
     For more details, see: https://tanstack.com/table/latest/docs/guide/data#give-data-a-stable-reference
