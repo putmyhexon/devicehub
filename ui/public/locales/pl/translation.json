@@ -250,6 +250,11 @@
   "Please type or select value": "Wpisz lub wybierz wartość",
   "Show Manifest": "Pokaż manifest",
   "Hide Manifest": "Ukryj manifest",
+  "Time": "Czas",
+  "TID": "TID",
+  "Tag": "Etykietka",
+  "Text": "Tekst",
+  "Device search": "Wyszukiwanie urządzenia",
   "Try to reconnect": "Spróbuj połączyć się ponownie",
   "Stop Automation": "Zatrzymaj automatyzację",
   "Unhealthy": "Niezdrowy",
@@ -261,5 +266,10 @@
   "Target Host": "Target host",
   "Target Port": "Port docelowy",
   "Restart Device": "Uruchom ponownie urządzenie",
-  "The device will be unavailable for a moment": "Urządzenie będzie na chwilę niedostępne"
+  "The device will be unavailable for a moment": "Urządzenie będzie na chwilę niedostępne",
+  "Type a command": "Wpisz polecenie",
+  "Click the start button": "Kliknij przycisk Start, aby rozpocząć śledzenie dzienników",
+  "Start": "Start",
+  "Export": "Eksport",
+  "File Extension": "Rozszerzenie pliku"
 }

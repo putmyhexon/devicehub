@@ -404,9 +404,17 @@
   "Please type or select value": "Digite ou selecione o valor",
   "Show Manifest": "Mostrar manifesto",
   "Hide Manifest": "Ocultar manifesto",
+  "Save Logs": "Salvar registros",
+  "Device search": "Pesquisa de dispositivos",
   "Unhealthy": "Insalubre",
   "Service is currently unavailable": "O serviço está indisponível no momento! \nTente sua tentativa mais tarde",
   "Device Port": "Porta de dispositivo",
   "Target Host": "Host alvo",
-  "Target Port": "Porta de destino"
+  "Target Port": "Porta de destino",
+  "Type a command": "Digite um comando",
+  "Click the start button": "Clique no botão Iniciar para começar a rastrear os logs",
+  "Start": "Começar",
+  "Export": "Exportar",
+  "File Name": "Nome do arquivo",
+  "File Extension": "Extensão de arquivo"
 }

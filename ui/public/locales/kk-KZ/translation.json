@@ -334,10 +334,17 @@
   "Please type or select value": "Мәнді теріңіз немесе таңдаңыз",
   "Show Manifest": "Манифест көрсету",
   "Hide Manifest": "Манифестті жасыру",
+  "PID": "PID",
+  "Tag": "Тег",
   "Stop Automation": "Автоматтандыруды тоқтату",
   "Unhealthy": "Дені сау емес",
   "Service is currently unavailable": "Қызмет қазір қолжетімсіз! \nӘрекетті кейінірек көріңіз",
   "Device Port": "Құрылғы порты",
   "Target Host": "Мақсатты хост",
-  "Target Port": "Мақсатты порт"
+  "Target Port": "Мақсатты порт",
+  "Type a command": "Пәрменді теріңіз",
+  "Click the start button": "Журналдарды бақылауды бастау үшін Бастау түймесін басыңыз",
+  "Start": "Жүргізу",
+  "Export": "Сыртқа шығару",
+  "File Extension": "Файл кеңейтімі"
 }

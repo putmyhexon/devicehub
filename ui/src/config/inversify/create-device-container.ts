@@ -1,10 +1,12 @@
 import { Container } from 'inversify'
 
+import { LogcatService } from '@/services/logcat-service'
 import { BookingService } from '@/services/booking-service'
 import { TouchService } from '@/services/touch-service/touch-service'
 import { ScalingService } from '@/services/scaling-service/scaling-service'
 import { DeviceLifecycleService } from '@/services/device-lifecycle-service'
 import { KeyboardService } from '@/services/keyboard-service/keyboard-service'
+import { SaveLogsService } from '@/services/save-logs-service/save-logs-service'
 import { PortForwardingService } from '@/services/port-forwarding-service/port-forwarding-service'
 import { ApplicationInstallationService } from '@/services/application-installation/application-installation-service'
 
@@ -34,10 +36,12 @@ export const createDeviceContainer = (serial: string): Container => {
   deviceContainer.bind<string>(CONTAINER_IDS.deviceSerial).toConstantValue(serial)
 
   deviceContainer.bind(CONTAINER_IDS.touchService).to(TouchService)
+  deviceContainer.bind(CONTAINER_IDS.logcatService).to(LogcatService)
   deviceContainer.bind(CONTAINER_IDS.scalingService).to(ScalingService)
   deviceContainer.bind(CONTAINER_IDS.bookingService).to(BookingService)
   deviceContainer.bind(CONTAINER_IDS.linkOpenerStore).to(LinkOpenerStore)
   deviceContainer.bind(CONTAINER_IDS.keyboardService).to(KeyboardService)
+  deviceContainer.bind(CONTAINER_IDS.saveLogsService).to(SaveLogsService)
   deviceContainer.bind(CONTAINER_IDS.deviceConnection).to(DeviceConnection)
   deviceContainer.bind(CONTAINER_IDS.shellControlStore).to(ShellControlStore)
   deviceContainer.bind(CONTAINER_IDS.deviceScreenStore).to(DeviceScreenStore)

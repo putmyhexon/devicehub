@@ -327,11 +327,22 @@
   "Please type or select value": "Please type or select value",
   "Show Manifest": "Show Manifest",
   "Hide Manifest": "Hide Manifest",
+  "Time": "Time",
+  "TID": "TID",
+  "Save Logs": "Save Logs",
+  "Device search": "Device search",
   "Stop Automation": "Stop Automation",
   "Unhealthy": "Unhealthy",
   "You (or someone else) kicked the device": "You (or someone else) kicked the device",
   "Service is currently unavailable": "Service is currently unavailable! Try your attempt later",
   "Device Port": "Device Port",
   "Target Host": "Target Host",
-  "Target Port": "Target Port"
+  "Target Port": "Target Port",
+  "Type a command": "Type a command",
+  "Waiting for logs": "Waiting for logs",
+  "Click the start button": "Click the Start button to begin tracking the logs",
+  "Start": "Start",
+  "Export": "Export",
+  "File Name": "File Name",
+  "File Extension": "File Extension"
 }

@@ -1,5 +1,6 @@
 import type { interfaces } from 'inversify'
 import type { GroupService } from '@/services/group-service'
+import type { LogcatService } from '@/services/logcat-service'
 import type { DeviceListStore } from '@/store/device-list-store'
 import type { LinkOpenerStore } from '@/store/link-opener-store'
 import type { BookingService } from '@/services/booking-service'
@@ -17,7 +18,9 @@ import type { ScalingService } from '@/services/scaling-service/scaling-service'
 import type { DeviceLifecycleService } from '@/services/device-lifecycle-service'
 import type { CurrentUserProfileStore } from '@/store/current-user-profile-store'
 import type { KeyboardService } from '@/services/keyboard-service/keyboard-service'
+import type { SaveLogsService } from '@/services/save-logs-service/save-logs-service'
 import type { DeviceScreenStore } from '@/store/device-screen-store/device-screen-store'
+import type { LogsTrackerService } from '@/services/logs-tracker-service/logs-tracker-service'
 import type { PortForwardingService } from '@/services/port-forwarding-service/port-forwarding-service'
 import type { ApplicationInstallationService } from '@/services/application-installation/application-installation-service'
 
@@ -25,17 +28,20 @@ export const CONTAINER_IDS = {
   deviceSerial: Symbol.for('serial') as interfaces.ServiceIdentifier<string>,
   touchService: Symbol.for('TouchService') as interfaces.ServiceIdentifier<TouchService>,
   groupService: Symbol.for('GroupService') as interfaces.ServiceIdentifier<GroupService>,
+  logcatService: Symbol.for('LogcatService') as interfaces.ServiceIdentifier<LogcatService>,
   bookingService: Symbol.for('BookingService') as interfaces.ServiceIdentifier<BookingService>,
   scalingService: Symbol.for('ScalingService') as interfaces.ServiceIdentifier<ScalingService>,
   linkOpenerStore: Symbol.for('LinkOpenerStore') as interfaces.ServiceIdentifier<LinkOpenerStore>,
   keyboardService: Symbol.for('KeyboardService') as interfaces.ServiceIdentifier<KeyboardService>,
   deviceListStore: Symbol.for('DeviceListStore') as interfaces.ServiceIdentifier<DeviceListStore>,
   settingsService: Symbol.for('SettingsService') as interfaces.ServiceIdentifier<SettingsService>,
+  saveLogsService: Symbol.for('SaveLogsService') as interfaces.ServiceIdentifier<SaveLogsService>,
   deviceConnection: Symbol.for('DeviceConnection') as interfaces.ServiceIdentifier<DeviceConnection>,
   factoryMobxQuery: Symbol.for('Factory<MobxQuery>') as interfaces.ServiceIdentifier<MobxQueryFactory>,
   shellControlStore: Symbol.for('ShellControlStore') as interfaces.ServiceIdentifier<ShellControlStore>,
   deviceScreenStore: Symbol.for('DeviceScreenStore') as interfaces.ServiceIdentifier<DeviceScreenStore>,
   deviceControlStore: Symbol.for('DeviceControlStore') as interfaces.ServiceIdentifier<DeviceControlStore>,
+  logsTrackerService: Symbol.for('LogsTrackerService') as interfaces.ServiceIdentifier<LogsTrackerService>,
   deviceBySerialStore: Symbol.for('DeviceBySerialStore') as interfaces.ServiceIdentifier<DeviceBySerialStore>,
   deviceDisconnection: Symbol.for('DeviceDisconnection') as interfaces.ServiceIdentifier<DeviceDisconnection>,
   factoryMobxMutation: Symbol.for('Factory<MobxMutation>') as interfaces.ServiceIdentifier<MobxMutationFactory>,

@@ -404,9 +404,17 @@
   "Please type or select value": "Veuillez saisir ou sélectionner une valeur",
   "Show Manifest": "Afficher le manifeste",
   "Hide Manifest": "Masquer le manifeste",
+  "Save Logs": "Enregistrer les journaux",
+  "Device search": "Recherche d'appareil",
   "Unhealthy": "Malsain",
   "Service is currently unavailable": "Le service est actuellement indisponible ! \nEssayez votre tentative plus tard",
   "Device Port": "Port de périphérique",
   "Target Host": "Hôte cible",
-  "Target Port": "Port cible"
+  "Target Port": "Port cible",
+  "Type a command": "Tapez une commande",
+  "Click the start button": "Cliquez sur le bouton Démarrer pour commencer à suivre les journaux",
+  "Start": "Commencer",
+  "Export": "Exporter",
+  "File Name": "Nom de fichier",
+  "File Extension": "Extension de fichier"
 }

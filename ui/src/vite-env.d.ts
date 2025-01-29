@@ -21,8 +21,9 @@ declare module '@tanstack/react-table' {
     itemRank: RankingInfo
   }
   interface ColumnMeta {
-    columnName: string
-    columnGroup: ColumnGroup
+    columnName?: string
+    columnGroup?: ColumnGroup
+    filterPlaceholder?: string
   }
 }
 

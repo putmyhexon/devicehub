@@ -34,5 +34,5 @@ export const ThemeSwitcher = () => {
     changeTheme?.(value as Theme)
   }
 
-  return <BaseSelect options={themeOptions} value={theme} onChange={onSwitcherChange} />
+  return <BaseSelect options={themeOptions} stretched={false} value={theme} onChange={onSwitcherChange} />
 }

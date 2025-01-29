@@ -14,12 +14,13 @@ export class LinkOpenerStore {
   currentBrowserId: string | undefined
 
   constructor(
+    @inject(CONTAINER_IDS.deviceSerial) serial: string,
     @inject(CONTAINER_IDS.deviceControlStore) private deviceControlStore: DeviceControlStore,
     @inject(CONTAINER_IDS.deviceBySerialStore) private deviceBySerialStore: DeviceBySerialStore
   ) {
     makeAutoObservable(this)
     makePersistable(this, {
-      name: 'currentBrowserId',
+      name: `currentBrowserId-${serial}`,
       properties: ['currentBrowserId'],
       storage: window.localStorage,
     }).then(

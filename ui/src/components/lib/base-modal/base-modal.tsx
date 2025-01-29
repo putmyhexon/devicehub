@@ -8,12 +8,13 @@ export type BaseModalProps = {
   isOpen: boolean
   title: string
   icon: ReactNode
+  children?: ReactNode
   description?: string
   actions?: ReactNode
   onClose: () => void
 }
 
-export const BaseModal = ({ isOpen, title, icon, description, onClose, actions }: BaseModalProps) => (
+export const BaseModal = ({ isOpen, title, icon, description, children, onClose, actions }: BaseModalProps) => (
   <ModalRoot activeModal={isOpen ? 'modal-card' : null} usePortal onClose={onClose}>
     <ModalCard
       actions={actions}
@@ -26,6 +27,8 @@ export const BaseModal = ({ isOpen, title, icon, description, onClose, actions }
       size={900}
       title={title}
       onClose={onClose}
-    />
+    >
+      {children}
+    </ModalCard>
   </ModalRoot>
 )

@@ -334,10 +334,17 @@
   "Please type or select value": "Пожалуйста, введите или выберите значение",
   "Show Manifest": "Показать манифест",
   "Hide Manifest": "Скрыть манифест",
+  "PID": "ПИД",
+  "Tag": "Тэг",
   "Stop Automation": "Остановить автоматизацию",
   "Unhealthy": "Нездоровый",
   "Service is currently unavailable": "В данный момент сервис недоступен! \nПопробуйте позже",
   "Device Port": "Порт устройства",
   "Target Host": "Целевой хост",
-  "Target Port": "Целевой порт"
+  "Target Port": "Целевой порт",
+  "Type a command": "Введите команду",
+  "Click the start button": "Нажмите кнопку «Старт», чтобы начать отслеживание логов",
+  "Start": "Начинать",
+  "Export": "Экспорт",
+  "File Extension": "Расширение файла"
 }
