@@ -17,6 +17,7 @@ import type { ScalingService } from '@/services/scaling-service/scaling-service'
 import type { CurrentUserProfileStore } from '@/store/current-user-profile-store'
 import type { KeyboardService } from '@/services/keyboard-service/keyboard-service'
 import type { DeviceScreenStore } from '@/store/device-screen-store/device-screen-store'
+import type { PortForwardingService } from '@/services/port-forwarding-service/port-forwarding-service'
 import type { ApplicationInstallationService } from '@/services/application-installation/application-installation-service'
 
 export const CONTAINER_IDS = {
@@ -37,6 +38,7 @@ export const CONTAINER_IDS = {
   deviceBySerialStore: Symbol.for('DeviceBySerialStore') as interfaces.ServiceIdentifier<DeviceBySerialStore>,
   deviceDisconnection: Symbol.for('DeviceDisconnection') as interfaces.ServiceIdentifier<DeviceDisconnection>,
   factoryMobxMutation: Symbol.for('Factory<MobxMutation>') as interfaces.ServiceIdentifier<MobxMutationFactory>,
+  portForwardingService: Symbol.for('PortForwardingService') as interfaces.ServiceIdentifier<PortForwardingService>,
   factoryTransactionService: Symbol.for(
     'Factory<TransactionService>'
   ) as interfaces.ServiceIdentifier<TransactionFactory>,

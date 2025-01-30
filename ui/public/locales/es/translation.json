@@ -242,7 +242,7 @@
   "Temperature": "Temperatura",
   "Text": "Texto",
   "The current view is marked secure and cannot be viewed remotely.": "La vista actual está marcada como segura y no puede ser vista de forma remota",
-  "The device will be unavailable for a moment.": "El dispositivo no estará disponible durante unos instantes",
+  "The device will be unavailable for a moment": "El dispositivo no estará disponible durante unos instantes",
   "The existing package could not be deleted.": "El paquete no se pudo eliminar",
   "The new package couldn't be installed because the verification did not succeed.": "El nuevo paquete no se pudo instalar porque no se pudo verificar",
   "The new package couldn't be installed because the verification timed out.": "El nuevo paquete no se pudo instalar porque se excedió el tiempo de espera al verificarlo",
@@ -330,5 +330,8 @@
   "Stop Automation": "Detener la automatización",
   "Unhealthy": "Malsano",
   "You (or someone else) kicked the device": "Tú (u otra persona) pateaste el dispositivo",
-  "Service is currently unavailable": "¡El servicio no está disponible actualmente! \nPrueba tu intento más tarde"
+  "Service is currently unavailable": "¡El servicio no está disponible actualmente! \nPrueba tu intento más tarde",
+  "Device Port": "Puerto de dispositivo",
+  "Target Host": "Host de objetivo",
+  "Target Port": "Puerto objetivo"
 }

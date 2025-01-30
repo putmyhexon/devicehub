@@ -290,7 +290,7 @@
   "Text": "Texte",
   "The URI passed in is invalid.": "L'URI transmise n'est pas invalide.",
   "The current view is marked secure and cannot be viewed remotely.": "La vue actuelle est marqué sécurisé et ne peut être consulté à distance.",
-  "The device will be unavailable for a moment.": "Le terminal ne sera pas disponible pour un moment",
+  "The device will be unavailable for a moment": "Le terminal ne sera pas disponible pour un moment",
   "The existing package could not be deleted.": "Le package existant ne peut pas être supprimé.",
   "The new package couldn't be installed because the verification did not succeed.": "Le nouveau paquet n'a pas pu être installé car la vérification n'a pas réussi.",
   "The new package couldn't be installed because the verification timed out.": "Le nouveau paquet n'a pas pu être installé car la vérification a expiré.",
@@ -405,5 +405,8 @@
   "Show Manifest": "Afficher le manifeste",
   "Hide Manifest": "Masquer le manifeste",
   "Unhealthy": "Malsain",
-  "Service is currently unavailable": "Le service est actuellement indisponible ! \nEssayez votre tentative plus tard"
+  "Service is currently unavailable": "Le service est actuellement indisponible ! \nEssayez votre tentative plus tard",
+  "Device Port": "Port de périphérique",
+  "Target Host": "Hôte cible",
+  "Target Port": "Port cible"
 }

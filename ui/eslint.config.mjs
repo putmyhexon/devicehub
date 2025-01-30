@@ -98,7 +98,7 @@ export default tseslint.config(
         {
           html: 'ignore',
           custom: 'enforce',
-          exceptions: ['BaseModal'],
+          exceptions: ['BaseModal', 'PortForwardItem'],
         },
       ],
       'react/jsx-filename-extension': [
@@ -382,7 +382,10 @@ export default tseslint.config(
     },
   },
   {
-    files: ['src/services/touch-service/touch-service.ts'],
+    files: [
+      'src/services/touch-service/touch-service.ts',
+      'src/services/port-forwarding-service/port-forwarding-service.ts',
+    ],
     rules: {
       'fp/no-delete': 'off',
     },

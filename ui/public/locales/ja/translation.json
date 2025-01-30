@@ -278,7 +278,7 @@
   "Take Screenshot": "スクリーンショットを撮る",
   "Temperature": "温度",
   "Text": "テキスト",
-  "The device will be unavailable for a moment.": "しばらく端末が利用できなくなります。",
+  "The device will be unavailable for a moment": "しばらく端末が利用できなくなります。",
   "The existing package could not be deleted.": "既存のパッケージは削除できませんでした。",
   "The URI passed in is invalid.": "渡されたURIは無効です。",
   "TID": "TID",
@@ -363,5 +363,8 @@
   "Hide Manifest": "マニフェストを隠す",
   "Stop Automation": "自動化の停止",
   "Unhealthy": "不健康",
-  "Service is currently unavailable": "現在サービスはご利用いただけません。\n後で試してください"
+  "Service is currently unavailable": "現在サービスはご利用いただけません。\n後で試してください",
+  "Device Port": "デバイスポート",
+  "Target Host": "ターゲットホスト",
+  "Target Port": "ターゲットポート"
 }

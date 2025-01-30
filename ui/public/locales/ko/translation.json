@@ -271,7 +271,7 @@
   "Take Screenshot": "스크린샷 캡처",
   "Temperature": "온도",
   "Text": "텍스트",
-  "The device will be unavailable for a moment.": "이 단말기는 잠시동안 사용 할 수 없습니다.",
+  "The device will be unavailable for a moment": "이 단말기는 잠시동안 사용 할 수 없습니다",
   "The existing package could not be deleted.": "기존 패키지를 삭제 할 수 없습니다.",
   "The new package couldn't be installed because the verification did not succeed.": "검증되지 않은 새로운 패키지는 설치 할 수 없습니다.",
   "The new package couldn't be installed because the verification timed out.": "검증 시간이 초과하여 새로운 패키지를 설치 할 수 없습니다.",
@@ -375,5 +375,8 @@
   "Stop Automation": "자동화 중지",
   "Unhealthy": "위험한",
   "Someone stole your device": "누군가가 귀하의 기기를 훔쳤습니다.",
-  "Service is currently unavailable": "현재 서비스를 이용할 수 없습니다! \n나중에 시도해 보세요."
+  "Service is currently unavailable": "현재 서비스를 이용할 수 없습니다! \n나중에 시도해 보세요.",
+  "Device Port": "장치 포트",
+  "Target Host": "대상 호스트",
+  "Target Port": "대상 포트"
 }

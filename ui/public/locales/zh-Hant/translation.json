@@ -217,7 +217,7 @@
   "Temperature": "溫度",
   "Text": "文字",
   "The current view is marked secure and cannot be viewed remotely.": "目前的畫面已被保護，無法從遠端監看",
-  "The device will be unavailable for a moment.": "此裝置暫時無法使用",
+  "The device will be unavailable for a moment": "此裝置暫時無法使用",
   "The existing package could not be deleted.": "現存的套件無法刪除",
   "The new package couldn't be installed because the verification did not succeed.": "新套件無法安裝，驗證不成功．",
   "The new package couldn't be installed because the verification timed out.": "驗證超時，新套件無法安裝",
@@ -310,5 +310,9 @@
   "Unhealthy": "不良",
   "Device was kicked by automatic timeout": "設備被自動超時踢出",
   "Device is present but offline": "設備存在但離線",
-  "Service is currently unavailable": "目前無法提供服務！\n稍後再嘗試"
+  "Service is currently unavailable": "目前無法提供服務！\n稍後再嘗試",
+  "Port Forwarding": "端口轉發",
+  "Device Port": "設備端口",
+  "Target Host": "目標主機",
+  "Target Port": "目標端口"
 }

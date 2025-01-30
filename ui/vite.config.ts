@@ -12,6 +12,15 @@ export default defineConfig({
   preview: {
     port: 5173,
   },
+  optimizeDeps: {
+    esbuildOptions: {
+      tsconfigRaw: {
+        compilerOptions: {
+          experimentalDecorators: true,
+        },
+      },
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',
