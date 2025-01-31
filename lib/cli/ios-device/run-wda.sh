@@ -60,7 +60,7 @@ gtail -n1 -f /tmp/wdalog.txt | grep -q "ServerURLHere" > /dev/null
 # echo "Found line"
 
 cd "$(git rev-parse --show-toplevel)" || exit
-MONGODB_PORT_27017_TCP=mongodb://10.211.0.2:27017 stf ios-device \
+MONGODB_PORT_27017_TCP=mongodb://devicehub-mongo:27017 stf ios-device \
     --serial "$deviceId" \
     --device-name "$deviceName" \
     --host localhost \

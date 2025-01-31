@@ -95,7 +95,7 @@
     "mime": "1.6.0",
     "minimatch": "3.1.2",
     "mjpeg-consumer": "2.0.0",
-    "mongodb": "6.1.0",
+    "mongodb": "6.13.0",
     "my-local-ip": "1.0.0",
     "ng-context-menu": "https://github.com/swimlane/ng-context-menu#93d825d981dc6f49bcaa861ef5a87fa9d1923f34",
     "ng-epoch": "file:ng-epoch",
