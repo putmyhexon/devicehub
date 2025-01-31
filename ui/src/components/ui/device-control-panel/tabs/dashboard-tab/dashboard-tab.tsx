@@ -1,20 +1,6 @@
-import { useTranslation } from 'react-i18next'
-import {
-  Icon24Upload,
-  Icon20BugOutline,
-  Icon20CopyOutline,
-  Icon20GlobeOutline,
-  Icon20DeleteOutline,
-  Icon28SettingsOutline,
-  Icon28StopwatchOutline,
-  Icon20AddSquareOutline,
-  Icon20ChevronRightOutline,
-  Icon20ClearDataOutline,
-} from '@vkontakte/icons'
 import { observer } from 'mobx-react-lite'
 import { useInjection } from 'inversify-react'
 
-import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
@@ -30,87 +16,24 @@ import { LinkOpenerControl } from './link-opener-control'
 import styles from './dashboard-tab.module.css'
 
 export const DashboardTab = observer(() => {
-  const { t } = useTranslation()
-  const bookingService = useInjection(CONTAINER_IDS.bookingService)
-  const deviceConnection = useInjection(CONTAINER_IDS.deviceConnection)
-  const shellControlStore = useInjection(CONTAINER_IDS.shellControlStore)
   const deviceBySerialStore = useInjection(CONTAINER_IDS.deviceBySerialStore)
-  const applicationInstallationService = useInjection(CONTAINER_IDS.applicationInstallationService)
-  const linkOpenerStore = useInjection(CONTAINER_IDS.linkOpenerStore)
 
   const { data: device } = deviceBySerialStore.deviceQueryResult()
 
   return (
     <div className={styles.dashboardTabContainer}>
       <div className={styles.dashboardTab}>
-        <DeviceControlCard
-          before={<Icon28SettingsOutline height={20} width={20} />}
-          className={styles.deviceButtons}
-          title={t('Device Buttons')}
-        >
-          <DeviceButtonsControl />
-        </DeviceControlCard>
+        <DeviceButtonsControl className={styles.deviceButtons} />
         <ConditionalRender conditions={[!device?.ios]}>
-          <DeviceControlCard
-            afterButtonIcon={<Icon20CopyOutline />}
-            afterTooltipText={t('Copy link')}
-            before={<Icon20BugOutline />}
-            className={styles.remoteDebug}
-            helpTooltipText={t('Run the following on your command line to debug the device from your IDE')}
-            title={t('Remote debug')}
-            onAfterButtonClick={() => navigator.clipboard.writeText(deviceConnection.debugCommand)}
-          >
-            <RemoteDebugControl />
-          </DeviceControlCard>
+          <RemoteDebugControl className={styles.remoteDebug} />
         </ConditionalRender>
-        <DeviceControlCard
-          afterButtonIcon={<Icon20DeleteOutline />}
-          afterTooltipText={t('Clear')}
-          before={<Icon24Upload height={20} width={20} />}
-          className={styles.appUpload}
-          title={t('App Upload')}
-          onAfterButtonClick={() => applicationInstallationService?.clear()}
-        >
-          <AppUploadControl />
-        </DeviceControlCard>
-        <DeviceControlCard
-          afterButtonIcon={<Icon20ClearDataOutline />}
-          afterTooltipText={t('Reset all browser settings')}
-          before={<Icon20GlobeOutline />}
-          className={styles.linkOpener}
-          title={t('Open link or deeplink')}
-          onAfterButtonClick={() => linkOpenerStore?.clearBrowser()}
-        >
-          <LinkOpenerControl />
-        </DeviceControlCard>
+        <AppUploadControl className={styles.appUpload} />
+        <LinkOpenerControl className={styles.linkOpener} />
         <ConditionalRender conditions={[!device?.ios]}>
-          <DeviceControlCard
-            afterButtonIcon={<Icon20DeleteOutline />}
-            afterTooltipText={t('Clear')}
-            before={<Icon20ChevronRightOutline />}
-            className={styles.shell}
-            helpTooltipText={t('Executes remote shell commands')}
-            title={t('Shell')}
-            onAfterButtonClick={() => shellControlStore?.clear()}
-          >
-            <ShellControl />
-          </DeviceControlCard>
+          <ShellControl className={styles.shell} />
         </ConditionalRender>
-        <DeviceControlCard before={<Icon20CopyOutline />} className={styles.clipboard} title={t('Clipboard')}>
-          <ClipboardControl />
-        </DeviceControlCard>
-        <DeviceControlCard
-          afterButtonIcon={<Icon20AddSquareOutline />}
-          afterTooltipText={t('Extend booking')}
-          before={<Icon28StopwatchOutline height={20} width={20} />}
-          className={styles.deviceBooking}
-          title={t('Device booking')}
-          onAfterButtonClick={() => {
-            bookingService?.reBookDevice()
-          }}
-        >
-          <DeviceBookingControl />
-        </DeviceControlCard>
+        <ClipboardControl className={styles.clipboard} />
+        <DeviceBookingControl className={styles.deviceBooking} />
       </div>
     </div>
   )

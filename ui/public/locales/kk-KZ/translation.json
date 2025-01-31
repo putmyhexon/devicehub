@@ -243,7 +243,7 @@
   "Temperature": "Температура",
   "Text": "Мәтін",
   "The current view is marked secure and cannot be viewed remotely.": "Қазіргі көзқарас қауіпсіз деп белгіленген және оған қашықтан қарауға болмайды.",
-  "The device will be unavailable for a moment.": "Құрылғы уақытша қолжетімсіз болады.",
+  "The device will be unavailable for a moment": "Құрылғы уақытша қолжетімсіз болады",
   "The existing package could not be deleted.": "Бар пакетті жою мүмкін емес.",
   "The new package couldn't be installed because the verification did not succeed.": "Жаңа пакет орнатылмайды, себебі тексеру сәтсіз аяқталды.",
   "The new package couldn't be installed because the verification timed out.": "Жаңа пакет орнатылмайды, себебі тексеру уақыт алады.",
@@ -336,5 +336,8 @@
   "Hide Manifest": "Манифестті жасыру",
   "Stop Automation": "Автоматтандыруды тоқтату",
   "Unhealthy": "Дені сау емес",
-  "Service is currently unavailable": "Қызмет қазір қолжетімсіз! \nӘрекетті кейінірек көріңіз"
+  "Service is currently unavailable": "Қызмет қазір қолжетімсіз! \nӘрекетті кейінірек көріңіз",
+  "Device Port": "Құрылғы порты",
+  "Target Host": "Мақсатты хост",
+  "Target Port": "Мақсатты порт"
 }

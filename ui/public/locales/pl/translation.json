@@ -255,5 +255,11 @@
   "Unhealthy": "Niezdrowy",
   "Someone stole your device": "Ktoś ukradł Twoje urządzenie",
   "You (or someone else) kicked the device": "Ty (lub ktoś inny) kopnąłeś urządzenie",
-  "Service is currently unavailable": "Usługa jest chwilowo niedostępna! \nSpróbuj później"
+  "Service is currently unavailable": "Usługa jest chwilowo niedostępna! \nSpróbuj później",
+  "Maintenance": "Konserwacja",
+  "Device Port": "Port urządzenia",
+  "Target Host": "Target host",
+  "Target Port": "Port docelowy",
+  "Restart Device": "Uruchom ponownie urządzenie",
+  "The device will be unavailable for a moment": "Urządzenie będzie na chwilę niedostępne"
 }

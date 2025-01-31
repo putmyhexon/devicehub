@@ -243,7 +243,7 @@
   "Temperature": "Температура",
   "Text": "Текст",
   "The current view is marked secure and cannot be viewed remotely.": "Текущий просмотр отмечен как безопасный и к нему нельзя получить доступ удалённо.",
-  "The device will be unavailable for a moment.": "Устройство будет временно недоступно.",
+  "The device will be unavailable for a moment": "Устройство будет временно недоступно",
   "The existing package could not be deleted.": "Существующий пакет не может быть удалён.",
   "The new package couldn't be installed because the verification did not succeed.": "Пакет не может быть установлен из-за ошибки верификации.",
   "The new package couldn't be installed because the verification timed out.": "Пакет не может быть установлен из-за превышения времени верификации.",
@@ -336,5 +336,8 @@
   "Hide Manifest": "Скрыть манифест",
   "Stop Automation": "Остановить автоматизацию",
   "Unhealthy": "Нездоровый",
-  "Service is currently unavailable": "В данный момент сервис недоступен! \nПопробуйте позже"
+  "Service is currently unavailable": "В данный момент сервис недоступен! \nПопробуйте позже",
+  "Device Port": "Порт устройства",
+  "Target Host": "Целевой хост",
+  "Target Port": "Целевой порт"
 }

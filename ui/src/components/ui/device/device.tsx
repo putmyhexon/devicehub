@@ -6,7 +6,6 @@ import { useInjection } from 'inversify-react'
 
 import { ErrorFallback } from '@/components/lib/error-fallback'
 
-import { deviceErrorModalStore } from '@/store/device-error-modal-store'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import { DeviceTopBar } from './device-top-bar'
@@ -14,16 +13,13 @@ import { DeviceScreen } from './device-screen'
 import { DeviceNavigationButtons } from './device-navigation-buttons'
 
 export const Device = observer(() => {
-  const deviceConnection = useInjection(CONTAINER_IDS.deviceConnection)
-  const deviceBySerialStore = useInjection(CONTAINER_IDS.deviceBySerialStore)
+  const deviceLifecycleService = useInjection(CONTAINER_IDS.deviceLifecycleService)
 
   useEffect(() => {
-    deviceConnection.useDevice()
-    deviceBySerialStore.addDeviceChangeListener()
+    deviceLifecycleService.prepareDevice()
 
     return () => {
-      deviceBySerialStore.removeDeviceChangeListener()
-      deviceErrorModalStore.clearError()
+      deviceLifecycleService.cleanupDevice()
     }
   }, [])
 

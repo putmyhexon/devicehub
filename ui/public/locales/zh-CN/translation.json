@@ -285,7 +285,7 @@
   "Temperature": "温度",
   "Text": "文字",
   "The current view is marked secure and cannot be viewed remotely.": "当前视图有安全标记，并且不能远程查看",
-  "The device will be unavailable for a moment.": "此设备将暂时无法使用",
+  "The device will be unavailable for a moment": "此设备将暂时无法使用",
   "The existing package could not be deleted.": "现有的程序包可能不会被删除",
   "The new package couldn't be installed because the verification did not succeed.": "新包不能安装，因为验证没有成功。",
   "The new package couldn't be installed because the verification timed out.": "新包不能安装，因为验证超时。",
@@ -402,5 +402,8 @@
   "Hide Manifest": "隐藏清单",
   "Stop Automation": "停止自动化",
   "Unhealthy": "不良",
-  "Service is currently unavailable": "目前无法提供服务！\n稍后再尝试"
+  "Service is currently unavailable": "目前无法提供服务！\n稍后再尝试",
+  "Device Port": "设备端口",
+  "Target Host": "目标主机",
+  "Target Port": "目标端口"
 }

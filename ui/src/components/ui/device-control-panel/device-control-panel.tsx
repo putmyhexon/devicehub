@@ -21,6 +21,7 @@ import {
 } from '@/constants/route-paths'
 
 import { DashboardTab } from './tabs/dashboard-tab'
+import { AdvancedTab } from './tabs/advanced-tab'
 
 import styles from './device-control-panel.module.css'
 
@@ -51,7 +52,7 @@ export const DeviceControlPanel = () => {
         title: t('Advanced'),
         before: <Icon20FlashOutline height={17} width={17} />,
         ariaControls: 'tab-content-advanced',
-        content: <Div />,
+        content: <AdvancedTab />,
       },
       {
         id: getControlFileExplorerRoute(serial),

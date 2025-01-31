@@ -243,7 +243,7 @@
   "Temperature": "Температура",
   "Text": "Текст",
   "The current view is marked secure and cannot be viewed remotely.": "Агымдагы карау куркынычсыз дип билгеләнгән һәм аңа ерактан керү мөмкин түгел.",
-  "The device will be unavailable for a moment.": "Җайланма вакытлыча эшләмәячәк.",
+  "The device will be unavailable for a moment": "Җайланма вакытлыча эшләмәячәк",
   "The existing package could not be deleted.": "Булган пакетны бетереп булмый.",
   "The new package couldn't be installed because the verification did not succeed.": "Пакет верификация хатасы аркасында билгеләнә алмый.",
   "The new package couldn't be installed because the verification timed out.": "Пакет верификация вакыты арту сәбәпле куела алмый.",
@@ -336,5 +336,8 @@
   "Hide Manifest": "Манифестны яшер",
   "Stop Automation": "Автоматизацияне туктатыгыз",
   "Unhealthy": "Сәламәт түгел",
-  "Service is currently unavailable": "Хәзерге вакытта хезмәт күрсәтеп булмый! \nСоңрак тырышып карагыз"
+  "Service is currently unavailable": "Хәзерге вакытта хезмәт күрсәтеп булмый! \nСоңрак тырышып карагыз",
+  "Device Port": "Җайланма порт",
+  "Target Host": "Максатлы хуҗа",
+  "Target Port": "Максатлы порт"
 }

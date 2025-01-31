@@ -5,6 +5,7 @@ import { KEYBOARD_KEYS_MAP } from '@/constants/keyboard-keys-map'
 import type { TransactionFactory } from '@/types/transaction-factory.type'
 import type { DeviceBySerialStore } from '@/store/device-by-serial-store'
 import type { TouchDownArgs, TouchMoveArgs, TouchMoveIosArgs } from './types'
+import type { PortForwardEntry } from '@/services/port-forwarding-service/types'
 import type { InitializeTransactionReturn, InstallOptions } from '@/services/core/transaction-service/types'
 
 export class DeviceControlService {
@@ -208,6 +209,28 @@ export class DeviceControlService {
   clearBrowser(browserId?: string): InitializeTransactionReturn {
     return this.sendTwoWay('browser.clear', {
       browser: browserId || null,
+    })
+  }
+
+  testForward({ targetHost, targetPort }: PortForwardEntry): InitializeTransactionReturn {
+    return this.sendTwoWay('forward.test', {
+      targetHost,
+      targetPort,
+    })
+  }
+
+  createForward({ id, devicePort, targetHost, targetPort }: PortForwardEntry): InitializeTransactionReturn {
+    return this.sendTwoWay('forward.create', {
+      id,
+      devicePort,
+      targetHost,
+      targetPort,
+    })
+  }
+
+  removeForward({ id }: PortForwardEntry): InitializeTransactionReturn {
+    return this.sendTwoWay('forward.remove', {
+      id,
     })
   }
 

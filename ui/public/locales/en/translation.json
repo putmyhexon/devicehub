@@ -242,7 +242,7 @@
   "Temperature": "Temperature",
   "Text": "Text",
   "The current view is marked secure and cannot be viewed remotely.": "The current view is marked secure and cannot be viewed remotely.",
-  "The device will be unavailable for a moment.": "The device will be unavailable for a moment.",
+  "The device will be unavailable for a moment": "The device will be unavailable for a moment",
   "The existing package could not be deleted.": "The existing package could not be deleted.",
   "The new package couldn't be installed because the verification did not succeed.": "The new package couldn't be installed because the verification did not succeed.",
   "The new package couldn't be installed because the verification timed out.": "The new package couldn't be installed because the verification timed out.",
@@ -330,5 +330,8 @@
   "Stop Automation": "Stop Automation",
   "Unhealthy": "Unhealthy",
   "You (or someone else) kicked the device": "You (or someone else) kicked the device",
-  "Service is currently unavailable": "Service is currently unavailable! Try your attempt later"
+  "Service is currently unavailable": "Service is currently unavailable! Try your attempt later",
+  "Device Port": "Device Port",
+  "Target Host": "Target Host",
+  "Target Port": "Target Port"
 }
