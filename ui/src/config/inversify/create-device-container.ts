@@ -3,6 +3,7 @@ import { Container } from 'inversify'
 import { BookingService } from '@/services/booking-service'
 import { TouchService } from '@/services/touch-service/touch-service'
 import { ScalingService } from '@/services/scaling-service/scaling-service'
+import { DeviceLifecycleService } from '@/services/device-lifecycle-service'
 import { KeyboardService } from '@/services/keyboard-service/keyboard-service'
 import { PortForwardingService } from '@/services/port-forwarding-service/port-forwarding-service'
 import { ApplicationInstallationService } from '@/services/application-installation/application-installation-service'
@@ -43,6 +44,7 @@ export const createDeviceContainer = (serial: string): Container => {
   deviceContainer.bind(CONTAINER_IDS.deviceControlStore).to(DeviceControlStore)
   deviceContainer.bind(CONTAINER_IDS.deviceBySerialStore).to(DeviceBySerialStore)
   deviceContainer.bind(CONTAINER_IDS.portForwardingService).to(PortForwardingService)
+  deviceContainer.bind(CONTAINER_IDS.deviceLifecycleService).to(DeviceLifecycleService)
   deviceContainer.bind(CONTAINER_IDS.applicationInstallationService).to(ApplicationInstallationService)
 
   return deviceContainer

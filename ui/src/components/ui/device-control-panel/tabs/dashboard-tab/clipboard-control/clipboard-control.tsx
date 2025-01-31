@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
 import { useInjection } from 'inversify-react'
+import { Icon20CopyOutline } from '@vkontakte/icons'
 
 import { OutputField } from '@/components/lib/output-field'
+import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
-export const ClipboardControl = observer(() => {
+export const ClipboardControl = observer(({ className }: { className?: string }) => {
   const { t } = useTranslation()
   const [clipboardContent, setClipboardContent] = useState('')
 
@@ -22,10 +24,12 @@ export const ClipboardControl = observer(() => {
   }
 
   return (
-    <OutputField
-      afterButtonClick={onGetClipboardContent}
-      text={t(clipboardContent)}
-      tooltipText={t('Get clipboard contents')}
-    />
+    <DeviceControlCard before={<Icon20CopyOutline />} className={className} title={t('Clipboard')}>
+      <OutputField
+        afterButtonClick={onGetClipboardContent}
+        text={t(clipboardContent)}
+        tooltipText={t('Get clipboard contents')}
+      />
+    </DeviceControlCard>
   )
 })

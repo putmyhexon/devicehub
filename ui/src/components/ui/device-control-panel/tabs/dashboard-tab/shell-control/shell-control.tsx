@@ -1,8 +1,10 @@
-import { IconButton, Input } from '@vkontakte/vkui'
-import { useInjection } from 'inversify-react'
-import { Icon20Play } from '@vkontakte/icons'
 import { observer } from 'mobx-react-lite'
+import { useInjection } from 'inversify-react'
+import { useTranslation } from 'react-i18next'
+import { IconButton, Input } from '@vkontakte/vkui'
+import { Icon20ChevronRightOutline, Icon20DeleteOutline, Icon20Play } from '@vkontakte/icons'
 
+import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
 import { OutputLogArea } from '@/components/lib/output-log-area'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
@@ -12,7 +14,9 @@ import styles from './shell-control.module.css'
 
 import type { KeyboardEvent } from 'react'
 
-export const ShellControl = observer(() => {
+export const ShellControl = observer(({ className }: { className?: string }) => {
+  const { t } = useTranslation()
+
   const shellControlStore = useInjection(CONTAINER_IDS.shellControlStore)
 
   const onPressEnter = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -22,7 +26,15 @@ export const ShellControl = observer(() => {
   }
 
   return (
-    <>
+    <DeviceControlCard
+      afterButtonIcon={<Icon20DeleteOutline />}
+      afterTooltipText={t('Clear')}
+      before={<Icon20ChevronRightOutline />}
+      className={className}
+      helpTooltipText={t('Executes remote shell commands')}
+      title={t('Shell')}
+      onAfterButtonClick={() => shellControlStore.clear()}
+    >
       <Input
         value={shellControlStore.command}
         after={
@@ -40,6 +52,6 @@ export const ShellControl = observer(() => {
       <ConditionalRender conditions={[!!shellControlStore.shellResult]}>
         <OutputLogArea className={styles.shellResult} text={shellControlStore.shellResult} />
       </ConditionalRender>
-    </>
+    </DeviceControlCard>
   )
 })

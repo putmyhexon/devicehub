@@ -7,8 +7,11 @@ import {
   Icon28ComputerOutline,
   Icon28SmartphoneOutline,
   Icon28ArrowRightOutline,
+  Icon20AddSquareOutline,
+  Icon20ShuffleOutline,
 } from '@vkontakte/icons'
 
+import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
@@ -17,36 +20,45 @@ import { PortForwardItem } from './port-forward-item'
 
 import styles from './port-forwarding-control.module.css'
 
-export const PortForwardingControl = observer(() => {
+export const PortForwardingControl = observer(({ className }: { className?: string }) => {
   const { t } = useTranslation()
 
   const portForwardingService = useInjection(CONTAINER_IDS.portForwardingService)
 
   return (
-    <div className={styles.portForwardingControl}>
-      <Flex align='center' justify='space-around'>
-        <Flex align='center' direction='column' gap='l' justify='center'>
-          <Icon28SmartphoneOutline />
-          <Text>{t('Device')}</Text>
+    <DeviceControlCard
+      afterButtonIcon={<Icon20AddSquareOutline />}
+      afterTooltipText={t('Add')}
+      before={<Icon20ShuffleOutline />}
+      className={className}
+      title={t('Port Forwarding')}
+      onAfterButtonClick={() => portForwardingService.addPortForward()}
+    >
+      <div className={styles.portForwardingControl}>
+        <Flex align='center' justify='space-around'>
+          <Flex align='center' direction='column' gap='l' justify='center'>
+            <Icon28SmartphoneOutline />
+            <Text>{t('Device')}</Text>
+          </Flex>
+          <Icon28ArrowRightOutline />
+          <Flex align='center' direction='column' gap='l' justify='center'>
+            <Icon28ComputerOutline />
+            <Text>{t('Host')}</Text>
+          </Flex>
         </Flex>
-        <Icon28ArrowRightOutline />
-        <Flex align='center' direction='column' gap='l' justify='center'>
-          <Icon28ComputerOutline />
-          <Text>{t('Host')}</Text>
-        </Flex>
-      </Flex>
-      <Spacing />
-      <Separator appearance='primary-alpha' size='4xl' />
-      <FormLayoutGroup mode='vertical'>
-        {portForwardingService.portForwards.map((item) => (
-          <PortForwardItem key={item.id} className={styles.portForwardItem} {...item} />
-        ))}
-      </FormLayoutGroup>
-      <ConditionalRender conditions={[portForwardingService.isPortForwardsEmpty]}>
-        <Placeholder className={styles.placeholder} icon={<Icon28InboxOutline />} noPadding>
-          {t('Empty')}
-        </Placeholder>
-      </ConditionalRender>
-    </div>
+        <Spacing />
+        <Separator appearance='primary-alpha' size='4xl' />
+        <FormLayoutGroup mode='vertical'>
+          {portForwardingService.portForwards.map((item) => (
+            <PortForwardItem key={item.id} className={styles.portForwardItem} {...item} />
+          ))}
+        </FormLayoutGroup>
+        <ConditionalRender conditions={[portForwardingService.isPortForwardsEmpty]}>
+          <Placeholder className={styles.placeholder} icon={<Icon28InboxOutline />} noPadding>
+            {t('Empty')}
+          </Placeholder>
+        </ConditionalRender>
+      </div>
+    </DeviceControlCard>
   )
 })

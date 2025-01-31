@@ -14,6 +14,7 @@ import type { TouchService } from '@/services/touch-service/touch-service'
 import type { TransactionFactory } from '@/types/transaction-factory.type'
 import type { MobxMutationFactory } from '@/types/mobx-mutation-factory.type'
 import type { ScalingService } from '@/services/scaling-service/scaling-service'
+import type { DeviceLifecycleService } from '@/services/device-lifecycle-service'
 import type { CurrentUserProfileStore } from '@/store/current-user-profile-store'
 import type { KeyboardService } from '@/services/keyboard-service/keyboard-service'
 import type { DeviceScreenStore } from '@/store/device-screen-store/device-screen-store'
@@ -39,6 +40,7 @@ export const CONTAINER_IDS = {
   deviceDisconnection: Symbol.for('DeviceDisconnection') as interfaces.ServiceIdentifier<DeviceDisconnection>,
   factoryMobxMutation: Symbol.for('Factory<MobxMutation>') as interfaces.ServiceIdentifier<MobxMutationFactory>,
   portForwardingService: Symbol.for('PortForwardingService') as interfaces.ServiceIdentifier<PortForwardingService>,
+  deviceLifecycleService: Symbol.for('DeviceLifecycleService') as interfaces.ServiceIdentifier<DeviceLifecycleService>,
   factoryTransactionService: Symbol.for(
     'Factory<TransactionService>'
   ) as interfaces.ServiceIdentifier<TransactionFactory>,
