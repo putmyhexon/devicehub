@@ -416,5 +416,7 @@
   "Start": "Commencer",
   "Export": "Exporter",
   "File Name": "Nom de fichier",
-  "File Extension": "Extension de fichier"
+  "File Extension": "Extension de fichier",
+  "JSON file": "Fichier json",
+  "Raw lines": "Lignes brutes"
 }

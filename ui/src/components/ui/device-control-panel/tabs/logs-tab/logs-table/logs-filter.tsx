@@ -23,7 +23,7 @@ const PRIORITY_OPTIONS: SelectOption<LogPriority>[] = [
   { name: 'Fatal', value: LogPriority.FATAL },
 ]
 
-export const Filter = observer(({ column }: { column: Column<LogcatEntryMessage, unknown> }) => {
+export const LogsFilter = observer(({ column }: { column: Column<LogcatEntryMessage, unknown> }) => {
   const columnFilterValue = column.getFilterValue()
   const { filterPlaceholder } = column.columnDef.meta || {}
 

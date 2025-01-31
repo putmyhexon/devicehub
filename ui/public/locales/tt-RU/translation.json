@@ -346,5 +346,7 @@
   "Click the start button": "Бүрәнәләрне күзәтү өчен старт төймәсенә басыгыз",
   "Start": "Башлау",
   "Export": "Экспорт",
-  "File Extension": "Файлны киңәйтү"
+  "File Extension": "Файлны киңәйтү",
+  "JSON file": "Джсон Файл",
+  "Raw lines": "Чимал"
 }

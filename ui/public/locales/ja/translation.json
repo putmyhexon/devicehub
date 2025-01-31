@@ -372,5 +372,7 @@
   "Click the start button": "[スタート]ボタンをクリックして、ログの追跡を開始します",
   "Start": "始める",
   "Export": "輸出",
-  "File Extension": "ファイル拡張子"
+  "File Extension": "ファイル拡張子",
+  "JSON file": "JSONファイル",
+  "Raw lines": "生の線"
 }

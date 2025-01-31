@@ -271,5 +271,7 @@
   "Click the start button": "Kliknij przycisk Start, aby rozpocząć śledzenie dzienników",
   "Start": "Start",
   "Export": "Eksport",
-  "File Extension": "Rozszerzenie pliku"
+  "File Extension": "Rozszerzenie pliku",
+  "JSON file": "Plik JSON",
+  "Raw lines": "Surowe linie"
 }

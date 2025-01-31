@@ -322,5 +322,7 @@
   "Click the start button": "單擊開始按鈕開始跟踪日誌",
   "Start": "開始",
   "Export": "出口",
-  "File Extension": "文件擴展"
+  "File Extension": "文件擴展",
+  "JSON file": "JSON文件",
+  "Raw lines": "原線"
 }

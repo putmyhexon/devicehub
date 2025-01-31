@@ -1,5 +1,6 @@
-import { useTranslation } from 'react-i18next'
+import { useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
+import { useTranslation } from 'react-i18next'
 import { useInjection } from 'inversify-react'
 import { Icon40DownloadCircle } from '@vkontakte/icons'
 import { Button, FormItem, FormLayoutGroup, Input, Spacing } from '@vkontakte/vkui'
@@ -15,13 +16,16 @@ import type { SelectOption } from '@/components/lib/base-select'
 import type { BaseModalProps } from '@/components/lib/base-modal'
 import type { LogsFileExtension } from '@/services/save-logs-service/types'
 
-const FILE_EXTENSION_OPTIONS: SelectOption<LogsFileExtension>[] = [
-  { name: 'JSON', value: 'json' },
-  { name: 'LOG', value: 'log' },
-]
-
 export const SaveLogsModal = observer(({ ...props }: Omit<BaseModalProps, 'title' | 'actions' | 'icon'>) => {
   const { t } = useTranslation()
+
+  const fileExtensionOptions: SelectOption<LogsFileExtension>[] = useMemo(
+    () => [
+      { name: t('JSON file'), value: 'json' },
+      { name: `${t('Raw lines')} (.log)`, value: 'log' },
+    ],
+    [t]
+  )
 
   const saveLogsService = useInjection(CONTAINER_IDS.saveLogsService)
 
@@ -53,7 +57,7 @@ export const SaveLogsModal = observer(({ ...props }: Omit<BaseModalProps, 'title
         </FormItem>
         <FormItem top={t('File Extension')}>
           <BaseSelect
-            options={FILE_EXTENSION_OPTIONS}
+            options={fileExtensionOptions}
             value={saveLogsService.selectedExtension}
             onChange={(value) => {
               saveLogsService.setSelectedExtension(value as LogsFileExtension)

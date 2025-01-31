@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Placeholder } from '@vkontakte/vkui'
 import { useInjection } from 'inversify-react'
@@ -11,49 +11,30 @@ import { ConditionalRender } from '@/components/lib/conditional-render'
 
 import { logsTableState } from '@/store/logs-table-state'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+import { useAutoScroll } from '@/lib/hooks/use-auto-scroll.hook'
 
-import { Filter } from './filter'
+import { LogsFilter } from './logs-filter'
 import { LOGS_COLUMNS } from './columns'
 import { TableRow } from './table-row'
 
 import styles from './logs-table.module.css'
 
-import type { ColumnFiltersState } from '@tanstack/react-table'
-
 export const LogsTable = observer(() => {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const endOfLogsRef = useRef<HTMLTableRowElement>(null)
   const { t } = useTranslation()
 
   const logcatService = useInjection(CONTAINER_IDS.logcatService)
 
-  useEffect(() => {
-    if (!endOfLogsRef.current) return undefined
-
-    const intersectionObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (endOfLogsRef.current && !entry.isIntersecting) {
-          endOfLogsRef.current.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' })
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    intersectionObserver.observe(endOfLogsRef.current)
-
-    return () => {
-      intersectionObserver.disconnect()
-    }
-  }, [])
+  useAutoScroll(endOfLogsRef)
 
   const table = useReactTable({
-    data: logcatService.visibleDeviceLogs,
+    data: logcatService.visibleLogs,
     columns: LOGS_COLUMNS,
     state: {
-      columnFilters,
+      columnFilters: logsTableState.columnFilters,
       globalFilter: logsTableState.globalFilter,
     },
-    onColumnFiltersChange: setColumnFilters,
+    onColumnFiltersChange: logsTableState.setColumnFilters,
     onGlobalFilterChange: logsTableState.setGlobalFilter,
     getFilteredRowModel: getFilteredRowModel(),
     getCoreRowModel: getCoreRowModel(),
@@ -80,7 +61,7 @@ export const LogsTable = observer(() => {
               {headerGroup.headers.map((header) => (
                 <th key={header.id}>
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  {header.column.getCanFilter() ? <Filter column={header.column} /> : null}
+                  {header.column.getCanFilter() ? <LogsFilter column={header.column} /> : null}
                 </th>
               ))}
             </tr>
@@ -93,23 +74,17 @@ export const LogsTable = observer(() => {
           <tr ref={endOfLogsRef} />
         </tbody>
       </table>
-      <ConditionalRender
-        conditions={[logcatService.visibleDeviceLogs.length === 0 && logcatService.isDeviceLogcatStarted]}
-      >
+      <ConditionalRender conditions={[logcatService.isLogsEmpty && logcatService.isLogcatStarted]}>
         <Placeholder className={styles.placeholder} icon={<Icon28HourglassOutline />}>
           {t('Waiting for logs')}
         </Placeholder>
       </ConditionalRender>
-      <ConditionalRender
-        conditions={[logcatService.visibleDeviceLogs.length === 0 && !logcatService.isDeviceLogcatStarted]}
-      >
+      <ConditionalRender conditions={[logcatService.isLogsEmpty && !logcatService.isLogcatStarted]}>
         <Placeholder className={styles.placeholder} icon={<Icon28RectrangleHandPointUp />}>
           {t('Click the start button')}
         </Placeholder>
       </ConditionalRender>
-      <ConditionalRender
-        conditions={[table.getRowModel().rows.length === 0 && logcatService.visibleDeviceLogs.length > 0]}
-      >
+      <ConditionalRender conditions={[!logcatService.isLogsEmpty && table.getRowModel().rows.length === 0]}>
         <Placeholder className={styles.placeholder} icon={<Icon28InboxOutline />}>
           {t('Empty')}
         </Placeholder>

@@ -343,5 +343,7 @@
   "Start": "Comenzar",
   "Export": "Exportar",
   "File Name": "Nombre del archivo",
-  "File Extension": "Extensión de archivo"
+  "File Extension": "Extensión de archivo",
+  "JSON file": "Archivo json",
+  "Raw lines": "Líneas crudas"
 }

@@ -346,5 +346,7 @@
   "Click the start button": "Журналдарды бақылауды бастау үшін Бастау түймесін басыңыз",
   "Start": "Жүргізу",
   "Export": "Сыртқа шығару",
-  "File Extension": "Файл кеңейтімі"
+  "File Extension": "Файл кеңейтімі",
+  "JSON file": "JSON файлы",
+  "Raw lines": "Шикі сызықтар"
 }

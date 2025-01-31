@@ -384,5 +384,7 @@
   "Click the start button": "시작 버튼을 클릭하여 로그 추적을 시작하십시오",
   "Start": "시작",
   "Export": "내보내다",
-  "File Extension": "파일 확장"
+  "File Extension": "파일 확장",
+  "JSON file": "JSON 파일",
+  "Raw lines": "원시 라인"
 }

@@ -63,7 +63,7 @@ export const LOGS_COLUMNS = [
     meta: {
       filterPlaceholder: 'e.g. Error',
     },
-    filterFn: startsWithFilter,
+    filterFn: 'fuzzy',
     cell: ({ getValue }) => getValue(),
   }),
 ]

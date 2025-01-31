@@ -31,7 +31,7 @@ export const LogsTab = observer(() => {
             onChange={(event) => logsTableState.setGlobalFilter(event.target.value)}
           />
           <Flex gap='m' noWrap>
-            <ConditionalRender conditions={[!logcatService.isDeviceLogcatStarted]}>
+            <ConditionalRender conditions={[!logcatService.isLogcatStarted]}>
               <Button
                 appearance='accent-invariable'
                 mode='primary'
@@ -42,7 +42,7 @@ export const LogsTab = observer(() => {
                 {t('Start')}
               </Button>
             </ConditionalRender>
-            <ConditionalRender conditions={[logcatService.isDeviceLogcatStarted]}>
+            <ConditionalRender conditions={[logcatService.isLogcatStarted]}>
               <Button
                 appearance='negative'
                 mode='primary'
@@ -53,16 +53,11 @@ export const LogsTab = observer(() => {
                 {t('Stop')}
               </Button>
             </ConditionalRender>
-            <Button
-              disabled={logcatService.isDeviceLogsEmpty}
-              mode='secondary'
-              size='m'
-              onClick={() => setIsModalOpen(true)}
-            >
+            <Button disabled={logcatService.isLogsEmpty} mode='secondary' size='m' onClick={() => setIsModalOpen(true)}>
               {t('Export')}
             </Button>
             <Button
-              disabled={logcatService.isDeviceLogsEmpty}
+              disabled={logcatService.isLogsEmpty}
               mode='secondary'
               size='m'
               onClick={() => logcatService.clearLogs()}

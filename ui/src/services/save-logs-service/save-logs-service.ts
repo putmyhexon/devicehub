@@ -2,7 +2,6 @@ import { makeAutoObservable } from 'mobx'
 import { inject, injectable } from 'inversify'
 
 import { LogcatService } from '@/services/logcat-service'
-import { LogcatEntryMessage } from '@/types/logcat-entry-message.type'
 
 import { downloadFile } from '@/lib/utils/download-file.util'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
@@ -11,6 +10,7 @@ import { deviceConnectionRequired } from '@/config/inversify/decorators'
 import { LogPriority } from '@/types/enums/log-priority.enum'
 
 import type { LogsFileExtension } from './types'
+import type { LogcatEntryMessage } from '@/types/logcat-entry-message.type'
 
 @injectable()
 @deviceConnectionRequired()

@@ -344,5 +344,7 @@
   "Start": "Start",
   "Export": "Export",
   "File Name": "File Name",
-  "File Extension": "File Extension"
+  "File Extension": "File Extension",
+  "JSON file": "JSON file",
+  "Raw lines": "Raw lines"
 }
