@@ -133,7 +133,7 @@
   "Oops!": "糟糕了！有錯誤發生",
   "Open": "開啟",
   "Orientation": "螢幕方向",
-  "OS": "平台",
+  "OS": "OS平台",
   "Overheat": "過熱",
   "Package": "套件",
   "Password": "密碼",
@@ -324,5 +324,18 @@
   "Export": "出口",
   "File Extension": "文件擴展",
   "JSON file": "JSON文件",
-  "Raw lines": "原線"
+  "Raw lines": "原線",
+  "None": "沒有任何",
+  "Density": "密度",
+  "Encrypted": "加密",
+  "X DPI": "X dpi",
+  "Y DPI": "Y DPI",
+  "Using Fallback": "使用後備",
+  "Roaming": "漫遊",
+  "Number": "數字",
+  "IMSI": "IMSI",
+  "ICCID": "ICCID",
+  "CPU Platform": "CPU平台",
+  "SDK": "SDK",
+  "ABI": "阿比"
 }

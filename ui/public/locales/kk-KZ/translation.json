@@ -348,5 +348,20 @@
   "Export": "Сыртқа шығару",
   "File Extension": "Файл кеңейтімі",
   "JSON file": "JSON файлы",
-  "Raw lines": "Шикі сызықтар"
+  "Raw lines": "Шикі сызықтар",
+  "None": "Ештеме",
+  "FPS": "Фс",
+  "ID": "Куәлік",
+  "Using Fallback": "Қайтару",
+  "Roaming": "Роуминг",
+  "SIM": "Самал",
+  "IMEI": "Име",
+  "IMSI": "Имси",
+  "ICCID": "ICCID",
+  "RAM": "RAM",
+  "ROM": "ROM",
+  "CPU Platform": "CPU платформасы",
+  "OS": "ОС",
+  "SDK": "Sdk",
+  "ABI": "АТИ"
 }

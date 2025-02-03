@@ -1,15 +1,12 @@
-.status {
-  margin-top: 7px;
-  text-align: center;
+.progressBar {
+  position: relative;
 }
 
-.loader {
-  clip-path: inset(0 1.5ch 0 0);
-  animation: l 1.5s steps(4, jump-none) infinite;
-}
+.caption {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
 
-@keyframes l {
-  to {
-    clip-path: inset(0);
-  }
+  color: #fff;
 }

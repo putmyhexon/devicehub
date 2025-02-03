@@ -6,7 +6,7 @@ import { FormStatus, Spacing } from '@vkontakte/vkui'
 import { Icon20DeleteOutline, Icon24Upload } from '@vkontakte/icons'
 
 import { FileInput } from '@/components/lib/file-input'
-import { ProgressBar } from '@/components/lib/progress-bar'
+import { LoadingBar } from '@/components/lib/loading-bar'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
 
@@ -45,7 +45,7 @@ export const AppUploadControl = observer(({ className }: { className?: string })
         </FormStatus>
       </ConditionalRender>
       <ConditionalRender conditions={[applicationInstallationService.isInstalling]}>
-        <ProgressBar status={applicationInstallationService.status} value={applicationInstallationService.progress} />
+        <LoadingBar status={applicationInstallationService.status} value={applicationInstallationService.progress} />
       </ConditionalRender>
       <ConditionalRender conditions={[applicationInstallationService.isInstalled]}>
         <ActivityLauncher />

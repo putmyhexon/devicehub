@@ -10,7 +10,7 @@ import type { DeviceTableColumnIds } from './types'
 import type { ColumnGroup } from '@/types/column-group.type'
 import type { DeviceState } from '@/types/enums/device-state.enum'
 import type { FilterFn, Row, DisplayColumnDef, FilterFnOption, SortingFnOption } from '@tanstack/react-table'
-import type { Device, DeviceBattery, DeviceBrowserAppsItem, DeviceNetwork } from '@/generated/types'
+import type { Device, DeviceBrowserAppsItem, DeviceNetwork } from '@/generated/types'
 
 export const fuzzyFilter: FilterFn<Device> = (row, columnId, value, addMeta): boolean => {
   const itemRank = rankItem(row.getValue(columnId), value, { threshold: 3 })
@@ -80,12 +80,3 @@ export const getNetworkString = (
   networkType: DeviceNetwork['type'],
   networkSubtype: DeviceNetwork['subtype']
 ): string => (networkSubtype ? (networkType + ' (' + networkSubtype + ')').toUpperCase() : networkType || '')
-
-export const getBatteryLevelString = (
-  batteryLevel: DeviceBattery['level'],
-  batteryScale: DeviceBattery['scale']
-): string | null => {
-  if (!batteryLevel || !batteryScale) return null
-
-  return `${Math.floor((batteryLevel / batteryScale) * 100)}%`
-}

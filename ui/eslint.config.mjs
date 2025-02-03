@@ -354,6 +354,10 @@ export default tseslint.config(
       'src/__mocks__/**',
       'src/constants/keyboard-keys-map.ts',
       'src/constants/device-likely-leave-reason-map.ts',
+      'src/constants/network-type-map.ts',
+      'src/constants/network-sub-type-map.ts',
+      'src/constants/battery-health-map.ts',
+      'src/constants/battery-status-map.ts',
     ],
     rules: {
       '@typescript-eslint/naming-convention': 'off',

@@ -9,18 +9,12 @@ import { deviceServiceToString } from '@/lib/utils/device-service-to-string.util
 import { dateToFormattedString } from '@/lib/utils/date-to-formatted-string.util'
 import { getDeviceState } from '@/lib/utils/get-device-state.util'
 import { isDeviceInactive } from '@/lib/utils/is-device-inactive.util'
+import { getBatteryLevel } from '@/lib/utils/get-battery-level.util'
 import { getExpireTime } from '@/lib/utils/get-expire-time.util'
 import { startsWithFilter } from '@/lib/utils/starts-with-filter.util'
 
 import { DeviceStatusCell, BookedBeforeCell, BrowserCell, ProductCell, ModelCell, NotesCell, LinkCell } from './cells'
-import {
-  browserAppsFilter,
-  browserAppsSorting,
-  deviceStatusSorting,
-  getBatteryLevelString,
-  getNetworkString,
-  textColumnDef,
-} from './helpers'
+import { browserAppsFilter, browserAppsSorting, deviceStatusSorting, getNetworkString, textColumnDef } from './helpers'
 import { DeviceTableColumnIds } from './types'
 
 import type { Device } from '@/generated/types'
@@ -236,7 +230,13 @@ export const DEVICE_COLUMNS = [
     })
   ),
   columnHelper.accessor(
-    (row) => getBatteryLevelString(row.battery?.level, row.battery?.scale),
+    (row) => {
+      if (!row.battery?.level || !row.battery?.scale) return null
+
+      const batteryLevel = getBatteryLevel(row.battery.level, row.battery.scale)
+
+      return `${batteryLevel} %`
+    },
     textColumnDef({
       columnId: DeviceTableColumnIds.BATTERY_LEVEL,
       columnName: 'Battery Level',
@@ -245,7 +245,7 @@ export const DEVICE_COLUMNS = [
     })
   ),
   columnHelper.accessor(
-    (row) => row.battery?.temp + '°C',
+    (row) => row.battery?.temp + ' °C',
     textColumnDef({
       columnId: DeviceTableColumnIds.BATTERY_TEMP,
       columnName: 'Battery Temp',

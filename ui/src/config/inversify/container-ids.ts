@@ -1,4 +1,5 @@
 import type { interfaces } from 'inversify'
+import type { InfoService } from '@/services/info-service'
 import type { GroupService } from '@/services/group-service'
 import type { LogcatService } from '@/services/logcat-service'
 import type { DeviceListStore } from '@/store/device-list-store'
@@ -26,6 +27,7 @@ import type { ApplicationInstallationService } from '@/services/application-inst
 
 export const CONTAINER_IDS = {
   deviceSerial: Symbol.for('serial') as interfaces.ServiceIdentifier<string>,
+  infoService: Symbol.for('InfoService') as interfaces.ServiceIdentifier<InfoService>,
   touchService: Symbol.for('TouchService') as interfaces.ServiceIdentifier<TouchService>,
   groupService: Symbol.for('GroupService') as interfaces.ServiceIdentifier<GroupService>,
   logcatService: Symbol.for('LogcatService') as interfaces.ServiceIdentifier<LogcatService>,

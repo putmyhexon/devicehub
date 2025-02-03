@@ -1,5 +1,6 @@
 import { Container } from 'inversify'
 
+import { InfoService } from '@/services/info-service'
 import { LogcatService } from '@/services/logcat-service'
 import { BookingService } from '@/services/booking-service'
 import { TouchService } from '@/services/touch-service/touch-service'
@@ -35,6 +36,7 @@ export const createDeviceContainer = (serial: string): Container => {
 
   deviceContainer.bind<string>(CONTAINER_IDS.deviceSerial).toConstantValue(serial)
 
+  deviceContainer.bind(CONTAINER_IDS.infoService).to(InfoService)
   deviceContainer.bind(CONTAINER_IDS.touchService).to(TouchService)
   deviceContainer.bind(CONTAINER_IDS.logcatService).to(LogcatService)
   deviceContainer.bind(CONTAINER_IDS.scalingService).to(ScalingService)
