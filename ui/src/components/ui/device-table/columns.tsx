@@ -1,14 +1,17 @@
 import { createColumnHelper } from '@tanstack/react-table'
 
+import { TextWithTranslation } from '@/components/lib/text-with-translation'
+
 import { ColumnGroup } from '@/types/column-group.type'
 
-import { capitalizeFirstLetter } from '@/lib/utils/capitalize-first-letter.util'
+import { toSentenceCase } from '@/lib/utils/to-sentence-case.util'
 import { deviceServiceToString } from '@/lib/utils/device-service-to-string.util'
 import { dateToFormattedString } from '@/lib/utils/date-to-formatted-string.util'
 import { getDeviceState } from '@/lib/utils/get-device-state.util'
 import { isDeviceInactive } from '@/lib/utils/is-device-inactive.util'
+import { getExpireTime } from '@/lib/utils/get-expire-time.util'
+import { startsWithFilter } from '@/lib/utils/starts-with-filter.util'
 
-import { HeaderWithTranslation } from './header-with-translation'
 import { DeviceStatusCell, BookedBeforeCell, BrowserCell, ProductCell, ModelCell, NotesCell, LinkCell } from './cells'
 import {
   browserAppsFilter,
@@ -16,7 +19,6 @@ import {
   deviceStatusSorting,
   getBatteryLevelString,
   getNetworkString,
-  startsWithFilter,
   textColumnDef,
 } from './helpers'
 import { DeviceTableColumnIds } from './types'
@@ -28,7 +30,7 @@ const columnHelper = createColumnHelper<Device>()
 export const DEVICE_COLUMNS = [
   /* NOTE: Device Info Group */
   columnHelper.accessor((row) => row.model || row.serial, {
-    header: () => <HeaderWithTranslation name='Model' />,
+    header: () => <TextWithTranslation name='Model' />,
     id: DeviceTableColumnIds.MODEL,
     meta: {
       columnName: 'Model',
@@ -51,7 +53,7 @@ export const DEVICE_COLUMNS = [
     })
   ),
   columnHelper.accessor((row) => row.product || row.model || row.serial, {
-    header: () => <HeaderWithTranslation name='Product' />,
+    header: () => <TextWithTranslation name='Product' />,
     id: DeviceTableColumnIds.PRODUCT,
     meta: {
       columnName: 'Product',
@@ -96,7 +98,7 @@ export const DEVICE_COLUMNS = [
     textColumnDef({ columnId: DeviceTableColumnIds.SCREEN, columnName: 'Screen', columnGroup: ColumnGroup.DEVICE_INFO })
   ),
   columnHelper.accessor((row) => getDeviceState(row), {
-    header: () => <HeaderWithTranslation name='Status' />,
+    header: () => <TextWithTranslation name='Status' />,
     id: DeviceTableColumnIds.STATE,
     meta: {
       columnName: 'Status',
@@ -140,7 +142,7 @@ export const DEVICE_COLUMNS = [
     })
   ),
   columnHelper.accessor((row) => row.browser?.apps, {
-    header: () => <HeaderWithTranslation name='Browser' />,
+    header: () => <TextWithTranslation name='Browser' />,
     id: DeviceTableColumnIds.BROWSER,
     meta: {
       columnName: 'Browser',
@@ -210,7 +212,7 @@ export const DEVICE_COLUMNS = [
   ),
   /* NOTE: Battery Group */
   columnHelper.accessor(
-    (row) => capitalizeFirstLetter(row.battery?.health),
+    (row) => toSentenceCase(row.battery?.health || ''),
     textColumnDef({
       columnId: DeviceTableColumnIds.BATTERY_HEALTH,
       columnName: 'Battery Health',
@@ -226,7 +228,7 @@ export const DEVICE_COLUMNS = [
     })
   ),
   columnHelper.accessor(
-    (row) => capitalizeFirstLetter(row.battery?.status),
+    (row) => toSentenceCase(row.battery?.status || ''),
     textColumnDef({
       columnId: DeviceTableColumnIds.BATTERY_STATUS,
       columnName: 'Battery Status',
@@ -277,7 +279,7 @@ export const DEVICE_COLUMNS = [
   ),
   /* NOTE: Group & User Details Group */
   columnHelper.accessor((row) => row.group?.name, {
-    header: () => <HeaderWithTranslation name='Group Name' />,
+    header: () => <TextWithTranslation name='Group Name' />,
     id: DeviceTableColumnIds.GROUP_NAME,
     meta: {
       columnName: 'Group Name',
@@ -288,7 +290,7 @@ export const DEVICE_COLUMNS = [
     cell: ({ getValue, row }) => <LinkCell text={getValue()} url={row.original.group?.runUrl} />,
   }),
   columnHelper.accessor(
-    (row) => capitalizeFirstLetter(row.group?.class),
+    (row) => toSentenceCase(row.group?.class || ''),
     textColumnDef({
       columnId: DeviceTableColumnIds.GROUP_CLASS,
       columnName: 'Group Class',
@@ -312,7 +314,7 @@ export const DEVICE_COLUMNS = [
     })
   ),
   columnHelper.accessor((row) => row.group?.repetitions, {
-    header: () => <HeaderWithTranslation name='Group Repetitions' />,
+    header: () => <TextWithTranslation name='Group Repetitions' />,
     id: DeviceTableColumnIds.REPETITIONS,
     meta: {
       columnName: 'Group Repetitions',
@@ -323,7 +325,7 @@ export const DEVICE_COLUMNS = [
     cell: ({ getValue }) => getValue(),
   }),
   columnHelper.accessor((row) => row.group?.owner?.name, {
-    header: () => <HeaderWithTranslation name='Group Owner' />,
+    header: () => <TextWithTranslation name='Group Owner' />,
     id: DeviceTableColumnIds.GROUP_OWNER,
     meta: {
       columnName: 'Group Owner',
@@ -346,19 +348,23 @@ export const DEVICE_COLUMNS = [
       columnGroup: ColumnGroup.GROUP_USER_DETAILS,
     })
   ),
-  columnHelper.accessor((row) => row.bookedBefore, {
-    header: () => <HeaderWithTranslation name='Booked before' />,
-    id: DeviceTableColumnIds.BOOKED_BEFORE,
-    meta: {
-      columnName: 'Booked before',
-      columnGroup: ColumnGroup.GROUP_USER_DETAILS,
-    },
-    filterFn: startsWithFilter,
-    sortingFn: 'basic',
-    cell: ({ getValue, row }) => (
-      <BookedBeforeCell bookedBefore={getValue()} statusChangedAt={row.original?.statusChangedAt} />
-    ),
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.statusChangedAt && row.bookedBefore
+        ? dateToFormattedString({ value: getExpireTime(row.statusChangedAt, row.bookedBefore), needTime: true })
+        : undefined,
+    {
+      header: () => <TextWithTranslation name='Booked before' />,
+      id: DeviceTableColumnIds.BOOKED_BEFORE,
+      meta: {
+        columnName: 'Booked before',
+        columnGroup: ColumnGroup.GROUP_USER_DETAILS,
+      },
+      filterFn: startsWithFilter,
+      sortingFn: 'basic',
+      cell: ({ getValue }) => <BookedBeforeCell formattedDate={getValue()} />,
+    }
+  ),
   // TODO: Add released date
   columnHelper.accessor(
     (row) => row.createdAt && dateToFormattedString({ value: row.createdAt }),
@@ -377,7 +383,7 @@ export const DEVICE_COLUMNS = [
     })
   ),
   columnHelper.accessor((row) => row.notes, {
-    header: () => <HeaderWithTranslation name='Notes' />,
+    header: () => <TextWithTranslation name='Notes' />,
     id: DeviceTableColumnIds.NOTES,
     meta: {
       columnName: 'Notes',

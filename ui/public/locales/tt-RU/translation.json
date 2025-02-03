@@ -334,10 +334,19 @@
   "Please type or select value": "Зинһар, кыйммәтне языгыз яки сайлагыз",
   "Show Manifest": "Манифестны күрсәт",
   "Hide Manifest": "Манифестны яшер",
+  "PID": "PID",
+  "Tag": "Тег",
   "Stop Automation": "Автоматизацияне туктатыгыз",
   "Unhealthy": "Сәламәт түгел",
   "Service is currently unavailable": "Хәзерге вакытта хезмәт күрсәтеп булмый! \nСоңрак тырышып карагыз",
   "Device Port": "Җайланма порт",
   "Target Host": "Максатлы хуҗа",
-  "Target Port": "Максатлы порт"
+  "Target Port": "Максатлы порт",
+  "Type a command": "Команда языгыз",
+  "Click the start button": "Бүрәнәләрне күзәтү өчен старт төймәсенә басыгыз",
+  "Start": "Башлау",
+  "Export": "Экспорт",
+  "File Extension": "Файлны киңәйтү",
+  "JSON file": "Джсон Файл",
+  "Raw lines": "Эшкәртелмәгән мәгълүматлар"
 }

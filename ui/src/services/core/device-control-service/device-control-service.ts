@@ -212,6 +212,16 @@ export class DeviceControlService {
     })
   }
 
+  startLogcat(filters: { tag: string; priority: number }): InitializeTransactionReturn {
+    return this.sendTwoWay('logcat.start', {
+      filters,
+    })
+  }
+
+  stopLogcat(): InitializeTransactionReturn {
+    return this.sendTwoWay('logcat.stop')
+  }
+
   testForward({ targetHost, targetPort }: PortForwardEntry): InitializeTransactionReturn {
     return this.sendTwoWay('forward.test', {
       targetHost,

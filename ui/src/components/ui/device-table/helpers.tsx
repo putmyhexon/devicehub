@@ -1,7 +1,10 @@
 import { rankItem } from '@tanstack/match-sorter-utils'
 
+import { TextWithTranslation } from '@/components/lib/text-with-translation'
+
+import { startsWithFilter } from '@/lib/utils/starts-with-filter.util'
+
 import { TextCell } from './cells/text-cell/text-cell'
-import { HeaderWithTranslation } from './header-with-translation'
 
 import type { DeviceTableColumnIds } from './types'
 import type { ColumnGroup } from '@/types/column-group.type'
@@ -17,14 +20,6 @@ export const fuzzyFilter: FilterFn<Device> = (row, columnId, value, addMeta): bo
   })
 
   return itemRank.passed
-}
-
-export const startsWithFilter = <T,>(row: Row<Device>, columnId: string, filterValue: string): boolean => {
-  const value = row.getValue<T>(columnId)
-
-  if (typeof value !== 'string') return false
-
-  return value.toLowerCase().startsWith(filterValue.toLowerCase())
 }
 
 export const browserAppsFilter = (row: Row<Device>, columnId: string, filterValue: string): boolean =>
@@ -70,7 +65,7 @@ export const textColumnDef = ({
   filterFn?: FilterFnOption<Device>
   sortingFn?: SortingFnOption<Device>
 }): DisplayColumnDef<Device, string> => ({
-  header: () => <HeaderWithTranslation name={columnName} />,
+  header: () => <TextWithTranslation name={columnName} />,
   id: columnId,
   meta: {
     columnName,

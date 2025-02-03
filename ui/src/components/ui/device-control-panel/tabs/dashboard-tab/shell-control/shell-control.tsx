@@ -36,6 +36,7 @@ export const ShellControl = observer(({ className }: { className?: string }) => 
       onAfterButtonClick={() => shellControlStore.clear()}
     >
       <Input
+        placeholder={t('Type a command')}
         value={shellControlStore.command}
         after={
           <IconButton

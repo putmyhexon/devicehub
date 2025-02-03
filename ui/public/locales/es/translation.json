@@ -333,5 +333,17 @@
   "Service is currently unavailable": "¡El servicio no está disponible actualmente! \nPrueba tu intento más tarde",
   "Device Port": "Puerto de dispositivo",
   "Target Host": "Host de objetivo",
-  "Target Port": "Puerto objetivo"
+  "Target Port": "Puerto objetivo",
+  "Time": "Tiempo",
+  "TID": "TID",
+  "Save Logs": "Guardar registros",
+  "Device search": "Búsqueda de dispositivos",
+  "Type a command": "Escribe un comando",
+  "Click the start button": "Haga clic en el botón Inicio para comenzar a rastrear los registros",
+  "Start": "Comenzar",
+  "Export": "Exportar",
+  "File Name": "Nombre del archivo",
+  "File Extension": "Extensión de archivo",
+  "JSON file": "Archivo json",
+  "Raw lines": "Líneas crudas"
 }

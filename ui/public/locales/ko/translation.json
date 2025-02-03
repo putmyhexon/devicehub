@@ -372,11 +372,19 @@
   "Please type or select value": "값을 입력하거나 선택하세요.",
   "Show Manifest": "매니페스트 표시",
   "Hide Manifest": "매니페스트 숨기기",
+  "Device search": "장치 검색",
   "Stop Automation": "자동화 중지",
   "Unhealthy": "위험한",
   "Someone stole your device": "누군가가 귀하의 기기를 훔쳤습니다.",
   "Service is currently unavailable": "현재 서비스를 이용할 수 없습니다! \n나중에 시도해 보세요.",
   "Device Port": "장치 포트",
   "Target Host": "대상 호스트",
-  "Target Port": "대상 포트"
+  "Target Port": "대상 포트",
+  "Type a command": "명령을 입력하세요",
+  "Click the start button": "시작 버튼을 클릭하여 로그 추적을 시작하십시오",
+  "Start": "시작",
+  "Export": "내보내다",
+  "File Extension": "파일 확장",
+  "JSON file": "JSON 파일",
+  "Raw lines": "원시 라인"
 }

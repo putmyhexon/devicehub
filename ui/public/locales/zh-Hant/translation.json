@@ -306,6 +306,9 @@
   "Please type or select value": "請輸入或選擇數值",
   "Show Manifest": "顯示清單",
   "Hide Manifest": "隱藏清單",
+  "PID": "PID",
+  "TID": "TID",
+  "Device search": "設備搜尋",
   "Stop Automation": "停止自動化",
   "Unhealthy": "不良",
   "Device was kicked by automatic timeout": "設備被自動超時踢出",
@@ -314,5 +317,12 @@
   "Port Forwarding": "端口轉發",
   "Device Port": "設備端口",
   "Target Host": "目標主機",
-  "Target Port": "目標端口"
+  "Target Port": "目標端口",
+  "Type a command": "輸入命令",
+  "Click the start button": "單擊開始按鈕開始跟踪日誌",
+  "Start": "開始",
+  "Export": "出口",
+  "File Extension": "文件擴展",
+  "JSON file": "JSON文件",
+  "Raw lines": "原線"
 }

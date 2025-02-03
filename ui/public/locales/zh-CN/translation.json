@@ -400,10 +400,18 @@
   "Please type or select value": "请输入或选择值",
   "Show Manifest": "显示清单",
   "Hide Manifest": "隐藏清单",
+  "Device search": "设备搜索",
   "Stop Automation": "停止自动化",
   "Unhealthy": "不良",
   "Service is currently unavailable": "目前无法提供服务！\n稍后再尝试",
   "Device Port": "设备端口",
   "Target Host": "目标主机",
-  "Target Port": "目标端口"
+  "Target Port": "目标端口",
+  "Type a command": "输入命令",
+  "Click the start button": "单击开始按钮开始跟踪日志",
+  "Start": "开始",
+  "Export": "出口",
+  "File Extension": "文件扩展",
+  "JSON file": "JSON文件",
+  "Raw lines": "原线"
 }

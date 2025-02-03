@@ -60,7 +60,13 @@ export const TabsPanel = <T extends boolean = false>({
       </PanelHeader>
       {content.map((tab) => (
         <ConditionalRender key={tab.id} conditions={[tab.id === selectedId]}>
-          <Group aria-controls={tab.ariaControls} aria-labelledby={tab.id} id={tab.ariaControls} role='tabpanel'>
+          <Group
+            aria-controls={tab.ariaControls}
+            aria-labelledby={tab.id}
+            id={tab.ariaControls}
+            role='tabpanel'
+            separator='hide'
+          >
             {tab.content}
           </Group>
         </ConditionalRender>
