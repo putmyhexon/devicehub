@@ -411,6 +411,8 @@
   "Device Port": "Porta de dispositivo",
   "Target Host": "Host alvo",
   "Target Port": "Porta de destino",
+  "None": "Nenhum",
+  "CPU Platform": "Plataforma da CPU",
   "Type a command": "Digite um comando",
   "Click the start button": "Clique no botão Iniciar para começar a rastrear os logs",
   "Start": "Começar",

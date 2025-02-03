@@ -143,6 +143,15 @@ export class DeviceControlService {
     return this.sendTwoWay('connect.start')
   }
 
+  identify(): InitializeTransactionReturn {
+    return this.sendTwoWay('device.identify')
+  }
+
+  getSdStatus(): InitializeTransactionReturn {
+    return this.sendTwoWay('sd.status')
+  }
+
+  finder = this.keyPress('finder')
   home = this.keyPress('home')
   menu = this.keyPress('menu')
   back = this.keyPress('back')

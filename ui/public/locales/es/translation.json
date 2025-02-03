@@ -345,5 +345,20 @@
   "File Name": "Nombre del archivo",
   "File Extension": "Extensión de archivo",
   "JSON file": "Archivo json",
-  "Raw lines": "Líneas crudas"
+  "Raw lines": "Líneas crudas",
+  "Power Source": "Fuente de energía",
+  "None": "Ninguno",
+  "Voltage": "Voltaje",
+  "FPS": "FPS",
+  "X DPI": "X DPI",
+  "Y DPI": "Y DPI",
+  "Using Fallback": "Usando Fallback",
+  "Roaming": "Itinerancia",
+  "Manufacturer": "Fabricante",
+  "Released": "Liberado",
+  "Carrier": "Transportador",
+  "SD Card Mounted": "Tarjeta SD montada",
+  "CPU Platform": "Plataforma de CPU",
+  "OS": "Sistema operativo",
+  "ABI": "Abi"
 }

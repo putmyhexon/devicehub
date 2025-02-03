@@ -23,6 +23,7 @@ import {
 import { DashboardTab } from './tabs/dashboard-tab'
 import { LogsTab } from './tabs/logs-tab'
 import { AdvancedTab } from './tabs/advanced-tab'
+import { InfoTab } from './tabs/info-tab'
 
 import styles from './device-control-panel.module.css'
 
@@ -67,7 +68,7 @@ export const DeviceControlPanel = () => {
         title: t('Info'),
         before: <Icon24InfoCircleOutline height={17} width={17} />,
         ariaControls: 'tab-content-info',
-        content: <Div />,
+        content: <InfoTab />,
       },
     ],
     [t, serial]

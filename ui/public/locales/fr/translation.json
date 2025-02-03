@@ -411,6 +411,8 @@
   "Device Port": "Port de périphérique",
   "Target Host": "Hôte cible",
   "Target Port": "Port cible",
+  "None": "Aucun",
+  "CPU Platform": "Plate-forme CPU",
   "Type a command": "Tapez une commande",
   "Click the start button": "Cliquez sur le bouton Démarrer pour commencer à suivre les journaux",
   "Start": "Commencer",

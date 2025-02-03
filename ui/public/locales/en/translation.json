@@ -346,5 +346,20 @@
   "File Name": "File Name",
   "File Extension": "File Extension",
   "JSON file": "JSON file",
-  "Raw lines": "Raw lines"
+  "Raw lines": "Raw lines",
+  "Power Source": "Power Source",
+  "None": "None",
+  "Voltage": "Voltage",
+  "FPS": "FPS",
+  "X DPI": "X DPI",
+  "Y DPI": "Y DPI",
+  "Using Fallback": "Using Fallback",
+  "Roaming": "Roaming",
+  "Manufacturer": "Manufacturer",
+  "Released": "Released",
+  "Carrier": "Carrier",
+  "SD Card Mounted": "SD Card Mounted",
+  "CPU Platform": "CPU Platform",
+  "OS": "OS",
+  "ABI": "ABI"
 }

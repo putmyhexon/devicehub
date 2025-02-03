@@ -407,6 +407,8 @@
   "Device Port": "设备端口",
   "Target Host": "目标主机",
   "Target Port": "目标端口",
+  "None": "没有任何",
+  "IMSI": "IMSI",
   "Type a command": "输入命令",
   "Click the start button": "单击开始按钮开始跟踪日志",
   "Start": "开始",

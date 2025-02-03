@@ -348,5 +348,20 @@
   "Export": "Экспорт",
   "File Extension": "Файлны киңәйтү",
   "JSON file": "Джсон Файл",
-  "Raw lines": "Эшкәртелмәгән мәгълүматлар"
+  "Raw lines": "Эшкәртелмәгән мәгълүматлар",
+  "None": "Юк",
+  "FPS": "FPS",
+  "ID": "Id",
+  "Using Fallback": "Кирбак куллану",
+  "Roaming": "Роуминг",
+  "SIM": "СИМ",
+  "IMEI": "IMEI",
+  "IMSI": "IMSI",
+  "ICCID": "ICCID",
+  "RAM": "RAM",
+  "ROM": "ROM",
+  "CPU Platform": "CPU платформасы",
+  "OS": "ОС",
+  "SDK": "SDK",
+  "ABI": "ABI"
 }
