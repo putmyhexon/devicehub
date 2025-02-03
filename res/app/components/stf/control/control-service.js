@@ -174,9 +174,6 @@ module.exports = function ControlServiceFactory(
             return sendTwoWay('device.install', options)
         }
 
-        this.installIos = function(options) {
-            return sendTwoWay('deviceIos.install', options)
-        }
 
         this.getTreeElements = function() {
             return sendTwoWay('getTreeElements')
