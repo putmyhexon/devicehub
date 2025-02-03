@@ -49,6 +49,7 @@ services:
             condition: service_started
   devicehub-generate-fake-device:
     image: devicehub:latest
+    build: .
     environment:
         - MONGODB_PORT_27017_TCP=mongodb://mongo1:27017
     container_name: devicehub-generate-fake-device
