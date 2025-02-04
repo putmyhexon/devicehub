@@ -14,6 +14,11 @@ declare module '@tanstack/react-query' {
 }
 
 declare module '@tanstack/react-table' {
+  interface TableOptions<TData extends RowData>
+    extends PartialKeys<TableOptionsResolved<TData>, 'state' | 'onStateChange' | 'renderFallbackValue'> {
+    filterFns?: FilterFns
+  }
+
   interface FilterFns {
     fuzzy: FilterFn<unknown>
   }

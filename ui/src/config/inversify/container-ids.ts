@@ -14,6 +14,7 @@ import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 import type { DeviceBySerialStore } from '@/store/device-by-serial-store'
 import type { TouchService } from '@/services/touch-service/touch-service'
 import type { TransactionFactory } from '@/types/transaction-factory.type'
+import type { FileExplorerService } from '@/services/file-explorer-service'
 import type { MobxMutationFactory } from '@/types/mobx-mutation-factory.type'
 import type { ScalingService } from '@/services/scaling-service/scaling-service'
 import type { DeviceLifecycleService } from '@/services/device-lifecycle-service'
@@ -46,6 +47,7 @@ export const CONTAINER_IDS = {
   logsTrackerService: Symbol.for('LogsTrackerService') as interfaces.ServiceIdentifier<LogsTrackerService>,
   deviceBySerialStore: Symbol.for('DeviceBySerialStore') as interfaces.ServiceIdentifier<DeviceBySerialStore>,
   deviceDisconnection: Symbol.for('DeviceDisconnection') as interfaces.ServiceIdentifier<DeviceDisconnection>,
+  fileExplorerService: Symbol.for('FileExplorerService') as interfaces.ServiceIdentifier<FileExplorerService>,
   factoryMobxMutation: Symbol.for('Factory<MobxMutation>') as interfaces.ServiceIdentifier<MobxMutationFactory>,
   portForwardingService: Symbol.for('PortForwardingService') as interfaces.ServiceIdentifier<PortForwardingService>,
   deviceLifecycleService: Symbol.for('DeviceLifecycleService') as interfaces.ServiceIdentifier<DeviceLifecycleService>,

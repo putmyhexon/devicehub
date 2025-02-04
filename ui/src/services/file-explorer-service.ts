@@ -1,0 +1,118 @@
+import { makeAutoObservable } from 'mobx'
+import { inject, injectable } from 'inversify'
+
+import { FSListMessage } from '@/types/fs-list-message.type'
+
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+import { DeviceControlStore } from '@/store/device-control-store'
+import { deviceConnectionRequired } from '@/config/inversify/decorators'
+
+import { S_IFDIR, S_IFLNK, S_IFMT } from '@/constants/file-bit-masks'
+
+@injectable()
+@deviceConnectionRequired()
+export class FileExplorerService {
+  currentPath = '/'
+  fsList: FSListMessage[] = []
+
+  constructor(@inject(CONTAINER_IDS.deviceControlStore) private deviceControlStore: DeviceControlStore) {
+    makeAutoObservable(this)
+
+    this.listDirectory()
+  }
+
+  get sortedFsList(): FSListMessage[] {
+    return this.fsList.slice().sort((prev, next) => {
+      const isPrevDirectory = this.isDirectory(prev.mode)
+      const isNextDirectory = this.isDirectory(next.mode)
+
+      if (isPrevDirectory !== isNextDirectory) {
+        return isPrevDirectory ? -1 : 1
+      }
+
+      return prev.name.localeCompare(next.name)
+    })
+  }
+
+  get isFsListEmpty(): boolean {
+    return this.fsList.length === 0
+  }
+
+  setCurrentPath(value: string): void {
+    this.currentPath = value
+
+    if (!this.currentPath.startsWith('/')) {
+      this.currentPath = `/${this.currentPath}`
+    }
+  }
+
+  async listDirectory(): Promise<void> {
+    try {
+      this.currentPath = this.currentPath.replace(/\/\/+/g, '/')
+
+      const fsListResult = await this.deviceControlStore.fsList(this.currentPath)
+      const { content } = await fsListResult.donePromise
+
+      if (content) {
+        this.fsList = content
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  enterDirectoryLocation(): void {
+    if (!this.currentPath) return
+
+    if (!this.currentPath.startsWith('/')) {
+      this.currentPath = `/${this.currentPath}`
+    }
+
+    this.listDirectory()
+  }
+
+  addSegment(value: string): void {
+    this.currentPath = `${this.currentPath}/${value}`
+
+    this.listDirectory()
+  }
+
+  async getFile(file: string): Promise<void> {
+    try {
+      const path = `${this.currentPath}/${file}`.replace(/\/\/+/g, '/')
+
+      const fsRetrieveResult = await this.deviceControlStore.fsRetrieve(path)
+      const { content } = await fsRetrieveResult.donePromise
+
+      if (content) {
+        window.open(`${content.href}?download`, '_blank')
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  goHome(): void {
+    this.currentPath = '/'
+
+    this.listDirectory()
+  }
+
+  upDirectory(): void {
+    if (!this.currentPath) return
+
+    const lastSlashIndex = this.currentPath.lastIndexOf('/')
+
+    if (lastSlashIndex !== -1) {
+      this.currentPath = this.currentPath.slice(0, lastSlashIndex)
+    }
+
+    if (this.currentPath === '') this.currentPath = '/'
+
+    this.listDirectory()
+  }
+
+  isDirectory(value: number): boolean {
+    return (value & S_IFMT) === S_IFDIR || (value & S_IFMT) === S_IFLNK
+  }
+}

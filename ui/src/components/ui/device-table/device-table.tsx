@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Placeholder, Skeleton } from '@vkontakte/vkui'
 import { useTranslation } from 'react-i18next'
 import { observer } from 'mobx-react-lite'
@@ -36,7 +36,6 @@ type DeviceTableProps = {
 }
 
 export const DeviceTable = observer(({ data, isSuccess, isLoading, isError }: DeviceTableProps) => {
-  const tableContainerRef = useRef<HTMLDivElement | null>(null)
   const { t } = useTranslation()
   const debouncedGlobalFilter = useDebounce(deviceTableState.globalFilter, 250)
   const tableColumns = useMemo(
@@ -97,7 +96,7 @@ export const DeviceTable = observer(({ data, isSuccess, isLoading, isError }: De
   }, [debouncedGlobalFilter])
 
   return (
-    <div ref={tableContainerRef} className={styles.tableWrapper}>
+    <div className={styles.tableWrapper}>
       <div style={{ height: `${rows.length * ROW_HEIGHT + ROW_HEIGHT}px` }}>
         <table className={styles.table}>
           <thead>

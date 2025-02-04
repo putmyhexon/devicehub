@@ -85,17 +85,19 @@ export class KeyboardService {
     this.deviceControlStore.paste(getClipboardData())
   }
 
-  copyListener({ setClipboardData }: CopyListenerArgs): void {
+  async copyListener({ setClipboardData }: CopyListenerArgs): Promise<void> {
     /* NOTE: This is asynchronous and by the time it returns we will no longer
       have access to setData(). In other words it doesn't work. Currently
       what happens is that on the first copy, it will attempt to fetch
       the clipboard contents. Only on the second copy will it actually
       copy that to the clipboard. 
     */
-    this.deviceControlStore.copy().promise.then((clipboardContent) => {
-      if (clipboardContent && typeof clipboardContent === 'string') {
-        setClipboardData(clipboardContent)
-      }
-    })
+
+    const copyResult = await this.deviceControlStore.copy()
+    const { data } = await copyResult.donePromise
+
+    if (data) {
+      setClipboardData(data)
+    }
   }
 }

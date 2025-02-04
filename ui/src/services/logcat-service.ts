@@ -65,7 +65,8 @@ export class LogcatService {
 
   async stopLogcat(): Promise<void> {
     try {
-      await this.deviceControlStore.stopLogcat().promise
+      const stopLogcatResult = await this.deviceControlStore.stopLogcat()
+      await stopLogcatResult.donePromise
 
       this.logsTrackerService.stopLogcatTracker(this.serial)
     } catch (error) {

@@ -7,16 +7,17 @@ import { generateTransactionSocketChannel } from '@/lib/utils/generate-transacti
 
 import type {
   ProgressFn,
+  TransactionDoneResult,
   InitializeTransactionReturn,
   TransactionDoneListenerMessage,
   TransactionProgressListenerMessage,
 } from './types'
 
 @injectable()
-export class TransactionService {
+export class TransactionService<T = unknown> {
   private channel = ''
   private abortController
-  private promise
+  private donePromise: PromiseWithResolvers<TransactionDoneResult<T>>
   private progressFn: ProgressFn | null = null
   private timeoutId: ReturnType<typeof setTimeout> | undefined = undefined
   private timeoutDelay = 60000
@@ -24,7 +25,7 @@ export class TransactionService {
   constructor() {
     makeAutoObservable(this)
 
-    this.promise = Promise.withResolvers()
+    this.donePromise = Promise.withResolvers()
     this.abortController = new AbortController()
     this.transactionDoneListener = this.transactionDoneListener.bind(this)
     this.transactionProgressListener = this.transactionProgressListener.bind(this)
@@ -42,7 +43,7 @@ export class TransactionService {
     this.channel = generateTransactionSocketChannel()
   }
 
-  initializeTransaction(): InitializeTransactionReturn {
+  initializeTransaction(): InitializeTransactionReturn<T> {
     this.addTransactionAbortListener()
     this.createChannel()
 
@@ -58,7 +59,7 @@ export class TransactionService {
 
     return {
       channel: this.channel,
-      promise: this.promise.promise,
+      donePromise: this.donePromise.promise,
       subscribeToProgress: this.subscribeToProgress.bind(this),
       abort: (reason) => this.abortController.abort(reason),
     }
@@ -79,7 +80,7 @@ export class TransactionService {
       'abort',
       () => {
         this.cleanUpTransaction()
-        this.promise.reject(new Error('Transaction aborted', { cause: this.abortController.signal.reason }))
+        this.donePromise.reject(new Error('Transaction aborted', { cause: this.abortController.signal.reason }))
       },
       { once: true }
     )
@@ -91,19 +92,21 @@ export class TransactionService {
     this.progressFn?.(message.progress, message.data)
   }
 
-  private transactionDoneListener(incomingChannel: string, message: TransactionDoneListenerMessage): void {
+  private transactionDoneListener(
+    incomingChannel: string,
+    { success, body, data }: TransactionDoneListenerMessage
+  ): void {
     if (incomingChannel !== this.channel) return
 
-    if (message.success && message.data) {
-      this.promise.resolve(message.data)
+    if (success) {
+      this.donePromise.resolve({
+        data,
+        content: body && JSON.parse(body),
+      })
     }
 
-    if (message.success && !message.data) {
-      this.promise.resolve(true)
-    }
-
-    if (!message.success) {
-      this.promise.reject(new Error('Failed to complete transaction', { cause: message.data }))
+    if (!success) {
+      this.donePromise.reject(new Error('Failed to complete transaction', { cause: data }))
     }
 
     this.cleanUpTransaction()

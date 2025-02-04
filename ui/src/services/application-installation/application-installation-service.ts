@@ -208,7 +208,7 @@ export class ApplicationInstallationService {
     const manifestResponse = await this.manifestQuery.fetch()
 
     if (manifestResponse.success) {
-      const install = this.deviceControlStore.install({
+      const install = await this.deviceControlStore.install({
         href: this.href,
         manifest: manifestResponse.manifest,
         launch: true,
@@ -249,7 +249,7 @@ export class ApplicationInstallationService {
         }
       })
 
-      install.promise.then((message) => {
+      install.donePromise.then((message) => {
         if (typeof message === 'string') {
           this.status = message
         }
@@ -268,7 +268,10 @@ export class ApplicationInstallationService {
   }
 
   async uninstall(packageName: string): Promise<void> {
-    await this.deviceControlStore.uninstall(packageName).promise
+    const uninstallResult = await this.deviceControlStore.uninstall(packageName)
+    await uninstallResult.donePromise
+
+    await this.deviceControlStore.uninstall(packageName)
 
     this.clear()
   }

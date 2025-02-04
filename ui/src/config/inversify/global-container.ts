@@ -41,4 +41,8 @@ globalContainer
   )
 globalContainer
   .bind<interfaces.Factory<TransactionService>>(CONTAINER_IDS.factoryTransactionService)
-  .toFactory<TransactionService>(() => (): TransactionService => new TransactionService())
+  .toFactory<TransactionService>(
+    () =>
+      <T = unknown>(): TransactionService<T> =>
+        new TransactionService()
+  )

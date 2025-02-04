@@ -1,8 +1,8 @@
 import type { Manifest } from '@/types/manifest.type'
 
 export type TransactionDoneListenerMessage = {
-  body: unknown | null
-  data: string
+  body: string | null
+  data: string | null
   seq: number
   source: string
   success: boolean
@@ -17,9 +17,14 @@ export type TransactionProgressListenerMessage = {
 
 export type ProgressFn = (progress: number, data: string) => void
 
-export type InitializeTransactionReturn = {
+export type TransactionDoneResult<T = unknown> = {
+  data: TransactionDoneListenerMessage['data']
+  content: T | null
+}
+
+export type InitializeTransactionReturn<T = unknown> = {
   channel: string
-  promise: Promise<unknown>
+  donePromise: Promise<TransactionDoneResult<T>>
   abort: (reason?: string) => void
   subscribeToProgress: (progressFn: ProgressFn) => () => void
 }

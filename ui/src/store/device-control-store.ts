@@ -31,11 +31,10 @@ export class DeviceControlStore extends DeviceControlService {
 
   async getClipboardContent(): Promise<string> {
     try {
-      const data = await this.copy().promise
+      const copyResult = await this.copy()
+      const { data } = await copyResult.donePromise
 
-      if (typeof data === 'string') {
-        return data
-      }
+      if (data) return data
 
       return 'No clipboard data'
     } catch (error) {

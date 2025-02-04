@@ -31,8 +31,10 @@ export class DeviceConnection {
     if (!device?.channel) return
 
     try {
-      this.deviceControlStore.startRemoteConnect().promise.then((connectToDeviceData) => {
-        const debugCommand = `adb connect ${connectToDeviceData}`
+      const startRemoteConnectResult = await this.deviceControlStore.startRemoteConnect()
+
+      startRemoteConnectResult.donePromise.then(({ data }) => {
+        const debugCommand = `adb connect ${data}`
 
         this.debugCommand = debugCommand
 

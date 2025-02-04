@@ -363,5 +363,7 @@
   "CPU Platform": "CPU платформасы",
   "OS": "ОС",
   "SDK": "Sdk",
-  "ABI": "АТИ"
+  "ABI": "АТИ",
+  "Date": "Дата",
+  "Permissions": "Рұқсаттар"
 }

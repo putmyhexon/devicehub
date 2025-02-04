@@ -2,6 +2,7 @@ import { socket } from '@/api/socket'
 
 import { KEYBOARD_KEYS_MAP } from '@/constants/keyboard-keys-map'
 
+import type { FSListMessage } from '@/types/fs-list-message.type'
 import type { TransactionFactory } from '@/types/transaction-factory.type'
 import type { DeviceBySerialStore } from '@/store/device-by-serial-store'
 import type { TouchDownArgs, TouchMoveArgs, TouchMoveIosArgs } from './types'
@@ -96,7 +97,7 @@ export class DeviceControlService {
     })
   }
 
-  copy(): InitializeTransactionReturn {
+  copy(): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('clipboard.copy')
   }
 
@@ -121,33 +122,45 @@ export class DeviceControlService {
     })
   }
 
-  install(options: InstallOptions): InitializeTransactionReturn {
+  fsRetrieve(file: string): Promise<InitializeTransactionReturn<{ href: string }>> {
+    return this.sendTwoWay('fs.retrieve', {
+      file,
+    })
+  }
+
+  fsList(dir: string): Promise<InitializeTransactionReturn<FSListMessage[]>> {
+    return this.sendTwoWay('fs.list', {
+      dir,
+    })
+  }
+
+  install(options: InstallOptions): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('device.install', options)
   }
 
-  installIos(options: InstallOptions): InitializeTransactionReturn {
+  installIos(options: InstallOptions): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('deviceIos.install', options)
   }
 
-  uninstall(packageName: string): InitializeTransactionReturn {
+  uninstall(packageName: string): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('device.uninstall', {
       packageName,
     })
   }
 
-  reboot(): InitializeTransactionReturn {
+  reboot(): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('device.reboot')
   }
 
-  startRemoteConnect(): InitializeTransactionReturn {
+  startRemoteConnect(): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('connect.start')
   }
 
-  identify(): InitializeTransactionReturn {
+  identify(): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('device.identify')
   }
 
-  getSdStatus(): InitializeTransactionReturn {
+  getSdStatus(): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('sd.status')
   }
 
@@ -171,8 +184,11 @@ export class DeviceControlService {
   mediaFastForward = this.keyPress('media_fast_forward')
 
   async unlockDevice(): Promise<void> {
-    await this.shell('input text 1452').promise
-    await this.shell('input keyevent 66').promise
+    const inputTextPromise = await this.shell('input text 1452')
+    const inputKeyEventPromise = await this.shell('input keyevent 66')
+
+    await inputTextPromise.donePromise
+    await inputKeyEventPromise.donePromise
   }
 
   setLightTheme(): void {
@@ -208,37 +224,37 @@ export class DeviceControlService {
     this.shell(`settings put system font_scale ${value}`)
   }
 
-  openBrowser(url: string, browserId?: string): InitializeTransactionReturn {
+  openBrowser(url: string, browserId?: string): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('browser.open', {
       url,
       browser: browserId || null,
     })
   }
 
-  clearBrowser(browserId?: string): InitializeTransactionReturn {
+  clearBrowser(browserId?: string): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('browser.clear', {
       browser: browserId || null,
     })
   }
 
-  startLogcat(filters: { tag: string; priority: number }): InitializeTransactionReturn {
+  startLogcat(filters: { tag: string; priority: number }): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('logcat.start', {
       filters,
     })
   }
 
-  stopLogcat(): InitializeTransactionReturn {
+  stopLogcat(): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('logcat.stop')
   }
 
-  testForward({ targetHost, targetPort }: PortForwardEntry): InitializeTransactionReturn {
+  testForward({ targetHost, targetPort }: PortForwardEntry): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('forward.test', {
       targetHost,
       targetPort,
     })
   }
 
-  createForward({ id, devicePort, targetHost, targetPort }: PortForwardEntry): InitializeTransactionReturn {
+  createForward({ id, devicePort, targetHost, targetPort }: PortForwardEntry): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('forward.create', {
       id,
       devicePort,
@@ -247,13 +263,13 @@ export class DeviceControlService {
     })
   }
 
-  removeForward({ id }: PortForwardEntry): InitializeTransactionReturn {
+  removeForward({ id }: PortForwardEntry): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('forward.remove', {
       id,
     })
   }
 
-  shell(command: string): InitializeTransactionReturn {
+  shell(command: string): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('shell.command', {
       command,
       timeout: 10000,
@@ -266,11 +282,11 @@ export class DeviceControlService {
     socket.emit(action, device?.channel, data)
   }
 
-  private sendTwoWay<T>(action: string, data?: T): InitializeTransactionReturn {
-    const transaction = this.transactionServiceFactory()
+  private async sendTwoWay<T, R>(action: string, data?: T): Promise<InitializeTransactionReturn<R>> {
+    const transaction = this.transactionServiceFactory<R>()
     const initializeTransaction = transaction.initializeTransaction()
 
-    const { data: device } = this.deviceBySerialStore.deviceQueryResult()
+    const device = await this.deviceBySerialStore.fetch()
 
     const platformSpecificAction = device?.ios ? `${action}Ios` : action
 
