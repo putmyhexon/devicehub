@@ -21,6 +21,14 @@ services:
         restart: unless-stopped
         networks:
             devicehub:
+    adbd:
+        container_name: adbd
+        image: 'devicefarmer/adb:latest'
+        restart: unless-stopped
+        network_mode: host
+        volumes:
+            - /dev/bus/usb:/dev/bus/usb
+        privileged: true
     devicehub-mongo:
         image: mongo:7.0
         hostname: devicehub-mongo
@@ -225,6 +233,16 @@ services:
         restart: unless-stopped
         networks:
             devicehub:
+    devicehub-provider:
+        build: .
+        image: vkcom/devicehub
+        container_name: devicehub-provider
+        depends_on:
+            devicehub-migrate:
+                condition: service_completed_successfully
+        restart: unless-stopped
+        network_mode: host
+        command: stf provider --name devicehub-provider --adb-host adbd --no-cleanup --connect-sub tcp://devicehub-triproxy-dev:7250 --connect-push tcp://devicehub-triproxy-dev:7270 --storage-url ${STF_URL}/ --public-ip ${STF_URL} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern wss://${STF_URL}/devicehub-provider/<%= serial %>/<%=publicPort %>/
 
 volumes:
     devicehub-db-volume:
