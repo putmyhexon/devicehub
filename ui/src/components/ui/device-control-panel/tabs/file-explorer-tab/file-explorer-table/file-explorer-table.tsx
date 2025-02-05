@@ -1,8 +1,9 @@
+import { useMemo } from 'react'
+import cn from 'classnames'
 import { observer } from 'mobx-react-lite'
 import { useInjection } from 'inversify-react'
-import { Placeholder } from '@vkontakte/vkui'
 import { useTranslation } from 'react-i18next'
-import { Icon28InboxOutline } from '@vkontakte/icons'
+import { Placeholder, Skeleton } from '@vkontakte/vkui'
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 
 import { ConditionalRender } from '@/components/lib/conditional-render'
@@ -14,14 +15,31 @@ import { FILE_EXPLORER_COLUMNS } from './columns'
 
 import styles from './file-explorer-table.module.css'
 
+import type { FSListMessage } from '@/types/fs-list-message.type'
+
 export const FileExplorerTable = observer(() => {
   const { t } = useTranslation()
 
   const fileExplorerService = useInjection(CONTAINER_IDS.fileExplorerService)
 
+  const displayData = useMemo<FSListMessage[]>(
+    () => (fileExplorerService.isDirectoryLoading ? Array(10).fill({}) : fileExplorerService.sortedFsList),
+    [fileExplorerService.isDirectoryLoading, fileExplorerService.sortedFsList]
+  )
+  const tableColumns = useMemo(
+    () =>
+      fileExplorerService.isDirectoryLoading
+        ? FILE_EXPLORER_COLUMNS.map((column) => ({
+            ...column,
+            cell: () => <Skeleton height='100%' width='100%' />,
+          }))
+        : FILE_EXPLORER_COLUMNS,
+    [fileExplorerService.isDirectoryLoading, fileExplorerService.sortedFsList]
+  )
+
   const table = useReactTable({
-    data: fileExplorerService.sortedFsList,
-    columns: FILE_EXPLORER_COLUMNS,
+    data: displayData,
+    columns: tableColumns,
     getCoreRowModel: getCoreRowModel(),
   })
 
@@ -45,16 +63,14 @@ export const FileExplorerTable = observer(() => {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody className={cn({ [styles.stripedRows]: !fileExplorerService.isDirectoryLoading })}>
           {table.getRowModel().rows.map((row) => (
             <TableRow key={row.id} row={row} />
           ))}
         </tbody>
       </table>
-      <ConditionalRender conditions={[fileExplorerService.isFsListEmpty]}>
-        <Placeholder className={styles.placeholder} icon={<Icon28InboxOutline />}>
-          {t('Empty')}
-        </Placeholder>
+      <ConditionalRender conditions={[fileExplorerService.isFsListEmpty && !fileExplorerService.isDirectoryLoading]}>
+        <Placeholder className={styles.placeholder}>{t('Empty')}</Placeholder>
       </ConditionalRender>
     </div>
   )

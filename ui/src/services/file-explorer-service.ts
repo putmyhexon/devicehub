@@ -14,6 +14,7 @@ import { S_IFDIR, S_IFLNK, S_IFMT } from '@/constants/file-bit-masks'
 export class FileExplorerService {
   currentPath = '/'
   fsList: FSListMessage[] = []
+  isDirectoryLoading = true
 
   constructor(@inject(CONTAINER_IDS.deviceControlStore) private deviceControlStore: DeviceControlStore) {
     makeAutoObservable(this)
@@ -90,6 +91,8 @@ export class FileExplorerService {
       this.currentPath = this.currentPath.slice(0, lastSlashIndex)
     }
 
+    if (this.currentPath === '') this.currentPath = '/'
+
     this.listDirectory()
   }
 
@@ -108,6 +111,7 @@ export class FileExplorerService {
 
       if (content) {
         this.fsList = content
+        this.isDirectoryLoading = false
       }
     } catch (error) {
       console.error(error)

@@ -9,15 +9,15 @@ import { FileExplorerTable } from './file-explorer-table'
 
 import styles from './file-explorer-tab.module.css'
 
-import type { KeyboardEvent } from 'react'
+import type { FormEvent } from 'react'
 
 export const FileExplorerTab = observer(() => {
   const fileExplorerService = useInjection(CONTAINER_IDS.fileExplorerService)
 
-  const onPressEnter = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      fileExplorerService.enterDirectoryLocation()
-    }
+  const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    fileExplorerService.enterDirectoryLocation()
   }
 
   return (
@@ -38,22 +38,18 @@ export const FileExplorerTab = observer(() => {
               onClick={() => fileExplorerService.upDirectory()}
             />
           </Flex>
-          <Input
-            beforeAlign='end'
-            className={styles.input}
-            value={fileExplorerService.currentPath}
-            after={
-              <IconButton
-                hoverMode='opacity'
-                label='list directory'
-                onClick={() => fileExplorerService.enterDirectoryLocation()}
-              >
-                <Icon24ChevronCompactRight />
-              </IconButton>
-            }
-            onChange={(event) => fileExplorerService.setCurrentPath(event.target.value)}
-            onKeyDown={onPressEnter}
-          />
+          <form className={styles.form} onSubmit={onFormSubmit}>
+            <Input
+              beforeAlign='end'
+              value={fileExplorerService.currentPath}
+              after={
+                <IconButton hoverMode='opacity' label='list directory' type='submit'>
+                  <Icon24ChevronCompactRight />
+                </IconButton>
+              }
+              onChange={(event) => fileExplorerService.setCurrentPath(event.target.value)}
+            />
+          </form>
         </Flex>
         <FileExplorerTable />
       </Div>

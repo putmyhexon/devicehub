@@ -24,11 +24,14 @@
     background-color: var(--table-header-background);
   }
 
-  tr:nth-child(even) {
-    background-color: var(--table-row-color);
+  .stripedRows {
+    tr:nth-child(even) {
+      background-color: var(--table-row-color);
+    }
   }
 
   td {
+    height: 38px;
     font-size: var(--vkui--font_caption1--font_size--regular);
     line-height: var(--vkui--font_caption1--line_height--regular);
   }

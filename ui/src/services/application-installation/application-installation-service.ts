@@ -271,8 +271,6 @@ export class ApplicationInstallationService {
     const uninstallResult = await this.deviceControlStore.uninstall(packageName)
     await uninstallResult.donePromise
 
-    await this.deviceControlStore.uninstall(packageName)
-
     this.clear()
   }
 }
