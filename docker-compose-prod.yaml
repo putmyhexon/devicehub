@@ -128,7 +128,7 @@ services:
         container_name: devicehub-storage-plugin-apk
         env_file:
             - scripts/variables.env
-        command: stf storage-plugin-apk --port 3000 --storage-url ${STF_URL}/ --secret=${STF_SECRET}
+        command: stf storage-plugin-apk --port 3000 --storage-url http://devicehub-storage-temp/ --secret=${STF_SECRET}
         depends_on:
             devicehub-migrate:
                 condition: service_completed_successfully
@@ -154,7 +154,7 @@ services:
         container_name: devicehub-storage-temp
         env_file:
             - scripts/variables.env
-        command: stf storage-temp --port 3000 --save-dir /data --connect-sub tcp://devicehub-triproxy-app:7150 --connect-push tcp://devicehub-triproxy-app:7170 --secret=${STF_SECRET}
+        command: stf storage-temp --port 3000 --save-dir /tmp --connect-sub tcp://devicehub-triproxy-app:7150 --connect-push tcp://devicehub-triproxy-app:7170 --secret=${STF_SECRET}
         depends_on:
             devicehub-migrate:
                 condition: service_completed_successfully
