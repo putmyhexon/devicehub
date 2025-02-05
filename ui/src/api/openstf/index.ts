@@ -32,3 +32,9 @@ export const getManifest = async (href: string): Promise<GetManifestResponse> =>
 
   return data
 }
+
+export const downloadFile = async (href: string): Promise<Blob> => {
+  const { data } = await openstfClient.get<Blob>(`${href}?download`, { responseType: 'blob' })
+
+  return data
+}

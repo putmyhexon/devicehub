@@ -29,6 +29,11 @@ export const SaveLogsModal = observer(({ ...props }: Omit<BaseModalProps, 'title
 
   const saveLogsService = useInjection(CONTAINER_IDS.saveLogsService)
 
+  const onSaveLogs = () => {
+    saveLogsService.saveLogs()
+    props.onClose()
+  }
+
   return (
     <BaseModal
       {...props}
@@ -40,7 +45,7 @@ export const SaveLogsModal = observer(({ ...props }: Omit<BaseModalProps, 'title
           disabled={!saveLogsService.logsFileName}
           mode='primary'
           size='l'
-          onClick={() => saveLogsService.saveLogs()}
+          onClick={onSaveLogs}
         >
           {t('Export')}
         </Button>

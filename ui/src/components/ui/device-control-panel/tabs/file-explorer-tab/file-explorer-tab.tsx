@@ -40,7 +40,6 @@ export const FileExplorerTab = observer(() => {
           </Flex>
           <form className={styles.form} onSubmit={onFormSubmit}>
             <Input
-              beforeAlign='end'
               value={fileExplorerService.currentPath}
               after={
                 <IconButton hoverMode='opacity' label='list directory' type='submit'>

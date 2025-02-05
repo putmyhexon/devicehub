@@ -1,8 +1,10 @@
 import { makeAutoObservable } from 'mobx'
 import { inject, injectable } from 'inversify'
 
+import { downloadFile } from '@/api/openstf'
 import { FSListMessage } from '@/types/fs-list-message.type'
 
+import { saveFile } from '@/lib/utils/save-file.util'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { DeviceControlStore } from '@/store/device-control-store'
 import { deviceConnectionRequired } from '@/config/inversify/decorators'
@@ -61,16 +63,18 @@ export class FileExplorerService {
     this.listDirectory()
   }
 
-  async getFile(file: string): Promise<void> {
+  async getFile(fileName: string): Promise<void> {
     try {
-      const path = this.appendPathSegment(file)
+      const path = this.appendPathSegment(fileName)
 
       const fsRetrieveResult = await this.deviceControlStore.fsRetrieve(path)
       const { content } = await fsRetrieveResult.donePromise
 
-      if (content) {
-        window.open(`${content.href}?download`, '_blank')
-      }
+      if (!content) return
+
+      const blob = await downloadFile(content.href)
+
+      saveFile(blob, fileName)
     } catch (error) {
       console.error(error)
     }

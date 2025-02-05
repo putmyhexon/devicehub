@@ -3,7 +3,7 @@ import { inject, injectable } from 'inversify'
 
 import { LogcatService } from '@/services/logcat-service'
 
-import { downloadFile } from '@/lib/utils/download-file.util'
+import { saveFile } from '@/lib/utils/save-file.util'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { DeviceBySerialStore } from '@/store/device-by-serial-store'
 import { deviceConnectionRequired } from '@/config/inversify/decorators'
@@ -49,12 +49,12 @@ export class SaveLogsService {
     const blob = new Blob([parsedLogs], { type: mimeType })
 
     if (this.logsFileName) {
-      downloadFile(blob, `${this.logsFileName}.${this.selectedExtension}`)
+      saveFile(blob, `${this.logsFileName}.${this.selectedExtension}`)
 
       return
     }
 
-    downloadFile(blob, `${this.serial}_logs.${this.selectedExtension}`)
+    saveFile(blob, `${this.serial}_logs.${this.selectedExtension}`)
   }
 
   private parseLogsToDefinedExtension(
