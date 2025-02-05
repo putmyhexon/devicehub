@@ -46,40 +46,23 @@ export class FileExplorerService {
     }
   }
 
-  async listDirectory(): Promise<void> {
-    try {
-      this.currentPath = this.currentPath.replace(/\/\/+/g, '/')
-
-      const fsListResult = await this.deviceControlStore.fsList(this.currentPath)
-      const { content } = await fsListResult.donePromise
-
-      if (content) {
-        this.fsList = content
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   enterDirectoryLocation(): void {
     if (!this.currentPath) return
 
-    if (!this.currentPath.startsWith('/')) {
-      this.currentPath = `/${this.currentPath}`
-    }
+    this.currentPath = this.currentPath.replace(/\/\/+/g, '/')
 
     this.listDirectory()
   }
 
   addSegment(value: string): void {
-    this.currentPath = `${this.currentPath}/${value}`
+    this.currentPath = this.appendPathSegment(value)
 
     this.listDirectory()
   }
 
   async getFile(file: string): Promise<void> {
     try {
-      const path = `${this.currentPath}/${file}`.replace(/\/\/+/g, '/')
+      const path = this.appendPathSegment(file)
 
       const fsRetrieveResult = await this.deviceControlStore.fsRetrieve(path)
       const { content } = await fsRetrieveResult.donePromise
@@ -107,12 +90,27 @@ export class FileExplorerService {
       this.currentPath = this.currentPath.slice(0, lastSlashIndex)
     }
 
-    if (this.currentPath === '') this.currentPath = '/'
-
     this.listDirectory()
   }
 
   isDirectory(value: number): boolean {
     return (value & S_IFMT) === S_IFDIR || (value & S_IFMT) === S_IFLNK
+  }
+
+  private appendPathSegment(segment: string): string {
+    return this.currentPath === '/' ? `/${segment}` : `${this.currentPath}/${segment}`
+  }
+
+  private async listDirectory(): Promise<void> {
+    try {
+      const fsListResult = await this.deviceControlStore.fsList(this.currentPath)
+      const { content } = await fsListResult.donePromise
+
+      if (content) {
+        this.fsList = content
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
