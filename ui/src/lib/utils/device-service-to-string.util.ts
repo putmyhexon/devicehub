@@ -1,6 +1,6 @@
-import type { Device } from '@/generated/types'
+import type { DeviceWithFields } from '@/types/device-with-fields.type'
 
-export const deviceServiceToString = (deviceService: Device['service']): string => {
+export const deviceServiceToString = (deviceService: DeviceWithFields['service']): string => {
   const services = []
 
   if (deviceService?.hasGMS) {

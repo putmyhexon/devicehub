@@ -9,10 +9,11 @@ import { TextCell } from './cells/text-cell/text-cell'
 import type { DeviceTableColumnIds } from './types'
 import type { ColumnGroup } from '@/types/column-group.type'
 import type { DeviceState } from '@/types/enums/device-state.enum'
+import type { DeviceWithFields } from '@/types/device-with-fields.type'
+import type { DeviceBrowserAppsItem, DeviceNetwork } from '@/generated/types'
 import type { FilterFn, Row, DisplayColumnDef, FilterFnOption, SortingFnOption } from '@tanstack/react-table'
-import type { Device, DeviceBrowserAppsItem, DeviceNetwork } from '@/generated/types'
 
-export const fuzzyFilter: FilterFn<Device> = (row, columnId, value, addMeta): boolean => {
+export const fuzzyFilter: FilterFn<DeviceWithFields> = (row, columnId, value, addMeta): boolean => {
   const itemRank = rankItem(row.getValue(columnId), value, { threshold: 3 })
 
   addMeta({
@@ -22,10 +23,14 @@ export const fuzzyFilter: FilterFn<Device> = (row, columnId, value, addMeta): bo
   return itemRank.passed
 }
 
-export const browserAppsFilter = (row: Row<Device>, columnId: string, filterValue: string): boolean =>
+export const browserAppsFilter = (row: Row<DeviceWithFields>, columnId: string, filterValue: string): boolean =>
   row.getValue<DeviceBrowserAppsItem[]>(columnId).findIndex((item) => item.type?.includes(filterValue)) !== -1
 
-export const browserAppsSorting = (rowA: Row<Device>, rowB: Row<Device>, columnId: string): number => {
+export const browserAppsSorting = (
+  rowA: Row<DeviceWithFields>,
+  rowB: Row<DeviceWithFields>,
+  columnId: string
+): number => {
   const appTypeA = rowA.getValue<DeviceBrowserAppsItem[]>(columnId)[0]?.type || ''
   const appTypeB = rowB.getValue<DeviceBrowserAppsItem[]>(columnId)[0]?.type || ''
 
@@ -45,7 +50,11 @@ const DEVICE_STATE_ORDER: Record<DeviceState, number> = {
   unhealthy: 100,
 }
 
-export const deviceStatusSorting = (rowA: Row<Device>, rowB: Row<Device>, columnId: string): number => {
+export const deviceStatusSorting = (
+  rowA: Row<DeviceWithFields>,
+  rowB: Row<DeviceWithFields>,
+  columnId: string
+): number => {
   const stateA = rowA.getValue<DeviceState>(columnId)
   const stateB = rowB.getValue<DeviceState>(columnId)
 
@@ -62,9 +71,9 @@ export const textColumnDef = ({
   columnId: DeviceTableColumnIds
   columnName: string
   columnGroup: ColumnGroup
-  filterFn?: FilterFnOption<Device>
-  sortingFn?: SortingFnOption<Device>
-}): DisplayColumnDef<Device, string> => ({
+  filterFn?: FilterFnOption<DeviceWithFields>
+  sortingFn?: SortingFnOption<DeviceWithFields>
+}): DisplayColumnDef<DeviceWithFields, string> => ({
   header: () => <TextWithTranslation name={columnName} />,
   id: columnId,
   meta: {
