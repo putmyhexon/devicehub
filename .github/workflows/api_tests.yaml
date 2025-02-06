@@ -4,10 +4,15 @@ on:
     push:
         paths:
             - 'lib/**'
+            - 'Dockerfile'
+            - 'test/api/**'
+            - 'docker-compose-test.yaml'
     pull_request:
         paths:
             - 'lib/**'
-
+            - 'Dockerfile'
+            - 'test/api/**'
+            - 'docker-compose-test.yaml'
 jobs:
     run-api-tests:
         runs-on: ubuntu-latest
