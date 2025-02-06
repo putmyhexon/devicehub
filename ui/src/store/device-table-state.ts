@@ -7,6 +7,7 @@ import type { VisibilityState } from '@tanstack/react-table'
 
 class DeviceTableState {
   globalFilter = ''
+  filteredDeviceCount = 0
   columnVisibility: VisibilityState = COLUMN_VISIBILITY_DEFAULT
 
   constructor() {
@@ -16,6 +17,10 @@ class DeviceTableState {
 
   setGlobalFilter(filter: string): void {
     this.globalFilter = filter
+  }
+
+  setFilteredDeviceCount(value: number): void {
+    this.filteredDeviceCount = value
   }
 
   setColumnVisibility(visibility: VisibilityState | ((visibility: VisibilityState) => VisibilityState)): void {

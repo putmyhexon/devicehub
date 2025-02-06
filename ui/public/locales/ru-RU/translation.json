@@ -363,5 +363,6 @@
   "CPU Platform": "Платформа процессора",
   "OS": "ОС",
   "SDK": "SDK",
-  "ABI": "ABI"
+  "ABI": "ABI",
+  "Displayed devices count": "Отображено устройств"
 }

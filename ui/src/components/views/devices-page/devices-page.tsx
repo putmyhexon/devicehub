@@ -2,14 +2,16 @@ import { useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
 import { useInjection } from 'inversify-react'
-import { View, Panel, Group, CustomScrollView, Header, Flex } from '@vkontakte/vkui'
+import { View, Panel, Group, CustomScrollView, Header, Flex, Text, Skeleton } from '@vkontakte/vkui'
 
 import { DeviceTable } from '@/components/ui/device-table'
 import { SearchDevice } from '@/components/ui/search-device'
 import { DeviceStatistics } from '@/components/ui/device-statistics'
+import { ConditionalRender } from '@/components/lib/conditional-render'
 import { TableColumnVisibility } from '@/components/ui/table-column-visibility'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+import { deviceTableState } from '@/store/device-table-state'
 
 import styles from './devices-page.module.css'
 
@@ -33,6 +35,17 @@ export const DevicesPage = observer(() => {
           <Flex align='center'>
             <SearchDevice />
             <TableColumnVisibility />
+            <Text className={styles.sideText}>
+              <Flex align='center'>
+                <span className={styles.sideTextLabel}>{`${t('Displayed devices count')}: `}</span>
+                <ConditionalRender conditions={[devicesQueryResult.isLoading]}>
+                  <Skeleton height={20} width={30} />
+                </ConditionalRender>
+                <ConditionalRender conditions={[!devicesQueryResult.isLoading]}>
+                  {deviceTableState.filteredDeviceCount}
+                </ConditionalRender>
+              </Flex>
+            </Text>
           </Flex>
           <CustomScrollView enableHorizontalScroll={true}>
             <DeviceTable

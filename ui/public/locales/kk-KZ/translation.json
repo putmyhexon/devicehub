@@ -363,5 +363,6 @@
   "CPU Platform": "CPU платформасы",
   "OS": "ОС",
   "SDK": "Sdk",
-  "ABI": "АТИ"
+  "ABI": "АТИ",
+  "Displayed devices count": "Көрсетілген құрылғылардың саны"
 }
