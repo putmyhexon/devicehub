@@ -16,7 +16,9 @@ export const TextCell = memo(({ textValue }: TextCellProps) => {
     <>
       {textValue && (
         <Tappable className={styles.tappable} hasHover={false} onClick={() => onCopyText(textValue)}>
-          <EllipsisText>{textValue}</EllipsisText>
+          <EllipsisText maxLines={3} maxWidth={200}>
+            {textValue}
+          </EllipsisText>
         </Tappable>
       )}
     </>

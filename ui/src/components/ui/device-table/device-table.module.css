@@ -4,7 +4,7 @@
 }
 
 .table {
-  table-layout: fixed;
+  table-layout: auto;
   border-collapse: collapse;
   width: 100%;
 
@@ -12,6 +12,7 @@
     cursor: pointer;
     user-select: none;
     position: relative;
+    white-space: nowrap;
   }
 
   thead tr {
@@ -30,10 +31,8 @@
 
   th,
   td {
-    width: 200px;
-    padding: 8px 8px 8px 15px;
+    padding: 5px 5px 5px 12px;
     text-align: left;
-    white-space: nowrap;
   }
 
   thead th {
