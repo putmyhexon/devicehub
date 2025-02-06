@@ -1,4 +1,4 @@
 .tappable {
-  max-width: min-content;
+  width: max-content;
   padding: 5px;
 }

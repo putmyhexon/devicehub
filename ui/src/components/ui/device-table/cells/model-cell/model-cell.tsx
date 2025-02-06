@@ -27,6 +27,8 @@ type ModelCellProps = {
 export const ModelCell = memo(({ model, platform }: ModelCellProps) => (
   <div className={styles.modelCell}>
     {platform && PLATFORM_ICON_MAP[platform]}
-    <EllipsisText>{model}</EllipsisText>
+    <EllipsisText maxLines={3} maxWidth={150}>
+      {model}
+    </EllipsisText>
   </div>
 ))
