@@ -325,5 +325,10 @@
   "Using Fallback": "使用後備",
   "Roaming": "漫遊",
   "Number": "數字",
-  "CPU Platform": "CPU平台"
+  "IMSI": "IMSI",
+  "ICCID": "ICCID",
+  "CPU Platform": "CPU平台",
+  "SDK": "SDK",
+  "ABI": "阿比",
+  "Displayed": "顯示"
 }

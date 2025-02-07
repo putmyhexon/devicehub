@@ -353,5 +353,8 @@
   "CPU Platform": "CPU платформасы",
   "OS": "ОС",
   "Date": "Дата",
-  "Permissions": "Рөхсәт"
+  "Permissions": "Рөхсәт",
+  "SDK": "SDK",
+  "ABI": "ABI",
+  "Displayed": "Күрсәтелә"
 }

@@ -353,5 +353,8 @@
   "CPU Platform": "Платформа процессора",
   "OS": "ОС",
   "Date": "Дата",
-  "Permissions": "Разрешения"
+  "Permissions": "Разрешения",
+  "SDK": "SDK",
+  "ABI": "ABI",
+  "Displayed": "Отображено"
 }

@@ -349,5 +349,7 @@
   "Carrier": "Carrier",
   "SD Card Mounted": "SD Card Mounted",
   "CPU Platform": "CPU Platform",
-  "OS": "OS"
+  "OS": "OS",
+  "ABI": "ABI",
+  "Displayed": "Displayed"
 }

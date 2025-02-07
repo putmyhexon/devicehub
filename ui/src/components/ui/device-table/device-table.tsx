@@ -95,6 +95,10 @@ export const DeviceTable = observer(({ data, isSuccess, isLoading, isError }: De
     table.setColumnFilters(existingColumnFilters)
   }, [debouncedGlobalFilter])
 
+  useEffect(() => {
+    deviceTableState.setFilteredDeviceCount(rows.length)
+  }, [rows.length])
+
   return (
     <div className={styles.tableWrapper}>
       <div style={{ height: `${rows.length * ROW_HEIGHT + ROW_HEIGHT}px` }}>
