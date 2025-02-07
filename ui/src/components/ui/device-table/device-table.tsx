@@ -97,8 +97,8 @@ export const DeviceTable = observer(({ data, isSuccess, isLoading, isError }: De
   }, [debouncedGlobalFilter])
 
   useEffect(() => {
-    deviceTableState.setFilteredDeviceCount(table.getRowModel().rows.length)
-  }, [table.getRowModel().rows.length])
+    deviceTableState.setFilteredDeviceCount(rows.length)
+  }, [rows.length])
 
   return (
     <div ref={tableContainerRef} className={styles.tableWrapper}>

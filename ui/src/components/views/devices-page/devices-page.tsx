@@ -37,7 +37,7 @@ export const DevicesPage = observer(() => {
             <TableColumnVisibility />
             <Text className={styles.sideText}>
               <Flex align='center'>
-                <span className={styles.sideTextLabel}>{`${t('Displayed devices count')}: `}</span>
+                <span className={styles.sideTextLabel}>{`${t('Displayed')}: `}</span>
                 <ConditionalRender conditions={[devicesQueryResult.isLoading]}>
                   <Skeleton height={20} width={30} />
                 </ConditionalRender>
