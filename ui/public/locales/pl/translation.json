@@ -293,5 +293,6 @@
   "ROM": "ROM",
   "SD Card Mounted": "Zamontowana karta SD",
   "CPU Platform": "Platforma procesora",
-  "SDK": "SDK"
+  "SDK": "SDK",
+  "Displayed": "Wystawiany"
 }

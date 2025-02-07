@@ -360,5 +360,6 @@
   "SD Card Mounted": "Tarjeta SD montada",
   "CPU Platform": "Plataforma de CPU",
   "OS": "Sistema operativo",
-  "ABI": "Abi"
+  "ABI": "Abi",
+  "Displayed": "Desplegado"
 }
