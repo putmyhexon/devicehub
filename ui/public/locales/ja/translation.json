@@ -366,5 +366,8 @@
   "JSON file": "JSONファイル",
   "Raw lines": "生の線",
   "OS": "OS",
-  "Displayed": "表示されます"
+  "Displayed": "表示されます",
+  "Date format": "日付形式",
+  "Email address separator": "メールアドレスセパレーター",
+  "Connection failed": "接続に失敗しました"
 }

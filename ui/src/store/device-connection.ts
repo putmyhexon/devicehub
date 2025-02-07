@@ -1,3 +1,4 @@
+import { t } from 'i18next'
 import { makeAutoObservable } from 'mobx'
 import { inject, injectable } from 'inversify'
 
@@ -9,6 +10,7 @@ import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
 import { DeviceControlStore } from './device-control-store'
 import { DeviceBySerialStore } from './device-by-serial-store'
+import { deviceErrorModalStore } from './device-error-modal-store'
 
 @injectable()
 @deviceConnectionRequired()
@@ -43,9 +45,10 @@ export class DeviceConnection {
 
       await this.groupService.invite(this.serial, device.channel, device.group)
 
-      this.settingsService.setLastUsedDevice(this.serial)
+      this.settingsService.updateLastUsedDevice(this.serial)
     } catch (error) {
-      // TODO: Обработать ошибку, показать toast
+      deviceErrorModalStore.setError(t('Connection failed'))
+
       console.error(error)
     }
   }

@@ -409,5 +409,8 @@
   "JSON file": "Fichier json",
   "Raw lines": "Lignes brutes",
   "OS": "OS",
-  "Displayed": "Affiché"
+  "Displayed": "Affiché",
+  "Date format": "Format de date",
+  "Email address separator": "Séparateur d'adresse e-mail",
+  "Connection failed": "Échec de la connexion"
 }

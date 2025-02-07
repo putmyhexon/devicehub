@@ -378,5 +378,8 @@
   "File Extension": "파일 확장",
   "JSON file": "JSON 파일",
   "Raw lines": "원시 라인",
-  "Displayed": "표시"
+  "Displayed": "표시",
+  "Date format": "날짜 형식",
+  "Email address separator": "이메일 주소 분리기",
+  "Connection failed": "연결이 실패했습니다"
 }
