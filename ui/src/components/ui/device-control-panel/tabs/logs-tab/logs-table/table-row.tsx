@@ -20,7 +20,7 @@ const PRIORITY_COLOR_MAP: Record<LogPriority, string> = {
 }
 
 export const TableRow = memo(({ row }: { row: Row<LogcatEntryMessage> }) => (
-  <tr key={row.id}>
+  <tr>
     {row.getVisibleCells().map((cell) => (
       <td key={cell.id} className={PRIORITY_COLOR_MAP[row.original.priority]}>
         {flexRender(cell.column.columnDef.cell, cell.getContext())}

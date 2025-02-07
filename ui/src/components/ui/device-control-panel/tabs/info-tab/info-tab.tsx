@@ -104,22 +104,22 @@ export const InfoTab = observer(() => {
             <InfoBlock title={t('Density')}>
               {device?.display?.density && ScreenDensity[device.display.density]}
             </InfoBlock>
-            <InfoBlock title={t('FPS')}>{device?.display?.fps}</InfoBlock>
+            <InfoBlock title='FPS'>{device?.display?.fps}</InfoBlock>
             <InfoBlock title={t('Width')} unit='px'>
               {device?.display?.width}
             </InfoBlock>
             <InfoBlock title={t('Height')} unit='px'>
               {device?.display?.height}
             </InfoBlock>
-            <InfoBlock title={t('ID')}>{device?.display?.id}</InfoBlock>
+            <InfoBlock title='ID'>{device?.display?.id}</InfoBlock>
             <InfoBlock title={t('Orientation')} unit='°'>
               {device?.display?.rotation}
             </InfoBlock>
             <InfoBlock title={t('Encrypted')}>
               {isBooleanTypeGuard(device?.display?.secure) && t(humanizedBool(device.display.secure))}
             </InfoBlock>
-            <InfoBlock title={t('X DPI')}>{device?.display?.xdpi}</InfoBlock>
-            <InfoBlock title={t('Y DPI')}>{device?.display?.ydpi}</InfoBlock>
+            <InfoBlock title='X DPI'>{device?.display?.xdpi}</InfoBlock>
+            <InfoBlock title='Y DPI'>{device?.display?.ydpi}</InfoBlock>
           </Group>
         </DeviceControlCard>
         <DeviceControlCard
@@ -173,9 +173,9 @@ export const InfoTab = observer(() => {
             <InfoBlock title={t('Carrier')}>{device?.operator}</InfoBlock>
             <InfoBlock title={t('Network')}>{device?.phone?.network}</InfoBlock>
             <InfoBlock title={t('Number')}>{device?.phone?.phoneNumber}</InfoBlock>
-            <InfoBlock title={t('IMEI')}>{device?.phone?.imei}</InfoBlock>
-            <InfoBlock title={t('IMSI')}>{device?.phone?.imsi}</InfoBlock>
-            <InfoBlock title={t('ICCID')}>{device?.phone?.iccid}</InfoBlock>
+            <InfoBlock title='IMEI'>{device?.phone?.imei}</InfoBlock>
+            <InfoBlock title='IMSI'>{device?.phone?.imsi}</InfoBlock>
+            <InfoBlock title='ICCID'>{device?.phone?.iccid}</InfoBlock>
           </Group>
         </DeviceControlCard>
         <DeviceControlCard
@@ -185,10 +185,10 @@ export const InfoTab = observer(() => {
           separator
         >
           <Group mode='plain'>
-            <InfoBlock title={t('RAM')} unit='MB'>
+            <InfoBlock title='RAM' unit='MB'>
               {device?.memory?.ram}
             </InfoBlock>
-            <InfoBlock title={t('ROM')} unit='MB'>
+            <InfoBlock title='ROM' unit='MB'>
               {device?.memory?.rom}
             </InfoBlock>
             <InfoBlock title={t('SD Card Mounted')}>
@@ -205,14 +205,14 @@ export const InfoTab = observer(() => {
           <Group mode='plain'>
             <InfoBlock title={t('OS')}>{device?.platform}</InfoBlock>
             <InfoBlock title={t('Version')}>{device?.version}</InfoBlock>
-            <InfoBlock title={t('SDK')}>{device?.sdk}</InfoBlock>
-            <InfoBlock title={t('ABI')}>{device?.abi}</InfoBlock>
+            <InfoBlock title='SDK'>{device?.sdk}</InfoBlock>
+            <InfoBlock title='ABI'>{device?.abi}</InfoBlock>
           </Group>
         </DeviceControlCard>
         <DeviceControlCard
           before={<Icon28SpeedometerMaxOutline color='#f24236' height={20} width={20} />}
           className={styles.cpu}
-          title={t('CPU')}
+          title='CPU'
           separator
         >
           <Group mode='plain'>

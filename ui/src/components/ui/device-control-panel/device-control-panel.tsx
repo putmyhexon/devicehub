@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
-import { Div, Panel, View } from '@vkontakte/vkui'
+import { Panel, View } from '@vkontakte/vkui'
 import {
   Icon20HomeOutline,
   Icon20FlashOutline,
@@ -20,10 +20,11 @@ import {
   getControlFileExplorerRoute,
 } from '@/constants/route-paths'
 
-import { DashboardTab } from './tabs/dashboard-tab'
+import { InfoTab } from './tabs/info-tab'
 import { LogsTab } from './tabs/logs-tab'
 import { AdvancedTab } from './tabs/advanced-tab'
-import { InfoTab } from './tabs/info-tab'
+import { DashboardTab } from './tabs/dashboard-tab'
+import { FileExplorerTab } from './tabs/file-explorer-tab'
 
 import styles from './device-control-panel.module.css'
 
@@ -61,7 +62,7 @@ export const DeviceControlPanel = () => {
         title: t('File Explorer'),
         before: <Icon20FolderSimpleOutline height={17} width={17} />,
         ariaControls: 'tab-content-explorer',
-        content: <Div />,
+        content: <FileExplorerTab />,
       },
       {
         id: getControlInfoRoute(serial),

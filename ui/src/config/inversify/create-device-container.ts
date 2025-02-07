@@ -4,6 +4,7 @@ import { InfoService } from '@/services/info-service'
 import { LogcatService } from '@/services/logcat-service'
 import { BookingService } from '@/services/booking-service'
 import { TouchService } from '@/services/touch-service/touch-service'
+import { FileExplorerService } from '@/services/file-explorer-service'
 import { ScalingService } from '@/services/scaling-service/scaling-service'
 import { DeviceLifecycleService } from '@/services/device-lifecycle-service'
 import { KeyboardService } from '@/services/keyboard-service/keyboard-service'
@@ -49,6 +50,7 @@ export const createDeviceContainer = (serial: string): Container => {
   deviceContainer.bind(CONTAINER_IDS.deviceScreenStore).to(DeviceScreenStore)
   deviceContainer.bind(CONTAINER_IDS.deviceControlStore).to(DeviceControlStore)
   deviceContainer.bind(CONTAINER_IDS.deviceBySerialStore).to(DeviceBySerialStore)
+  deviceContainer.bind(CONTAINER_IDS.fileExplorerService).to(FileExplorerService)
   deviceContainer.bind(CONTAINER_IDS.portForwardingService).to(PortForwardingService)
   deviceContainer.bind(CONTAINER_IDS.deviceLifecycleService).to(DeviceLifecycleService)
   deviceContainer.bind(CONTAINER_IDS.applicationInstallationService).to(ApplicationInstallationService)

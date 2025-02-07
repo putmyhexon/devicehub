@@ -35,9 +35,10 @@ export const MaintenanceControl = ({ className }: { className?: string }) => {
           title={t('Warning')}
           onClose={() => setIsConfirmationOpen(false)}
           onOk={async () => {
-            const result = await deviceControlStore.reboot().promise
+            const rebootResult = await deviceControlStore.reboot()
+            const { data } = await rebootResult.donePromise
 
-            console.info(result)
+            console.info(data)
           }}
         />
       </Flex>

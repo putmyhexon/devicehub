@@ -1,3 +1,3 @@
 import type { TransactionService } from '@/services/core/transaction-service/transaction-service'
 
-export type TransactionFactory = () => TransactionService
+export type TransactionFactory = <T>() => TransactionService<T>

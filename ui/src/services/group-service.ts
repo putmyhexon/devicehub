@@ -26,7 +26,7 @@ export class GroupService {
     }
 
     const transaction = this.transactionServiceFactory()
-    const { channel: transactionChannel, promise: transactionEndPromise } = transaction.initializeTransaction()
+    const { channel: transactionChannel, donePromise: transactionEndPromise } = transaction.initializeTransaction()
 
     socket.emit('group.invite', channel, transactionChannel, {
       requirements: {
@@ -43,7 +43,7 @@ export class GroupService {
 
   kick(serial: string, channel: string): Promise<unknown> {
     const transaction = this.transactionServiceFactory()
-    const { channel: transactionChannel, promise: transactionEndPromise } = transaction.initializeTransaction()
+    const { channel: transactionChannel, donePromise: transactionEndPromise } = transaction.initializeTransaction()
 
     socket.emit('group.kick', channel, transactionChannel, {
       requirements: {

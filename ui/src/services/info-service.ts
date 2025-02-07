@@ -33,9 +33,8 @@ export class InfoService {
   }
 
   async getSdStatus(): Promise<void> {
-    await this.deviceBySerialStore.fetch()
-
-    const data = await this.deviceControlStore.getSdStatus().promise
+    const sdStatusResult = await this.deviceControlStore.getSdStatus()
+    const { data } = await sdStatusResult.donePromise
 
     if (data === 'sd_mounted') {
       this.sdCardMounted = true

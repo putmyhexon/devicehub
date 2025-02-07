@@ -25,12 +25,12 @@ export class ShellControlStore {
     this.shellResult = ''
   }
 
-  runShellCommand(): void {
-    const data = this.deviceControlStore.shell(this.command)
+  async runShellCommand(): Promise<void> {
+    const shellResult = await this.deviceControlStore.shell(this.command)
 
     this.clear()
 
-    data.subscribeToProgress((_, result) => {
+    shellResult.subscribeToProgress((_, result) => {
       if (result) {
         runInAction(() => {
           this.shellResult += result
