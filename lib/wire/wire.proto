@@ -306,6 +306,7 @@ message FileSystemListMessage {
 
 message FileSystemGetMessage {
   required string file = 1;
+  optional string jwt = 2;
 }
 
 message Envelope {

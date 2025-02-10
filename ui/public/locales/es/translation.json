@@ -350,5 +350,8 @@
   "CPU Platform": "Plataforma de CPU",
   "OS": "Sistema operativo",
   "ABI": "Abi",
-  "Displayed": "Desplegado"
+  "Displayed": "Desplegado",
+  "Date format": "Formato de fecha",
+  "Email address separator": "Separador de dirección de correo electrónico",
+  "Connection failed": "Falló la conexión"
 }

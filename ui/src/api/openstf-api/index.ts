@@ -1,10 +1,13 @@
 import { openstfApiClient } from './openstf-api-client'
 
+import { DEVICE_FIELDS } from '@/constants/device-fields'
+
 import { OPENSTF_API_ROUTES } from './routes'
 
+import type { DeviceWithFieldsListResponse } from './types'
+import type { DeviceWithFields } from '@/types/device-with-fields.type'
 import type {
   Device,
-  DeviceListResponse,
   DeviceResponse,
   GetDeviceBySerialParams,
   GetDevicesParams,
@@ -12,8 +15,13 @@ import type {
   UserResponseUser,
 } from '@/generated/types'
 
-export const getDevices = async (params?: GetDevicesParams): Promise<Device[]> => {
-  const { data } = await openstfApiClient.get<DeviceListResponse>(OPENSTF_API_ROUTES.devices, { params })
+export const getDevicesWithFields = async (params?: Omit<GetDevicesParams, 'fields'>): Promise<DeviceWithFields[]> => {
+  const { data } = await openstfApiClient.get<DeviceWithFieldsListResponse>(OPENSTF_API_ROUTES.devices, {
+    params: {
+      ...params,
+      fields: DEVICE_FIELDS,
+    },
+  })
 
   return data.devices
 }

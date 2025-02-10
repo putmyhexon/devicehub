@@ -4,11 +4,11 @@ import { memo } from 'react'
 
 import { getControlRoute } from '@/constants/route-paths'
 
-import type { Device } from '@/generated/types'
+import type { DeviceWithFields } from '@/types/device-with-fields.type'
 
 type ProductCellProps = {
-  product: Device['product']
-  serial: Device['serial']
+  product: DeviceWithFields['product']
+  serial: DeviceWithFields['serial']
   isDisabled?: boolean
 }
 

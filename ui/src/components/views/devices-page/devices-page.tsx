@@ -15,14 +15,14 @@ import { deviceTableState } from '@/store/device-table-state'
 
 import styles from './devices-page.module.css'
 
-import type { Device } from '@/generated/types'
+import type { DeviceWithFields } from '@/types/device-with-fields.type'
 
 export const DevicesPage = observer(() => {
   const { t } = useTranslation()
 
   const { devicesQueryResult } = useInjection(CONTAINER_IDS.deviceListStore)
 
-  const displayData = useMemo<Device[]>(
+  const displayData = useMemo<DeviceWithFields[]>(
     () => (devicesQueryResult.isLoading ? Array(10).fill({}) : (devicesQueryResult.data ?? [])),
     [devicesQueryResult.isLoading, devicesQueryResult.data]
   )

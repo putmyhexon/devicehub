@@ -404,5 +404,8 @@
   "File Extension": "文件扩展",
   "JSON file": "JSON文件",
   "Raw lines": "原线",
+  "Date format": "日期格式",
+  "Email address separator": "电子邮件地址分隔符",
+  "Connection failed": "连接失败",
   "Displayed": "显示"
 }

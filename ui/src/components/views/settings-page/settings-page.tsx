@@ -13,7 +13,7 @@ import {
   getSettingsUsersRoute,
 } from '@/constants/route-paths'
 
-import { GeneralSettingsTab } from './tabs/general-settings-tab'
+import { GeneralTab } from './tabs/general-tab'
 
 import styles from './settings-page.module.css'
 
@@ -28,7 +28,7 @@ export const SettingsPage = () => {
         id: getSettingsRoute(),
         title: t('General'),
         ariaControls: 'tab-content-general',
-        content: <GeneralSettingsTab />,
+        content: <GeneralTab />,
       },
       {
         id: getSettingsKeysRoute(),

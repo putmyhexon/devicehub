@@ -409,5 +409,8 @@
   "File Extension": "Extensão de arquivo",
   "JSON file": "Arquivo json",
   "Raw lines": "Linhas cruas",
-  "Displayed": "Exibido"
+  "Displayed": "Exibido",
+  "Date format": "Formato de data",
+  "Email address separator": "Separador de endereço de e -mail",
+  "Connection failed": "A conexão falhou"
 }

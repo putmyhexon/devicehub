@@ -11,11 +11,11 @@ import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import { getControlRoute } from '@/constants/route-paths'
 
-import type { Device } from '@/generated/types'
+import type { DeviceWithFields } from '@/types/device-with-fields.type'
 
 type DeviceStatusCellProps = {
-  serial: Device['serial']
-  channel: Device['channel']
+  serial: DeviceWithFields['serial']
+  channel: DeviceWithFields['channel']
   deviceState: DeviceState
 }
 

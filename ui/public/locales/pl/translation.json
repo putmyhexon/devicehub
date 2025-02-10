@@ -284,5 +284,8 @@
   "CPU Platform": "Platforma procesora",
   "Date": "Data",
   "SDK": "SDK",
-  "Displayed": "Wystawiany"
+  "Displayed": "Wystawiany",
+  "Date format": "Format daty",
+  "Email address separator": "Separator adresu e -mail",
+  "Connection failed": "Połączenie nie powiodło się"
 }
