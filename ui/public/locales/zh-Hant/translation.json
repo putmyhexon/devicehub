@@ -73,7 +73,7 @@
   "Fingerprint": "指紋",
   "Frequency": "頻率",
   "General": "一般",
-  "Generate Access Token": "產生存取憑證",
+  "Generate Access Token": "產生令牌",
   "Get": "擷取",
   "Get clipboard contents": "取得剪貼簿內容",
   "Go Back": "返回",
@@ -333,5 +333,14 @@
   "Date format": "日期格式",
   "Email address separator": "電子郵件地址分隔符",
   "Connection failed": "連接失敗",
-  "Displayed": "顯示"
+  "Displayed": "顯示",
+  "Make sure to copy your access token now. You wont be able to see it again": "確保立即復制您的訪問令牌。\n您將無法再看到它",
+  "Run this command to copy the key to your clipboard": "運行此命令將鍵複製到剪貼板",
+  "ADB Keys": "ADB鍵",
+  "Are you sure you want to delete the ADB key": "您確定要刪除ADB鍵嗎",
+  "Generate": "產生",
+  "Key": "鑰匙",
+  "No ADB keys": "沒有ADB鍵",
+  "Add ADB Key": "添加ADB密鑰",
+  "Are you sure you want to delete the access token": "您確定要刪除訪問令牌嗎"
 }

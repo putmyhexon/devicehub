@@ -1,0 +1,12 @@
+.accessTokensControl {
+  overflow: hidden;
+}
+
+.addNewTokenInput {
+  flex-grow: 1;
+  width: 100%;
+}
+
+.generateTokenButton {
+  margin: 3px 0 0 10px;
+}

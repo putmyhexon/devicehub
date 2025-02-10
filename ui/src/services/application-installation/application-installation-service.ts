@@ -10,7 +10,6 @@ import { DeviceControlStore } from '@/store/device-control-store'
 import { DeviceBySerialStore } from '@/store/device-by-serial-store'
 import { deviceConnectionRequired } from '@/config/inversify/decorators'
 
-import type { AxiosError } from 'axios'
 import type { Manifest } from '@/types/manifest.type'
 import type { Device, ErrorResponse } from '@/generated/types'
 import type { ActivityOptions, ActivityOptionsSet, RunActivityArgs, SelectOption } from './types'
@@ -59,7 +58,7 @@ export class ApplicationInstallationService {
     })
   }
 
-  get manifestQueryResult(): QueryObserverResult<GetManifestResponse, AxiosError> {
+  get manifestQueryResult(): QueryObserverResult<GetManifestResponse> {
     return this.manifestQuery.result
   }
 

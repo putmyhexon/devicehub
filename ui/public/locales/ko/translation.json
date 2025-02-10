@@ -12,7 +12,6 @@
   "ADB Keys": "ADB 키",
   "Add": "추가",
   "Add ADB Key": "ADB 키 추가",
-  "Add Key": "키 추가",
   "Add the following ADB Key to STF?": "다음 ADB 키를 STF에 추가 하시겠습니까?",
   "Admin mode has been disabled.": "관리자 모드가 비활성화 되었습니다.",
   "Admin mode has been enabled.": "관리자 모드가 활성화 되었습니다.",
@@ -97,9 +96,9 @@
   "Frequency": "속도",
   "Full": "전체",
   "General": "일반",
-  "Generate Access Token": "액세스 토큰 생성",
+  "Generate Access Token": "토큰을 생성하십시오",
   "Generate Login for VNC": "VNC 로그인 생성",
-  "Generate New Token": "새로운 토큰 생성",
+  "Generate": "생성하다",
   "Get": "시작",
   "Get clipboard contents": "클립보드 내용을 가져옵니다",
   "Go Back": "뒤로 이동",
@@ -136,7 +135,7 @@
   "Lock Rotation": "화면 잠금",
   "Logs": "로그",
   "Maintenance": "유지 관리",
-  "Make sure to copy your access token now. You won't be able to see it again!": "엑세스 토큰을 복사하세요. 다시 확인할 수 없습니다!",
+  "Make sure to copy your access token now. You wont be able to see it again": "엑세스 토큰을 복사하세요. 다시 확인할 수 없습니다",
   "Manage Apps": "앱 관리",
   "Manner Mode": "매너 모드",
   "Manufacturer": "제조사",
@@ -381,5 +380,8 @@
   "Displayed": "표시",
   "Date format": "날짜 형식",
   "Email address separator": "이메일 주소 분리기",
-  "Connection failed": "연결이 실패했습니다"
+  "Connection failed": "연결이 실패했습니다",
+  "Run this command to copy the key to your clipboard": "이 명령을 실행하여 키를 클립 보드에 복사하십시오.",
+  "Are you sure you want to delete the ADB key": "ADB 키를 삭제 하시겠습니까",
+  "Are you sure you want to delete the access token": "액세스 토큰을 삭제 하시겠습니까?"
 }

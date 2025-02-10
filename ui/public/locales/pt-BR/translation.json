@@ -13,7 +13,6 @@
   "Activity": "Atividades",
   "Add": "Adicionar",
   "Add ADB Key": "Adicionar chave ADB",
-  "Add Key": "Adicionar chave",
   "Add the following ADB Key to STF?": "Adicionar esta chave ADB no STF?",
   "Admin mode has been disabled.": "Modo administrador foi desabilitado",
   "Admin mode has been enabled.": "Modo administrador foi habilitado",
@@ -101,9 +100,9 @@
   "Frequency": "Frequencia",
   "Full": "Completo",
   "General": "Geral",
-  "Generate Access Token": "Gerar Token de Acesso",
+  "Generate Access Token": "Gerar token",
   "Generate Login for VNC": "Gerar acesso por VNC",
-  "Generate New Token": "Gerar Novo Token",
+  "Generate": "Gerar",
   "Get": "Obter",
   "Get clipboard contents": "Obter conteúdo da área de transferência",
   "Go Back": "Voltar",
@@ -140,7 +139,7 @@
   "Lock Rotation": "Desabilitar Rotação da Tela",
   "Logs": "Logs",
   "Maintenance": "Manutenção",
-  "Make sure to copy your access token now. You won't be able to see it again.": "Certifique-se de copiar o seu token de acesso agora. Você não será capaz de vê-lo novamente.",
+  "Make sure to copy your access token now. You wont be able to see it again": "Certifique-se de copiar o seu token de acesso agora. Você não será capaz de vê-lo novamente",
   "Manage Apps": "Gerenciar Aplicativos",
   "Manner Mode": "Manner Mode",
   "Manufacturer": "Fabricante",
@@ -412,5 +411,7 @@
   "Displayed": "Exibido",
   "Date format": "Formato de data",
   "Email address separator": "Separador de endereço de e -mail",
-  "Connection failed": "A conexão falhou"
+  "Connection failed": "A conexão falhou",
+  "Are you sure you want to delete the ADB key": "Tem certeza que deseja excluir a tecla adb?",
+  "Are you sure you want to delete the access token": "Tem certeza que deseja excluir o token de acesso"
 }

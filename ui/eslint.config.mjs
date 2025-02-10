@@ -400,5 +400,14 @@ export default tseslint.config(
     rules: {
       'no-else/no-else': 'off',
     },
+  },
+  {
+    files: [
+      'src/components/views/settings-page/tabs/keys-tab/adb-keys-control/adb-keys-control.tsx',
+      'src/components/views/settings-page/tabs/keys-tab/access-tokens-control/access-tokens-control.tsx',
+    ],
+    rules: {
+      'react/no-array-index-key': 'off',
+    },
   }
 )

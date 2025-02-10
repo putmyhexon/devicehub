@@ -10,7 +10,6 @@
   "Activity": "Activity",
   "Add": "Add",
   "Add ADB Key": "Add ADB Key",
-  "Add Key": "Add Key",
   "Add the following ADB Key to STF?": "Add the following ADB Key to STF?",
   "Admin mode has been disabled.": "Admin mode has been disabled.",
   "Admin mode has been enabled.": "Admin mode has been enabled.",
@@ -90,9 +89,9 @@
   "Frequency": "Frequency",
   "Full": "Full",
   "General": "General",
-  "Generate Access Token": "Generate Access Token",
+  "Generate Access Token": "Generate token",
   "Generate Login for VNC": "Generate Login for VNC",
-  "Generate New Token": "Generate New Token",
+  "Generate": "Generate",
   "Get": "Get",
   "Get clipboard contents": "Get clipboard contents",
   "Go Back": "Go Back",
@@ -127,7 +126,7 @@
   "Lock Rotation": "Lock Rotation",
   "Logs": "Logs",
   "Maintenance": "Maintenance",
-  "Make sure to copy your access token now. You won't be able to see it again.": "Make sure to copy your access token now. You won't be able to see it again.",
+  "Make sure to copy your access token now. You wont be able to see it again": "Make sure to copy your access token now. You won't be able to see it again",
   "Manage Apps": "Manage Apps",
   "Media": "Media",
   "Memory": "Memory",
@@ -354,5 +353,8 @@
   "Displayed": "Displayed",
   "Date format": "Date format",
   "Email address separator": "Email address separator",
-  "Connection failed": "Connection failed"
+  "Connection failed": "Connection failed",
+  "ADB Keys": "ADB Keys",
+  "Are you sure you want to delete the ADB key": "Are you sure you want to delete the ADB key?",
+  "Are you sure you want to delete the access token": "Are you sure you want to delete the access token?"
 }

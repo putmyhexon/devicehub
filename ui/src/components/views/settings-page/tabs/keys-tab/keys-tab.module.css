@@ -1,0 +1,14 @@
+.keysTab {
+  overflow: hidden;
+}
+
+.controlCard {
+  flex: 1;
+  min-width: max-content;
+}
+
+.listItem {
+  svg {
+    box-sizing: content-box;
+  }
+}

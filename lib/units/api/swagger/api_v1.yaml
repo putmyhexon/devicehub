@@ -3610,6 +3610,15 @@ components:
             forwards:
                 type: array
                 items: {}
+            adbKeys:
+              type: array
+              items:
+                type: object
+                properties:
+                    fingerprint:
+                        type: string
+                    title:
+                        type: string
             settings:
                 type: object
                 properties:
@@ -3802,9 +3811,7 @@ components:
       properties:
         success:
           type: boolean
-        description:
-          type: string
-        tokens:
+        titles:
           type: array
           items:
             type: string

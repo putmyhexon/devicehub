@@ -10,7 +10,6 @@
   "ADB Keys": "ADBキー",
   "Add": "追加",
   "Add ADB Key": "ADBキーを追加",
-  "Add Key": "キー追加",
   "Add the following ADB Key to STF?": "STFに下記のADBキーを追加しますか？",
   "Admin mode has been disabled.": "管理モードは無効になりました。",
   "Admin mode has been enabled.": "管理モードは有効になりました。",
@@ -96,9 +95,9 @@
   "Frequency": "クロック",
   "Full": "フル",
   "General": "一般",
-  "Generate Access Token": "アクセストークン生成",
+  "Generate Access Token": "トークンを生成します",
   "Generate Login for VNC": "VNC用にログイン情報生成",
-  "Generate New Token": "新規トークン生成",
+  "Generate": "生成する",
   "Get": "取得",
   "Get clipboard contents": "クリップボードの中身を取得する",
   "Go Back": "戻る",
@@ -369,5 +368,8 @@
   "Displayed": "表示されます",
   "Date format": "日付形式",
   "Email address separator": "メールアドレスセパレーター",
-  "Connection failed": "接続に失敗しました"
+  "Connection failed": "接続に失敗しました",
+  "Make sure to copy your access token now. You wont be able to see it again": "今すぐアクセストークンをコピーしてください。\nあなたはそれを二度と見ることができません",
+  "Are you sure you want to delete the ADB key": "ADBキーを削除したいですか",
+  "Are you sure you want to delete the access token": "アクセストークンを削除したいですか"
 }
