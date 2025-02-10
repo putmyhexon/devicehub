@@ -2908,6 +2908,7 @@ paths:
       - name: timeout
         in: query
         description: timeout for group in seconds
+        required: true
         schema:
           minimum: 600
           type: integer
