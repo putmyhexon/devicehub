@@ -351,5 +351,8 @@
   "CPU Platform": "CPU Platform",
   "OS": "OS",
   "ABI": "ABI",
-  "Displayed": "Displayed"
+  "Displayed": "Displayed",
+  "Date format": "Date format",
+  "Email address separator": "Email address separator",
+  "Connection failed": "Connection failed"
 }

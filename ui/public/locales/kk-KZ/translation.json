@@ -356,5 +356,8 @@
   "OS": "ОС",
   "SDK": "Sdk",
   "ABI": "АТИ",
-  "Displayed": "Пик"
+  "Displayed": "Пик",
+  "Date format": "Күн форматы",
+  "Email address separator": "Электрондық пошта мекенжайы бөлгіш",
+  "Connection failed": "Қосылу сәтсіз аяқталды"
 }

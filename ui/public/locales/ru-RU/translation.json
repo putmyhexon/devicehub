@@ -356,5 +356,8 @@
   "Permissions": "Разрешения",
   "SDK": "SDK",
   "ABI": "ABI",
-  "Displayed": "Отображено"
+  "Displayed": "Отображено",
+  "Date format": "Формат даты",
+  "Email address separator": "Разделитель адреса электронной почты",
+  "Connection failed": "Не удалось установить соединение"
 }

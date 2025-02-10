@@ -330,5 +330,8 @@
   "CPU Platform": "CPU平台",
   "SDK": "SDK",
   "ABI": "阿比",
+  "Date format": "日期格式",
+  "Email address separator": "電子郵件地址分隔符",
+  "Connection failed": "連接失敗",
   "Displayed": "顯示"
 }

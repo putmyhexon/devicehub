@@ -25,4 +25,8 @@ export class CurrentUserProfileStore {
   get profileQueryResult(): QueryObserverResult<UserResponseUser, AxiosError> {
     return this.profileQuery.result
   }
+
+  fetch(): Promise<UserResponseUser> {
+    return this.profileQuery.fetch()
+  }
 }

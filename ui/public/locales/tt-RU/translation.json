@@ -356,5 +356,8 @@
   "Permissions": "Рөхсәт",
   "SDK": "SDK",
   "ABI": "ABI",
-  "Displayed": "Күрсәтелә"
+  "Displayed": "Күрсәтелә",
+  "Date format": "Дата форматы",
+  "Email address separator": "Электрон почта адресы Сепаратор",
+  "Connection failed": "Тоташу уңышсыз"
 }
