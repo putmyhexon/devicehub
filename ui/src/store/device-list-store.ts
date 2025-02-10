@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify'
 import { makeAutoObservable } from 'mobx'
 
 import { socket } from '@/api/socket'
+import { DeviceWithFields } from '@/types/device-with-fields.type'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
@@ -41,7 +42,7 @@ export class DeviceListStore {
     socket.off('device.change', this.onDeviceChange)
   }
 
-  get devicesQueryResult(): QueryObserverResult<Device[], AxiosError> {
+  get devicesQueryResult(): QueryObserverResult<DeviceWithFields[], AxiosError> {
     return this.devicesQuery.result
   }
 

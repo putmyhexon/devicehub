@@ -5,7 +5,7 @@ import { Icon56AndroidDeviceOutline, Icon56AppleDeviceOutline, Icon56DevicesOutl
 import styles from './model-cell.module.css'
 
 import type { ReactElement } from 'react'
-import type { Device } from '@/generated/types'
+import type { DeviceWithFields } from '@/types/device-with-fields.type'
 
 enum PlatformIcon {
   ANDROID = 'Android',
@@ -20,8 +20,8 @@ const PLATFORM_ICON_MAP: Record<string, ReactElement> = {
 }
 
 type ModelCellProps = {
-  model: Device['model']
-  platform: Device['platform']
+  model: DeviceWithFields['model']
+  platform: DeviceWithFields['platform']
 }
 
 export const ModelCell = memo(({ model, platform }: ModelCellProps) => (

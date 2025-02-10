@@ -8,12 +8,12 @@ import { ROW_HEIGHT } from './constants'
 
 import styles from './device-table.module.css'
 
-import type { DeviceState } from '@/types/enums/device-state.enum'
 import type { Row } from '@tanstack/react-table'
-import type { Device } from '@/generated/types'
+import type { DeviceState } from '@/types/enums/device-state.enum'
+import type { DeviceWithFields } from '@/types/device-with-fields.type'
 
 type TableBodyProps = {
-  rows: Row<Device>[]
+  rows: Row<DeviceWithFields>[]
 }
 
 export const TableBody = ({ rows }: TableBodyProps) => {

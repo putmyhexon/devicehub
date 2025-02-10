@@ -17,9 +17,9 @@ import { DeviceStatusCell, BookedBeforeCell, BrowserCell, ProductCell, ModelCell
 import { browserAppsFilter, browserAppsSorting, deviceStatusSorting, getNetworkString, textColumnDef } from './helpers'
 import { DeviceTableColumnIds } from './types'
 
-import type { Device } from '@/generated/types'
+import type { DeviceWithFields } from '@/types/device-with-fields.type'
 
-const columnHelper = createColumnHelper<Device>()
+const columnHelper = createColumnHelper<DeviceWithFields>()
 
 export const DEVICE_COLUMNS = [
   /* NOTE: Device Info Group */

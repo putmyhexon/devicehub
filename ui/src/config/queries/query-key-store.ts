@@ -1,7 +1,7 @@
 import { createQueryKeyStore } from '@lukemorales/query-key-factory'
 
 import { getAuthContact, getAuthDocs, getManifest } from '@/api/openstf'
-import { getCurrentUserProfile, getDeviceBySerial, getDevices } from '@/api/openstf-api'
+import { getCurrentUserProfile, getDeviceBySerial, getDevicesWithFields } from '@/api/openstf-api'
 
 import type { inferQueryKeyStore } from '@lukemorales/query-key-factory'
 import type { GetManifestResponse } from '@/api/openstf/types'
@@ -11,7 +11,7 @@ export const queries = createQueryKeyStore({
   devices: {
     all: {
       queryKey: null,
-      queryFn: () => getDevices(),
+      queryFn: () => getDevicesWithFields(),
     },
     bySerial: (serial: string) => ({
       queryKey: [serial],
