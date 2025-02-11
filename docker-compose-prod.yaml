@@ -11,6 +11,7 @@ services:
             - certs:/etc/nginx/ssl:ro
         ports:
             - "80:80"
+            - "443:443"
         depends_on:
             devicehub-app:
                 condition: service_started
