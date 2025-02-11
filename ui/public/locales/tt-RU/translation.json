@@ -121,7 +121,7 @@
   "Launch Activity": "Аппарат яңаланыу",
   "Launching activity...": "Аппарат яңаланыу...",
   "Level": "Түбәнлек",
-  "Local Settings": "Локаль эшләүләр",
+  "Display Settings": "Деллюстрацияләр",
   "Location": "Тикшереп була",
   "Logs": "Журнал",
   "Maintenance": "Төрлеү",
@@ -365,5 +365,10 @@
   "Title": "Исем",
   "Generate": "Тудыру",
   "Generate Access Token": "Билге ясау",
-  "Are you sure you want to delete the access token": "Сезгә керү билгесен бетерергә телисезме?"
+  "Are you sure you want to delete the access token": "Сезгә керү билгесен бетерергә телисезме?",
+  "Activation": "Активлаштыру",
+  "Enable scrolling text": "Спрослы текстны эшләтеп җибәрү",
+  "Alert Message": "Белем хәбәре",
+  "Interface Settings": "Интерфейс көйләүләре",
+  "Reset general settings": "Гомуми көйләүләрне яңадан урнаштыру"
 }

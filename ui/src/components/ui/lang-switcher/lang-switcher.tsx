@@ -43,7 +43,5 @@ export const LangSwitcher = () => {
     i18n.changeLanguage(value)
   }
 
-  return (
-    <BaseSelect options={LANGUAGES_OPTIONS} stretched={false} value={currentLanguage} onChange={onSwitcherChange} />
-  )
+  return <BaseSelect options={LANGUAGES_OPTIONS} value={currentLanguage} onChange={onSwitcherChange} />
 }

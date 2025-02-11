@@ -5,7 +5,7 @@ import { useInjection } from 'inversify-react'
 import { IconButton, Image, Input, SegmentedControl, Tooltip } from '@vkontakte/vkui'
 import { Icon20ClearDataOutline, Icon20GlobeOutline, Icon24OpenIn } from '@vkontakte/icons'
 
-import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
+import { ContentCard } from '@/components/lib/content-card'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
@@ -39,7 +39,7 @@ export const LinkOpenerControl = observer(({ className }: { className?: string }
   }
 
   return (
-    <DeviceControlCard
+    <ContentCard
       afterButtonIcon={<Icon20ClearDataOutline />}
       afterTooltipText={t('Reset all browser settings')}
       before={<Icon20GlobeOutline />}
@@ -73,6 +73,6 @@ export const LinkOpenerControl = observer(({ className }: { className?: string }
           onChange={onBrowserChange}
         />
       )}
-    </DeviceControlCard>
+    </ContentCard>
   )
 })

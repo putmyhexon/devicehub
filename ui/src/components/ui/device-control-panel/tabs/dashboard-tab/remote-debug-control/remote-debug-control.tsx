@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Icon20BugOutline, Icon20CopyOutline } from '@vkontakte/icons'
 
 import { OutputField } from '@/components/lib/output-field'
-import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
+import { ContentCard } from '@/components/lib/content-card'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
@@ -13,7 +13,7 @@ export const RemoteDebugControl = ({ className }: { className?: string }) => {
   const deviceConnection = useInjection(CONTAINER_IDS.deviceConnection)
 
   return (
-    <DeviceControlCard
+    <ContentCard
       afterButtonIcon={<Icon20CopyOutline />}
       afterTooltipText={t('Copy link')}
       before={<Icon20BugOutline />}
@@ -23,6 +23,6 @@ export const RemoteDebugControl = ({ className }: { className?: string }) => {
       onAfterButtonClick={() => navigator.clipboard.writeText(deviceConnection.debugCommand)}
     >
       <OutputField text={deviceConnection.debugCommand} />
-    </DeviceControlCard>
+    </ContentCard>
   )
 }

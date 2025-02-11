@@ -1,44 +1,33 @@
-import { useTranslation } from 'react-i18next'
+import { Flex } from '@vkontakte/vkui'
 import { observer } from 'mobx-react-lite'
 import { useInjection } from 'inversify-react'
-import { FormItem, FormLayoutGroup, Input } from '@vkontakte/vkui'
 
-import { LangSwitcher } from '@/components/ui/lang-switcher'
-import { ThemeSwitcher } from '@/components/ui/theme-switcher'
+import { ConditionalRender } from '@/components/lib/conditional-render'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+
+import { ResetSettings } from './reset-settings'
+import { InterfaceSettings } from './interface-settings'
+import { AlertMessageSettings } from './alert-message-settings'
+import { DisplaySettings } from './display-settings/display-settings'
 
 import styles from './general-tab.module.css'
 
 export const GeneralTab = observer(() => {
-  const { t } = useTranslation()
-
-  const settingsService = useInjection(CONTAINER_IDS.settingsService)
+  const currentUserProfileStore = useInjection(CONTAINER_IDS.currentUserProfileStore)
 
   return (
-    <FormLayoutGroup>
-      <FormItem top={t('Language')}>
-        <LangSwitcher />
-      </FormItem>
-      <FormItem top={t('Theme')}>
-        <ThemeSwitcher />
-      </FormItem>
-      <FormItem top={t('Date format')}>
-        <Input
-          className={styles.input}
-          placeholder='e.g. M/d/yy h:mm:ss a'
-          value={settingsService.dateFormat}
-          onChange={(event) => settingsService.setDateFormat(event.target.value)}
-        />
-      </FormItem>
-      <FormItem top={t('Email address separator')}>
-        <Input
-          className={styles.input}
-          placeholder='e.g. ,'
-          value={settingsService.emailSeparator}
-          onChange={(event) => settingsService.setEmailSeparator(event.target.value)}
-        />
-      </FormItem>
-    </FormLayoutGroup>
+    <div className={styles.generalTabContainer}>
+      <div className={styles.generalTab}>
+        <Flex direction='column' gap='l' justify='space-between'>
+          <InterfaceSettings />
+          <DisplaySettings />
+          <ResetSettings />
+        </Flex>
+        <ConditionalRender conditions={[currentUserProfileStore.isAdmin]}>
+          <AlertMessageSettings className={styles.alertMessageSettings} />
+        </ConditionalRender>
+      </div>
+    </div>
   )
 })

@@ -8,7 +8,7 @@ import { Icon20DeleteOutline, Icon24Upload } from '@vkontakte/icons'
 import { FileInput } from '@/components/lib/file-input'
 import { LoadingBar } from '@/components/lib/loading-bar'
 import { ConditionalRender } from '@/components/lib/conditional-render'
-import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
+import { ContentCard } from '@/components/lib/content-card'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
@@ -21,7 +21,7 @@ export const AppUploadControl = observer(({ className }: { className?: string })
   const applicationInstallationService = useInjection(CONTAINER_IDS.applicationInstallationService)
 
   return (
-    <DeviceControlCard
+    <ContentCard
       afterButtonIcon={<Icon20DeleteOutline />}
       afterTooltipText={t('Clear')}
       before={<Icon24Upload height={20} width={20} />}
@@ -50,6 +50,6 @@ export const AppUploadControl = observer(({ className }: { className?: string })
       <ConditionalRender conditions={[applicationInstallationService.isInstalled]}>
         <ActivityLauncher />
       </ConditionalRender>
-    </DeviceControlCard>
+    </ContentCard>
   )
 })

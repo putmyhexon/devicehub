@@ -129,7 +129,7 @@
   "Launch Activity": "アクティビティを起動する",
   "Launching activity...": "アクティビティを起動中...",
   "Level": "レベル",
-  "Local Settings": "ローカル設定",
+  "Display Settings": "設定を表示します",
   "Location": "場所",
   "Lock Rotation": "回転ロック",
   "Logs": "ログ",
@@ -371,5 +371,10 @@
   "Connection failed": "接続に失敗しました",
   "Make sure to copy your access token now. You wont be able to see it again": "今すぐアクセストークンをコピーしてください。\nあなたはそれを二度と見ることができません",
   "Are you sure you want to delete the ADB key": "ADBキーを削除したいですか",
-  "Are you sure you want to delete the access token": "アクセストークンを削除したいですか"
+  "Are you sure you want to delete the access token": "アクセストークンを削除したいですか",
+  "Activation": "活性化",
+  "Enable scrolling text": "スクロールテキストを有効にします",
+  "Alert Message": "アラートメッセージ",
+  "Interface Settings": "インターフェイス設定",
+  "Reset general settings": "一般的な設定をリセットします"
 }

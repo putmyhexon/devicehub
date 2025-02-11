@@ -4,6 +4,9 @@
   --table-z-index: 50;
   --screen-input-z-index: 10;
 
+  /* Sizes */
+  --marquee-height: 45px;
+
   /* Colors */
   --light-gray: #cfcfcf;
   --slider-mark-outline: #828282;

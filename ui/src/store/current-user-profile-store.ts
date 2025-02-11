@@ -25,6 +25,10 @@ export class CurrentUserProfileStore {
     return this.profileQuery.result
   }
 
+  get isAdmin(): boolean {
+    return this.profileQueryResult.data?.privilege === 'admin'
+  }
+
   fetch(): Promise<UserResponseUser> {
     return this.profileQuery.fetch()
   }

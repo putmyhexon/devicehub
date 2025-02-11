@@ -356,5 +356,11 @@
   "Connection failed": "Connection failed",
   "ADB Keys": "ADB Keys",
   "Are you sure you want to delete the ADB key": "Are you sure you want to delete the ADB key?",
-  "Are you sure you want to delete the access token": "Are you sure you want to delete the access token?"
+  "Are you sure you want to delete the access token": "Are you sure you want to delete the access token?",
+  "Display Settings": "Display Settings",
+  "Activation": "Activation",
+  "Enable scrolling text": "Enable scrolling text",
+  "Alert Message": "Alert Message",
+  "Interface Settings": "Interface Settings",
+  "Reset general settings": "Reset general settings"
 }

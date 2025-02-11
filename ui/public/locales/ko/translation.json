@@ -130,7 +130,7 @@
   "Launch Activity": "액티비티 실행",
   "Launching activity...": "액티비티 실행중...",
   "Level": "수준",
-  "Local Settings": "로컬 설정",
+  "Display Settings": "디스플레이 설정",
   "Location": "위치",
   "Lock Rotation": "화면 잠금",
   "Logs": "로그",
@@ -383,5 +383,10 @@
   "Connection failed": "연결이 실패했습니다",
   "Run this command to copy the key to your clipboard": "이 명령을 실행하여 키를 클립 보드에 복사하십시오.",
   "Are you sure you want to delete the ADB key": "ADB 키를 삭제 하시겠습니까",
-  "Are you sure you want to delete the access token": "액세스 토큰을 삭제 하시겠습니까?"
+  "Are you sure you want to delete the access token": "액세스 토큰을 삭제 하시겠습니까?",
+  "Activation": "활성화",
+  "Enable scrolling text": "스크롤 텍스트를 활성화합니다",
+  "Alert Message": "경고 메시지",
+  "Interface Settings": "인터페이스 설정",
+  "Reset general settings": "일반 설정을 재설정하십시오"
 }

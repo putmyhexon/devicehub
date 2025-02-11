@@ -128,7 +128,7 @@
   "Launch Activity": "Uruchom aktywność",
   "Launching activity...": "Uruchamianie aktywności..",
   "Level": "Poziom",
-  "Local Settings": "Ustawienia lokalne",
+  "Display Settings": "Ustawienia wyświetlania",
   "Location": "Lokacja",
   "Lock Rotation": "Zablokuj rotację",
   "Logs": "Logi",
@@ -292,5 +292,11 @@
   "Are you sure you want to delete the ADB key": "Czy na pewno chcesz usunąć klucz ADB?",
   "Title": "Tytuł",
   "Unknown": "Nieznany",
-  "Are you sure you want to delete the access token": "Czy na pewno chcesz usunąć token dostępu?"
+  "Are you sure you want to delete the access token": "Czy na pewno chcesz usunąć token dostępu?",
+  "Reset Settings": "Zresetuj ustawienia",
+  "Activation": "Aktywacja",
+  "Enable scrolling text": "Włącz przewijanie tekstu",
+  "Alert Message": "Wiadomość ostrzegawcza",
+  "Interface Settings": "Ustawienia interfejsu",
+  "Reset general settings": "Zresetuj ogólne ustawienia"
 }

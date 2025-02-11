@@ -134,7 +134,7 @@
   "Launch Activity": "启动活动",
   "Launching activity...": "活动启动中...",
   "Level": "等级",
-  "Local Settings": "本地设置",
+  "Display Settings": "显示设置",
   "Location": "位置",
   "Lock Rotation": "锁定屏幕旋转",
   "Logs": "日志",
@@ -408,5 +408,10 @@
   "Connection failed": "连接失败",
   "Displayed": "显示",
   "Are you sure you want to delete the ADB key": "您确定要删除ADB键吗",
-  "Are you sure you want to delete the access token": "您确定要删除访问令牌吗"
+  "Are you sure you want to delete the access token": "您确定要删除访问令牌吗",
+  "Activation": "激活",
+  "Enable scrolling text": "启用滚动文字",
+  "Alert Message": "警报消息",
+  "Interface Settings": "接口设置",
+  "Reset general settings": "重置一般设置"
 }

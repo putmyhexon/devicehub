@@ -2,7 +2,7 @@ import { Container } from 'inversify'
 
 import { GroupService } from '@/services/group-service'
 import { AdbKeyService } from '@/services/adb-key-service'
-import { SettingsService } from '@/services/settings-service'
+import { SettingsService } from '@/services/settings-service/settings-service'
 import { AccessTokenService } from '@/services/access-token-service'
 import { LogsTrackerService } from '@/services/logs-tracker-service/logs-tracker-service'
 import { TransactionService } from '@/services/core/transaction-service/transaction-service'

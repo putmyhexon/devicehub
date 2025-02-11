@@ -1,8 +1,8 @@
-.deviceControlCard {
+.contentCard {
   overflow: hidden;
 }
 
-.cardContent {
+.cardContainer {
   height: 100%;
 }
 

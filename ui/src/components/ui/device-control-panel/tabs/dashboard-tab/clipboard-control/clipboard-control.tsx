@@ -5,7 +5,7 @@ import { useInjection } from 'inversify-react'
 import { Icon20CopyOutline } from '@vkontakte/icons'
 
 import { OutputField } from '@/components/lib/output-field'
-import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
+import { ContentCard } from '@/components/lib/content-card'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
@@ -24,12 +24,12 @@ export const ClipboardControl = observer(({ className }: { className?: string })
   }
 
   return (
-    <DeviceControlCard before={<Icon20CopyOutline />} className={className} title={t('Clipboard')}>
+    <ContentCard before={<Icon20CopyOutline />} className={className} title={t('Clipboard')}>
       <OutputField
         afterButtonClick={onGetClipboardContent}
         text={t(clipboardContent)}
         tooltipText={t('Get clipboard contents')}
       />
-    </DeviceControlCard>
+    </ContentCard>
   )
 })

@@ -121,7 +121,7 @@
   "Launch Activity": "Запустить приложение",
   "Launching activity...": "Приложение запускается...",
   "Level": "Уровень",
-  "Local Settings": "Локальные настройки",
+  "Display Settings": "Настройки отображения",
   "Location": "Местоположение",
   "Logs": "Журнал",
   "Maintenance": "Обслуживание",
@@ -365,5 +365,10 @@
   "Title": "Название",
   "Generate": "Сгенерировать",
   "Generate Access Token": "Сгенерировать токен",
-  "Are you sure you want to delete the access token": "Вы уверены, что хотите удалить токен доступа?"
+  "Are you sure you want to delete the access token": "Вы уверены, что хотите удалить токен доступа?",
+  "Activation": "Активация",
+  "Enable scrolling text": "Запуск бегущей строки",
+  "Alert Message": "Оповещение",
+  "Interface Settings": "Настройки интерфейса",
+  "Reset general settings": "Сбросить общие настройки"
 }

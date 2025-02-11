@@ -25,7 +25,7 @@ import {
 import { observer } from 'mobx-react-lite'
 import { useInjection } from 'inversify-react'
 
-import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
+import { ContentCard } from '@/components/lib/content-card'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
@@ -39,7 +39,7 @@ export const DeviceButtonsControl = observer(({ className }: { className?: strin
   const deviceControlStore = useInjection(CONTAINER_IDS.deviceControlStore)
 
   return (
-    <DeviceControlCard
+    <ContentCard
       before={<Icon28SettingsOutline height={20} width={20} />}
       className={className}
       title={t('Device Buttons')}
@@ -199,6 +199,6 @@ export const DeviceButtonsControl = observer(({ className }: { className?: strin
           </div>
         </FormItem>
       </FormLayoutGroup>
-    </DeviceControlCard>
+    </ContentCard>
   )
 })

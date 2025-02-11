@@ -10,7 +10,7 @@ export type CaptureDevicesParams = {
   /**
    * timeout for group in seconds
    */
-  timeout?: number
+  timeout: number
   /**
    * Device amount needed for autotests run
    */
