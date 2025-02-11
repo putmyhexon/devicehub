@@ -97,7 +97,7 @@ services:
         container_name: devicehub-app
         env_file:
             - scripts/variables.env
-        command: stf app --port 3000 --auth-url ${STF_URL}/${AUTH_URL} --websocket-url ${STF_URL}/ --secret=${STF_SECRET}
+        command: stf app --port 3000 --auth-url https://${STF_DOMAIN}:${STF_PORT}/${AUTH_URL} --websocket-url https://${STF_DOMAIN}:${STF_PORT}/ --secret=${STF_SECRET}
         depends_on:
             devicehub-migrate:
                 condition: service_completed_successfully
@@ -110,7 +110,7 @@ services:
         container_name: devicehub-auth
         env_file:
             - scripts/variables.env
-        command: stf auth-mock --port 3000 --app-url ${STF_URL} --secret=${STF_SECRET}
+        command: stf auth-mock --port 3000 --app-url https://${STF_DOMAIN}:${STF_PORT} --secret=${STF_SECRET}
         depends_on:
             devicehub-migrate:
                 condition: service_completed_successfully
@@ -162,7 +162,7 @@ services:
         container_name: devicehub-storage-plugin-image
         env_file:
             - scripts/variables.env
-        command: stf storage-plugin-image --port 3000 --storage-url ${STF_URL}/ --secret=${STF_SECRET}
+        command: stf storage-plugin-image --port 3000 --storage-url https://${STF_DOMAIN}:${STF_PORT}/ --secret=${STF_SECRET}
         depends_on:
             devicehub-migrate:
                 condition: service_completed_successfully
@@ -222,7 +222,7 @@ services:
         container_name: devicehub-websocket
         env_file:
             - scripts/variables.env
-        command: stf websocket --port 3000 --storage-url ${STF_URL}/ --connect-sub tcp://devicehub-triproxy-app:7150 --connect-push tcp://devicehub-triproxy-app:7170 --secret=${STF_SECRET}
+        command: stf websocket --port 3000 --storage-url https://${STF_DOMAIN}:${STF_PORT}/ --connect-sub tcp://devicehub-triproxy-app:7150 --connect-push tcp://devicehub-triproxy-app:7170 --secret=${STF_SECRET}
         depends_on:
             devicehub-migrate:
                 condition: service_completed_successfully
@@ -267,13 +267,13 @@ services:
             adbd:
                 condition: service_healthy
         restart: unless-stopped
-        command: stf provider --name devicehub-provider --adb-host adbd --no-cleanup --connect-sub tcp://devicehub-triproxy-dev:7250 --connect-push tcp://devicehub-triproxy-dev:7270 --storage-url ${STF_URL}/ --public-ip ${STF_URL} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern "wss://${STF_URL}/d/devicehub-provider/<%= publicPort %>/"
+        command: stf provider --name devicehub-provider --adb-host adbd --no-cleanup --connect-sub tcp://devicehub-triproxy-dev:7250 --connect-push tcp://devicehub-triproxy-dev:7270 --storage-url https://${STF_DOMAIN}:${STF_PORT}/ --public-ip https://${STF_DOMAIN}:${STF_PORT} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern "wss://${STF_DOMAIN}:${STF_PORT}/d/devicehub-provider/<%= publicPort %>/"
         networks:
             devicehub:
     devicehub-ssl:
         image: paulczar/omgwtfssl
         environment:
-            - SSL_SUBJECT=${STF_DOMAIN}
+            - SSL_SUBJECT=${STF_DOMAIN}:${STF_PORT}
         volumes:
             - certs:/certs:rw
 volumes:
