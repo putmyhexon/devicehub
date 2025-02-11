@@ -24,12 +24,18 @@ services:
             devicehub:
     adbd:
         container_name: adbd
-        image: 'devicefarmer/adb:latest'
+        image: "devicefarmer/adb:latest"
         restart: unless-stopped
         network_mode: host
         volumes:
             - /dev/bus/usb:/dev/bus/usb
         privileged: true
+        healthcheck:
+            test: nc -vz 127.0.0.1 5037
+            interval: 1m30s
+            timeout: 30s
+            retries: 5
+            start_period: 30s
     devicehub-mongo:
         image: mongo:7.0
         hostname: devicehub-mongo
@@ -245,6 +251,8 @@ services:
         depends_on:
             devicehub-migrate:
                 condition: service_completed_successfully
+            adbd:
+                condition: service_healthy
         restart: unless-stopped
         command: stf provider --name devicehub-provider --adb-host adbd --no-cleanup --connect-sub tcp://devicehub-triproxy-dev:7250 --connect-push tcp://devicehub-triproxy-dev:7270 --storage-url ${STF_URL}/ --public-ip ${STF_URL} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${STF_URL}/d/devicehub-provider/<%= publicPort %>/"
         networks:
