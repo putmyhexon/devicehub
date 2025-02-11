@@ -8,17 +8,28 @@ services:
         container_name: devicehub-nginx
         volumes:
             - ./scripts/nginx.conf:/etc/nginx/nginx.conf:ro
+            - certs:/etc/nginx/ssl:ro
         ports:
             - "80:80"
         depends_on:
-            - devicehub-app
-            - devicehub-websocket
-            - devicehub-storage-temp
-            - devicehub-storage-plugin-apk
-            - devicehub-storage-plugin-image
-            - devicehub-api
-            - devicehub-auth
-            - devicehub-provider
+            devicehub-app:
+                condition: service_started
+            devicehub-websocket:
+                condition: service_started
+            devicehub-storage-temp:
+                condition: service_started
+            devicehub-storage-plugin-apk:
+                condition: service_started
+            devicehub-storage-plugin-image:
+                condition: service_started
+            devicehub-api:
+                condition: service_started
+            devicehub-auth:
+                condition: service_started
+            devicehub-provider:
+                condition: service_started
+            devicehub-ssl:
+                condition: service_completed_successfully
         restart: unless-stopped
         networks:
             devicehub:
@@ -258,6 +269,12 @@ services:
         command: stf provider --name devicehub-provider --adb-host adbd --no-cleanup --connect-sub tcp://devicehub-triproxy-dev:7250 --connect-push tcp://devicehub-triproxy-dev:7270 --storage-url ${STF_URL}/ --public-ip ${STF_URL} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${STF_URL}/d/devicehub-provider/<%= publicPort %>/"
         networks:
             devicehub:
-
+    devicehub-ssl:
+        image: paulczar/omgwtfssl
+        environment:
+            - SSL_SUBJECT=${STF_DOMAIN}
+        volumes:
+            - certs:/certs:rw
 volumes:
     devicehub-db-volume:
+    certs:
