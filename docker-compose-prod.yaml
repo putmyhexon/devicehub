@@ -26,7 +26,6 @@ services:
         container_name: adbd
         image: "devicefarmer/adb:latest"
         restart: unless-stopped
-        network_mode: host
         volumes:
             - /dev/bus/usb:/dev/bus/usb
         privileged: true
@@ -36,6 +35,8 @@ services:
             timeout: 30s
             retries: 5
             start_period: 30s
+        networks:
+            devicehub:
     devicehub-mongo:
         image: mongo:7.0
         hostname: devicehub-mongo
