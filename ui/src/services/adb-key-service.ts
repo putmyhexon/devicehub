@@ -26,8 +26,8 @@ export class AdbKeyService {
   }
 
   private extractHostNameFromKey(key: string): string {
-    if (key.match(/.+= (.+)/)) {
-      return key.replace(/.+= (.+)/g, '$1')
+    if (key.match(/\S+\s+(.+)/)) {
+      return key.replace(/\S+\s+(.+)/g, '$1')
     }
 
     return ''

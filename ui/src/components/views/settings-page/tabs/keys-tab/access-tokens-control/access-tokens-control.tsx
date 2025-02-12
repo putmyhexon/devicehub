@@ -7,7 +7,7 @@ import { Button, FormItem, FormLayoutGroup, Input, List, Placeholder, Spacing } 
 import { Icon20AddSquareOutline, Icon20TagOutline, Icon28InboxOutline, Icon28KeySquareOutline } from '@vkontakte/icons'
 
 import { WarningModal } from '@/components/ui/modals'
-import { InstructionBlock } from '@/components/lib/instruction-block'
+import { CopyableBlock } from '@/components/lib/copyable-block'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
 
@@ -59,7 +59,7 @@ export const AccessTokensControl = observer(({ className }: { className?: string
       onAfterButtonClick={() => setIsAddNewTokenOpen((prev) => !prev)}
     >
       <ConditionalRender conditions={[!!accessTokenService.generatedTokenId]}>
-        <InstructionBlock
+        <CopyableBlock
           copyableText={accessTokenService.generatedTokenId}
           title={t('Make sure to copy your access token now. You wont be able to see it again')}
           onOkClick={() => {

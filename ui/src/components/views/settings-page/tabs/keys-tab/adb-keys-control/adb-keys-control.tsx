@@ -13,7 +13,7 @@ import {
 import { Button, Div, FormItem, FormStatus, Input, List, Placeholder, Textarea } from '@vkontakte/vkui'
 
 import { WarningModal } from '@/components/ui/modals'
-import { InstructionBlock } from '@/components/lib/instruction-block'
+import { CopyableBlock } from '@/components/lib/copyable-block'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
 
@@ -58,7 +58,7 @@ export const AdbKeysControl = observer(({ className }: { className?: string }) =
       onAfterButtonClick={() => adbKeyService.setIsAddAdbKeyOpen((prev) => !prev)}
     >
       <ConditionalRender conditions={[adbKeyService.isAddAdbKeyOpen]}>
-        <InstructionBlock
+        <CopyableBlock
           copyableText='pbcopy < ~/.android/adbkey.pub'
           isClosable={false}
           title={t('Run this command to copy the key to your clipboard')}
