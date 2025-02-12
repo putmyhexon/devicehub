@@ -6,7 +6,7 @@
 .generalTab {
   overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(max-content, 500px) minmax(max-content, 750px);
+  grid-template-columns: minmax(max-content, 350px) minmax(max-content, 750px);
   gap: 10px;
   align-items: start;
 

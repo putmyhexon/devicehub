@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Div, Panel, View } from '@vkontakte/vkui'
 
 import { TabsPanel } from '@/components/lib/tabs-panel'
+import { GeneralTab } from '@/components/ui/settings-tabs/general-tab'
+import { KeysTab } from '@/components/ui/settings-tabs/keys-tab'
 
 import {
   getSettingsDevicesRoute,
@@ -12,9 +14,6 @@ import {
   getSettingsShellRoute,
   getSettingsUsersRoute,
 } from '@/constants/route-paths'
-
-import { GeneralTab } from './tabs/general-tab'
-import { KeysTab } from './tabs/keys-tab'
 
 import styles from './settings-page.module.css'
 

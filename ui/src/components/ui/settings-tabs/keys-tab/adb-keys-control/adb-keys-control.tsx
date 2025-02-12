@@ -15,7 +15,7 @@ import { Button, Div, FormItem, FormStatus, Input, List, Placeholder, Textarea }
 import { WarningModal } from '@/components/ui/modals'
 import { CopyableBlock } from '@/components/lib/copyable-block'
 import { ConditionalRender } from '@/components/lib/conditional-render'
-import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
+import { ContentCard } from '@/components/lib/content-card'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
@@ -48,7 +48,7 @@ export const AdbKeysControl = observer(({ className }: { className?: string }) =
   })
 
   return (
-    <DeviceControlCard
+    <ContentCard
       afterButtonIcon={<Icon20AddSquareOutline />}
       afterTooltipText={t('Add ADB Key')}
       before={<Icon16LogoAndroid height={20} width={20} />}
@@ -127,6 +127,6 @@ export const AdbKeysControl = observer(({ className }: { className?: string }) =
         onClose={() => setIsConfirmationOpen(false)}
         onOk={async () => adbKeyService.removeAdbKey()}
       />
-    </DeviceControlCard>
+    </ContentCard>
   )
 })

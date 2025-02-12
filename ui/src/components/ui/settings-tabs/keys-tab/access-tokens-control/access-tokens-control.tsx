@@ -9,7 +9,7 @@ import { Icon20AddSquareOutline, Icon20TagOutline, Icon28InboxOutline, Icon28Key
 import { WarningModal } from '@/components/ui/modals'
 import { CopyableBlock } from '@/components/lib/copyable-block'
 import { ConditionalRender } from '@/components/lib/conditional-render'
-import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
+import { ContentCard } from '@/components/lib/content-card'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
@@ -48,7 +48,7 @@ export const AccessTokensControl = observer(({ className }: { className?: string
   }, [isAddNewTokenOpen])
 
   return (
-    <DeviceControlCard
+    <ContentCard
       afterButtonIcon={<Icon20AddSquareOutline />}
       afterTooltipText={t('Generate Access Token')}
       before={<Icon28KeySquareOutline height={20} width={20} />}
@@ -123,6 +123,6 @@ export const AccessTokensControl = observer(({ className }: { className?: string
         onClose={() => setIsConfirmationOpen(false)}
         onOk={async () => accessTokenService.removeAccessToken()}
       />
-    </DeviceControlCard>
+    </ContentCard>
   )
 })
