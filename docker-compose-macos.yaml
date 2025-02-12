@@ -38,6 +38,8 @@ services:
             retries: 30
         networks:
             devicehub:
+        volumes:
+            - devicehub-db-volume:/opt/devicehub/db
     devicehub-mongosetup:
         image: mongo:7.0
         container_name: devicehub-mongosetup
