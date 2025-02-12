@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Icon24Upload } from '@vkontakte/icons'
 import { DropZone, Placeholder, VisuallyHidden } from '@vkontakte/vkui'
 
+import { getFileExtension } from '@/lib/utils/get-file-extension.util'
+
 import styles from './file-input.module.css'
 
 import type { ChangeEvent, DragEvent } from 'react'
@@ -24,7 +26,10 @@ export const FileInput = ({ onChange, onError, accept }: FileInputProps) => {
   const onChangeWithValidation = (files: FileList) => {
     onError?.('')
 
-    if (files[0] && !accept?.includes(files[0]?.type)) {
+    const file = files[0]
+    const fileExtension = getFileExtension(file)
+
+    if (!accept?.includes(fileExtension) && file.type !== 'application/octet-stream') {
       onError?.('Unsupported file type')
 
       return
