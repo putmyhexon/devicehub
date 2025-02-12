@@ -3909,7 +3909,6 @@ components:
         class:
           type: string
           description: "Group class; privileged value => debug, bookable, standard"
-          default: once
           enum:
           - once
           - bookable
