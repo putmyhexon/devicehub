@@ -46,6 +46,8 @@ services:
             retries: 30
         networks:
             devicehub:
+        volumes:
+            - devicehub-db-volume:/opt/devicehub/db
     devicehub-mongosetup:
         image: mongo:7.0
         container_name: devicehub-mongosetup
@@ -247,5 +249,6 @@ services:
         command: stf provider --name devicehub-provider --adb-host adbd --no-cleanup --connect-sub tcp://devicehub-triproxy-dev:7250 --connect-push tcp://devicehub-triproxy-dev:7270 --storage-url ${STF_URL}/ --public-ip ${STF_URL} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${STF_URL}/d/devicehub-provider/<%= publicPort %>/"
         networks:
             devicehub:
+
 volumes:
     devicehub-db-volume:
