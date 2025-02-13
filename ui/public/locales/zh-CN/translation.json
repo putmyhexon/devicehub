@@ -13,7 +13,6 @@
   "ADB Keys": "安卓调试桥密钥",
   "Add": "添加",
   "Add ADB Key": "添加ADB Key",
-  "Add Key": "添加Key",
   "Add the following ADB Key to STF?": "添加以下的ADB Key到STF?",
   "Admin mode has been disabled.": "管理员模式已关闭",
   "Admin mode has been enabled.": "管理员模式已启用",
@@ -101,9 +100,9 @@
   "Frequency": "频率",
   "Full": "全部",
   "General": "通用",
-  "Generate Access Token": "生成访问令牌",
+  "Generate Access Token": "产生令牌",
   "Generate Login for VNC": "生成登录VNC",
-  "Generate New Token": "生成新令牌",
+  "Generate": "产生",
   "Get": "获取",
   "Get clipboard contents": "获取剪贴板内容",
   "Go Back": "返回",
@@ -140,7 +139,7 @@
   "Lock Rotation": "锁定屏幕旋转",
   "Logs": "日志",
   "Maintenance": "维护",
-  "Make sure to copy your access token now. You won't be able to see it again.": "请确保已备份您的身份验证凭证，此凭证后续将不再显示！",
+  "Make sure to copy your access token now. You wont be able to see it again": "请确保已备份您的身份验证凭证，此凭证后续将不再显示",
   "Manage Apps": "管理Apps",
   "Manner Mode": "管理模式",
   "Manufacturer": "制造商",
@@ -407,5 +406,7 @@
   "Date format": "日期格式",
   "Email address separator": "电子邮件地址分隔符",
   "Connection failed": "连接失败",
-  "Displayed": "显示"
+  "Displayed": "显示",
+  "Are you sure you want to delete the ADB key": "您确定要删除ADB键吗",
+  "Are you sure you want to delete the access token": "您确定要删除访问令牌吗"
 }

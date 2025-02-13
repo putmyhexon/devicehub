@@ -2,6 +2,7 @@ import type { interfaces } from 'inversify'
 import type { InfoService } from '@/services/info-service'
 import type { GroupService } from '@/services/group-service'
 import type { LogcatService } from '@/services/logcat-service'
+import type { AdbKeyService } from '@/services/adb-key-service'
 import type { DeviceListStore } from '@/store/device-list-store'
 import type { LinkOpenerStore } from '@/store/link-opener-store'
 import type { BookingService } from '@/services/booking-service'
@@ -12,6 +13,7 @@ import type { DeviceControlStore } from '@/store/device-control-store'
 import type { DeviceDisconnection } from '@/store/device-disconnection'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 import type { DeviceBySerialStore } from '@/store/device-by-serial-store'
+import type { AccessTokenService } from '@/services/access-token-service'
 import type { TouchService } from '@/services/touch-service/touch-service'
 import type { TransactionFactory } from '@/types/transaction-factory.type'
 import type { FileExplorerService } from '@/services/file-explorer-service'
@@ -32,6 +34,7 @@ export const CONTAINER_IDS = {
   touchService: Symbol.for('TouchService') as interfaces.ServiceIdentifier<TouchService>,
   groupService: Symbol.for('GroupService') as interfaces.ServiceIdentifier<GroupService>,
   logcatService: Symbol.for('LogcatService') as interfaces.ServiceIdentifier<LogcatService>,
+  adbKeyService: Symbol.for('AdbKeyService') as interfaces.ServiceIdentifier<AdbKeyService>,
   bookingService: Symbol.for('BookingService') as interfaces.ServiceIdentifier<BookingService>,
   scalingService: Symbol.for('ScalingService') as interfaces.ServiceIdentifier<ScalingService>,
   linkOpenerStore: Symbol.for('LinkOpenerStore') as interfaces.ServiceIdentifier<LinkOpenerStore>,
@@ -43,6 +46,7 @@ export const CONTAINER_IDS = {
   factoryMobxQuery: Symbol.for('Factory<MobxQuery>') as interfaces.ServiceIdentifier<MobxQueryFactory>,
   shellControlStore: Symbol.for('ShellControlStore') as interfaces.ServiceIdentifier<ShellControlStore>,
   deviceScreenStore: Symbol.for('DeviceScreenStore') as interfaces.ServiceIdentifier<DeviceScreenStore>,
+  accessTokenService: Symbol.for('AccessTokenService') as interfaces.ServiceIdentifier<AccessTokenService>,
   deviceControlStore: Symbol.for('DeviceControlStore') as interfaces.ServiceIdentifier<DeviceControlStore>,
   logsTrackerService: Symbol.for('LogsTrackerService') as interfaces.ServiceIdentifier<LogsTrackerService>,
   deviceBySerialStore: Symbol.for('DeviceBySerialStore') as interfaces.ServiceIdentifier<DeviceBySerialStore>,

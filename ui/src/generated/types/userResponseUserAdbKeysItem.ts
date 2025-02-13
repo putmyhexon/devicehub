@@ -6,7 +6,7 @@
  * OpenAPI spec version: 2.4.3
  */
 
-export interface AccessTokensResponse {
-  success: boolean
-  titles?: string[]
+export type UserResponseUserAdbKeysItem = {
+  fingerprint?: string
+  title?: string
 }

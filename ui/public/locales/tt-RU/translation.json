@@ -10,7 +10,6 @@
   "ADB Keys": "ADB Ключтері",
   "Add": "Қосу",
   "Add ADB Key": "ADB Клюбін қосу",
-  "Add Key": "Клюбін қосу",
   "Add the following ADB Key to STF?": "Осы ADB Клюбін VK DeviceHub-ке қосу?",
   "Admin mode has been disabled.": "Админ режимі өшірілді",
   "Admin mode has been enabled.": "Админ режимі іске қосылды",
@@ -359,5 +358,12 @@
   "Displayed": "Күрсәтелә",
   "Date format": "Дата форматы",
   "Email address separator": "Электрон почта адресы Сепаратор",
-  "Connection failed": "Тоташу уңышсыз"
+  "Connection failed": "Тоташу уңышсыз",
+  "Make sure to copy your access token now. You wont be able to see it again": "Хәзер керү билгесен күчереп алыгыз. \nСез аны кабат күрә алмассыз",
+  "Are you sure you want to delete the ADB key": "Сез ADB ачкычын бетерергә телисезме?",
+  "Access Tokens": "Токларга керү",
+  "Title": "Исем",
+  "Generate": "Тудыру",
+  "Generate Access Token": "Билге ясау",
+  "Are you sure you want to delete the access token": "Сезгә керү билгесен бетерергә телисезме?"
 }

@@ -13,7 +13,6 @@
   "Activity": "Activité",
   "Add": "Ajouter",
   "Add ADB Key": "Ajouter une Clef ADB",
-  "Add Key": "Ajouter une Clef",
   "Add the following ADB Key to STF?": "Ajouter la Clef ADB suivante dans STF?",
   "Admin mode has been disabled.": "Le Mode Administrateur a été désactivé",
   "Admin mode has been enabled.": "Le Mode Administrateur a été activé",
@@ -101,9 +100,9 @@
   "Frequency": "Fréquence",
   "Full": "Rempli",
   "General": "Général",
-  "Generate Access Token": "Générer un Jeton d'Accès",
+  "Generate Access Token": "Générer un jeton",
   "Generate Login for VNC": "Générer un identifiant pour VNC",
-  "Generate New Token": "Générer un Nouveau Jeton",
+  "Generate": "Générer",
   "Get": "Obtenir",
   "Get clipboard contents": "Obtenir le contenu du Presse-Papier",
   "Go Back": "Retour",
@@ -140,7 +139,7 @@
   "Lock Rotation": "Bloquer la Rotation",
   "Logs": "Logs",
   "Maintenance": "Maintenance",
-  "Make sure to copy your access token now. You won't be able to see it again.": "Assurez-vous de copier votre jeton d'accès maintenant. Vous ne serez pas en mesure de le voir à nouveau.",
+  "Make sure to copy your access token now. You wont be able to see it again": "Assurez-vous de copier votre jeton d'accès maintenant. Vous ne serez pas en mesure de le voir à nouveau",
   "Manage Apps": "Gérer les Applications",
   "Manner Mode": "Mode Silencieux",
   "Manufacturer": "Fabricant",
@@ -412,5 +411,7 @@
   "Displayed": "Affiché",
   "Date format": "Format de date",
   "Email address separator": "Séparateur d'adresse e-mail",
-  "Connection failed": "Échec de la connexion"
+  "Connection failed": "Échec de la connexion",
+  "Are you sure you want to delete the ADB key": "Êtes-vous sûr de vouloir supprimer la clé ADB?",
+  "Are you sure you want to delete the access token": "Êtes-vous sûr de vouloir supprimer le jeton d'accès?"
 }

@@ -5,12 +5,14 @@
  * Control and manages real Smartphone devices from browser and restful apis
  * OpenAPI spec version: 2.4.3
  */
+import type { UserResponseUserAdbKeysItem } from './userResponseUserAdbKeysItem'
 import type { UserResponseUserGroups } from './userResponseUserGroups'
 import type { UserResponseUserSettings } from './userResponseUserSettings'
 
 export type UserResponseUser = {
   _id?: string
   acceptedPolicy?: boolean
+  adbKeys?: UserResponseUserAdbKeysItem[]
   createdAt?: string
   email?: string
   forwards?: unknown[]

@@ -10,7 +10,6 @@
   "ADB Keys": "Ключи ADB",
   "Add": "Добавить",
   "Add ADB Key": "Добавить ADB ключ",
-  "Add Key": "Добавить ключ",
   "Add the following ADB Key to STF?": "Добавить ADB ключ к VK DeviceHub?",
   "Admin mode has been disabled.": "Режим администратора отключен.",
   "Admin mode has been enabled.": "Режим администратора включен.",
@@ -359,5 +358,12 @@
   "Displayed": "Отображено",
   "Date format": "Формат даты",
   "Email address separator": "Разделитель адреса электронной почты",
-  "Connection failed": "Не удалось установить соединение"
+  "Connection failed": "Не удалось установить соединение",
+  "Make sure to copy your access token now. You wont be able to see it again": "Обязательно скопируйте свой токен доступа. \nВы не сможете увидеть его снова",
+  "Are you sure you want to delete the ADB key": "Вы уверены, что хотите удалить ключ ADB?",
+  "Access Tokens": "Токены доступа",
+  "Title": "Название",
+  "Generate": "Сгенерировать",
+  "Generate Access Token": "Сгенерировать токен",
+  "Are you sure you want to delete the access token": "Вы уверены, что хотите удалить токен доступа?"
 }

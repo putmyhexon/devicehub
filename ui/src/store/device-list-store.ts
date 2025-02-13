@@ -11,7 +11,6 @@ import { getDeviceState } from '@/lib/utils/get-device-state.util'
 import { isDeviceUsable } from '@/lib/utils/is-device-usable.util'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
-import type { AxiosError } from 'axios'
 import type { Device } from '@/generated/types'
 import type { QueryObserverResult } from '@tanstack/react-query'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
@@ -42,7 +41,7 @@ export class DeviceListStore {
     socket.off('device.change', this.onDeviceChange)
   }
 
-  get devicesQueryResult(): QueryObserverResult<DeviceWithFields[], AxiosError> {
+  get devicesQueryResult(): QueryObserverResult<DeviceWithFields[]> {
     return this.devicesQuery.result
   }
 

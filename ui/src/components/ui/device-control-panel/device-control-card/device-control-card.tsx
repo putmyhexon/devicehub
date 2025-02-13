@@ -18,6 +18,7 @@ type DeviceControlCardProps = {
   helpTooltipText?: string
   className?: string
   separator?: boolean
+  isAfterButtonDisabled?: boolean
 }
 
 export const DeviceControlCard = ({
@@ -30,6 +31,7 @@ export const DeviceControlCard = ({
   helpTooltipText,
   className,
   separator = false,
+  isAfterButtonDisabled = false,
 }: DeviceControlCardProps) => (
   <Card className={cn(styles.deviceControlCard, className)} mode='tint'>
     <Div className={styles.cardContent}>
@@ -47,11 +49,16 @@ export const DeviceControlCard = ({
             </Tooltip>
           </ConditionalRender>
           <ConditionalRender conditions={[!!onAfterButtonClick]}>
-            <Tooltip appearance='accent' description={afterTooltipText}>
+            <Tooltip
+              appearance='accent'
+              description={afterTooltipText}
+              shown={isAfterButtonDisabled ? false : undefined}
+            >
               <Button
                 appearance='neutral'
                 aria-label='Control action button'
                 before={afterButtonIcon}
+                disabled={isAfterButtonDisabled}
                 mode='tertiary'
                 onClick={onAfterButtonClick}
               />

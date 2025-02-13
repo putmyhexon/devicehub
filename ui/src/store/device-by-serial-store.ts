@@ -14,7 +14,6 @@ import { DEVICE_LIKELY_LEAVE_REASON } from '@/constants/device-likely-leave-reas
 
 import { deviceErrorModalStore } from './device-error-modal-store'
 
-import type { AxiosError } from 'axios'
 import type { Device } from '@/generated/types'
 import type { QueryObserverResult } from '@tanstack/react-query'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
@@ -83,7 +82,7 @@ export class DeviceBySerialStore {
     })
   }
 
-  deviceQueryResult(): QueryObserverResult<Device, AxiosError> {
+  deviceQueryResult(): QueryObserverResult<Device> {
     return this.deviceQuery.result
   }
 
@@ -91,7 +90,7 @@ export class DeviceBySerialStore {
     return this.deviceQuery.fetch()
   }
 
-  refetch(): Promise<QueryObserverResult<Device, AxiosError>> {
+  refetch(): Promise<QueryObserverResult<Device>> {
     return this.deviceQuery.refetch()
   }
 }

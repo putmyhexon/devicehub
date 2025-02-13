@@ -4,7 +4,6 @@ import { inject, injectable } from 'inversify'
 import { queries } from '@/config/queries/query-key-store'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
-import type { AxiosError } from 'axios'
 import type { UserResponseUser } from '@/generated/types'
 import type { QueryObserverResult } from '@tanstack/react-query'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
@@ -22,7 +21,7 @@ export class CurrentUserProfileStore {
     }))
   }
 
-  get profileQueryResult(): QueryObserverResult<UserResponseUser, AxiosError> {
+  get profileQueryResult(): QueryObserverResult<UserResponseUser> {
     return this.profileQuery.result
   }
 

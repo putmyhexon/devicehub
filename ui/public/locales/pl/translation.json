@@ -13,7 +13,6 @@
   "ADB Keys": "Klucze ADB",
   "Add": "Dodaj",
   "Add ADB Key": "Dodaj klucz ADB",
-  "Add Key": "Dodaj klucz",
   "Add the following ADB Key to STF?": "Dodać następujący klucz ADB do STF?",
   "Admin mode has been disabled.": "Tryb admina został wyłączony.",
   "Admin mode has been enabled.": "Tryb admina został włączony",
@@ -98,9 +97,9 @@
   "Frequency": "Częstotliwość",
   "Full": "Pełny",
   "General": "Ogólne",
-  "Generate Access Token": "Generuj token dostępu",
+  "Generate Access Token": "Wygeneruj token",
   "Generate Login for VNC": "Generuj login do VNC",
-  "Generate New Token": "Wygeneruj nowy token",
+  "Generate": "Spowodować",
   "Get": "Pobierz",
   "Get clipboard contents": "Kopiuj zawartość schowka",
   "Go Back": "Wróć",
@@ -287,5 +286,11 @@
   "Displayed": "Wystawiany",
   "Date format": "Format daty",
   "Email address separator": "Separator adresu e -mail",
-  "Connection failed": "Połączenie nie powiodło się"
+  "Connection failed": "Połączenie nie powiodło się",
+  "Make sure to copy your access token now. You wont be able to see it again": "Pamiętaj, aby skopiować swój token dostępu teraz. \nNie będziesz mógł tego ponownie zobaczyć",
+  "Run this command to copy the key to your clipboard": "Uruchom to polecenie, aby skopiować klucz do schowka",
+  "Are you sure you want to delete the ADB key": "Czy na pewno chcesz usunąć klucz ADB?",
+  "Title": "Tytuł",
+  "Unknown": "Nieznany",
+  "Are you sure you want to delete the access token": "Czy na pewno chcesz usunąć token dostępu?"
 }

@@ -8,11 +8,12 @@ import type { DeviceWithFieldsListResponse } from './types'
 import type { DeviceWithFields } from '@/types/device-with-fields.type'
 import type {
   Device,
-  DeviceResponse,
-  GetDeviceBySerialParams,
-  GetDevicesParams,
   UserResponse,
+  DeviceResponse,
   UserResponseUser,
+  GetDevicesParams,
+  GetDeviceBySerialParams,
+  AccessTokensResponse,
 } from '@/generated/types'
 
 export const getDevicesWithFields = async (params?: Omit<GetDevicesParams, 'fields'>): Promise<DeviceWithFields[]> => {
@@ -36,4 +37,10 @@ export const getCurrentUserProfile = async (): Promise<UserResponseUser> => {
   const { data } = await openstfApiClient.get<UserResponse>(OPENSTF_API_ROUTES.user)
 
   return data.user
+}
+
+export const getAccessTokens = async (): Promise<string[]> => {
+  const { data } = await openstfApiClient.get<AccessTokensResponse>(OPENSTF_API_ROUTES.accessTokens)
+
+  return data.titles?.reverse() || []
 }

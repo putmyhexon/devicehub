@@ -14,6 +14,7 @@ import {
 } from '@/constants/route-paths'
 
 import { GeneralTab } from './tabs/general-tab'
+import { KeysTab } from './tabs/keys-tab'
 
 import styles from './settings-page.module.css'
 
@@ -34,7 +35,7 @@ export const SettingsPage = () => {
         id: getSettingsKeysRoute(),
         title: t('Keys'),
         ariaControls: 'tab-content-keys',
-        content: <Div />,
+        content: <KeysTab />,
       },
       {
         id: getSettingsGroupsRoute(),
