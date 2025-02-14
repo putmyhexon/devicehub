@@ -17,7 +17,7 @@ import { observer } from 'mobx-react-lite'
 
 import { InfoBlock } from '@/components/lib/info-block'
 import { ProgressBar } from '@/components/lib/progress-bar'
-import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
+import { ContentCard } from '@/components/lib/content-card'
 
 import { humanizedBool } from '@/lib/utils/humanized-bool.util'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
@@ -45,7 +45,7 @@ export const InfoTab = observer(() => {
   return (
     <div className={styles.infoTabContainer}>
       <div className={styles.infoTab}>
-        <DeviceControlCard
+        <ContentCard
           afterButtonIcon={<Icon20LocationMapOutline />}
           afterTooltipText={t('Find Device')}
           before={<Icon20LocationOutline color='#FF5287' />}
@@ -57,8 +57,8 @@ export const InfoTab = observer(() => {
           <Group mode='plain'>
             <InfoBlock title={t('Place')}>{device?.provider?.name}</InfoBlock>
           </Group>
-        </DeviceControlCard>
-        <DeviceControlCard
+        </ContentCard>
+        <ContentCard
           before={<Icon20FlashOutline color='#FFCC00' />}
           className={styles.battery}
           title={t('Battery')}
@@ -90,8 +90,8 @@ export const InfoTab = observer(() => {
               {device?.battery?.voltage}
             </InfoBlock>
           </Group>
-        </DeviceControlCard>
-        <DeviceControlCard
+        </ContentCard>
+        <ContentCard
           before={<Icon20SmartphoneOutline color='#1fb3b8' />}
           className={styles.display}
           title={t('Display')}
@@ -121,8 +121,8 @@ export const InfoTab = observer(() => {
             <InfoBlock title='X DPI'>{device?.display?.xdpi}</InfoBlock>
             <InfoBlock title='Y DPI'>{device?.display?.ydpi}</InfoBlock>
           </Group>
-        </DeviceControlCard>
-        <DeviceControlCard
+        </ContentCard>
+        <ContentCard
           before={<Icon16WifiOutline color='#0C7AFF' height={20} width={20} />}
           className={styles.network}
           title={t('Network')}
@@ -146,8 +146,8 @@ export const InfoTab = observer(() => {
               {device?.network?.subtype && NETWORK_SUB_TYPE_MAP[device.network.subtype]}
             </InfoBlock>
           </Group>
-        </DeviceControlCard>
-        <DeviceControlCard
+        </ContentCard>
+        <ContentCard
           before={<Icon28SmartphoneStarsOutline color='#ca9ce1' height={20} width={20} />}
           className={styles.hardware}
           title={t('Hardware')}
@@ -162,8 +162,8 @@ export const InfoTab = observer(() => {
               {device?.releasedAt && dateToFormattedString({ value: device.releasedAt, needTime: true })}
             </InfoBlock>
           </Group>
-        </DeviceControlCard>
-        <DeviceControlCard
+        </ContentCard>
+        <ContentCard
           before={<Icon24MemoryCard color='#9ac4f8' height={20} width={20} />}
           className={styles.sim}
           title={t('SIM')}
@@ -177,8 +177,8 @@ export const InfoTab = observer(() => {
             <InfoBlock title='IMSI'>{device?.phone?.imsi}</InfoBlock>
             <InfoBlock title='ICCID'>{device?.phone?.iccid}</InfoBlock>
           </Group>
-        </DeviceControlCard>
-        <DeviceControlCard
+        </ContentCard>
+        <ContentCard
           before={<Icon20CoinsOutline color='#FFA101' />}
           className={styles.memory}
           title={t('Memory')}
@@ -195,8 +195,8 @@ export const InfoTab = observer(() => {
               {isBooleanTypeGuard(infoService.sdCardMounted) && t(humanizedBool(infoService.sdCardMounted))}
             </InfoBlock>
           </Group>
-        </DeviceControlCard>
-        <DeviceControlCard
+        </ContentCard>
+        <ContentCard
           before={<Icon20ComputerSmartphoneOutline color='#00cc66' />}
           className={styles.platform}
           title={t('Platform')}
@@ -208,8 +208,8 @@ export const InfoTab = observer(() => {
             <InfoBlock title='SDK'>{device?.sdk}</InfoBlock>
             <InfoBlock title='ABI'>{device?.abi}</InfoBlock>
           </Group>
-        </DeviceControlCard>
-        <DeviceControlCard
+        </ContentCard>
+        <ContentCard
           before={<Icon28SpeedometerMaxOutline color='#f24236' height={20} width={20} />}
           className={styles.cpu}
           title='CPU'
@@ -222,7 +222,7 @@ export const InfoTab = observer(() => {
               {device?.cpu?.freq}
             </InfoBlock>
           </Group>
-        </DeviceControlCard>
+        </ContentCard>
       </div>
     </div>
   )

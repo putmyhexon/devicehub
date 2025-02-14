@@ -3,7 +3,7 @@ import { makeAutoObservable } from 'mobx'
 import { inject, injectable } from 'inversify'
 
 import { GroupService } from '@/services/group-service'
-import { SettingsService } from '@/services/settings-service'
+import { SettingsService } from '@/services/settings-service/settings-service'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { deviceConnectionRequired } from '@/config/inversify/decorators'

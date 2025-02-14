@@ -11,6 +11,7 @@ type BaseSelectProps<T> = {
   options: SelectOption<T>[]
   selectType?: 'default' | 'plain' | 'accent'
   stretched?: boolean
+  isDisabled?: boolean
 }
 
 export const BaseSelect = <T extends string | number | undefined>({
@@ -19,9 +20,11 @@ export const BaseSelect = <T extends string | number | undefined>({
   options,
   selectType = 'default',
   stretched = true,
+  isDisabled = false,
 }: BaseSelectProps<T>) => (
   <NativeSelect
     className={cn({ [styles.compact]: !stretched })}
+    disabled={isDisabled}
     selectType={selectType}
     value={value}
     onChange={(event) => {

@@ -134,7 +134,7 @@
   "Launch Activity": "Abrir Activity",
   "Launching activity...": "Abrindo activity...",
   "Level": "Nível",
-  "Local Settings": "Configurações Locais",
+  "Display Settings": "Configurações de exibição",
   "Location": "Localização",
   "Lock Rotation": "Desabilitar Rotação da Tela",
   "Logs": "Logs",
@@ -413,5 +413,10 @@
   "Email address separator": "Separador de endereço de e -mail",
   "Connection failed": "A conexão falhou",
   "Are you sure you want to delete the ADB key": "Tem certeza que deseja excluir a tecla adb?",
-  "Are you sure you want to delete the access token": "Tem certeza que deseja excluir o token de acesso"
+  "Are you sure you want to delete the access token": "Tem certeza que deseja excluir o token de acesso",
+  "Activation": "Ativação",
+  "Enable scrolling text": "Ativar texto de rolagem",
+  "Alert Message": "Mensagem de alerta",
+  "Interface Settings": "Configurações da interface",
+  "Reset general settings": "Redefinir configurações gerais"
 }

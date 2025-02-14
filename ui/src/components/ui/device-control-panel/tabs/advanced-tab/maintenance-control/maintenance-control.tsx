@@ -5,7 +5,7 @@ import { Button, Flex } from '@vkontakte/vkui'
 import { Icon20WrenchOutline } from '@vkontakte/icons'
 
 import { WarningModal } from '@/components/ui/modals'
-import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
+import { ContentCard } from '@/components/lib/content-card'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
@@ -18,7 +18,7 @@ export const MaintenanceControl = ({ className }: { className?: string }) => {
   const deviceControlStore = useInjection(CONTAINER_IDS.deviceControlStore)
 
   return (
-    <DeviceControlCard before={<Icon20WrenchOutline />} className={className} title={t('Maintenance')}>
+    <ContentCard before={<Icon20WrenchOutline />} className={className} title={t('Maintenance')}>
       <Flex align='center' justify='center'>
         <Button
           appearance='negative'
@@ -42,6 +42,6 @@ export const MaintenanceControl = ({ className }: { className?: string }) => {
           }}
         />
       </Flex>
-    </DeviceControlCard>
+    </ContentCard>
   )
 }

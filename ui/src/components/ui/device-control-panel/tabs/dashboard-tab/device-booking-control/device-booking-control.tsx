@@ -4,7 +4,7 @@ import { MiniInfoCell } from '@vkontakte/vkui'
 import { useInjection } from 'inversify-react'
 import { Icon20AddSquareOutline, Icon28StopwatchOutline } from '@vkontakte/icons'
 
-import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
+import { ContentCard } from '@/components/lib/content-card'
 
 import { dateToFormattedString } from '@/lib/utils/date-to-formatted-string.util'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
@@ -15,7 +15,7 @@ export const DeviceBookingControl = observer(({ className }: { className?: strin
   const bookingService = useInjection(CONTAINER_IDS.bookingService)
 
   return (
-    <DeviceControlCard
+    <ContentCard
       afterButtonIcon={<Icon20AddSquareOutline />}
       afterTooltipText={t('Extend booking')}
       before={<Icon28StopwatchOutline height={20} width={20} />}
@@ -28,6 +28,6 @@ export const DeviceBookingControl = observer(({ className }: { className?: strin
         {': '}
         <time>{dateToFormattedString({ value: bookingService.bookedBeforeTime, onlyTime: true })}</time>
       </MiniInfoCell>
-    </DeviceControlCard>
+    </ContentCard>
   )
 })

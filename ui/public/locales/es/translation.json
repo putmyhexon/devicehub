@@ -355,5 +355,11 @@
   "Connection failed": "Falló la conexión",
   "ADB Keys": "Llaves ADB",
   "Are you sure you want to delete the ADB key": "¿Estás seguro de que quieres eliminar la tecla ADB?",
-  "Are you sure you want to delete the access token": "¿Estás seguro de que quieres eliminar el token de acceso?"
+  "Are you sure you want to delete the access token": "¿Estás seguro de que quieres eliminar el token de acceso?",
+  "Display Settings": "Mostrar configuración",
+  "Activation": "Activación",
+  "Enable scrolling text": "Habilitar texto de desplazamiento",
+  "Alert Message": "Mensaje de alerta",
+  "Interface Settings": "Configuración de la interfaz",
+  "Reset general settings": "Restablecer la configuración general"
 }

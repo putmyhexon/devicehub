@@ -4,11 +4,11 @@ import { Button, Card, Div, Flex, Headline, Separator, Tooltip } from '@vkontakt
 
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
-import styles from './device-control-card.module.css'
+import styles from './content-card.module.css'
 
 import type { ReactElement, ReactNode } from 'react'
 
-type DeviceControlCardProps = {
+type ContentCardProps = {
   title: string
   children: ReactNode
   before?: ReactNode
@@ -21,7 +21,7 @@ type DeviceControlCardProps = {
   isAfterButtonDisabled?: boolean
 }
 
-export const DeviceControlCard = ({
+export const ContentCard = ({
   title,
   children,
   before,
@@ -32,9 +32,9 @@ export const DeviceControlCard = ({
   className,
   separator = false,
   isAfterButtonDisabled = false,
-}: DeviceControlCardProps) => (
-  <Card className={cn(styles.deviceControlCard, className)} mode='tint'>
-    <Div className={styles.cardContent}>
+}: ContentCardProps) => (
+  <Card className={cn(styles.contentCard, className)} mode='tint'>
+    <Div className={styles.cardContainer}>
       <Flex align='center' className={styles.cardHeader} justify='space-between' noWrap>
         <Flex align='center' noWrap>
           {before}
@@ -56,7 +56,7 @@ export const DeviceControlCard = ({
             >
               <Button
                 appearance='neutral'
-                aria-label='Control action button'
+                aria-label='action button'
                 before={afterButtonIcon}
                 disabled={isAfterButtonDisabled}
                 mode='tertiary'

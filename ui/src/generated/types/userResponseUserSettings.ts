@@ -5,11 +5,13 @@
  * Control and manages real Smartphone devices from browser and restful apis
  * OpenAPI spec version: 2.4.3
  */
+import type { UserResponseUserSettingsAlertMessage } from './userResponseUserSettingsAlertMessage'
 import type { UserResponseUserSettingsDeviceListColumnsItem } from './userResponseUserSettingsDeviceListColumnsItem'
 import type { UserResponseUserSettingsDeviceListSort } from './userResponseUserSettingsDeviceListSort'
 import type { UserResponseUserSettingsGroupItemsPerPage } from './userResponseUserSettingsGroupItemsPerPage'
 
 export type UserResponseUserSettings = {
+  alertMessage?: UserResponseUserSettingsAlertMessage
   dateFormat?: string
   deviceListColumns?: UserResponseUserSettingsDeviceListColumnsItem[]
   deviceListSort?: UserResponseUserSettingsDeviceListSort

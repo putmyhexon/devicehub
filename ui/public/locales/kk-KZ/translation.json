@@ -121,7 +121,7 @@
   "Launch Activity": "Іске қосу",
   "Launching activity...": "Іске қосу процесі басталды...",
   "Level": "Деңгей",
-  "Local Settings": "Локальді орнатпалар",
+  "Display Settings": "Дисплей параметрлері",
   "Location": "Орналасу",
   "Logs": "Журнал",
   "Maintenance": "Қызмет көрсету",
@@ -365,5 +365,10 @@
   "Title": "Тақырып",
   "Generate": "Жасау",
   "Generate Access Token": "Token жасаңыз",
-  "Are you sure you want to delete the access token": "Сіз Access Token-ді жойғыңыз келетініне сенімдісіз бе?"
+  "Are you sure you want to delete the access token": "Сіз Access Token-ді жойғыңыз келетініне сенімдісіз бе?",
+  "Activation": "Қосылу",
+  "Enable scrolling text": "Айналдыру мәтінін қосыңыз",
+  "Alert Message": "Ескерту хабарламасы",
+  "Interface Settings": "Интерфейс параметрлері",
+  "Reset general settings": "Жалпы параметрлерді қалпына келтіру"
 }

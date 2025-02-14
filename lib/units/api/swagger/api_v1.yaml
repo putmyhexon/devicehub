@@ -3628,6 +3628,19 @@ components:
                         type: string
                     emailAddressSeparator:
                         type: string
+                    alertMessage:
+                        type: object
+                        properties:
+                            activation:
+                                type: string
+                            data:
+                                type: string
+                            level:
+                                type: string
+                                enum:
+                                  - Information
+                                  - Warning
+                                  - Critical
                     platform:
                         type: string
                     groupItemsPerPage:

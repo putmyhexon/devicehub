@@ -98,7 +98,7 @@
   "Launch Activity": "執行活動",
   "Launching activity...": "活動執行中",
   "Level": "電量",
-  "Local Settings": "本機設定",
+  "Display Settings": "顯示設置",
   "Location": "位置",
   "Lock Rotation": "鎖定螢幕旋轉",
   "Maintenance": "維護",
@@ -342,5 +342,9 @@
   "Key": "鑰匙",
   "No ADB keys": "沒有ADB鍵",
   "Add ADB Key": "添加ADB密鑰",
-  "Are you sure you want to delete the access token": "您確定要刪除訪問令牌嗎"
+  "Are you sure you want to delete the access token": "您確定要刪除訪問令牌嗎",
+  "Activation": "啟用設定",
+  "Enable scrolling text": "啟用滾動文字",
+  "Alert Message": "警報消息",
+  "Reset general settings": "重置一般設置"
 }

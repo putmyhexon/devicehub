@@ -11,7 +11,7 @@ import {
   Icon20ShuffleOutline,
 } from '@vkontakte/icons'
 
-import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
+import { ContentCard } from '@/components/lib/content-card'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
@@ -26,7 +26,7 @@ export const PortForwardingControl = observer(({ className }: { className?: stri
   const portForwardingService = useInjection(CONTAINER_IDS.portForwardingService)
 
   return (
-    <DeviceControlCard
+    <ContentCard
       afterButtonIcon={<Icon20AddSquareOutline />}
       afterTooltipText={t('Add')}
       before={<Icon20ShuffleOutline />}
@@ -59,6 +59,6 @@ export const PortForwardingControl = observer(({ className }: { className?: stri
           </Placeholder>
         </ConditionalRender>
       </div>
-    </DeviceControlCard>
+    </ContentCard>
   )
 })

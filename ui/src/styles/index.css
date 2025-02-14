@@ -5,3 +5,11 @@
   height: 100%;
   padding-top: var(--vkui_internal--panel_header_height);
 }
+
+.marqueeOffset {
+  padding-top: calc(var(--vkui_internal--panel_header_height) + var(--marquee-height));
+}
+
+body {
+  overflow-x: hidden;
+}

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { IconButton, Input } from '@vkontakte/vkui'
 import { Icon20ChevronRightOutline, Icon20DeleteOutline, Icon20Play } from '@vkontakte/icons'
 
-import { DeviceControlCard } from '@/components/ui/device-control-panel/device-control-card'
+import { ContentCard } from '@/components/lib/content-card'
 import { OutputLogArea } from '@/components/lib/output-log-area'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
@@ -26,7 +26,7 @@ export const ShellControl = observer(({ className }: { className?: string }) => 
   }
 
   return (
-    <DeviceControlCard
+    <ContentCard
       afterButtonIcon={<Icon20DeleteOutline />}
       afterTooltipText={t('Clear')}
       before={<Icon20ChevronRightOutline />}
@@ -53,6 +53,6 @@ export const ShellControl = observer(({ className }: { className?: string }) => 
       <ConditionalRender conditions={[!!shellControlStore.shellResult]}>
         <OutputLogArea className={styles.shellResult} text={shellControlStore.shellResult} />
       </ConditionalRender>
-    </DeviceControlCard>
+    </ContentCard>
   )
 })
