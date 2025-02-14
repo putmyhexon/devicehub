@@ -8,28 +8,47 @@ services:
         container_name: devicehub-nginx
         volumes:
             - ./scripts/nginx.conf:/etc/nginx/nginx.conf:ro
+            - certs:/etc/nginx/ssl:ro
         ports:
             - "80:80"
+            - "443:443"
         depends_on:
-            - devicehub-app
-            - devicehub-websocket
-            - devicehub-storage-temp
-            - devicehub-storage-plugin-apk
-            - devicehub-storage-plugin-image
-            - devicehub-api
-            - devicehub-auth
-            - devicehub-provider
+            devicehub-app:
+                condition: service_started
+            devicehub-websocket:
+                condition: service_started
+            devicehub-storage-temp:
+                condition: service_started
+            devicehub-storage-plugin-apk:
+                condition: service_started
+            devicehub-storage-plugin-image:
+                condition: service_started
+            devicehub-api:
+                condition: service_started
+            devicehub-auth:
+                condition: service_started
+            devicehub-provider:
+                condition: service_started
+            devicehub-ssl:
+                condition: service_completed_successfully
         restart: unless-stopped
         networks:
             devicehub:
     adbd:
         container_name: adbd
-        image: 'devicefarmer/adb:latest'
+        image: "devicefarmer/adb:latest"
         restart: unless-stopped
-        network_mode: host
         volumes:
             - /dev/bus/usb:/dev/bus/usb
         privileged: true
+        healthcheck:
+            test: nc -vz 127.0.0.1 5037
+            interval: 1m30s
+            timeout: 30s
+            retries: 5
+            start_period: 30s
+        networks:
+            devicehub:
     devicehub-mongo:
         image: mongo:7.0
         hostname: devicehub-mongo
@@ -78,7 +97,7 @@ services:
         container_name: devicehub-app
         env_file:
             - scripts/variables.env
-        command: stf app --port 3000 --auth-url ${STF_URL}/${AUTH_URL} --websocket-url ${STF_URL}/ --secret=${STF_SECRET}
+        command: stf app --port 3000 --auth-url https://${STF_DOMAIN}:${STF_PORT}/${AUTH_URL} --websocket-url https://${STF_DOMAIN}:${STF_PORT}/ --secret=${STF_SECRET}
         depends_on:
             devicehub-migrate:
                 condition: service_completed_successfully
@@ -91,7 +110,7 @@ services:
         container_name: devicehub-auth
         env_file:
             - scripts/variables.env
-        command: stf auth-mock --port 3000 --app-url ${STF_URL} --secret=${STF_SECRET}
+        command: stf auth-mock --port 3000 --app-url https://${STF_DOMAIN}:${STF_PORT} --secret=${STF_SECRET}
         depends_on:
             devicehub-migrate:
                 condition: service_completed_successfully
@@ -143,7 +162,7 @@ services:
         container_name: devicehub-storage-plugin-image
         env_file:
             - scripts/variables.env
-        command: stf storage-plugin-image --port 3000 --storage-url ${STF_URL}/ --secret=${STF_SECRET}
+        command: stf storage-plugin-image --port 3000 --storage-url https://${STF_DOMAIN}:${STF_PORT}/ --secret=${STF_SECRET}
         depends_on:
             devicehub-migrate:
                 condition: service_completed_successfully
@@ -203,7 +222,7 @@ services:
         container_name: devicehub-websocket
         env_file:
             - scripts/variables.env
-        command: stf websocket --port 3000 --storage-url ${STF_URL}/ --connect-sub tcp://devicehub-triproxy-app:7150 --connect-push tcp://devicehub-triproxy-app:7170 --secret=${STF_SECRET}
+        command: stf websocket --port 3000 --storage-url https://${STF_DOMAIN}:${STF_PORT}/ --connect-sub tcp://devicehub-triproxy-app:7150 --connect-push tcp://devicehub-triproxy-app:7170 --secret=${STF_SECRET}
         depends_on:
             devicehub-migrate:
                 condition: service_completed_successfully
@@ -245,10 +264,18 @@ services:
         depends_on:
             devicehub-migrate:
                 condition: service_completed_successfully
+            adbd:
+                condition: service_healthy
         restart: unless-stopped
-        command: stf provider --name devicehub-provider --adb-host adbd --no-cleanup --connect-sub tcp://devicehub-triproxy-dev:7250 --connect-push tcp://devicehub-triproxy-dev:7270 --storage-url ${STF_URL}/ --public-ip ${STF_URL} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern "ws://${STF_URL}/d/devicehub-provider/<%= publicPort %>/"
+        command: stf provider --name devicehub-provider --adb-host adbd --no-cleanup --connect-sub tcp://devicehub-triproxy-dev:7250 --connect-push tcp://devicehub-triproxy-dev:7270 --storage-url https://${STF_DOMAIN}:${STF_PORT}/ --public-ip https://${STF_DOMAIN}:${STF_PORT} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern "wss://${STF_DOMAIN}:${STF_PORT}/d/devicehub-provider/<%= publicPort %>/"
         networks:
             devicehub:
-
+    devicehub-ssl:
+        image: paulczar/omgwtfssl
+        environment:
+            - SSL_SUBJECT=${STF_DOMAIN}:${STF_PORT}
+        volumes:
+            - certs:/certs:rw
 volumes:
     devicehub-db-volume:
+    certs:
