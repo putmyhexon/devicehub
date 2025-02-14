@@ -88,7 +88,7 @@ export const DEVICE_COLUMNS = [
     })
   ),
   columnHelper.accessor(
-    (row) => (row.display ? `${row.display?.width}x${row.display?.height}` : null),
+    (row) => (row.display ? `${row.display?.width || 0}x${row.display?.height || 0}` : null),
     textColumnDef({ columnId: DeviceTableColumnIds.SCREEN, columnName: 'Screen', columnGroup: ColumnGroup.DEVICE_INFO })
   ),
   columnHelper.accessor((row) => getDeviceState(row), {
