@@ -1,5 +1,6 @@
-import { makeAutoObservable, runInAction } from 'mobx'
+import { t } from 'i18next'
 import { inject, injectable } from 'inversify'
+import { makeAutoObservable, runInAction } from 'mobx'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { deviceConnectionRequired } from '@/config/inversify/decorators'
@@ -26,20 +27,31 @@ export class ShellControlStore {
   }
 
   async runShellCommand(): Promise<void> {
-    const shellResult = await this.deviceControlStore.shell(this.command)
+    try {
+      const shellResult = await this.deviceControlStore.shell(this.command)
 
-    this.clear()
+      let output = ''
 
-    shellResult.subscribeToProgress((_, result) => {
-      if (result) {
-        runInAction(() => {
-          this.shellResult += result
-        })
-      }
+      shellResult.subscribeToProgress((_, result) => {
+        if (result) {
+          runInAction(() => {
+            output += result
+          })
+        }
 
-      if (!result) {
-        this.shellResult = 'No output'
-      }
-    })
+        if (!result) {
+          output = 'No output'
+        }
+      })
+
+      await shellResult.donePromise
+
+      this.shellResult = output
+      this.command = ''
+    } catch (error) {
+      console.error(error)
+
+      this.shellResult = t('Error while getting data')
+    }
   }
 }

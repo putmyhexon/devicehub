@@ -12,18 +12,18 @@
     'deviceButtons linkOpener'
     'appUpload shell'
     'appUpload shell'
-    'clipboard shell' / minmax(max-content, 1fr) 1fr;
+    'clipboard shell' / minmax(400px, 1fr) 1fr;
   gap: 10px;
 
   @container (max-width: 620px) {
     grid-template:
       'deviceButtons'
-      'appUpload'
-      'clipboard'
       'shell'
+      'linkOpener'
+      'clipboard'
       'deviceBooking'
-      'remoteDebug'
-      'linkOpener' / minmax(400px, auto);
+      'appUpload'
+      'remoteDebug' / minmax(400px, auto);
   }
 }
 

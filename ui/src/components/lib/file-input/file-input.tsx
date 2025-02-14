@@ -13,7 +13,7 @@ type FileInputProps = {
   onChange?: (file: File) => void
 }
 
-export const FileInput = ({ onChange, onError, accept }: FileInputProps) => {
+export const FileInput = ({ onChange, accept }: FileInputProps) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -22,14 +22,6 @@ export const FileInput = ({ onChange, onError, accept }: FileInputProps) => {
   }
 
   const onChangeWithValidation = (files: FileList) => {
-    onError?.('')
-
-    if (files[0] && !accept?.includes(files[0]?.type)) {
-      onError?.('Unsupported file type')
-
-      return
-    }
-
     onChange?.(files[0])
   }
 
