@@ -11,8 +11,6 @@ import { SettingsService } from '@/services/settings-service/settings-service'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
-import styles from './alert-message-settings.module.css'
-
 import type { SelectOption } from '@/components/lib/base-select'
 import type { AlertMessageLevel } from '@/types/alert-message-level.type'
 
@@ -44,8 +42,8 @@ export const AlertMessageSettings = observer(({ className }: { className: string
             onChange={(value) => settingsService.setAlertMessage('level', value as AlertMessageLevel)}
           />
         </FormItem>
-        <Spacing size='xl' />
-        <SelectionControl className={styles.switch} hasActive={false} hasHover={false}>
+        <Spacing size='2xl' />
+        <SelectionControl>
           <Switch
             checked={settingsService.isAlertMessageActive}
             onChange={(event) => {
