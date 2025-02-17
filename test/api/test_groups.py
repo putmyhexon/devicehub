@@ -98,7 +98,6 @@ def test_create_and_delete_once_group(api_client, random_str, successful_respons
     successful_response_check(response, description='Deleted (groups)')
 
 
-@pytest.mark.focus
 def test_return_device_to_origin_group(
     api_client,
     api_client_custom_token,

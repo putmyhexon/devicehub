@@ -57,7 +57,7 @@ def api_client_custom_token(base_url):
     return api_client_by_token_func
 
 
-# method create server user and return his token
+# method create service user and return his token
 @pytest.fixture()
 def service_user_token(api_client, stf_secret, random_user, successful_response_check):
     def service_user_token_func(user=random_user(), is_admin=False):
@@ -248,10 +248,9 @@ def common_group_id(api_client):
     response = get_groups.sync_detailed(client=api_client)
     equal(response.status_code, 200)
     is_true(response.parsed.success)
-    equal(len(response.parsed.groups), 1)
-    common_group = response.parsed.groups[0]
-    equal(common_group['name'], 'Common')
-    return response.parsed.groups[0]['id']
+    common_group = next(filter(lambda x: x['name'] == 'Common', response.parsed.groups), None)
+    is_not_none(common_group)
+    return common_group['id']
 
 
 @pytest.fixture()

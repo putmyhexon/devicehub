@@ -115,7 +115,7 @@ def test_get_user_by_email_with_bad_token(api_client_with_bad_token, admin_user)
     is_none(response.parsed)
 
 
-def test_create_remove_user(api_client, random_user, successful_response_check):
+def test_create_remove_user(api_client, random_user, successful_response_check, common_group_id):
     user = random_user()
     response = create_user.sync_detailed(
         client=api_client,
@@ -139,7 +139,7 @@ def test_create_remove_user(api_client, random_user, successful_response_check):
     subscribed = user_dict.get('groups').get('subscribed')
     is_not_none(subscribed)
     greater(len(subscribed), 0)
-    # assert user_dict.get('groups').get('subscribed') == actual_common_group_id
+    equal(user_dict.get('groups').get('subscribed')[0], common_group_id)
     is_false(user_dict.get('groups').get('lock'))
     quotas = user_dict.get('groups').get('quotas')
     equal(quotas.get('allocated').get('number'), quotas.get('defaultGroupsNumber'))
