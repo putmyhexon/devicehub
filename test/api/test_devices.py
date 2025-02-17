@@ -1,5 +1,5 @@
 import pytest
-from pytest_check import equal, is_not_none, is_true, is_none, is_in, is_false, greater
+from pytest_check import equal, is_not_none, is_none
 
 from smartphone_test_farm_client.api.devices import get_devices, get_device_by_serial
 from smartphone_test_farm_client.models import GetDevicesTarget
@@ -90,10 +90,9 @@ def test_get_devices_with_wrong_target(api_client):
 
 
 # api/v1/devices/{serial} - list of devices
-def test_get_device_by_serial(api_client, fake_device_field_check, successful_response_check, get_first_device_id):
-    serial = get_first_device_id(api_client)
+def test_get_device_by_serial(api_client, fake_device_field_check, successful_response_check, first_device_serial):
 
-    response = get_device_by_serial.sync_detailed(client=api_client, serial=serial)
+    response = get_device_by_serial.sync_detailed(client=api_client, serial=first_device_serial)
     successful_response_check(response, description='Device Information')
     is_not_none(response.parsed.device)
     device_dict = response.parsed.device.to_dict()
@@ -104,11 +103,10 @@ def test_get_device_by_serial_empty_fields(
     api_client,
     fake_device_field_check,
     successful_response_check,
-    get_first_device_id
+    first_device_serial
 ):
-    serial = get_first_device_id(api_client)
 
-    response = get_device_by_serial.sync_detailed(client=api_client, serial=serial, fields='')
+    response = get_device_by_serial.sync_detailed(client=api_client, serial=first_device_serial, fields='')
     successful_response_check(response, description='Device Information')
     is_not_none(response.parsed.device)
     device_dict = response.parsed.device.to_dict()
@@ -119,14 +117,13 @@ def test_get_device_by_serial_with_fields(
     api_client,
     fake_device_field_check,
     successful_response_check,
-    get_first_device_id,
+    first_device_serial,
     fake_device_certain_field_check
 ):
-    serial = get_first_device_id(api_client)
 
     response = get_device_by_serial.sync_detailed(
         client=api_client,
-        serial=serial,
+        serial=first_device_serial,
         fields='present,present,status,serial,group.owner.name,using,somefields'
     )
     successful_response_check(response, description='Device Information')
@@ -139,13 +136,12 @@ def test_get_device_by_serial_with_wrong_fields(
     api_client,
     fake_device_field_check,
     successful_response_check,
-    get_first_device_id
+    first_device_serial
 ):
-    serial = get_first_device_id(api_client)
 
     response = get_device_by_serial.sync_detailed(
         client=api_client,
-        serial=serial,
+        serial=first_device_serial,
         fields='wrong,111,!@!$!$, ,'
     )
     successful_response_check(response, description='Device Information')

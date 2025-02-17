@@ -1,3 +1,4 @@
+import json
 import random
 import string
 
@@ -5,12 +6,15 @@ import pytest
 from pytest_check import equal, is_not_none, is_true, is_false, is_in, greater_equal, greater, is_none
 
 from smartphone_test_farm_client import AuthenticatedClient
-from smartphone_test_farm_client.api.devices import get_devices
-from smartphone_test_farm_client.api.groups import get_groups
+from smartphone_test_farm_client.api.admin import create_service_user
+from smartphone_test_farm_client.api.devices import get_devices, get_device_by_serial
+from smartphone_test_farm_client.api.groups import get_groups, get_group
 
 ADMIN_EMAIL = 'administrator@fakedomain.com'
 ADMIN_NAME = 'administrator'
 ADMIN_PRIVILEGE = 'admin'
+
+STF_SECRET = 'kute kittykat'
 
 
 def pytest_addoption(parser):
@@ -19,7 +23,7 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture(scope='session')
-def token(request):
+def token_from_params(request):
     token_value = request.config.option.token
     if token_value is None:
         pytest.fail(reason='Missed token')
@@ -34,14 +38,51 @@ def base_url(request):
     return f'{url}/api/v1'
 
 
-@pytest.fixture(scope="module")
-def api_client(token, base_url):
-    api_client = AuthenticatedClient(base_url=base_url,
-                                     token=token)
+@pytest.fixture()
+def api_client(token_from_params, base_url):
+    api_client = AuthenticatedClient(
+        base_url=base_url,
+        token=token_from_params
+    )
     return api_client
 
 
-@pytest.fixture(scope="module")
+# method return api client for make request from custom user(no admin user passed through run parameters)
+@pytest.fixture()
+def api_client_custom_token(base_url):
+    def api_client_by_token_func(token):
+        api_client = AuthenticatedClient(base_url=base_url, token=token)
+        return api_client
+
+    return api_client_by_token_func
+
+
+# method create service user and return his token
+@pytest.fixture()
+def service_user_token(api_client, stf_secret, random_user, successful_response_check):
+    def service_user_token_func(user=random_user(), is_admin=False):
+        response = create_service_user.sync_detailed(
+            client=api_client,
+            email=user.email,
+            name=user.name,
+            admin=is_admin,
+            secret=stf_secret
+        )
+        successful_response_check(
+            response=response,
+            status_code=201,
+            description='Created (service user)'
+        )
+        service_user_dict = response.parsed.service_user_info.to_dict()
+        is_not_none(service_user_dict)
+        token = service_user_dict.get('token')
+        is_not_none(token)
+        return token
+
+    return service_user_token_func
+
+
+@pytest.fixture()
 def api_client_with_bad_token(base_url):
     api_client = AuthenticatedClient(base_url=base_url, token='bad_token')
     return api_client
@@ -57,12 +98,17 @@ class User:
         return f"User(email={self.email}, name={self.name}, privilege={self.privilege})"
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
 def admin_user():
     return User(email=ADMIN_EMAIL, name=ADMIN_NAME, privilege=ADMIN_PRIVILEGE)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
+def stf_secret():
+    return STF_SECRET
+
+
+@pytest.fixture()
 def random_user(random_str):
     def random_user_func():
         return User(email=f'{random_str()}@test.com', name=random_str(), privilege='user')
@@ -70,7 +116,7 @@ def random_user(random_str):
     return random_user_func
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
 def random_str():
     def random_str_func(size=10, chars=string.ascii_uppercase + string.ascii_lowercase + string.digits):
         return ''.join(random.choice(chars) for _ in range(size))
@@ -78,7 +124,7 @@ def random_str():
     return random_str_func
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
 def random_choice():
     def random_func(list):
         return random.choice(list)
@@ -86,7 +132,7 @@ def random_choice():
     return random_func
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
 def fake_device_field_check():
     def fake_device_field_check_func(device_dict):
         equal(len(device_dict.values()), 33)
@@ -158,8 +204,9 @@ def fake_device_field_check():
 
     return fake_device_field_check_func
 
+
 # This checking for request with param fields='present,present,status,serial,group.owner.name,using,somefields'
-@pytest.fixture(scope="module")
+@pytest.fixture()
 def fake_device_certain_field_check():
     def fake_device_certain_field_check_func(device_dict):
         equal(len(device_dict.values()), 6)
@@ -176,38 +223,65 @@ def fake_device_certain_field_check():
     return fake_device_certain_field_check_func
 
 
-@pytest.fixture(scope="module")
-def get_common_group_id():
-    def get_common_group_id_func(api_client):
-        response = get_groups.sync_detailed(client=api_client)
-        equal(response.status_code, 200)
-        is_true(response.parsed.success)
-        equal(len(response.parsed.groups), 1)
-        common_group = response.parsed.groups[0]
-        equal(common_group['name'], 'Common')
-        return response.parsed.groups[0]['id']
+# method check that device belongs to group(two requests check data in devices and groups tables)
+@pytest.fixture()
+def device_in_group_check(api_client, successful_response_check):
+    def device_in_group_check_func(serial, group_id, group_name=None):
+        response = get_device_by_serial.sync_detailed(serial=serial, client=api_client)
+        successful_response_check(response, description='Device Information')
+        is_not_none(response.parsed.device)
+        device_dict = response.parsed.device.to_dict()
+        equal(device_dict.get('group').get('id'), group_id)
+        if group_name is not None:
+            equal(device_dict.get('group').get('name'), group_name)
+        response = get_group.sync_detailed(id=group_id, client=api_client)
+        successful_response_check(response, description='Group Information')
+        is_not_none(response.parsed.group)
+        group_dict = response.parsed.group.to_dict()
+        is_in(serial, group_dict.get('devices'))
 
-    return get_common_group_id_func
-
-
-@pytest.fixture(scope="module")
-def get_first_device_id(successful_response_check):
-    def get_first_device_id_func(api_client):
-        response = get_devices.sync_detailed(client=api_client)
-        successful_response_check(response, description='Devices Information')
-        is_not_none(response.parsed.devices)
-        greater(len(response.parsed.devices), 0)
-        return response.parsed.devices[0].serial
-
-    return get_first_device_id_func
+    return device_in_group_check_func
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
+def common_group_id(api_client):
+    response = get_groups.sync_detailed(client=api_client)
+    equal(response.status_code, 200)
+    is_true(response.parsed.success)
+    common_group = next(filter(lambda x: x['name'] == 'Common', response.parsed.groups), None)
+    is_not_none(common_group)
+    return common_group['id']
+
+
+@pytest.fixture()
+def first_device_serial(successful_response_check, api_client):
+    response = get_devices.sync_detailed(client=api_client)
+    successful_response_check(response, description='Devices Information')
+    is_not_none(response.parsed.devices)
+    greater(len(response.parsed.devices), 0)
+    return response.parsed.devices[0].serial
+
+
+@pytest.fixture()
 def successful_response_check():
-    def successful_response_check_func(response, description=None):
-        equal(response.status_code, 200)
+    def successful_response_check_func(response, status_code=200, description=None):
+        # print(f'\n!!!DEBUG!!!\n{response}\n=================')
+        equal(response.status_code, status_code)
         is_true(response.parsed.success)
         if description is not None:
             equal(response.parsed.description, description)
 
     return successful_response_check_func
+
+
+@pytest.fixture()
+def failure_response_check():
+    def failure_response_check_func(response, status_code=400, description=None):
+        # print(f'\n!!!DEBUG!!!\n{response}\n=================')
+        equal(response.status_code, status_code)
+        response_content = json.loads(response.content)
+        is_false(response_content['success'])
+        if description is not None:
+            equal(response_content['description'], description)
+
+    return failure_response_check_func
