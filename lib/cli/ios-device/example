@@ -1,6 +1,5 @@
 stf ios-device \
-    --serial "346AEE38-F1C5-4FE2-BBCC-7B75786A44EE" \
-    --device-name "Simulator iPhone 15" \
+    --serial "5D43EFDC-B845-4D3D-8465-FAA493C54A2E" \
     --host localhost \
     --screen-port 7409 \
     --mjpeg-port  9100 \
