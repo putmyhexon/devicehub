@@ -7,7 +7,6 @@
 enum MessageType {
   CopyMessage                       = 33;
   DeviceIntroductionMessage         = 74;
-  DeviceOnInstAppMessage            = 1;
   DeviceAbsentMessage               = 111;
   DeviceIdentityMessage             = 2;
   DeviceLogcatEntryMessage          = 3;
@@ -933,20 +932,17 @@ message GetInstalledApplications {
   required string serial = 1;
   // optional string channel = 2;
 }
-message DeviceOnInstAppMessage {
-  required string serial = 1;
-}
 message UpdateIosDevice{
   required string id = 1;
   required string name = 2;
   required string platform = 3;
-  required string architect = 4;
+  required string architecture = 4;
+  required string sdk = 5;
 }
 
 message SdkIosVersion{
   required string id = 1;
-  required string device = 2;
-  required string sdkVersion = 3;
+  required string sdkVersion = 2;
 }
 message SizeIosDevice{
   required string id = 1;

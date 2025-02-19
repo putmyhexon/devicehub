@@ -62,7 +62,6 @@ gtail -n1 -f /tmp/wdalog.txt | grep -q "ServerURLHere" > /dev/null
 cd "$(git rev-parse --show-toplevel)" || exit
 MONGODB_PORT_27017_TCP=mongodb://devicehub-mongo:27017 stf ios-device \
     --serial "$deviceId" \
-    --device-name "$deviceName" \
     --host localhost \
     --screen-port 1800$deviceNum \
     --mjpeg-port  910$deviceNum \
