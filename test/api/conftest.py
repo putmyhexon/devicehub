@@ -1,6 +1,7 @@
 import json
 import random
 import string
+import time
 
 import pytest
 from pytest_check import equal, is_not_none, is_true, is_false, is_in, greater_equal, greater, is_none
@@ -223,10 +224,9 @@ def fake_device_certain_field_check():
     return fake_device_certain_field_check_func
 
 
-# method check that device belongs to group(two requests check data in devices and groups tables)
 @pytest.fixture()
-def device_in_group_check(api_client, successful_response_check):
-    def device_in_group_check_func(serial, group_id, group_name=None):
+def __device_has_group_check(api_client, successful_response_check):
+    def device_has_group_check_func(serial, group_id, group_name=None):
         response = get_device_by_serial.sync_detailed(serial=serial, client=api_client)
         successful_response_check(response, description='Device Information')
         is_not_none(response.parsed.device)
@@ -234,6 +234,15 @@ def device_in_group_check(api_client, successful_response_check):
         equal(device_dict.get('group').get('id'), group_id)
         if group_name is not None:
             equal(device_dict.get('group').get('name'), group_name)
+
+    return device_has_group_check_func
+
+
+# method check that device belongs to group(two requests check data in devices and groups tables)
+@pytest.fixture()
+def device_in_group_check(api_client, successful_response_check, __device_has_group_check):
+    def device_in_group_check_func(serial, group_id, group_name=None):
+        __device_has_group_check(serial, group_id, group_name)
         response = get_group.sync_detailed(id=group_id, client=api_client)
         successful_response_check(response, description='Group Information')
         is_not_none(response.parsed.group)
@@ -241,6 +250,23 @@ def device_in_group_check(api_client, successful_response_check):
         is_in(serial, group_dict.get('devices'))
 
     return device_in_group_check_func
+
+
+@pytest.fixture()
+def devices_in_group_check(api_client, successful_response_check, __device_has_group_check):
+    # add timeout to wait while devices move to group in DB
+    time.sleep(1)
+
+    def devices_in_group_check_func(serials, group_id, group_name=None):
+        response = get_group.sync_detailed(id=group_id, client=api_client)
+        successful_response_check(response, description='Group Information')
+        is_not_none(response.parsed.group)
+        group_dict = response.parsed.group.to_dict()
+        equal(sorted(serials), sorted(group_dict.get('devices')))
+        for serial in serials:
+            __device_has_group_check(serial, group_id, group_name)
+
+    return devices_in_group_check_func
 
 
 @pytest.fixture()
@@ -260,6 +286,15 @@ def first_device_serial(successful_response_check, api_client):
     is_not_none(response.parsed.devices)
     greater(len(response.parsed.devices), 0)
     return response.parsed.devices[0].serial
+
+
+@pytest.fixture()
+def devices_serial(successful_response_check, api_client):
+    response = get_devices.sync_detailed(client=api_client)
+    successful_response_check(response, description='Devices Information')
+    is_not_none(response.parsed.devices)
+    greater(len(response.parsed.devices), 0)
+    return list(map(lambda x: x.serial, response.parsed.devices))
 
 
 @pytest.fixture()
