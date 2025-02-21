@@ -254,10 +254,9 @@ def device_in_group_check(api_client, successful_response_check, __device_has_gr
 
 @pytest.fixture()
 def devices_in_group_check(api_client, successful_response_check, __device_has_group_check):
-    # add timeout to wait while devices move to group in DB
-    time.sleep(1)
-
     def devices_in_group_check_func(serials, group_id, group_name=None):
+        # add timeout to wait while devices move to group in DB
+        time.sleep(1)
         response = get_group.sync_detailed(id=group_id, client=api_client)
         successful_response_check(response, description='Group Information')
         is_not_none(response.parsed.group)
