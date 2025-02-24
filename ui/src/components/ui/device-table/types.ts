@@ -21,7 +21,7 @@ export enum DeviceTableColumnIds {
   MODEL = 'model',
   NETWORK = 'network',
   NOTES = 'notes',
-  OPEN_GL_ES_VERSION = 'openGLESVersion',
+  OPEN_GLES_VERSION = 'openGLESVersion',
   OPERATOR = 'operator',
   OWNER_NAME = 'ownerName',
   PHONE = 'phone',

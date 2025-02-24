@@ -1,0 +1,270 @@
+import { t } from 'i18next'
+import { makeAutoObservable } from 'mobx'
+import { inject, injectable } from 'inversify'
+import { QueryObserverResult } from '@tanstack/react-query'
+import { addMinutes, formatDuration, intervalToDuration } from 'date-fns'
+
+import { ScheduleFormFields } from '@/components/ui/settings-tabs/groups-tab/group-item/tabs/schedule/types'
+
+import { GroupUser } from '@/types/group-user.type'
+import { GroupDevice } from '@/types/group-device.type'
+import { GroupListService } from '@/services/group-list-service'
+import { ConflictTableRow } from '@/types/conflict-table-row.type'
+import { DataWithGroupStatus } from '@/types/data-with-group-status.type'
+import { Conflict, GroupListResponseGroupsItem } from '@/generated/types'
+
+import { queries } from '@/config/queries/query-key-store'
+import { isRootGroup } from '@/lib/utils/is-root-group.util'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
+import { isOriginGroup } from '@/lib/utils/is-origin-group.util'
+import { isRepetitionsGroup } from '@/lib/utils/is-repetitions-group.util'
+import { CurrentUserProfileStore } from '@/store/current-user-profile-store'
+
+import { CLASS_CONFIGURATIONS } from '@/constants/schedule-class-configuration'
+
+import type { ScheduleData, ScheduleFormErrors } from './types'
+import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
+
+@injectable()
+export class GroupItemService {
+  private usersQuery
+  private devicesQuery
+
+  scheduleData: ScheduleData = {
+    dateRange: [new Date(), addMinutes(new Date(), 5)],
+    repetitions: 0,
+    groupClass: 'once',
+  }
+  scheduleFormErrors: ScheduleFormErrors = {}
+  conflicts: ConflictTableRow[] = []
+
+  constructor(
+    @inject(CONTAINER_IDS.groupId) public currentGroupId: string,
+    @inject(CONTAINER_IDS.factoryMobxQuery) mobxQueryFactory: MobxQueryFactory,
+    @inject(CONTAINER_IDS.groupListService) private groupListService: GroupListService,
+    @inject(CONTAINER_IDS.currentUserProfileStore) private currentUserProfileStore: CurrentUserProfileStore
+  ) {
+    makeAutoObservable(this)
+
+    this.usersQuery = mobxQueryFactory(() => ({ ...queries.users.group }))
+    this.devicesQuery = mobxQueryFactory(() => ({ ...queries.devices.group({ target: 'origin' }) }))
+
+    this.init()
+  }
+
+  init(): void {
+    const { start, stop } = this.currentGroup?.dates?.[0] || {}
+
+    if (start && stop) {
+      this.scheduleData = {
+        dateRange: [new Date(start), new Date(stop)],
+        repetitions: this.currentGroup?.repetitions || 0,
+        groupClass: this.currentGroup?.class || 'once',
+      }
+    }
+  }
+
+  get usersQueryResult(): QueryObserverResult<GroupUser[]> {
+    return this.usersQuery.result
+  }
+
+  get devicesQueryResult(): QueryObserverResult<GroupDevice[]> {
+    return this.devicesQuery.result
+  }
+
+  get currentGroup(): GroupListResponseGroupsItem | undefined {
+    return this.groupListService.groupsQueryResult.data?.find((item) => item.id === this.currentGroupId)
+  }
+
+  get isSomeUsersNotInGroup(): boolean {
+    return this.groupUsersData.some((item) => !item.isInGroup)
+  }
+
+  get isSomeDevicesNotInGroup(): boolean {
+    return this.groupDevicesData.some((item) => !item.isInGroup)
+  }
+
+  get isScheduleFormErrorsEmpty(): boolean {
+    return Object.keys(this.scheduleFormErrors).length === 0
+  }
+
+  get isCanRemoveAllUsers(): boolean {
+    const users = this.usersQuery.data || []
+
+    const ownerEmail = this.currentGroup?.owner?.email
+    const usersCount = users?.length
+
+    if (usersCount === 0) return false
+
+    if (isRootGroup(this.currentGroup?.privilege) && usersCount === 1 && users[0].privilege === 'admin') return false
+
+    if (
+      this.currentGroup?.privilege !== 'root' &&
+      usersCount === 2 &&
+      users[0].privilege === 'admin' &&
+      users[1].email === ownerEmail
+    ) {
+      return false
+    }
+
+    if (
+      this.currentGroup?.privilege !== 'root' &&
+      usersCount === 2 &&
+      users[0].email === ownerEmail &&
+      users[1].privilege === 'admin'
+    ) {
+      return false
+    }
+
+    if (
+      this.currentGroup?.privilege !== 'root' &&
+      usersCount === 1 &&
+      (users[0].email === ownerEmail || users[0].privilege === 'admin')
+    ) {
+      return false
+    }
+
+    return true
+  }
+
+  get groupUsersData(): DataWithGroupStatus<GroupUser>[] {
+    const users = this.usersQuery.data || []
+
+    return users.map((item) => {
+      if (item.email && this.currentGroup?.users?.includes(item.email)) {
+        return {
+          ...item,
+          isInGroup: true,
+        }
+      }
+
+      return {
+        ...item,
+        isInGroup: false,
+      }
+    })
+  }
+
+  get groupDevicesData(): DataWithGroupStatus<GroupDevice>[] {
+    const devices = this.devicesQuery.data || []
+
+    return devices.map((item) => {
+      if (item.serial && this.currentGroup?.devices?.includes(item.serial)) {
+        return {
+          ...item,
+          isInGroup: true,
+        }
+      }
+
+      return {
+        ...item,
+        isInGroup: false,
+      }
+    })
+  }
+
+  get conflictsCount(): number {
+    return this.conflicts.length
+  }
+
+  setConflicts(conflicts: Conflict[]): void {
+    for (const conflict of conflicts) {
+      for (const serial of conflict.devices || []) {
+        this.conflicts.push({
+          serial,
+          startDate: conflict.date?.start || '',
+          stopDate: conflict.date?.stop || '',
+          group: conflict.group || '',
+          ownerName: conflict.owner?.name || '',
+          ownerEmail: conflict.owner?.email || '',
+        })
+      }
+    }
+  }
+
+  clearConflicts(): void {
+    this.conflicts = []
+  }
+
+  setScheduleData<T extends keyof ScheduleData>(key: T, data: ScheduleData[T]): void {
+    this.scheduleData[key] = data
+
+    this.validateScheduleForm()
+  }
+
+  checkDurationQuota(deviceNumber: number): boolean {
+    if (isOriginGroup(this.scheduleData.groupClass)) return true
+
+    const [startDate, expireDate] = this.scheduleData.dateRange
+
+    if (!startDate || !expireDate || !this.currentGroup?.devices) return false
+
+    const duration =
+      (this.currentGroup.devices.length + deviceNumber) *
+      (expireDate.getTime() - startDate.getTime()) *
+      (this.scheduleData.repetitions + 1)
+
+    const groupOwnerEmail = this.currentGroup.owner?.email
+    const users = this.usersQuery.data || []
+
+    const userOwner = users.find((item) => item.email === groupOwnerEmail)
+
+    if (!userOwner?.groups?.quotas?.allocated?.duration) return false
+
+    if (duration <= userOwner.groups.quotas.allocated.duration) return true
+
+    return false
+  }
+
+  validateScheduleForm(): void {
+    const errors: ScheduleFormErrors = {}
+
+    if (isRepetitionsGroup(this.scheduleData.groupClass) && this.scheduleData.repetitions < 1) {
+      errors.repetitions = {
+        field: ScheduleFormFields.REPETITIONS,
+        message: t('Repetitions must exceed 0 for this class'),
+      }
+    }
+
+    const [startDate, expireDate] = this.scheduleData.dateRange
+
+    if (startDate >= expireDate) {
+      errors.startDate = {
+        field: ScheduleFormFields.START_DATE,
+        message: t('Start date must be before expiration date'),
+      }
+    }
+
+    const classConfiguration = CLASS_CONFIGURATIONS.find((item) => item.value === this.scheduleData.groupClass)
+
+    if (classConfiguration?.duration && expireDate.getTime() - startDate.getTime() > classConfiguration.duration) {
+      const duration = intervalToDuration({ start: 0, end: classConfiguration.duration })
+
+      errors.expireDate = {
+        field: ScheduleFormFields.EXPIRE_DATE,
+        message: `${t('The difference between expiration date and starting date')} (${formatDuration(duration)})`,
+      }
+    }
+
+    if (
+      (this.currentUserProfileStore.isAdmin &&
+        this.currentGroup?.devices?.length &&
+        isOriginGroup(this.scheduleData.groupClass) &&
+        !isOriginGroup(this.currentGroup.class)) ||
+      (!isOriginGroup(this.scheduleData.groupClass) && isOriginGroup(this.currentGroup?.class))
+    ) {
+      errors.groupClass = {
+        field: ScheduleFormFields.GROUP_CLASS,
+        message: t('Unauthorized class while device list is not empty'),
+      }
+    }
+
+    if (!this.checkDurationQuota(0)) {
+      errors.groupClass = {
+        message: t('Group duration quotas is reached'),
+      }
+    }
+
+    this.scheduleFormErrors = errors
+  }
+}

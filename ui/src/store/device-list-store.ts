@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify'
 import { makeAutoObservable } from 'mobx'
 
 import { socket } from '@/api/socket'
-import { DeviceWithFields } from '@/types/device-with-fields.type'
+import { ListDevice } from '@/types/list-device.type'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
@@ -23,10 +23,7 @@ export class DeviceListStore {
   constructor(@inject(CONTAINER_IDS.factoryMobxQuery) mobxQueryFactory: MobxQueryFactory) {
     makeAutoObservable(this)
 
-    this.devicesQuery = mobxQueryFactory(() => ({
-      ...queries.devices.all,
-      staleTime: Infinity,
-    }))
+    this.devicesQuery = mobxQueryFactory(() => ({ ...queries.devices.list, staleTime: Infinity }))
 
     this.onDeviceChange = this.onDeviceChange.bind(this)
 
@@ -41,7 +38,7 @@ export class DeviceListStore {
     socket.off('device.change', this.onDeviceChange)
   }
 
-  get devicesQueryResult(): QueryObserverResult<DeviceWithFields[]> {
+  get devicesQueryResult(): QueryObserverResult<ListDevice[]> {
     return this.devicesQuery.result
   }
 
@@ -69,9 +66,9 @@ export class DeviceListStore {
   }
 
   private async onDeviceChange({ data: changedData }: DeviceChangeMessage<Partial<Device>>): Promise<void> {
-    const deviceList = await queryClient.ensureQueryData({ ...queries.devices.all })
+    const deviceList = await queryClient.ensureQueryData({ ...queries.devices.list })
 
-    queryClient.setQueryData<Device[]>(queries.devices.all.queryKey, (oldData) => {
+    queryClient.setQueryData<Device[]>(queries.devices.list.queryKey, (oldData) => {
       if (!oldData) return deviceList
 
       return oldData.map((item) => {

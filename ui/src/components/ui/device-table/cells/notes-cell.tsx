@@ -5,11 +5,11 @@ import { Icon16PenOutline } from '@vkontakte/icons'
 
 import { socket } from '@/api/socket'
 
-import type { DeviceWithFields } from '@/types/device-with-fields.type'
+import type { ListDevice } from '@/types/list-device.type'
 
 type NotesCellProps = {
-  notes: DeviceWithFields['notes']
-  serial: DeviceWithFields['serial']
+  notes: ListDevice['notes']
+  serial: ListDevice['serial']
 }
 
 export const NotesCell = memo(({ notes, serial }: NotesCellProps) => {

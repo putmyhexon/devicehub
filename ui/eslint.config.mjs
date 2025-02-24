@@ -409,5 +409,14 @@ export default tseslint.config(
     rules: {
       'react/no-array-index-key': 'off',
     },
+  },
+  {
+    files: [
+      'src/components/ui/settings-tabs/groups-tab/group-item/group-name/group-name.tsx',
+      'src/components/ui/settings-tabs/keys-tab/access-tokens-control/access-tokens-control.tsx',
+    ],
+    rules: {
+      'jsx-a11y/no-autofocus': 'off',
+    },
   }
 )

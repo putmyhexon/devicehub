@@ -1,10 +1,10 @@
-import type { DeviceWithFields } from '@/types/device-with-fields.type'
+import type { ListDevice } from '@/types/list-device.type'
 import type { DeviceWithFieldsListResponse } from '@/api/openstf-api/types'
 
-const makeDevices = (length: number): DeviceWithFields[] =>
+const makeDevices = (length: number): ListDevice[] =>
   Array.from(
     { length },
-    (): DeviceWithFields => ({
+    (): ListDevice => ({
       present: true,
       provider: { name: 'staging-cloud-provider-7fdcc48cb5-4w5vv' },
       owner: null,
@@ -65,13 +65,13 @@ const makeDevices = (length: number): DeviceWithFields[] =>
     })
   )
 
-export const DEVICE_LIST_RESPONSE: DeviceWithFieldsListResponse = {
+export const DEVICE_LIST_RESPONSE: DeviceWithFieldsListResponse<ListDevice> = {
   success: true,
   description: 'Devices Information',
   devices: makeDevices(1000),
 }
 
-export const DEVICES_WITH_VARIOUS_DATA: DeviceWithFieldsListResponse = {
+export const DEVICES_WITH_VARIOUS_DATA: DeviceWithFieldsListResponse<ListDevice> = {
   success: true,
   description: 'Devices Information',
   devices: [

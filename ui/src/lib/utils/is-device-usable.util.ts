@@ -1,10 +1,10 @@
-import type { DeviceWithFields } from '@/types/device-with-fields.type'
+import type { ListDevice } from '@/types/list-device.type'
 
 type IsDeviceUsableArgs = {
-  status: DeviceWithFields['status']
-  present: DeviceWithFields['present']
-  ready: DeviceWithFields['ready']
-  using: DeviceWithFields['using']
+  status: ListDevice['status']
+  present: ListDevice['present']
+  ready: ListDevice['ready']
+  using: ListDevice['using']
   hasOwner: boolean
 }
 

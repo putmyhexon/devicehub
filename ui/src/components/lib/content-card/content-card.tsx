@@ -15,6 +15,7 @@ type ContentCardProps = {
   afterButtonIcon?: ReactElement
   onAfterButtonClick?: () => void
   afterTooltipText?: string
+  isAfterButtonLoading?: boolean
   helpTooltipText?: string
   className?: string
   separator?: boolean
@@ -32,6 +33,7 @@ export const ContentCard = ({
   className,
   separator = false,
   isAfterButtonDisabled = false,
+  isAfterButtonLoading = false,
 }: ContentCardProps) => (
   <Card className={cn(styles.contentCard, className)} mode='tint'>
     <Div className={styles.cardContainer}>
@@ -59,6 +61,7 @@ export const ContentCard = ({
                 aria-label='action button'
                 before={afterButtonIcon}
                 disabled={isAfterButtonDisabled}
+                loading={isAfterButtonLoading}
                 mode='tertiary'
                 onClick={onAfterButtonClick}
               />

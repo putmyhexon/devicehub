@@ -4,7 +4,7 @@ import { inject, injectable } from 'inversify'
 import { queries } from '@/config/queries/query-key-store'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
-import type { UserResponseUser } from '@/generated/types'
+import type { User } from '@/generated/types'
 import type { QueryObserverResult } from '@tanstack/react-query'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 
@@ -15,13 +15,10 @@ export class CurrentUserProfileStore {
   constructor(@inject(CONTAINER_IDS.factoryMobxQuery) mobxQueryFactory: MobxQueryFactory) {
     makeAutoObservable(this)
 
-    this.profileQuery = mobxQueryFactory(() => ({
-      ...queries.user.profile,
-      staleTime: Infinity,
-    }))
+    this.profileQuery = mobxQueryFactory(() => ({ ...queries.user.profile, staleTime: Infinity }))
   }
 
-  get profileQueryResult(): QueryObserverResult<UserResponseUser> {
+  get profileQueryResult(): QueryObserverResult<User> {
     return this.profileQuery.result
   }
 
@@ -29,7 +26,7 @@ export class CurrentUserProfileStore {
     return this.profileQueryResult.data?.privilege === 'admin'
   }
 
-  fetch(): Promise<UserResponseUser> {
+  fetch(): Promise<User> {
     return this.profileQuery.fetch()
   }
 }
