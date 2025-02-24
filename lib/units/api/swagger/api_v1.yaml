@@ -3003,6 +3003,76 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedErrorResponse'
     x-swagger-router-controller: autotests
+  /autotests/{id}/addDevices/:
+      get:
+          tags:
+              - autotests
+          summary: Add devices for autotests group
+          description: Filter and add devices to autotests group
+          operationId: addDevices
+          parameters:
+              -   name: id
+                  in: path
+                  description: Group identifier
+                  required: true
+                  schema:
+                      type: string
+              -   name: amount
+                  in: query
+                  description: Device amount needed for autotests run
+                  required: true
+                  schema:
+                      minimum: 1
+                      type: integer
+              -   name: need_amount
+                  in: query
+                  description: "need only specified amount, not less"
+                  schema:
+                      type: boolean
+              -   name: abi
+                  in: query
+                  description: device abi
+                  schema:
+                      type: string
+              -   name: sdk
+                  in: query
+                  description: device sdk
+                  schema:
+                      type: string
+              -   name: model
+                  in: query
+                  description: device model
+                  schema:
+                      type: string
+              -   name: type
+                  in: query
+                  description: device type
+                  schema:
+                      type: string
+              -   name: version
+                  in: query
+                  description: device os version
+                  schema:
+                      type: string
+          responses:
+              "200":
+                  description: Updated group with new devices
+                  content:
+                      application/json:
+                          schema:
+                              $ref: '#/components/schemas/GroupResponse'
+              default:
+                  description: |
+                      Unexpected Error:
+                        * 401: Unauthorized => bad credentials
+                        * 404: Not Found => unknown data
+                        * 500: Internal Server Error
+                  content:
+                      application/json:
+                          schema:
+                              $ref: '#/components/schemas/UnexpectedErrorResponse'
+          x-codegen-request-body-name: addDevices
+      x-swagger-router-controller: autotests
   /autotests/install/{serial}:
     post:
       tags:
