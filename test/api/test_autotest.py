@@ -5,8 +5,8 @@ import random
 import pytest
 from pytest_check import equal, is_, is_not_none, is_none
 
-from devicehub_client.api.autotests import capture_devices, free_devices
-from devicehub_client.types import UNSET
+from devicehub_client.devicehub_client.api.autotests import capture_devices, free_devices
+from devicehub_client.devicehub_client.types import UNSET
 
 
 def raise_multiple(errors):
