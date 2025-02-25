@@ -3694,25 +3694,6 @@ components:
                 type: string
                 nullable: true
 
-    AutoTestResponse:
-      required:
-      - description
-      - groups
-      - success
-      type: object
-      properties:
-        success:
-          type: boolean
-        description:
-          type: string
-        group:
-          type: object
-          properties:
-            devices:
-              type: array
-              items:
-                type: object
-                properties: {}
     User:
       type: object
       properties:
