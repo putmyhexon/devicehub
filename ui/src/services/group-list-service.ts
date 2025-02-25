@@ -2,14 +2,17 @@ import { makeAutoObservable } from 'mobx'
 import { inject, injectable } from 'inversify'
 import { QueryObserverResult } from '@tanstack/react-query'
 
-import { GroupListResponseGroupsItem } from '@/generated/types'
+import { socket } from '@/api/socket'
 
+import { queryClient } from '@/config/queries/query-client'
 import { queries } from '@/config/queries/query-key-store'
 import { isRootGroup } from '@/lib/utils/is-root-group.util'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { CurrentUserProfileStore } from '@/store/current-user-profile-store'
 
+import type { GroupListResponseGroupsItem } from '@/generated/types'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
+import type { SettingsGroupChangeMessage } from '@/types/settings-group-change-message.type'
 
 @injectable()
 export class GroupListService {
@@ -20,7 +23,7 @@ export class GroupListService {
   currentGroupId = ''
   globalFilter = ''
   currentPage = 1
-  pageSize = 10
+  pageSize = 5
 
   constructor(
     @inject(CONTAINER_IDS.factoryMobxQuery) mobxQueryFactory: MobxQueryFactory,
@@ -29,6 +32,12 @@ export class GroupListService {
     makeAutoObservable(this)
 
     this.groupsQuery = mobxQueryFactory(() => ({ ...queries.groups.all }))
+
+    this.onGroupCreate = this.onGroupCreate.bind(this)
+    this.onGroupDelete = this.onGroupDelete.bind(this)
+    this.onGroupChange = this.onGroupChange.bind(this)
+
+    this.addGroupListeners()
   }
 
   get groupsQueryResult(): QueryObserverResult<GroupListResponseGroupsItem[]> {
@@ -76,6 +85,28 @@ export class GroupListService {
       !this.paginatedGroups.length ||
       (this.paginatedGroups.length === 1 && isRootGroup(this.paginatedGroups[0].privilege))
     )
+  }
+
+  addGroupListeners(): void {
+    socket.on('user.settings.groups.created', this.onGroupCreate)
+    socket.on('user.view.groups.created', this.onGroupCreate)
+
+    socket.on('user.settings.groups.deleted', this.onGroupDelete)
+    socket.on('user.view.groups.deleted', this.onGroupDelete)
+
+    socket.on('user.settings.groups.updated', this.onGroupChange)
+    socket.on('user.view.groups.updated', this.onGroupChange)
+  }
+
+  removeGroupChangeListener(): void {
+    socket.off('user.settings.groups.created', this.onGroupCreate)
+    socket.off('user.view.groups.created', this.onGroupCreate)
+
+    socket.off('user.settings.groups.deleted', this.onGroupDelete)
+    socket.off('user.view.groups.deleted', this.onGroupDelete)
+
+    socket.off('user.settings.groups.updated', this.onGroupChange)
+    socket.off('user.view.groups.updated', this.onGroupChange)
   }
 
   setGlobalFilter(value: string): void {
@@ -137,5 +168,39 @@ export class GroupListService {
     }
 
     return false
+  }
+
+  private async onGroupChange({ group }: SettingsGroupChangeMessage): Promise<void> {
+    queryClient.setQueryData<GroupListResponseGroupsItem[]>(queries.groups.all.queryKey, (oldData) => {
+      if (!oldData) return []
+
+      return oldData.map((item): GroupListResponseGroupsItem => {
+        if (item.id === group.id) {
+          return { ...item, ...group }
+        }
+
+        return item
+      })
+    })
+  }
+
+  private async onGroupCreate({ group }: SettingsGroupChangeMessage): Promise<void> {
+    queryClient.setQueryData<GroupListResponseGroupsItem[]>(queries.groups.all.queryKey, (oldData) => {
+      if (!oldData) return []
+
+      const isGroupAlreadyExist = oldData.findIndex((item) => item.id === group.id) !== -1
+
+      if (isGroupAlreadyExist) return oldData
+
+      return [...oldData, group]
+    })
+  }
+
+  private async onGroupDelete({ group }: SettingsGroupChangeMessage): Promise<void> {
+    queryClient.setQueryData<GroupListResponseGroupsItem[]>(queries.groups.all.queryKey, (oldData) => {
+      if (!oldData) return []
+
+      return oldData.filter((item) => item.id !== group.id)
+    })
   }
 }

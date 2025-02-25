@@ -1,5 +1,5 @@
-import type { GroupPayloadClass } from '@/generated/types'
 import type { FormError } from '@/types/form-field-error.type'
+import type { GroupListResponseGroupsItem, GroupPayloadClass } from '@/generated/types'
 import type { ScheduleFormFields } from '@/components/ui/settings-tabs/groups-tab/group-item/tabs/schedule'
 
 export type ScheduleFormErrors = {
@@ -11,3 +11,5 @@ export type ScheduleData = {
   repetitions: number
   groupClass: GroupPayloadClass
 }
+
+export type SetScheduleDataArgs = Pick<GroupListResponseGroupsItem, 'dates' | 'repetitions' | 'class'>

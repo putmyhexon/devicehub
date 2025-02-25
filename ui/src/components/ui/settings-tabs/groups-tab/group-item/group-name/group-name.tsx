@@ -85,6 +85,7 @@ export const GroupName = ({ groupId, name }: GroupNameProps) => {
             onBlur={changeName}
             onChange={onChangeEditedName}
             onClick={(event) => event.stopPropagation()}
+            onKeyDown={(event) => event.key === 'Escape' && setIsEditing(false)}
           />
           <ConditionalRender conditions={[!!error]}>
             <p className={styles.error}>{error}</p>

@@ -6,6 +6,7 @@ import { BaseSelect } from '@/components/lib/base-select'
 
 import styles from './group-table.module.css'
 
+import type { ReactNode } from 'react'
 import type { Table } from '@tanstack/react-table'
 import type { SelectOption } from '@/components/lib/base-select'
 
@@ -17,9 +18,10 @@ enum IsUserInGroup {
 
 type GroupTopFiltersProps<T> = {
   table: Table<T>
+  children?: ReactNode
 }
 
-export const GroupTopFilters = <T,>({ table }: GroupTopFiltersProps<T>) => {
+export const GroupTopFilters = <T,>({ table, children }: GroupTopFiltersProps<T>) => {
   const { t } = useTranslation()
   const [globalFilter, setGlobalFilter] = useState('')
   const [isInGroupFilter, setIsInGroupFilter] = useState<IsUserInGroup>(IsUserInGroup.ALL)
@@ -34,38 +36,41 @@ export const GroupTopFilters = <T,>({ table }: GroupTopFiltersProps<T>) => {
   )
 
   return (
-    <Flex align='center'>
-      <Search
-        className={styles.search}
-        value={globalFilter}
-        noPadding
-        onChange={(event) => {
-          setGlobalFilter(event.target.value)
+    <Flex align='center' justify='space-between'>
+      <Flex align='center'>
+        <Search
+          className={styles.search}
+          value={globalFilter}
+          noPadding
+          onChange={(event) => {
+            setGlobalFilter(event.target.value)
 
-          table.setGlobalFilter(event.target.value)
-        }}
-      />
-      <BaseSelect
-        options={isIngGroupOptions}
-        selectType='plain'
-        stretched={false}
-        value={isInGroupFilter}
-        onChange={(value) => {
-          setIsInGroupFilter(Number(value))
+            table.setGlobalFilter(event.target.value)
+          }}
+        />
+        <BaseSelect
+          options={isIngGroupOptions}
+          selectType='plain'
+          stretched={false}
+          value={isInGroupFilter}
+          onChange={(value) => {
+            setIsInGroupFilter(Number(value))
 
-          if (Number(value) === IsUserInGroup.ALL) {
-            table.getColumn('isInGroup')?.setFilterValue(undefined)
-          }
+            if (Number(value) === IsUserInGroup.ALL) {
+              table.getColumn('isInGroup')?.setFilterValue(undefined)
+            }
 
-          if (Number(value) === IsUserInGroup.IN_GROUP) {
-            table.getColumn('isInGroup')?.setFilterValue(true)
-          }
+            if (Number(value) === IsUserInGroup.IN_GROUP) {
+              table.getColumn('isInGroup')?.setFilterValue(true)
+            }
 
-          if (Number(value) === IsUserInGroup.NOT_IN_GROUP) {
-            table.getColumn('isInGroup')?.setFilterValue(false)
-          }
-        }}
-      />
+            if (Number(value) === IsUserInGroup.NOT_IN_GROUP) {
+              table.getColumn('isInGroup')?.setFilterValue(false)
+            }
+          }}
+        />
+      </Flex>
+      {children}
     </Flex>
   )
 }

@@ -21,7 +21,9 @@ export const useAddUserInGroup = (): UseMutationResult<boolean, AxiosError<Unexp
         if (!oldData) return []
 
         return oldData.map((item): GroupListResponseGroupsItem => {
-          if (item.id === data.groupId) return { ...item, users: [...(item.users || []), ...(data.userEmail || [])] }
+          if (item.id === data.groupId) {
+            return { ...item, users: [...(item.users || []), ...(data.userEmail ? [data.userEmail] : [])] }
+          }
 
           return item
         })
@@ -33,8 +35,5 @@ export const useAddUserInGroup = (): UseMutationResult<boolean, AxiosError<Unexp
       queryClient.setQueryData(queries.groups.all.queryKey, context?.previousGroups)
 
       console.error(error)
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queries.groups.all.queryKey })
     },
   })

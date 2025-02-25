@@ -5,6 +5,7 @@ import { QueryObserverResult } from '@tanstack/react-query'
 import { addMinutes, formatDuration, intervalToDuration } from 'date-fns'
 
 import { ScheduleFormFields } from '@/components/ui/settings-tabs/groups-tab/group-item/tabs/schedule/types'
+import { GroupUsersColumnIds } from '@/components/ui/settings-tabs/groups-tab/group-item/tabs/group-users-table/types'
 
 import { GroupUser } from '@/types/group-user.type'
 import { GroupDevice } from '@/types/group-device.type'
@@ -22,7 +23,8 @@ import { CurrentUserProfileStore } from '@/store/current-user-profile-store'
 
 import { CLASS_CONFIGURATIONS } from '@/constants/schedule-class-configuration'
 
-import type { ScheduleData, ScheduleFormErrors } from './types'
+import type { Row } from '@tanstack/react-table'
+import type { ScheduleData, ScheduleFormErrors, SetScheduleDataArgs } from './types'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 
 @injectable()
@@ -48,20 +50,6 @@ export class GroupItemService {
 
     this.usersQuery = mobxQueryFactory(() => ({ ...queries.users.group }))
     this.devicesQuery = mobxQueryFactory(() => ({ ...queries.devices.group({ target: 'origin' }) }))
-
-    this.init()
-  }
-
-  init(): void {
-    const { start, stop } = this.currentGroup?.dates?.[0] || {}
-
-    if (start && stop) {
-      this.scheduleData = {
-        dateRange: [new Date(start), new Date(stop)],
-        repetitions: this.currentGroup?.repetitions || 0,
-        groupClass: this.currentGroup?.class || 'once',
-      }
-    }
   }
 
   get usersQueryResult(): QueryObserverResult<GroupUser[]> {
@@ -186,6 +174,18 @@ export class GroupItemService {
     this.conflicts = []
   }
 
+  setEntireScheduleData(data: SetScheduleDataArgs): void {
+    const { start, stop } = data.dates?.[0] || {}
+
+    const updatedData: ScheduleData = {
+      dateRange: [start ? new Date(start) : new Date(), stop ? new Date(stop) : new Date()],
+      repetitions: data?.repetitions || 0,
+      groupClass: data?.class || 'once',
+    }
+
+    this.scheduleData = updatedData
+  }
+
   setScheduleData<T extends keyof ScheduleData>(key: T, data: ScheduleData[T]): void {
     this.scheduleData[key] = data
 
@@ -266,5 +266,15 @@ export class GroupItemService {
     }
 
     this.scheduleFormErrors = errors
+  }
+
+  async getGroupUsersEmails(users: Row<DataWithGroupStatus<GroupUser>>[]): Promise<string> {
+    const currentUserProfileStore = await this.currentUserProfileStore.fetch()
+
+    const emailSeparator = currentUserProfileStore.settings?.emailAddressSeparator
+    const emails: string[] = users.map((item) => item.getValue(GroupUsersColumnIds.EMAIL))
+    const uniqueEmail = Array.from(new Set(emails))
+
+    return uniqueEmail.join(emailSeparator || ',')
   }
 }

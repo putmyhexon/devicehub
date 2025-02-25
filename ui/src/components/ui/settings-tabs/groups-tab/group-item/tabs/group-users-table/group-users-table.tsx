@@ -1,6 +1,9 @@
 import { useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
+import { useTranslation } from 'react-i18next'
 import { useInjection } from 'inversify-react'
+import { Button, Tooltip } from '@vkontakte/vkui'
+import { Icon16MailOutline } from '@vkontakte/icons'
 import { createColumnHelper } from '@tanstack/react-table'
 
 import { TextWithTranslation } from '@/components/lib/text-with-translation'
@@ -14,13 +17,14 @@ import { GroupTable, GroupTopFilters, IsInGroupCell, isInGroupSorting } from '..
 
 import { GroupUsersColumnIds } from './types'
 
-import type { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef, Row } from '@tanstack/react-table'
 import type { GroupUser } from '@/types/group-user.type'
 import type { DataWithGroupStatus } from '@/types/data-with-group-status.type'
 
 const columnHelper = createColumnHelper<DataWithGroupStatus<GroupUser>>()
 
 export const GroupUsersTable = observer(() => {
+  const { t } = useTranslation()
   const { mutate: addUsersInGroup } = useAddUserInGroup()
   const { mutate: removeUsersFromGroup } = useRemoveUserFromGroup()
 
@@ -75,6 +79,12 @@ export const GroupUsersTable = observer(() => {
     []
   ) as ColumnDef<DataWithGroupStatus<GroupUser>>[]
 
+  const onWriteEmail = async (users: Row<DataWithGroupStatus<GroupUser>>[]) => {
+    const emails = await groupItemService.getGroupUsersEmails(users)
+
+    navigator.clipboard.writeText(emails)
+  }
+
   return (
     <GroupTable
       columns={columns}
@@ -90,7 +100,22 @@ export const GroupUsersTable = observer(() => {
         ],
       }}
     >
-      {(table) => <GroupTopFilters table={table} />}
+      {(table) => (
+        <GroupTopFilters table={table}>
+          <Tooltip appearance='accent' description={t('Write an email to the group user selection')}>
+            <Button
+              before={<Icon16MailOutline />}
+              disabled={table.getRowModel().rows.length === 0}
+              href='mailto:?body=*** Paste the email addresses from the clipboard! ***'
+              mode='link'
+              size='s'
+              onClick={() => onWriteEmail(table.getRowModel().rows)}
+            >
+              {t('Contact Users')}
+            </Button>
+          </Tooltip>
+        </GroupTopFilters>
+      )}
     </GroupTable>
   )
 })

@@ -29,7 +29,9 @@ export const useAddDeviceToGroup = (): UseMutationResult<
         if (!oldData) return []
 
         return oldData.map((item): GroupListResponseGroupsItem => {
-          if (item.id === data.groupId) return { ...item, devices: [...(item.devices || []), ...(data.serial || [])] }
+          if (item.id === data.groupId) {
+            return { ...item, devices: [...(item.devices || []), ...(data.serial ? [data.serial] : [])] }
+          }
 
           return item
         })
@@ -45,9 +47,6 @@ export const useAddDeviceToGroup = (): UseMutationResult<
       }
 
       console.error(error)
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queries.groups.all.queryKey })
     },
   })
 }

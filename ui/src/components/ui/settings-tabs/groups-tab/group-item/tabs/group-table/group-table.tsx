@@ -48,7 +48,7 @@ export const GroupTable = <T,>({
 }: GroupTableProps<T>) => {
   const { t } = useTranslation()
 
-  const displayData = useMemo<T[]>(() => (isDataLoading ? Array(3).fill({}) : data), [isDataLoading, data])
+  const displayData = useMemo<T[]>(() => (isDataLoading ? Array(5).fill({}) : data), [isDataLoading, data])
   const tableColumns = useMemo(
     () =>
       isDataLoading

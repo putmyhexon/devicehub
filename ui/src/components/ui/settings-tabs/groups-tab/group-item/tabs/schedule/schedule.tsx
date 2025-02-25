@@ -12,6 +12,7 @@ import {
   FormStatus,
   Div,
 } from '@vkontakte/vkui'
+import { useEffect } from 'react'
 
 import { BaseSelect } from '@/components/lib/base-select'
 import { ConditionalRender } from '@/components/lib/conditional-render'
@@ -27,24 +28,23 @@ import { ScheduleFormFields } from './types'
 import styles from './schedule.module.css'
 
 import type { FormEvent } from 'react'
-import type { GroupListResponseGroupsItemState, GroupPayloadClass } from '@/generated/types'
+import type { GroupListResponseGroupsItem, GroupPayloadClass } from '@/generated/types'
 
 type ScheduleProps = {
-  groupId: string
-  groupState?: GroupListResponseGroupsItemState
+  group?: GroupListResponseGroupsItem
 }
 
-export const Schedule = observer(({ groupId, groupState }: ScheduleProps) => {
+export const Schedule = observer(({ group }: ScheduleProps) => {
   const { t } = useTranslation()
   const { i18n } = useTranslation()
-  const { mutate: updateGroup, isPending } = useUpdateGroup(groupId)
+  const { mutate: updateGroup, isPending } = useUpdateGroup(group?.id || '')
 
   const { isAdmin } = useInjection(CONTAINER_IDS.currentUserProfileStore)
   const groupItemService = useInjection(CONTAINER_IDS.groupItemService)
   const { scheduleData, isScheduleFormErrorsEmpty, scheduleFormErrors } = groupItemService
 
   const { dateRange, groupClass, repetitions } = scheduleData
-  const isScheduleFormDisabled = groupState === 'ready'
+  const isScheduleFormDisabled = group?.state === 'ready'
 
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -58,6 +58,14 @@ export const Schedule = observer(({ groupId, groupState }: ScheduleProps) => {
       })
     }
   }
+
+  useEffect(() => {
+    groupItemService.setEntireScheduleData({
+      dates: group?.dates,
+      repetitions: group?.repetitions,
+      class: group?.class,
+    })
+  }, [group])
 
   return (
     <form onSubmit={onFormSubmit}>
@@ -144,7 +152,9 @@ export const Schedule = observer(({ groupId, groupState }: ScheduleProps) => {
             />
           </LocaleProvider>
         </FormItem>
-        <ConditionalRender conditions={[groupClass === 'bookable' || groupClass === 'standard']}>
+        <ConditionalRender
+          conditions={[groupClass === 'bookable' || (groupClass === 'standard' && group?.state !== 'ready')]}
+        >
           <Div>
             <FormStatus>{t('Saving will also get ready the group')}</FormStatus>
           </Div>

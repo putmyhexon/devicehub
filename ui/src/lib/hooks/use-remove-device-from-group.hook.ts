@@ -40,7 +40,4 @@ export const useRemoveDeviceFromGroup = (): UseMutationResult<
 
       console.error(error)
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queries.groups.all.queryKey })
-    },
   })

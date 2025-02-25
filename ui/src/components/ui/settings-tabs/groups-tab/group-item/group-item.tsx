@@ -76,7 +76,7 @@ export const GroupItem = ({ group }: GroupItemProps) => {
         id: 'Schedule',
         title: t('Schedule'),
         ariaControls: 'tab-content-schedule',
-        content: <Schedule groupId={group?.id || ''} groupState={group?.state} />,
+        content: <Schedule group={group} />,
       },
       {
         id: 'Conflicts',
@@ -92,7 +92,7 @@ export const GroupItem = ({ group }: GroupItemProps) => {
         content: <GroupConflictsTable />,
       },
     ],
-    [t, conflictsCount, group?.id, group?.state]
+    [t, conflictsCount, group]
   )
 
   return (
