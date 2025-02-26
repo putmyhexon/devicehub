@@ -27,3 +27,8 @@ export type GetManifestResponse = {
   success: boolean
   manifest: Manifest
 }
+
+export type UploadFileArgs = {
+  type: string
+  file: File
+}

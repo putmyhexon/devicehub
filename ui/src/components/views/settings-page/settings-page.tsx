@@ -4,6 +4,7 @@ import { Div, Panel, View } from '@vkontakte/vkui'
 
 import { TabsPanel } from '@/components/lib/tabs-panel'
 import { GeneralTab } from '@/components/ui/settings-tabs/general-tab'
+import { GroupsTab } from '@/components/ui/settings-tabs/groups-tab'
 import { KeysTab } from '@/components/ui/settings-tabs/keys-tab'
 
 import {
@@ -40,7 +41,7 @@ export const SettingsPage = () => {
         id: getSettingsGroupsRoute(),
         title: t('Groups'),
         ariaControls: 'tab-content-groups',
-        content: <Div />,
+        content: <GroupsTab />,
       },
       {
         id: getSettingsDevicesRoute(),

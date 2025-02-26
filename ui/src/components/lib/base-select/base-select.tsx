@@ -6,6 +6,7 @@ import styles from './base-select.module.css'
 import type { SelectOption } from './types'
 
 type BaseSelectProps<T> = {
+  id?: string
   value: T
   onChange: (value: string) => void
   options: SelectOption<T>[]
@@ -15,6 +16,7 @@ type BaseSelectProps<T> = {
 }
 
 export const BaseSelect = <T extends string | number | undefined>({
+  id,
   value,
   onChange,
   options,
@@ -25,6 +27,7 @@ export const BaseSelect = <T extends string | number | undefined>({
   <NativeSelect
     className={cn({ [styles.compact]: !stretched })}
     disabled={isDisabled}
+    id={id}
     selectType={selectType}
     value={value}
     onChange={(event) => {

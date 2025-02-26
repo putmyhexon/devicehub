@@ -17,9 +17,9 @@ import { DeviceStatusCell, BookedBeforeCell, BrowserCell, ProductCell, ModelCell
 import { browserAppsFilter, browserAppsSorting, deviceStatusSorting, getNetworkString, textColumnDef } from './helpers'
 import { DeviceTableColumnIds } from './types'
 
-import type { DeviceWithFields } from '@/types/device-with-fields.type'
+import type { ListDevice } from '@/types/list-device.type'
 
-const columnHelper = createColumnHelper<DeviceWithFields>()
+const columnHelper = createColumnHelper<ListDevice>()
 
 export const DEVICE_COLUMNS = [
   /* NOTE: Device Info Group */
@@ -130,7 +130,7 @@ export const DEVICE_COLUMNS = [
   columnHelper.accessor(
     (row) => row.openGLESVersion,
     textColumnDef({
-      columnId: DeviceTableColumnIds.OPEN_GL_ES_VERSION,
+      columnId: DeviceTableColumnIds.OPEN_GLES_VERSION,
       columnName: 'OpenGL ES version',
       columnGroup: ColumnGroup.OS_HARDWARE,
     })

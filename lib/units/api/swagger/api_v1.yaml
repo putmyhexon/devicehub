@@ -3612,17 +3612,249 @@ components:
           type: array
           items:
             type: object
-            properties: {}
-    AdbKeyAddedResponse:
-        required:
-        - success
-        - fingerprint
-        type: object
-        properties:
-            success:
-                type: boolean
-            fingerprint:
+            properties:
+              _id:
                 type: string
+              name:
+                type: string
+              owner:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    format: email
+                  name:
+                    type: string
+              users:
+                type: array
+                items:
+                  type: string
+              privilege:
+                type: string
+              class:
+                type: string
+                description: "Group class; privileged value => debug, bookable, standard"
+                enum:
+                - once
+                - bookable
+                - hourly
+                - daily
+                - weekly
+                - monthly
+                - quaterly
+                - halfyearly
+                - yearly
+                - debug
+                - standard
+              repetitions:
+                type: integer
+                minimum: 0
+                description: "Group repetitions; default value => 0"
+              duration:
+                type: integer
+              isActive:
+                type: boolean
+              state:
+                type: string
+                description: "Group state; default value => pending or ready for bookable/standard classes"
+                enum:
+                - pending
+                - ready
+              dates:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    start:
+                      type: string
+                      format: date-time
+                    stop:
+                      type: string
+                      format: date-time
+              envUserGroupsNumber:
+                type: integer
+              envUserGroupsDuration:
+                type: integer
+              envUserGroupsRepetitions:
+                type: integer
+              id:
+                type: string
+              devices:
+                type: array
+                items:
+                  type: string
+              lock:
+                type: object
+                properties:
+                  user:
+                    type: boolean
+                  admin:
+                    type: boolean
+              runUrl:
+                type: string
+                nullable: true
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        ip:
+          type: string
+        group:
+          type: string
+        lastLoggedInAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        forwards:
+          type: array
+          items: {}
+        groupDeviceData:
+          type: object
+          properties:
+            columns:
+              type: object
+              properties:
+                name:
+                  type: string
+                selected:
+                  type: boolean
+                sort:
+                  type: string
+            sort:
+              type: object
+              properties:
+                index:
+                  type: number
+                reverse:
+                  type: boolean
+        adbKeys:
+          type: array
+          items:
+            type: object
+            properties:
+                fingerprint:
+                    type: string
+                title:
+                    type: string
+        settings:
+          type: object
+          properties:
+            lastUsedDevice:
+              type: string
+            dateFormat:
+              type: string
+            emailAddressSeparator:
+              type: string
+            alertMessage:
+                type: object
+                properties:
+                    activation:
+                        type: string
+                    data:
+                        type: string
+                    level:
+                        type: string
+                        enum:
+                        - Information
+                        - Warning
+                        - Critical
+            platform:
+              type: string
+            groupItemsPerPage:
+              type: object
+              properties:
+                name:
+                  type: string
+                value:
+                  type: integer
+            deviceListColumns:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  selected:
+                    type: boolean
+            selectedLanguage:
+              type: string
+            deviceListSort:
+                type: object
+                properties:
+                  fixed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        order:
+                          type: string
+                  user:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        order:
+                          type: string
+        acceptedPolicy:
+          type: boolean
+        privilege:
+          type: string
+        groups:
+          type: object
+          properties:
+            subscribed:
+              type: array
+              items:
+                type: string
+            lock:
+              type: boolean
+            quotas:
+              type: object
+              properties:
+                allocated:
+                  type: object
+                  properties:
+                    number:
+                      type: number
+                    duration:
+                      type: number
+                consumed:
+                  type: object
+                  properties:
+                    number:
+                      type: number
+                    duration:
+                      type: number
+                defaultGroupsNumber:
+                  type: number
+                defaultGroupsDuration:
+                  type: number
+                defaultGroupsRepetitions:
+                  type: number
+                repetitions:
+                  type: integer
+    AdbKeyAddedResponse:
+      required:
+      - success
+      - fingerprint
+      type: object
+      properties:
+        success:
+          type: boolean
+        fingerprint:
+          type: string
     UserListResponse:
       required:
       - description
@@ -3637,8 +3869,7 @@ components:
         users:
           type: array
           items:
-            type: object
-            properties: {}
+            $ref: '#/components/schemas/User'
     UserResponse:
       required:
       - description
@@ -3651,137 +3882,7 @@ components:
         description:
           type: string
         user:
-          type: object
-          properties:
-            _id:
-                type: string
-            email:
-                type: string
-            name:
-                type: string
-            ip:
-                type: string
-            group:
-                type: string
-            lastLoggedInAt:
-                type: string
-                format: date-time
-            createdAt:
-                type: string
-                format: date-time
-            forwards:
-                type: array
-                items: {}
-            adbKeys:
-              type: array
-              items:
-                type: object
-                properties:
-                    fingerprint:
-                        type: string
-                    title:
-                        type: string
-            settings:
-                type: object
-                properties:
-                    lastUsedDevice:
-                        type: string
-                    dateFormat:
-                        type: string
-                    emailAddressSeparator:
-                        type: string
-                    alertMessage:
-                        type: object
-                        properties:
-                            activation:
-                                type: string
-                            data:
-                                type: string
-                            level:
-                                type: string
-                                enum:
-                                  - Information
-                                  - Warning
-                                  - Critical
-                    platform:
-                        type: string
-                    groupItemsPerPage:
-                        type: object
-                        properties:
-                            name:
-                                type: string
-                            value:
-                                type: integer
-                    deviceListColumns:
-                        type: array
-                        items:
-                            type: object
-                            properties:
-                                name:
-                                    type: string
-                                selected:
-                                    type: boolean
-                    selectedLanguage:
-                        type: string
-                    deviceListSort:
-                        type: object
-                        properties:
-                            fixed:
-                                type: array
-                                items:
-                                    type: object
-                                    properties:
-                                        name:
-                                            type: string
-                                        order:
-                                            type: string
-                            user:
-                                type: array
-                                items:
-                                    type: object
-                                    properties:
-                                        name:
-                                            type: string
-                                        order:
-                                            type: string
-            acceptedPolicy:
-                type: boolean
-            privilege:
-                type: string
-            groups:
-                type: object
-                properties:
-                    subscribed:
-                        type: array
-                        items:
-                            type: string
-                    lock:
-                        type: boolean
-                    quotas:
-                        type: object
-                        properties:
-                            allocated:
-                                type: object
-                                properties:
-                                    number:
-                                        type: number
-                                    duration:
-                                        type: number
-                            consumed:
-                                type: object
-                                properties:
-                                    number:
-                                        type: number
-                                    duration:
-                                        type: number
-                            defaultGroupsNumber:
-                                type: number
-                            defaultGroupsDuration:
-                                type: number
-                            defaultGroupsRepetitions:
-                                type: number
-                            repetitions:
-                                type: integer
+          $ref: '#/components/schemas/User'
 
     ServiceUserResponse:
       required:

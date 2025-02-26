@@ -5,10 +5,10 @@
  * Control and manages real Smartphone devices from browser and restful apis
  * OpenAPI spec version: 1.3.10
  */
-import type { UserListResponseUsersItem } from './userListResponseUsersItem'
+import type { User } from './user'
 
 export interface UserListResponse {
   description: string
   success: boolean
-  users: UserListResponseUsersItem[]
+  users: User[]
 }

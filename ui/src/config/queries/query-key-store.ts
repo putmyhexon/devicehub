@@ -1,22 +1,42 @@
 import { createQueryKeyStore } from '@lukemorales/query-key-factory'
 
 import { getAuthContact, getAuthDocs, getManifest } from '@/api/openstf'
-import { getAccessTokens, getCurrentUserProfile, getDeviceBySerial, getDevicesWithFields } from '@/api/openstf-api'
+import {
+  getAccessTokens,
+  getCurrentUserProfile,
+  getDeviceBySerial,
+  getGroupDevices,
+  getGroups,
+  getGroupUsers,
+  getListDevices,
+} from '@/api/openstf-api'
 
+import type { GroupDevice } from '@/types/group-device.type'
+import type { ParamsWithoutFields } from '@/api/openstf-api/types'
 import type { inferQueryKeyStore } from '@lukemorales/query-key-factory'
 import type { GetManifestResponse } from '@/api/openstf/types'
-import type { Device } from '@/generated/types'
+import type { Device, GetDevicesParams } from '@/generated/types'
 
 export const queries = createQueryKeyStore({
   devices: {
-    all: {
+    list: {
       queryKey: null,
-      queryFn: () => getDevicesWithFields(),
+      queryFn: () => getListDevices(),
     },
+    group: (params?: ParamsWithoutFields<GetDevicesParams>) => ({
+      queryKey: [params],
+      queryFn: (): Promise<GroupDevice[]> => getGroupDevices(params),
+    }),
     bySerial: (serial: string) => ({
       queryKey: [serial],
       queryFn: (): Promise<Device> => getDeviceBySerial(serial),
     }),
+  },
+  users: {
+    group: {
+      queryKey: null,
+      queryFn: () => getGroupUsers(),
+    },
   },
   user: {
     profile: {
@@ -26,6 +46,12 @@ export const queries = createQueryKeyStore({
     accessTokens: {
       queryKey: null,
       queryFn: () => getAccessTokens(),
+    },
+  },
+  groups: {
+    all: {
+      queryKey: null,
+      queryFn: () => getGroups(),
     },
   },
   auth: {
