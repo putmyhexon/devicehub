@@ -1,7 +1,7 @@
-from pytest_check import greater, equal, is_not_none, is_not_in
+from pytest_check import greater, equal, is_not_none, is_not_in, is_none
 
 from devicehub_client.api.admin import add_origin_group_devices
-from devicehub_client.api.groups import get_groups, get_group_devices, create_group, delete_group, \
+from devicehub_client.api.groups import get_groups, get_group_device, get_group_devices, create_group, delete_group, \
     add_group_device, add_group_user, add_group_devices, remove_group_device, update_group, remove_group_devices
 from devicehub_client.models import GroupPayload, GroupPayloadClass, DevicesPayload, GroupPayloadState
 
@@ -76,6 +76,64 @@ def test_get_groups_devices_with_wrong_fields(
         equal(len(device_dict.values()), 1)
         is_not_none(device_dict.get('reverseForwards'))
         equal(device_dict.get('reverseForwards'), [])
+
+
+def test_get_unexisting_group_devices(
+    api_client,
+    fake_device_field_check,
+    common_group_id,
+    failure_response_check,
+    random_str,
+    first_device_serial
+):
+    random_group = f'group-{random_str()}'
+    response = get_group_devices.sync_detailed(id=random_group, client=api_client)
+    failure_response_check(response, status_code=404, description='Not Found (group)')
+    is_none(response.parsed)
+
+
+# api/v1/groups/{groupId}/devices/{deviceId} - certain device for certain group
+def test_get_groups_device(
+    api_client,
+    fake_device_field_check,
+    common_group_id,
+    successful_response_check,
+    devices_serial
+):
+    for serial in devices_serial:
+        response = get_group_device.sync_detailed(id=common_group_id, serial=serial, client=api_client)
+        successful_response_check(response, description='Device Information')
+        is_not_none(response.parsed.device)
+        device_dict = response.parsed.device.to_dict()
+        equal(device_dict.get('serial'), serial)
+        fake_device_field_check(device_dict)
+
+
+def test_get_groups_unexisting_device(
+    api_client,
+    fake_device_field_check,
+    common_group_id,
+    failure_response_check,
+    random_str
+):
+    random_serial = f'serial-{random_str()}'
+    response = get_group_device.sync_detailed(id=common_group_id, serial=random_serial, client=api_client)
+    failure_response_check(response, status_code=404, description='Not Found (device)')
+    is_none(response.parsed)
+
+
+def test_get_unexisting_group_device(
+    api_client,
+    fake_device_field_check,
+    common_group_id,
+    failure_response_check,
+    random_str,
+    first_device_serial
+):
+    random_group = f'group-{random_str()}'
+    response = get_group_device.sync_detailed(id=random_group, serial=first_device_serial, client=api_client)
+    failure_response_check(response, status_code=404, description='Not Found (group)')
+    is_none(response.parsed)
 
 
 def test_create_and_delete_once_group(api_client, random_str, successful_response_check):
@@ -200,7 +258,7 @@ def test_remove_device_by_one_from_once_group(
     random_str,
     successful_response_check,
     devices_serial,
-    devices_in_group_check,
+    device_in_group_check,
     api_client_custom_token,
     service_user_token
 ):
@@ -228,15 +286,18 @@ def test_remove_device_by_one_from_once_group(
     )
     successful_response_check(response, description='Updated (group)')
     equal(response.parsed.group.to_dict()['state'], GroupPayloadState.READY)
-    # add device to once group by user
-    response = add_group_devices.sync_detailed(
-        id=once_group_id,
-        client=user_api_client,
-        body=DevicesPayload(serials=','.join(devices_serial))
-    )
-    successful_response_check(response, description='Added (group devices)')
-    equal(sorted(devices_serial), sorted(response.parsed.group.to_dict()['devices']))
-    devices_in_group_check(serials=devices_serial, group_id=once_group_id, group_name=once_group_name)
+    # add device to once group by user by one
+    group_devices = []
+    for serial in devices_serial:
+        response = add_group_device.sync_detailed(
+            id=once_group_id,
+            client=user_api_client,
+            serial=serial
+        )
+        successful_response_check(response, description='Added (group devices)')
+        group_devices.append(serial)
+        equal(sorted(group_devices), sorted(response.parsed.group.to_dict()['devices']))
+        device_in_group_check(serial=serial, group_id=once_group_id, group_name=once_group_name)
     # try to delete devices by one by user
     for serial in devices_serial:
         response = remove_group_device.sync_detailed(id=once_group_id, serial=serial, client=user_api_client)
