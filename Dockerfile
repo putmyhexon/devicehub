@@ -10,6 +10,8 @@ ENV PATH=/app/bin:$PATH \
     DEBIAN_FRONTEND=noninteractive \
     BUNDLETOOL_REL=1.8.2
 
+ENV NODE_OPTIONS="--max-old-space-size=8192"
+
 WORKDIR /app
 EXPOSE 3000
 
@@ -19,7 +21,7 @@ RUN useradd --system \
       stf-build && \
     apt-get update && \
     apt-get upgrade -yq && \
-    apt-get -y install wget python3 build-essential ca-certificates libzmq3-dev libprotobuf-dev git graphicsmagick openjdk-11-jdk yasm curl nano iputils-ping && \
+    apt-get -y install htop wget python3 build-essential ca-certificates libzmq3-dev libprotobuf-dev git graphicsmagick openjdk-11-jdk yasm curl nano iputils-ping && \
     apt-get clean && \
     rm -rf /var/cache/apt/* /var/lib/apt/lists/*
 
@@ -61,11 +63,11 @@ RUN set -x && \
     mv /tmp/bundletool/* /app/bundletool && \
     cd /app && \
     find /tmp -mindepth 1 ! -regex '^/tmp/hsperfdata_root\(/.*\)?' -delete && \
-    ln -s /app/bin/stf.mjs /app/bin/stf
-    # cd ui &&
-    # npm ci && \
-    # npx tsc -b && \
-    # npx vite build --mode staging
+    ln -s /app/bin/stf.mjs /app/bin/stf && \
+    cd ui && \
+    npm ci && \
+    npx tsc -b && \
+    npx vite build
 
 # Switch to the app user.
 USER stf
