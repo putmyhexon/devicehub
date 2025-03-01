@@ -1,31 +1,31 @@
 import { t } from 'i18next'
 import { makeAutoObservable } from 'mobx'
 import { inject, injectable } from 'inversify'
-import { QueryObserverResult } from '@tanstack/react-query'
 import { addMinutes, formatDuration, intervalToDuration } from 'date-fns'
 
 import { ScheduleFormFields } from '@/components/ui/settings-tabs/groups-tab/group-item/tabs/schedule/types'
 import { GroupUsersColumnIds } from '@/components/ui/settings-tabs/groups-tab/group-item/tabs/group-users-table/types'
 
-import { GroupUser } from '@/types/group-user.type'
-import { GroupDevice } from '@/types/group-device.type'
-import { GroupListService } from '@/services/group-list-service'
-import { ConflictTableRow } from '@/types/conflict-table-row.type'
+import { GroupSettingsService } from '@/services/group-settings-service'
 import { DataWithGroupStatus } from '@/types/data-with-group-status.type'
-import { Conflict, GroupListResponseGroupsItem } from '@/generated/types'
 
 import { queries } from '@/config/queries/query-key-store'
 import { isRootGroup } from '@/lib/utils/is-root-group.util'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { isOriginGroup } from '@/lib/utils/is-origin-group.util'
 import { isRepetitionsGroup } from '@/lib/utils/is-repetitions-group.util'
-import { CurrentUserProfileStore } from '@/store/current-user-profile-store'
 
 import { CLASS_CONFIGURATIONS } from '@/constants/schedule-class-configuration'
 
 import type { Row } from '@tanstack/react-table'
-import type { ScheduleData, ScheduleFormErrors, SetScheduleDataArgs } from './types'
+import type { GroupUser } from '@/types/group-user.type'
+import type { GroupDevice } from '@/types/group-device.type'
+import type { QueryObserverResult } from '@tanstack/react-query'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
+import type { ConflictTableRow } from '@/types/conflict-table-row.type'
+import type { Conflict, GroupListResponseGroupsItem } from '@/generated/types'
+import type { CurrentUserProfileStore } from '@/store/current-user-profile-store'
+import type { ScheduleData, ScheduleFormErrors, SetScheduleDataArgs } from './types'
 
 @injectable()
 export class GroupItemService {
@@ -43,7 +43,7 @@ export class GroupItemService {
   constructor(
     @inject(CONTAINER_IDS.groupId) public currentGroupId: string,
     @inject(CONTAINER_IDS.factoryMobxQuery) mobxQueryFactory: MobxQueryFactory,
-    @inject(CONTAINER_IDS.groupListService) private groupListService: GroupListService,
+    @inject(CONTAINER_IDS.groupSettingsService) private groupSettingsService: GroupSettingsService,
     @inject(CONTAINER_IDS.currentUserProfileStore) private currentUserProfileStore: CurrentUserProfileStore
   ) {
     makeAutoObservable(this)
@@ -61,7 +61,7 @@ export class GroupItemService {
   }
 
   get currentGroup(): GroupListResponseGroupsItem | undefined {
-    return this.groupListService.groupsQueryResult.data?.find((item) => item.id === this.currentGroupId)
+    return this.groupSettingsService.groupsQueryResult.data?.find((item) => item.id === this.currentGroupId)
   }
 
   get isSomeUsersNotInGroup(): boolean {

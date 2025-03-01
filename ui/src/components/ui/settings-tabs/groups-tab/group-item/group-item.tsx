@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react'
+import { observer } from 'mobx-react-lite'
 import { useInjection } from 'inversify-react'
 import { useTranslation } from 'react-i18next'
 import { Icon24CheckSquareOutline } from '@vkontakte/icons'
-import { Button, Cell, Checkbox, Counter, Tooltip } from '@vkontakte/vkui'
+import { Button, Counter, Tooltip } from '@vkontakte/vkui'
 
-import { WarningModal } from '@/components/ui/modals'
+import { ListItem } from '@/components/lib/list-item'
 import { TabsPanel } from '@/components/lib/tabs-panel'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
@@ -26,37 +27,17 @@ import type { TabsContent } from '@/components/lib/tabs-panel'
 import type { GroupListResponseGroupsItem } from '@/generated/types'
 
 type GroupItemProps = {
-  group?: GroupListResponseGroupsItem
+  group: GroupListResponseGroupsItem
 }
 
-export const GroupItem = ({ group }: GroupItemProps) => {
+export const GroupItem = observer(({ group }: GroupItemProps) => {
   const { t } = useTranslation()
-  const [isOpen, setIsOpen] = useState(false)
   const [selectedTab, setSelectedTab] = useState('Users')
-  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
   const { mutate: removeGroup } = useRemoveGroup()
-  const { mutate: updateGroup } = useUpdateGroup(group?.id || '')
+  const { mutate: updateGroup } = useUpdateGroup(group.id || '')
 
-  const groupListService = useInjection(CONTAINER_IDS.groupListService)
+  const groupSettingsService = useInjection(CONTAINER_IDS.groupSettingsService)
   const { conflictsCount } = useInjection(CONTAINER_IDS.groupItemService)
-
-  const onReadyClick = (event: MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation()
-
-    updateGroup({ state: 'ready' })
-  }
-
-  const onRemoveGroup = () => {
-    if (isRootGroup(group?.privilege) || !group?.id) return
-
-    if (groupListService.needConfirm) {
-      setIsConfirmationOpen(true)
-
-      return
-    }
-
-    removeGroup(group.id)
-  }
 
   const tabsContent = useMemo<TabsContent[]>(
     () => [
@@ -95,61 +76,48 @@ export const GroupItem = ({ group }: GroupItemProps) => {
     [t, conflictsCount, group]
   )
 
+  const onReadyClick = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation()
+
+    updateGroup({ state: 'ready' })
+  }
+
   return (
-    <div className={styles.groupItem}>
-      <Cell
-        extraSubtitle={`ID: ${group?.id} - ${t('Owner')}: ${group?.owner?.name}`}
-        mode='removable'
-        subtitle={`${t('Class')}: ${group?.class} - ${t('Devices')}: ${group?.devices?.length || 0} - ${t('Users')}: ${group?.users?.length || 0}`}
-        before={
-          <Checkbox
-            checked={groupListService.isGroupSelected(group?.id)}
-            onChange={(event) => {
-              if (group) {
-                groupListService.setSelectedGroups(group, event.target.checked)
-              }
-            }}
-          />
+    <ListItem
+      extraSubtitle={`ID: ${group.id} - ${t('Owner')}: ${group.owner?.name}`}
+      isNeedConfirmRemove={groupSettingsService.needConfirm}
+      isRemoveDisabled={isRootGroup(group.privilege)}
+      isSelected={groupSettingsService.isItemSelected(group.id)}
+      modalDescription={t('Really delete this group')}
+      subtitle={`${t('Class')}: ${group.class} - ${t('Devices')}: ${group.devices?.length || 0} - ${t('Users')}: ${group.users?.length || 0}`}
+      title={<GroupName groupId={group.id} name={group.name} />}
+      indicator={
+        <ConditionalRender conditions={[group.state === 'pending']}>
+          <Tooltip appearance='accent' description={t('Get ready')}>
+            <Button
+              before={<Icon24CheckSquareOutline className={styles.readyIcon} />}
+              hasHover={false}
+              mode='tertiary'
+              onClick={onReadyClick}
+            />
+          </Tooltip>
+        </ConditionalRender>
+      }
+      onIsSelectedChange={(event) => groupSettingsService.setSelectedItem(group, event.target.checked)}
+      onRemove={() => {
+        if (group.id) {
+          removeGroup(group.id)
+
+          groupSettingsService.setSelectedItem(group, false)
         }
-        indicator={
-          <ConditionalRender conditions={[group?.state === 'pending']}>
-            <Tooltip appearance='accent' description={t('Get ready')}>
-              <Button
-                before={<Icon24CheckSquareOutline className={styles.readyIcon} />}
-                hasHover={false}
-                mode='tertiary'
-                onClick={onReadyClick}
-              />
-            </Tooltip>
-          </ConditionalRender>
-        }
-        hasActive
-        hasHover
-        multiline
-        onClick={() => setIsOpen((prev) => !prev)}
-        onRemove={onRemoveGroup}
-      >
-        <GroupName groupId={group?.id} name={group?.name} />
-      </Cell>
-      <ConditionalRender conditions={[isOpen]}>
-        <TabsPanel
-          content={tabsContent}
-          mode='plain'
-          selectedTabId={selectedTab}
-          onChange={(tabId) => setSelectedTab(tabId)}
-        />
-      </ConditionalRender>
-      <WarningModal
-        description={t('Really delete this group')}
-        isOpen={isConfirmationOpen}
-        title={t('Warning')}
-        onClose={() => setIsConfirmationOpen(false)}
-        onOk={async () => {
-          if (group?.id) {
-            removeGroup(group.id)
-          }
-        }}
+      }}
+    >
+      <TabsPanel
+        content={tabsContent}
+        mode='plain'
+        selectedTabId={selectedTab}
+        onChange={(tabId) => setSelectedTab(tabId)}
       />
-    </div>
+    </ListItem>
   )
-}
+})

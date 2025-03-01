@@ -13,7 +13,7 @@ import { ContentCard } from '@/components/lib/content-card'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
-import { ListItem } from '../list-item'
+import { KeyListItem } from '../key-list-item'
 
 import styles from './access-tokens-control.module.css'
 
@@ -97,7 +97,7 @@ export const AccessTokensControl = observer(({ className }: { className?: string
       </ConditionalRender>
       <List>
         {data.map((item, index) => (
-          <ListItem
+          <KeyListItem
             key={index}
             title={item}
             onRemove={() => {

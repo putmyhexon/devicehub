@@ -4,13 +4,13 @@ import { Icon20KeyOutline } from '@vkontakte/icons'
 
 import styles from './keys-tab.module.css'
 
-type ListItemProps = {
+type KeyListItemProps = {
   title: string
   subtitle?: string
   onRemove: () => void
 }
 
-export const ListItem = observer(({ title, subtitle, onRemove }: ListItemProps) => (
+export const KeyListItem = observer(({ title, subtitle, onRemove }: KeyListItemProps) => (
   <Cell
     before={<Icon20KeyOutline />}
     className={styles.listItem}
