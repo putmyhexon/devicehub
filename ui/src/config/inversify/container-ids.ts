@@ -9,7 +9,6 @@ import type { BookingService } from '@/services/booking-service'
 import type { DeviceConnection } from '@/store/device-connection'
 import type { ShellControlStore } from '@/store/shell-control-store'
 import type { DeviceControlStore } from '@/store/device-control-store'
-import type { GroupListService } from '@/services/group-list-service'
 import type { DeviceDisconnection } from '@/store/device-disconnection'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 import type { DeviceBySerialStore } from '@/store/device-by-serial-store'
@@ -17,7 +16,9 @@ import type { AccessTokenService } from '@/services/access-token-service'
 import type { TouchService } from '@/services/touch-service/touch-service'
 import type { TransactionFactory } from '@/types/transaction-factory.type'
 import type { FileExplorerService } from '@/services/file-explorer-service'
+import type { GroupSettingsService } from '@/services/group-settings-service'
 import type { MobxMutationFactory } from '@/types/mobx-mutation-factory.type'
+import type { DeviceSettingsService } from '@/services/device-settings-service'
 import type { ScalingService } from '@/services/scaling-service/scaling-service'
 import type { DeviceLifecycleService } from '@/services/device-lifecycle-service'
 import type { CurrentUserProfileStore } from '@/store/current-user-profile-store'
@@ -46,7 +47,6 @@ export const CONTAINER_IDS = {
   settingsService: Symbol.for('SettingsService') as interfaces.ServiceIdentifier<SettingsService>,
   saveLogsService: Symbol.for('SaveLogsService') as interfaces.ServiceIdentifier<SaveLogsService>,
   groupItemService: Symbol.for('GroupItemService') as interfaces.ServiceIdentifier<GroupItemService>,
-  groupListService: Symbol.for('GroupListService') as interfaces.ServiceIdentifier<GroupListService>,
   deviceConnection: Symbol.for('DeviceConnection') as interfaces.ServiceIdentifier<DeviceConnection>,
   factoryMobxQuery: Symbol.for('Factory<MobxQuery>') as interfaces.ServiceIdentifier<MobxQueryFactory>,
   shellControlStore: Symbol.for('ShellControlStore') as interfaces.ServiceIdentifier<ShellControlStore>,
@@ -58,7 +58,9 @@ export const CONTAINER_IDS = {
   deviceDisconnection: Symbol.for('DeviceDisconnection') as interfaces.ServiceIdentifier<DeviceDisconnection>,
   fileExplorerService: Symbol.for('FileExplorerService') as interfaces.ServiceIdentifier<FileExplorerService>,
   factoryMobxMutation: Symbol.for('Factory<MobxMutation>') as interfaces.ServiceIdentifier<MobxMutationFactory>,
+  groupSettingsService: Symbol.for('GroupSettingsService') as interfaces.ServiceIdentifier<GroupSettingsService>,
   portForwardingService: Symbol.for('PortForwardingService') as interfaces.ServiceIdentifier<PortForwardingService>,
+  deviceSettingsService: Symbol.for('DeviceSettingsService') as interfaces.ServiceIdentifier<DeviceSettingsService>,
   deviceLifecycleService: Symbol.for('DeviceLifecycleService') as interfaces.ServiceIdentifier<DeviceLifecycleService>,
   factoryTransactionService: Symbol.for(
     'Factory<TransactionService>'

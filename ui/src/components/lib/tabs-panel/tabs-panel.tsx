@@ -51,6 +51,7 @@ export const TabsPanel = <T extends boolean = false>({
               key={tab.id}
               aria-controls={tab.ariaControls}
               before={tab.before}
+              disabled={tab.disabled}
               id={tab.id}
               selected={tab.id === selectedId}
               status={tab.status}

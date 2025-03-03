@@ -19,11 +19,11 @@ const createGroupItemContainer = (groupId: string) => {
 }
 
 export const GroupList = observer(() => {
-  const groupListService = useInjection(CONTAINER_IDS.groupListService)
+  const groupSettingsService = useInjection(CONTAINER_IDS.groupSettingsService)
 
   return (
     <List gap={5}>
-      {groupListService.paginatedGroups.map((group) => (
+      {groupSettingsService.paginatedItems.map((group) => (
         <DIContainerProvider key={group.id} container={() => createGroupItemContainer(group.id || '')}>
           <GroupItem group={group} />
         </DIContainerProvider>

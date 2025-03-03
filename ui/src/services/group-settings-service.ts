@@ -1,35 +1,34 @@
-import { makeAutoObservable } from 'mobx'
 import { inject, injectable } from 'inversify'
-import { QueryObserverResult } from '@tanstack/react-query'
+import { computed, makeObservable, observable } from 'mobx'
 
 import { socket } from '@/api/socket'
 
-import { queryClient } from '@/config/queries/query-client'
 import { queries } from '@/config/queries/query-key-store'
+import { queryClient } from '@/config/queries/query-client'
 import { isRootGroup } from '@/lib/utils/is-root-group.util'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { CurrentUserProfileStore } from '@/store/current-user-profile-store'
 
+import { ListManagementService } from './list-management-service'
+
+import type { QueryObserverResult } from '@tanstack/react-query'
 import type { GroupListResponseGroupsItem } from '@/generated/types'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 import type { SettingsGroupChangeMessage } from '@/types/settings-group-change-message.type'
 
 @injectable()
-export class GroupListService {
+export class GroupSettingsService extends ListManagementService<'id', GroupListResponseGroupsItem> {
   private groupsQuery
 
-  selectedGroups: GroupListResponseGroupsItem[] = []
-  needConfirm = true
-  currentGroupId = ''
-  globalFilter = ''
-  currentPage = 1
-  pageSize = 5
+  @observable currentGroupId = ''
 
   constructor(
     @inject(CONTAINER_IDS.factoryMobxQuery) mobxQueryFactory: MobxQueryFactory,
     @inject(CONTAINER_IDS.currentUserProfileStore) private currentUserProfileStore: CurrentUserProfileStore
   ) {
-    makeAutoObservable(this)
+    super('id')
+
+    makeObservable(this)
 
     this.groupsQuery = mobxQueryFactory(() => ({ ...queries.groups.all }))
 
@@ -40,10 +39,17 @@ export class GroupListService {
     this.addGroupListeners()
   }
 
+  @computed
   get groupsQueryResult(): QueryObserverResult<GroupListResponseGroupsItem[]> {
     return this.groupsQuery.result
   }
 
+  @computed
+  get items(): GroupListResponseGroupsItem[] {
+    return this.groupsQueryResult.data?.filter((item) => this.filterGroup(item)) || []
+  }
+
+  @computed
   get isCanCreateGroup(): boolean {
     const { groups } = this.currentUserProfileStore.profileQueryResult?.data || {}
 
@@ -53,37 +59,18 @@ export class GroupListService {
     return groupConsumedQuota < groupAllocatedQuota
   }
 
-  get filteredGroups(): GroupListResponseGroupsItem[] {
-    return this.groupsQueryResult.data?.filter((item) => this.filterGroup(item)) || []
-  }
-
+  @computed
   get joinedGroupIds(): string {
-    return this.selectedGroups
+    return this.selectedItems
       .filter((item) => item?.privilege !== 'root')
       .map((item) => item.id)
       .join(',')
   }
 
-  get paginatedGroups(): GroupListResponseGroupsItem[] {
-    return this.filteredGroups.slice(this.pageSize * this.currentPage - this.pageSize, this.pageSize * this.currentPage)
-  }
-
-  get isPaginatedGroupsEmpty(): boolean {
-    return this.paginatedGroups.length === 0
-  }
-
-  get isSelectedGroupsEmpty(): boolean {
-    return this.selectedGroups.length === 0
-  }
-
-  get totalPages(): number {
-    return Math.ceil(this.filteredGroups.length / this.pageSize)
-  }
-
+  @computed
   get isRemoveGroupsDisabled(): boolean {
     return (
-      !this.paginatedGroups.length ||
-      (this.paginatedGroups.length === 1 && isRootGroup(this.paginatedGroups[0].privilege))
+      !this.paginatedItems.length || (this.paginatedItems.length === 1 && isRootGroup(this.paginatedItems[0].privilege))
     )
   }
 
@@ -109,43 +96,11 @@ export class GroupListService {
     socket.off('user.view.groups.updated', this.onGroupChange)
   }
 
-  setGlobalFilter(value: string): void {
-    this.globalFilter = value
-  }
-
-  setCurrentPage(value: number): void {
-    this.currentPage = value
-  }
-
-  setPageSize(value: number): void {
-    this.pageSize = value
-
-    this.currentPage = 1
-  }
-
-  setSelectedGroups(group: GroupListResponseGroupsItem, checked: boolean): void {
-    if (checked) {
-      this.selectedGroups.push(group)
-    }
-
-    if (!checked) {
-      this.selectedGroups = this.selectedGroups.filter((item) => item.id !== group.id)
-    }
-  }
-
-  toggleNeedConfirm(): void {
-    this.needConfirm = !this.needConfirm
-  }
-
-  isGroupSelected(groupId?: string): boolean {
-    return this.selectedGroups.findIndex((item) => item.id === groupId) !== -1
-  }
-
   async getGroupOwnerEmails(): Promise<string> {
     const currentUserProfileStore = await this.currentUserProfileStore.fetch()
 
     const emailSeparator = currentUserProfileStore.settings?.emailAddressSeparator
-    const emails: string[] = this.selectedGroups.map((item) => item.owner?.email || '')
+    const emails: string[] = this.selectedItems.map((item) => item.owner?.email || '')
     const uniqueEmail = Array.from(new Set(emails))
 
     return uniqueEmail.join(emailSeparator || ',')
@@ -154,15 +109,13 @@ export class GroupListService {
   private filterGroup(item: GroupListResponseGroupsItem): boolean {
     if (!this.globalFilter) return true
 
-    const caseInsensitiveSearch = this.globalFilter.toLowerCase()
-
     if (
-      item.id?.toLowerCase()?.startsWith(caseInsensitiveSearch) ||
-      item.name?.toLowerCase().startsWith(caseInsensitiveSearch) ||
-      item.class?.toLowerCase().startsWith(caseInsensitiveSearch) ||
-      item.owner?.name?.toLowerCase().startsWith(caseInsensitiveSearch) ||
-      item.devices?.length === Number(caseInsensitiveSearch) ||
-      item.users?.length === Number(caseInsensitiveSearch)
+      this.startsWithFilter(item.id) ||
+      this.startsWithFilter(item.name) ||
+      this.startsWithFilter(item.class) ||
+      this.startsWithFilter(item.owner?.name) ||
+      this.startsWithFilter(String(item.users?.length)) ||
+      this.startsWithFilter(String(item.devices?.length))
     ) {
       return true
     }
@@ -170,7 +123,7 @@ export class GroupListService {
     return false
   }
 
-  private async onGroupChange({ group }: SettingsGroupChangeMessage): Promise<void> {
+  private onGroupChange({ group }: SettingsGroupChangeMessage): void {
     queryClient.setQueryData<GroupListResponseGroupsItem[]>(queries.groups.all.queryKey, (oldData) => {
       if (!oldData) return []
 
@@ -184,7 +137,7 @@ export class GroupListService {
     })
   }
 
-  private async onGroupCreate({ group }: SettingsGroupChangeMessage): Promise<void> {
+  private onGroupCreate({ group }: SettingsGroupChangeMessage): void {
     queryClient.setQueryData<GroupListResponseGroupsItem[]>(queries.groups.all.queryKey, (oldData) => {
       if (!oldData) return []
 
@@ -196,7 +149,7 @@ export class GroupListService {
     })
   }
 
-  private async onGroupDelete({ group }: SettingsGroupChangeMessage): Promise<void> {
+  private onGroupDelete({ group }: SettingsGroupChangeMessage): void {
     queryClient.setQueryData<GroupListResponseGroupsItem[]>(queries.groups.all.queryKey, (oldData) => {
       if (!oldData) return []
 

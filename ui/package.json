@@ -80,6 +80,7 @@
     "eslint-plugin-react": "^7.37.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.12",
+    "eslint-plugin-sort-class-members": "^1.21.0",
     "globals": "^15.9.0",
     "jsdom": "^25.0.1",
     "msw": "^2.6.0",

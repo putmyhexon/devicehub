@@ -3,12 +3,14 @@ import { createQueryKeyStore } from '@lukemorales/query-key-factory'
 import { getAuthContact, getAuthDocs, getManifest } from '@/api/openstf'
 import {
   getAccessTokens,
+  getAdbRange,
   getCurrentUserProfile,
   getDeviceBySerial,
   getGroupDevices,
   getGroups,
   getGroupUsers,
   getListDevices,
+  getSettingsDevices,
 } from '@/api/openstf-api'
 
 import type { GroupDevice } from '@/types/group-device.type'
@@ -27,10 +29,18 @@ export const queries = createQueryKeyStore({
       queryKey: [params],
       queryFn: (): Promise<GroupDevice[]> => getGroupDevices(params),
     }),
+    settings: {
+      queryKey: null,
+      queryFn: () => getSettingsDevices({ target: 'user' }),
+    },
     bySerial: (serial: string) => ({
       queryKey: [serial],
       queryFn: (): Promise<Device> => getDeviceBySerial(serial),
     }),
+    adbRange: {
+      queryKey: null,
+      queryFn: () => getAdbRange(),
+    },
   },
   users: {
     group: {

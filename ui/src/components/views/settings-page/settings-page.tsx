@@ -1,4 +1,6 @@
 import { useMemo } from 'react'
+import { observer } from 'mobx-react-lite'
+import { useInjection } from 'inversify-react'
 import { useTranslation } from 'react-i18next'
 import { Div, Panel, View } from '@vkontakte/vkui'
 
@@ -6,6 +8,9 @@ import { TabsPanel } from '@/components/lib/tabs-panel'
 import { GeneralTab } from '@/components/ui/settings-tabs/general-tab'
 import { GroupsTab } from '@/components/ui/settings-tabs/groups-tab'
 import { KeysTab } from '@/components/ui/settings-tabs/keys-tab'
+import { DevicesTab } from '@/components/ui/settings-tabs/devices-tab'
+
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import {
   getSettingsDevicesRoute,
@@ -20,8 +25,10 @@ import styles from './settings-page.module.css'
 
 import type { TabsContent } from '@/components/lib/tabs-panel'
 
-export const SettingsPage = () => {
+export const SettingsPage = observer(() => {
   const { t } = useTranslation()
+
+  const { isAdmin } = useInjection(CONTAINER_IDS.currentUserProfileStore)
 
   const tabsContent = useMemo<TabsContent[]>(
     () => [
@@ -47,22 +54,25 @@ export const SettingsPage = () => {
         id: getSettingsDevicesRoute(),
         title: t('Devices'),
         ariaControls: 'tab-content-devices',
-        content: <Div />,
+        disabled: !isAdmin,
+        content: <DevicesTab />,
       },
       {
         id: getSettingsUsersRoute(),
         title: t('Users'),
         ariaControls: 'tab-content-users',
+        disabled: !isAdmin,
         content: <Div />,
       },
       {
         id: getSettingsShellRoute(),
         title: t('Shell'),
         ariaControls: 'tab-content-shell',
+        disabled: !isAdmin,
         content: <Div />,
       },
     ],
-    [t]
+    [t, isAdmin]
   )
 
   return (
@@ -72,4 +82,4 @@ export const SettingsPage = () => {
       </Panel>
     </View>
   )
-}
+})

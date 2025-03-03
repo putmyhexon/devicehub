@@ -1,14 +1,23 @@
 import { openstfApiClient } from './openstf-api-client'
 import { isOriginGroup } from '@/lib/utils/is-origin-group.util'
 
-import { DEVICE_GROUPS_FIELDS, DEVICE_LIST_FIELDS, USERS_GROUPS_FIELDS } from '@/constants/request-fields'
+import {
+  DEVICE_SETTINGS_FIELDS,
+  DEVICE_GROUPS_FIELDS,
+  DEVICE_LIST_FIELDS,
+  USERS_GROUPS_FIELDS,
+} from '@/constants/request-fields'
 
 import { OPENSTF_API_ROUTES } from './routes'
 
+import type { SettingsDevice } from '@/types/settings-device.type'
 import type { GroupUser } from '@/types/group-user.type'
 import type {
   GroupUserArgs,
   GroupDeviceArgs,
+  RemoveDeviceArgs,
+  UpdateDeviceArgs,
+  RemoveDevicesArgs,
   ParamsWithoutFields,
   GroupDeviceWithClassArgs,
   UsersWithFieldsListResponse,
@@ -26,6 +35,8 @@ import type {
   GetUsersParams,
   GetGroupsParams,
   DefaultResponse,
+  AdbPortResponse,
+  AdbRangeResponse,
   GetDevicesParams,
   GroupListResponse,
   AccessTokensResponse,
@@ -74,6 +85,9 @@ export const getListDevices = (params?: ParamsWithoutFields<GetDevicesParams>): 
 
 export const getGroupDevices = (params?: ParamsWithoutFields<GetDevicesParams>): Promise<GroupDevice[]> =>
   getDevices({ ...params, fields: DEVICE_GROUPS_FIELDS })
+
+export const getSettingsDevices = (params?: ParamsWithoutFields<GetDevicesParams>): Promise<SettingsDevice[]> =>
+  getDevices({ ...params, fields: DEVICE_SETTINGS_FIELDS })
 
 export const getDeviceBySerial = async (serial: string, params?: GetDeviceBySerialParams): Promise<Device> => {
   const { data } = await openstfApiClient.get<DeviceResponse>(`${OPENSTF_API_ROUTES.devices}/${serial}`, { params })
@@ -161,4 +175,45 @@ export const updateGroup = async (id: string, data: GroupPayload): Promise<boole
   } = await openstfApiClient.put<GroupResponse>(`${OPENSTF_API_ROUTES.groups}/${id}`, data)
 
   return success
+}
+
+export const renewAdbPort = async (serial: string): Promise<number> => {
+  const { data } = await openstfApiClient.put<AdbPortResponse>(OPENSTF_API_ROUTES.adbPort(serial))
+
+  return data.port
+}
+
+export const updateDevice = async ({ serial, params }: UpdateDeviceArgs): Promise<boolean> => {
+  const { data } = await openstfApiClient.put<DefaultResponse>(
+    OPENSTF_API_ROUTES.updateStorageInfo(serial),
+    undefined,
+    {
+      params,
+    }
+  )
+
+  return data.success
+}
+
+export const removeDevice = async ({ serial, params }: RemoveDeviceArgs): Promise<boolean> => {
+  const { data } = await openstfApiClient.delete<DefaultResponse>(`${OPENSTF_API_ROUTES.devices}/${serial}`, {
+    params,
+  })
+
+  return data.success
+}
+
+export const removeDevices = async ({ ids, params }: RemoveDevicesArgs): Promise<boolean> => {
+  const { data } = await openstfApiClient.delete<DefaultResponse>(OPENSTF_API_ROUTES.devices, {
+    params,
+    data: ids ? { ids } : undefined,
+  })
+
+  return data.success
+}
+
+export const getAdbRange = async (): Promise<string> => {
+  const { data } = await openstfApiClient.get<AdbRangeResponse>(OPENSTF_API_ROUTES.adbRange)
+
+  return data.adbRange
 }

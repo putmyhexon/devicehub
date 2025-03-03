@@ -10,6 +10,25 @@ import type { PortForwardEntry } from '@/services/port-forwarding-service/types'
 import type { InitializeTransactionReturn, InstallOptions } from '@/services/core/transaction-service/types'
 
 export class DeviceControlService {
+  finder = this.keyPress('finder')
+  home = this.keyPress('home')
+  menu = this.keyPress('menu')
+  back = this.keyPress('back')
+  appSwitch = this.keyPress('app_switch')
+  switchCharset = this.keyPress('switch_charset')
+  power = this.keyPress('power')
+  camera = this.keyPress('camera')
+  search = this.keyPress('search')
+  mute = this.keyPress('mute')
+  volumeDown = this.keyPress('volume_down')
+  volumeUp = this.keyPress('volume_up')
+  mediaRewind = this.keyPress('media_rewind')
+  mediaPrevious = this.keyPress('media_previous')
+  mediaPlayPause = this.keyPress('media_play_pause')
+  mediaStop = this.keyPress('media_stop')
+  mediaNext = this.keyPress('media_next')
+  mediaFastForward = this.keyPress('media_fast_forward')
+
   constructor(
     protected deviceBySerialStore: DeviceBySerialStore,
     private transactionServiceFactory: TransactionFactory
@@ -163,25 +182,6 @@ export class DeviceControlService {
   getSdStatus(): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('sd.status')
   }
-
-  finder = this.keyPress('finder')
-  home = this.keyPress('home')
-  menu = this.keyPress('menu')
-  back = this.keyPress('back')
-  appSwitch = this.keyPress('app_switch')
-  switchCharset = this.keyPress('switch_charset')
-  power = this.keyPress('power')
-  camera = this.keyPress('camera')
-  search = this.keyPress('search')
-  mute = this.keyPress('mute')
-  volumeDown = this.keyPress('volume_down')
-  volumeUp = this.keyPress('volume_up')
-  mediaRewind = this.keyPress('media_rewind')
-  mediaPrevious = this.keyPress('media_previous')
-  mediaPlayPause = this.keyPress('media_play_pause')
-  mediaStop = this.keyPress('media_stop')
-  mediaNext = this.keyPress('media_next')
-  mediaFastForward = this.keyPress('media_fast_forward')
 
   async unlockDevice(): Promise<void> {
     const inputTextPromise = await this.shell('input text 1452')

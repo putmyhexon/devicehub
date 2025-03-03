@@ -7,7 +7,10 @@ import { UserSettingsUpdateMessage } from '@/types/user-settings-update-message.
 import { debounce } from '@/lib/utils/debounce.util'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 import { CurrentUserProfileStore } from '@/store/current-user-profile-store'
+import { queryClient } from '@/config/queries/query-client'
+import { queries } from '@/config/queries/query-key-store'
 
+import type { User } from '@/generated/types'
 import type { AlertMessageData } from './types'
 
 const DEFAULT_DATE_FORMAT = 'M/d/yy h:mm:ss a'
@@ -20,11 +23,18 @@ const DEFAULT_ALERT_MESSAGE: AlertMessageData = {
 
 @injectable()
 export class SettingsService {
+  static checkedToText(checked: boolean): string {
+    return checked === true ? 'True' : 'False'
+  }
   private debounceDelay = 250
 
   dateFormat = DEFAULT_DATE_FORMAT
   emailSeparator = DEFAULT_EMAIL_SEPARATOR
   alertMessage = DEFAULT_ALERT_MESSAGE
+
+  private debouncedAlertMessage = debounce(this.updateAlertMessage, this.debounceDelay)
+  private debouncedDateFormat = debounce(this.updateDateFormat, this.debounceDelay)
+  private debouncedEmailSeparator = debounce(this.updateEmailSeparator, this.debounceDelay)
 
   constructor(@inject(CONTAINER_IDS.currentUserProfileStore) private currentUserProfileStore: CurrentUserProfileStore) {
     makeAutoObservable(this)
@@ -60,10 +70,12 @@ export class SettingsService {
 
   addUserSettingsUpdateListener(): void {
     socket.on('user.settings.users.updated', this.onUserSettingsUpdate)
+    socket.on('user.view.users.updated', this.onUserSettingsUpdate)
   }
 
   removeUserSettingsUpdateListener(): void {
     socket.off('user.settings.users.updated', this.onUserSettingsUpdate)
+    socket.off('user.view.users.updated', this.onUserSettingsUpdate)
   }
 
   setDateFormat(value: string): void {
@@ -120,19 +132,23 @@ export class SettingsService {
     })
   }
 
-  static checkedToText(checked: boolean): string {
-    return checked === true ? 'True' : 'False'
-  }
-
   private onUserSettingsUpdate({ user }: UserSettingsUpdateMessage): void {
     if (user.settings.alertMessage) {
       this.alertMessage = user.settings.alertMessage
     }
-  }
 
-  private debouncedAlertMessage = debounce(this.updateAlertMessage, this.debounceDelay)
-  private debouncedDateFormat = debounce(this.updateDateFormat, this.debounceDelay)
-  private debouncedEmailSeparator = debounce(this.updateEmailSeparator, this.debounceDelay)
+    queryClient.setQueryData<User>(queries.user.profile.queryKey, (oldData) => {
+      if (!oldData) return oldData
+
+      return {
+        ...oldData,
+        groups: {
+          ...oldData.groups,
+          ...user.groups,
+        },
+      }
+    })
+  }
 
   private updateUserSettings<T>(data: Record<string, T>): void {
     socket.emit('user.settings.update', data)

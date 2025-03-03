@@ -29,7 +29,4 @@ export const useRemoveGroup = (): UseMutationResult<boolean, AxiosError<Unexpect
 
       console.error(error)
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: queries.groups.all.queryKey })
-    },
   })

@@ -1,25 +1,11 @@
+import type { UserGroups } from '@/generated/types'
+
 export type UserSettingsUpdateMessage = {
   user: {
     email: string
     name: string
     privilege: string
-    groups: {
-      quotas: {
-        allocated: {
-          duration: number
-          number: number
-        }
-        consumed: {
-          duration: number
-          number: number
-        }
-        defaultGroupsDuration: number
-        defaultGroupsNumber: number
-        defaultGroupsRepetitions: number
-        repetitions: number
-      }
-      subscribed: string[]
-    }
+    groups: UserGroups
     settings: {
       alertMessage: {
         activation: string

@@ -7,7 +7,8 @@
 }
 
 .cardHeader {
-  padding-bottom: 20px;
+  height: 28px;
+  margin-bottom: 20px;
 }
 
 .cardTitle {

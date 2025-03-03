@@ -6,5 +6,6 @@ export type TabsContent = {
   before?: ReactNode
   status?: ReactElement | number
   ariaControls: string
+  disabled?: boolean
   content: ReactNode
 }

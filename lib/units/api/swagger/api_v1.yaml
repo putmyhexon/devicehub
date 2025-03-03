@@ -2302,7 +2302,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeviceListResponse'
+                $ref: '#/components/schemas/AdbRangeResponse'
         default:
           description: |
             Unexpected Error:
@@ -2662,7 +2662,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultResponse'
+                $ref: '#/components/schemas/AdbPortResponse'
         default:
           description: |
             Unexpected Error:
@@ -3241,6 +3241,34 @@ components:
           type: boolean
           default: true
         description:
+          type: string
+    AdbPortResponse:
+      required:
+      - description
+      - success
+      - port
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        description:
+          type: string
+        port:
+          type: number
+    AdbRangeResponse:
+      required:
+      - description
+      - success
+      - adbRange
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        description:
+          type: string
+        adbRange:
           type: string
     GroupResponse:
       required:

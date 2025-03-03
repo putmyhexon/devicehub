@@ -1,0 +1,29 @@
+.listHeader {
+  overflow: hidden;
+  width: 100%;
+
+  svg {
+    box-sizing: content-box;
+  }
+}
+
+.search {
+  min-width: 100px;
+  max-width: 325px;
+}
+
+.selectAllCheckbox {
+  margin-left: var(--vkui--size_base_padding_horizontal--regular);
+}
+
+.afterPagination {
+  margin-right: var(--vkui--size_base_padding_horizontal--regular);
+}
+
+.titledValue {
+  margin: 5px;
+}
+
+.pagination {
+  margin: 20px 0;
+}

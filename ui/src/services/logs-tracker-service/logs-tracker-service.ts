@@ -22,6 +22,8 @@ export class LogsTrackerService {
   logsByDeviceSerial: Record<string, DeviceLogs> = {}
   maxLogsBuffer = 3000
 
+  private throttledFlushLogs = throttle(this.flushLogs, this.throttleDelay)
+
   constructor() {
     makeAutoObservable(this)
 
@@ -72,8 +74,6 @@ export class LogsTrackerService {
 
     this.throttledFlushLogs(data.serial)
   }
-
-  private throttledFlushLogs = throttle(this.flushLogs, this.throttleDelay)
 
   private flushLogs(serial: string): void {
     const filteredLogs = filterLogs(this.batchedLogs, logsTableState.columnFilters)

@@ -4,5 +4,8 @@ export const DEVICE_LIST_FIELDS =
 export const DEVICE_GROUPS_FIELDS =
   'serial,model,version,operator,network.type,network.subtype,display.height,display.width,manufacturer,sdk,abi,cpuPlatform,openGLESVersion,marketName,phone.imei,provider.name,group.originName'
 
+export const DEVICE_SETTINGS_FIELDS =
+  'serial,model,version,manufacturer,sdk,marketName,provider.name,group.originName,storageId,place,adbPort'
+
 export const USERS_GROUPS_FIELDS =
   'email,name,privilege,groups.subscribed,groups.quotas.allocated,groups.quotas.consumed'
