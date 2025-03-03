@@ -66,7 +66,7 @@ services:
         networks:
             devicehub:
         volumes:
-            - devicehub-db-volume:/opt/devicehub/db
+            - devicehub-db-volume:/data/db
     devicehub-mongosetup:
         image: mongo:7.0
         container_name: devicehub-mongosetup
