@@ -60,7 +60,7 @@ export class GroupSettingsService extends ListManagementService<'id', GroupListR
   @computed
   get joinedGroupIds(): string {
     return this.selectedItems
-      .filter((item) => item?.privilege !== 'root')
+      .filter((item) => item.privilege !== 'root')
       .map((item) => item.id)
       .join(',')
   }

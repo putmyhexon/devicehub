@@ -51,6 +51,7 @@ export const UserItem = observer(({ user, removeFilters }: UserItemProps) => {
         href={`mailto:${user.email}`}
         isNeedConfirmRemove={userSettingsService.needConfirm}
         isOpenable={false}
+        isRemoveDisabled={user.privilege === 'admin'}
         isSelected={userSettingsService.isItemSelected(user.email)}
         modalDescription={t('Really delete this user')}
         title={`${user.name}`}

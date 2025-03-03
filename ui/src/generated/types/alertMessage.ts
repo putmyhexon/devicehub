@@ -5,6 +5,7 @@
  * Control and manages real Smartphone devices from browser and restful apis
  * OpenAPI spec version: 1.3.10
  */
+import type { AlertMessageLevel } from './alertMessageLevel'
 
 export interface AlertMessage {
   /** Enable or disablee the alert message */
@@ -12,5 +13,5 @@ export interface AlertMessage {
   /** Alert message text to display */
   data?: string
   /** Alert message level */
-  level?: string
+  level?: AlertMessageLevel
 }

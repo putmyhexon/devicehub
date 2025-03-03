@@ -46,7 +46,10 @@ export class UserSettingsService extends ListManagementService<'email', Settings
 
   @computed
   get joinedUsersEmails(): string {
-    return this.selectedItems.map((item) => item.email).join(',')
+    return this.selectedItems
+      .filter((item) => item.privilege !== 'admin')
+      .map((item) => item.email)
+      .join(',')
   }
 
   @computed
