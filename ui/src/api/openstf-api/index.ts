@@ -6,15 +6,20 @@ import {
   DEVICE_GROUPS_FIELDS,
   DEVICE_LIST_FIELDS,
   USERS_GROUPS_FIELDS,
+  USERS_SETTINGS_FIELDS,
 } from '@/constants/request-fields'
 
 import { OPENSTF_API_ROUTES } from './routes'
 
+import type { SettingsUser } from '@/types/settings-user.type'
 import type { SettingsDevice } from '@/types/settings-device.type'
 import type { GroupUser } from '@/types/group-user.type'
 import type {
   GroupUserArgs,
+  CreateUserArgs,
+  RemoveUserArgs,
   GroupDeviceArgs,
+  RemoveUsersArgs,
   RemoveDeviceArgs,
   UpdateDeviceArgs,
   RemoveDevicesArgs,
@@ -22,6 +27,7 @@ import type {
   GroupDeviceWithClassArgs,
   UsersWithFieldsListResponse,
   DeviceWithFieldsListResponse,
+  UpdateUserGroupQuotaArgs,
 } from './types'
 import type { GroupDevice } from '@/types/group-device.type'
 import type { ListDevice } from '@/types/list-device.type'
@@ -38,10 +44,14 @@ import type {
   AdbPortResponse,
   AdbRangeResponse,
   GetDevicesParams,
+  UserListResponse,
   GroupListResponse,
   AccessTokensResponse,
   GetDeviceBySerialParams,
   GroupListResponseGroupsItem,
+  UpdateDefaultUserGroupsQuotasParams,
+  AlertMessageResponse,
+  AlertMessage,
 } from '@/generated/types'
 
 const getDevices = async <T>(params?: GetDevicesParams): Promise<T[]> => {
@@ -89,6 +99,18 @@ export const getGroupDevices = (params?: ParamsWithoutFields<GetDevicesParams>):
 export const getSettingsDevices = (params?: ParamsWithoutFields<GetDevicesParams>): Promise<SettingsDevice[]> =>
   getDevices({ ...params, fields: DEVICE_SETTINGS_FIELDS })
 
+export const getGroupUsers = (params?: ParamsWithoutFields<GetUsersParams>): Promise<GroupUser[]> =>
+  getUsers({ ...params, fields: USERS_GROUPS_FIELDS })
+
+export const getSettingsUsers = (params?: ParamsWithoutFields<GetUsersParams>): Promise<SettingsUser[]> =>
+  getUsers({ ...params, fields: USERS_SETTINGS_FIELDS })
+
+export const getGroups = async (params?: GetGroupsParams): Promise<GroupListResponseGroupsItem[]> => {
+  const { data } = await openstfApiClient.get<GroupListResponse>(OPENSTF_API_ROUTES.groups, { params })
+
+  return data.groups
+}
+
 export const getDeviceBySerial = async (serial: string, params?: GetDeviceBySerialParams): Promise<Device> => {
   const { data } = await openstfApiClient.get<DeviceResponse>(`${OPENSTF_API_ROUTES.devices}/${serial}`, { params })
 
@@ -99,15 +121,6 @@ export const getCurrentUserProfile = async (): Promise<User> => {
   const { data } = await openstfApiClient.get<UserResponse>(OPENSTF_API_ROUTES.user)
 
   return data.user
-}
-
-export const getGroupUsers = (params?: ParamsWithoutFields<GetUsersParams>): Promise<GroupUser[]> =>
-  getUsers({ ...params, fields: USERS_GROUPS_FIELDS })
-
-export const getGroups = async (params?: GetGroupsParams): Promise<GroupListResponseGroupsItem[]> => {
-  const { data } = await openstfApiClient.get<GroupListResponse>(OPENSTF_API_ROUTES.groups, { params })
-
-  return data.groups
 }
 
 export const getAccessTokens = async (): Promise<string[]> => {
@@ -183,7 +196,7 @@ export const renewAdbPort = async (serial: string): Promise<number> => {
   return data.port
 }
 
-export const updateDevice = async ({ serial, params }: UpdateDeviceArgs): Promise<boolean> => {
+export const updateDevice = async ({ serial, ...params }: UpdateDeviceArgs): Promise<boolean> => {
   const { data } = await openstfApiClient.put<DefaultResponse>(
     OPENSTF_API_ROUTES.updateStorageInfo(serial),
     undefined,
@@ -195,7 +208,7 @@ export const updateDevice = async ({ serial, params }: UpdateDeviceArgs): Promis
   return data.success
 }
 
-export const removeDevice = async ({ serial, params }: RemoveDeviceArgs): Promise<boolean> => {
+export const removeDevice = async ({ serial, ...params }: RemoveDeviceArgs): Promise<boolean> => {
   const { data } = await openstfApiClient.delete<DefaultResponse>(`${OPENSTF_API_ROUTES.devices}/${serial}`, {
     params,
   })
@@ -203,7 +216,7 @@ export const removeDevice = async ({ serial, params }: RemoveDeviceArgs): Promis
   return data.success
 }
 
-export const removeDevices = async ({ ids, params }: RemoveDevicesArgs): Promise<boolean> => {
+export const removeDevices = async ({ ids, ...params }: RemoveDevicesArgs): Promise<boolean> => {
   const { data } = await openstfApiClient.delete<DefaultResponse>(OPENSTF_API_ROUTES.devices, {
     params,
     data: ids ? { ids } : undefined,
@@ -216,4 +229,63 @@ export const getAdbRange = async (): Promise<string> => {
   const { data } = await openstfApiClient.get<AdbRangeResponse>(OPENSTF_API_ROUTES.adbRange)
 
   return data.adbRange
+}
+
+export const updateDefaultUserGroupsQuota = async (params: UpdateDefaultUserGroupsQuotasParams): Promise<boolean> => {
+  const { data } = await openstfApiClient.put<UserResponse>(OPENSTF_API_ROUTES.defaultGroupsQuotas, undefined, {
+    params,
+  })
+
+  return data.success
+}
+
+export const updateUserGroupQuota = async ({ email, ...params }: UpdateUserGroupQuotaArgs): Promise<boolean> => {
+  const { data } = await openstfApiClient.put<UserResponse>(OPENSTF_API_ROUTES.userGroupQuota(email), undefined, {
+    params,
+  })
+
+  return data.success
+}
+
+export const createUser = async ({ email, ...params }: CreateUserArgs): Promise<boolean> => {
+  const { data } = await openstfApiClient.post<UserResponse>(`${OPENSTF_API_ROUTES.users}/${email}`, undefined, {
+    params,
+  })
+
+  return data.success
+}
+
+export const removeUser = async ({ email, ...params }: RemoveUserArgs): Promise<boolean> => {
+  const { data } = await openstfApiClient.delete<DefaultResponse>(`${OPENSTF_API_ROUTES.users}/${email}`, {
+    params,
+  })
+
+  return data.success
+}
+
+export const removeUsers = async ({ emails, ...params }: RemoveUsersArgs): Promise<boolean> => {
+  const { data } = await openstfApiClient.delete<DefaultResponse>(OPENSTF_API_ROUTES.users, {
+    params,
+    data: emails ? { emails } : undefined,
+  })
+
+  return data.success
+}
+
+export const grantAdmin = async (email: string): Promise<boolean> => {
+  const { data } = await openstfApiClient.post<UserListResponse>(OPENSTF_API_ROUTES.grantAdmin(email))
+
+  return data.success
+}
+
+export const revokeAdmin = async (email: string): Promise<boolean> => {
+  const { data } = await openstfApiClient.delete<UserListResponse>(OPENSTF_API_ROUTES.revokeAdmin(email))
+
+  return data.success
+}
+
+export const getAlertMessage = async (): Promise<AlertMessage> => {
+  const { data } = await openstfApiClient.get<AlertMessageResponse>(OPENSTF_API_ROUTES.alertMessage)
+
+  return data.alertMessage
 }

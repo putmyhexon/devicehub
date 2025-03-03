@@ -1,3 +1,7 @@
+import { useEffect, useMemo } from 'react'
+import cn from 'classnames'
+import { useTranslation } from 'react-i18next'
+import { Icon28InboxOutline } from '@vkontakte/icons'
 import {
   flexRender,
   useReactTable,
@@ -6,10 +10,6 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
 } from '@tanstack/react-table'
-import cn from 'classnames'
-import { useEffect, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Icon28InboxOutline } from '@vkontakte/icons'
 import { Flex, Pagination, Placeholder, Skeleton, Spacing } from '@vkontakte/vkui'
 
 import { BaseSelect } from '@/components/lib/base-select'

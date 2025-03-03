@@ -9,3 +9,5 @@ export const DEVICE_SETTINGS_FIELDS =
 
 export const USERS_GROUPS_FIELDS =
   'email,name,privilege,groups.subscribed,groups.quotas.allocated,groups.quotas.consumed'
+
+export const USERS_SETTINGS_FIELDS = 'email,name,privilege,groups.quotas'

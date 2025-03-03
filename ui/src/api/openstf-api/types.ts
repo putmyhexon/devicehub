@@ -1,9 +1,13 @@
 import type {
-  UpdateStorageInfoParams,
   DeleteDeviceParams,
   DeviceListResponse,
   GroupPayloadClass,
   UserListResponse,
+  UpdateStorageInfoParams,
+  UpdateUserGroupsQuotasParams,
+  CreateUserParams,
+  DeleteUserParams,
+  DeleteUsersParams,
 } from '@/generated/types'
 
 export type ParamsWithoutFields<T> = Omit<T, 'fields'>
@@ -20,19 +24,11 @@ export type GroupDeviceArgs = {
   serial?: string
 }
 
-export type RemoveDeviceArgs = {
-  serial: string
-  params?: DeleteDeviceParams
-}
-
-export type RemoveDevicesArgs = {
-  ids: string
-  params?: DeleteDeviceParams
-}
-
-export type UpdateDeviceArgs = {
-  serial: string
-  params?: UpdateStorageInfoParams
-}
-
-export type GroupDeviceWithClassArgs = GroupDeviceArgs & { groupClass?: GroupPayloadClass }
+export type CreateUserArgs = { email: string } & CreateUserParams
+export type RemoveUserArgs = { email: string } & DeleteUserParams
+export type RemoveUsersArgs = { emails: string } & DeleteUsersParams
+export type RemoveDevicesArgs = { ids: string } & DeleteDeviceParams
+export type RemoveDeviceArgs = { serial: string } & DeleteDeviceParams
+export type UpdateDeviceArgs = { serial: string } & UpdateStorageInfoParams
+export type UpdateUserGroupQuotaArgs = { email: string } & UpdateUserGroupsQuotasParams
+export type GroupDeviceWithClassArgs = { groupClass?: GroupPayloadClass } & GroupDeviceArgs

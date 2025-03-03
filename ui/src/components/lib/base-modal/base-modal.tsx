@@ -7,7 +7,7 @@ import type { ReactNode } from 'react'
 export type BaseModalProps = {
   isOpen: boolean
   title: string
-  icon: ReactNode
+  icon?: ReactNode
   children?: ReactNode
   description?: string
   actions?: ReactNode

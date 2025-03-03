@@ -2,20 +2,20 @@ import { makeAutoObservable } from 'mobx'
 import { inject, injectable } from 'inversify'
 
 import { socket } from '@/api/socket'
-import { UserSettingsUpdateMessage } from '@/types/user-settings-update-message.type'
 
 import { debounce } from '@/lib/utils/debounce.util'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
-import { CurrentUserProfileStore } from '@/store/current-user-profile-store'
 import { queryClient } from '@/config/queries/query-client'
 import { queries } from '@/config/queries/query-key-store'
 
-import type { User } from '@/generated/types'
-import type { AlertMessageData } from './types'
+import type { AlertMessage, User } from '@/generated/types'
+import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
+import type { CurrentUserProfileStore } from '@/store/current-user-profile-store'
+import type { UserSettingsUpdateMessage } from '@/types/user-settings-update-message.type'
 
 const DEFAULT_DATE_FORMAT = 'M/d/yy h:mm:ss a'
 const DEFAULT_EMAIL_SEPARATOR = ','
-const DEFAULT_ALERT_MESSAGE: AlertMessageData = {
+const DEFAULT_ALERT_MESSAGE: AlertMessage = {
   data: '*** This site is currently under maintenance, please wait ***',
   activation: 'False',
   level: 'Critical',
@@ -26,6 +26,7 @@ export class SettingsService {
   static checkedToText(checked: boolean): string {
     return checked === true ? 'True' : 'False'
   }
+  private alertMessageQuery
   private debounceDelay = 250
 
   dateFormat = DEFAULT_DATE_FORMAT
@@ -36,14 +37,19 @@ export class SettingsService {
   private debouncedDateFormat = debounce(this.updateDateFormat, this.debounceDelay)
   private debouncedEmailSeparator = debounce(this.updateEmailSeparator, this.debounceDelay)
 
-  constructor(@inject(CONTAINER_IDS.currentUserProfileStore) private currentUserProfileStore: CurrentUserProfileStore) {
+  constructor(
+    @inject(CONTAINER_IDS.currentUserProfileStore) private currentUserProfileStore: CurrentUserProfileStore,
+    @inject(CONTAINER_IDS.factoryMobxQuery) mobxQueryFactory: MobxQueryFactory
+  ) {
     makeAutoObservable(this)
 
     this.updateEmailSeparator = this.updateEmailSeparator.bind(this)
     this.onUserSettingsUpdate = this.onUserSettingsUpdate.bind(this)
     this.updateDateFormat = this.updateDateFormat.bind(this)
 
-    this.addUserSettingsUpdateListener()
+    this.alertMessageQuery = mobxQueryFactory(() => ({ ...queries.users.alertMessage }))
+
+    this.addUserSettingsUpdateListeners()
 
     this.init()
   }
@@ -54,6 +60,7 @@ export class SettingsService {
 
   async init(): Promise<void> {
     const { settings } = await this.currentUserProfileStore.fetch()
+    const alertMessage = await this.alertMessageQuery.fetch()
 
     if (settings?.dateFormat) {
       this.dateFormat = settings.dateFormat
@@ -63,17 +70,17 @@ export class SettingsService {
       this.emailSeparator = settings.emailAddressSeparator
     }
 
-    if (settings?.alertMessage) {
-      this.alertMessage = { ...this.alertMessage, ...settings.alertMessage }
+    if (alertMessage) {
+      this.alertMessage = { ...this.alertMessage, ...alertMessage }
     }
   }
 
-  addUserSettingsUpdateListener(): void {
+  addUserSettingsUpdateListeners(): void {
     socket.on('user.settings.users.updated', this.onUserSettingsUpdate)
     socket.on('user.view.users.updated', this.onUserSettingsUpdate)
   }
 
-  removeUserSettingsUpdateListener(): void {
+  removeUserSettingsUpdateListeners(): void {
     socket.off('user.settings.users.updated', this.onUserSettingsUpdate)
     socket.off('user.view.users.updated', this.onUserSettingsUpdate)
   }
@@ -90,7 +97,7 @@ export class SettingsService {
     this.debouncedEmailSeparator(value)
   }
 
-  setAlertMessage<T extends keyof AlertMessageData>(key: T, data: AlertMessageData[T]): void {
+  setAlertMessage<T extends keyof AlertMessage>(key: T, data: AlertMessage[T]): void {
     this.alertMessage[key] = data
 
     if (key === 'data') {
@@ -137,17 +144,19 @@ export class SettingsService {
       this.alertMessage = user.settings.alertMessage
     }
 
-    queryClient.setQueryData<User>(queries.user.profile.queryKey, (oldData) => {
-      if (!oldData) return oldData
+    if (user.email === this.currentUserProfileStore.profileQueryResult.data?.email) {
+      queryClient.setQueryData<User>(queries.user.profile.queryKey, (oldData) => {
+        if (!oldData) return oldData
 
-      return {
-        ...oldData,
-        groups: {
-          ...oldData.groups,
-          ...user.groups,
-        },
-      }
-    })
+        return {
+          ...oldData,
+          groups: {
+            ...oldData.groups,
+            ...user.groups,
+          },
+        }
+      })
+    }
   }
 
   private updateUserSettings<T>(data: Record<string, T>): void {

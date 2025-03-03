@@ -4,6 +4,7 @@ import { getAuthContact, getAuthDocs, getManifest } from '@/api/openstf'
 import {
   getAccessTokens,
   getAdbRange,
+  getAlertMessage,
   getCurrentUserProfile,
   getDeviceBySerial,
   getGroupDevices,
@@ -11,6 +12,7 @@ import {
   getGroupUsers,
   getListDevices,
   getSettingsDevices,
+  getSettingsUsers,
 } from '@/api/openstf-api'
 
 import type { GroupDevice } from '@/types/group-device.type'
@@ -46,6 +48,14 @@ export const queries = createQueryKeyStore({
     group: {
       queryKey: null,
       queryFn: () => getGroupUsers(),
+    },
+    settings: {
+      queryKey: null,
+      queryFn: () => getSettingsUsers(),
+    },
+    alertMessage: {
+      queryKey: null,
+      queryFn: () => getAlertMessage(),
     },
   },
   user: {

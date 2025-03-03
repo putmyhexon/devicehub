@@ -28,8 +28,6 @@ export class DeviceSettingsService extends ListManagementService<'serial', Setti
     this.onDeviceCreate = this.onDeviceCreate.bind(this)
     this.onDeviceDelete = this.onDeviceDelete.bind(this)
     this.onDeviceChange = this.onDeviceChange.bind(this)
-
-    this.addDeviceListeners()
   }
 
   @computed
@@ -47,13 +45,13 @@ export class DeviceSettingsService extends ListManagementService<'serial', Setti
     return this.selectedItems.map((item) => item.serial).join(',')
   }
 
-  addDeviceListeners(): void {
+  addDeviceSettingsListeners(): void {
     socket.on('user.settings.devices.created', this.onDeviceCreate)
     socket.on('user.settings.devices.deleted', this.onDeviceDelete)
     socket.on('user.settings.devices.updated', this.onDeviceChange)
   }
 
-  removeDeviceChangeListener(): void {
+  removeDeviceSettingsListeners(): void {
     socket.off('user.settings.devices.created', this.onDeviceCreate)
     socket.off('user.settings.devices.deleted', this.onDeviceDelete)
     socket.off('user.settings.devices.updated', this.onDeviceChange)

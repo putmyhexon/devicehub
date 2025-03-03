@@ -16,6 +16,7 @@ import type { AccessTokenService } from '@/services/access-token-service'
 import type { TouchService } from '@/services/touch-service/touch-service'
 import type { TransactionFactory } from '@/types/transaction-factory.type'
 import type { FileExplorerService } from '@/services/file-explorer-service'
+import type { UserSettingsService } from '@/services/user-settings-service'
 import type { GroupSettingsService } from '@/services/group-settings-service'
 import type { MobxMutationFactory } from '@/types/mobx-mutation-factory.type'
 import type { DeviceSettingsService } from '@/services/device-settings-service'
@@ -56,6 +57,7 @@ export const CONTAINER_IDS = {
   logsTrackerService: Symbol.for('LogsTrackerService') as interfaces.ServiceIdentifier<LogsTrackerService>,
   deviceBySerialStore: Symbol.for('DeviceBySerialStore') as interfaces.ServiceIdentifier<DeviceBySerialStore>,
   deviceDisconnection: Symbol.for('DeviceDisconnection') as interfaces.ServiceIdentifier<DeviceDisconnection>,
+  userSettingsService: Symbol.for('UserSettingsService') as interfaces.ServiceIdentifier<UserSettingsService>,
   fileExplorerService: Symbol.for('FileExplorerService') as interfaces.ServiceIdentifier<FileExplorerService>,
   factoryMobxMutation: Symbol.for('Factory<MobxMutation>') as interfaces.ServiceIdentifier<MobxMutationFactory>,
   groupSettingsService: Symbol.for('GroupSettingsService') as interfaces.ServiceIdentifier<GroupSettingsService>,

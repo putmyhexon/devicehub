@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useInjection } from 'inversify-react'
 import { useTranslation } from 'react-i18next'
@@ -12,8 +13,6 @@ import { useCreateGroup } from '@/lib/hooks/use-create-group.hook'
 import { useRemoveGroups } from '@/lib/hooks/use-remove-groups.hook'
 
 import { GroupList } from './group-list'
-
-import styles from './groups-tab.module.css'
 
 export const GroupsTab = observer(() => {
   const { t } = useTranslation()
@@ -38,6 +37,14 @@ export const GroupsTab = observer(() => {
     groupSettingsService.clearSelectedItems()
   }
 
+  useEffect(() => {
+    groupSettingsService.addGroupSettingsListeners()
+
+    return () => {
+      groupSettingsService.removeGroupSettingsListeners()
+    }
+  }, [])
+
   return (
     <ListHeader
       beforeIcon={<Icon20UsersOutline />}
@@ -46,13 +53,13 @@ export const GroupsTab = observer(() => {
       isAddButtonLoading={isCreateGroupPending}
       isItemsLoading={isGroupsLoading}
       isRemoveButtonDisabled={groupSettingsService.isRemoveGroupsDisabled}
+      skeletonHeight={74}
       title={t('Group list')}
       actions={
         <ConditionalRender conditions={[isAdmin]}>
           <Tooltip appearance='accent' description={t('Write an email to the group user selection')}>
             <Button
               before={<Icon16MailOutline />}
-              className={styles.contactOwners}
               disabled={groupSettingsService.isSelectedItemsEmpty}
               href='mailto:?body=*** Paste the email addresses from the clipboard! ***'
               mode='link'

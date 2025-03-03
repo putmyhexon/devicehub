@@ -2,7 +2,17 @@ import { useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useInjection } from 'inversify-react'
 import { useTranslation } from 'react-i18next'
-import { Button, ButtonGroup, Checkbox, Flex, Pagination, Placeholder, Search, Tooltip } from '@vkontakte/vkui'
+import {
+  Button,
+  ButtonGroup,
+  Checkbox,
+  Flex,
+  Pagination,
+  Placeholder,
+  Search,
+  Skeleton,
+  Tooltip,
+} from '@vkontakte/vkui'
 import {
   Icon16DeleteOutline,
   Icon16Lock,
@@ -35,12 +45,14 @@ type ListHeaderProps<T> = {
   title: string
   actions?: ReactNode
   beforeIcon?: ReactNode
+  beforeAddButton?: ReactNode
   isAddButtonDisabled?: boolean
   isAddButtonLoading?: boolean
   isRemoveButtonDisabled?: boolean
   isItemsLoading?: boolean
   containerId: interfaces.ServiceIdentifier<T>
   beforePagination?: ReactNode
+  skeletonHeight?: number
   onRemove?: () => void
   onAddItem?: () => void
   children: ReactNode
@@ -52,11 +64,13 @@ export const ListHeader = observer(
     actions,
     beforeIcon,
     containerId,
+    beforeAddButton,
     isItemsLoading,
     isAddButtonLoading,
     isAddButtonDisabled,
     isRemoveButtonDisabled,
     beforePagination,
+    skeletonHeight,
     onAddItem,
     onRemove,
     children,
@@ -86,6 +100,7 @@ export const ListHeader = observer(
         afterTooltipText={t('Add')}
         before={beforeIcon}
         className={styles.listHeader}
+        extraAfter={beforeAddButton}
         isAfterButtonDisabled={isAddButtonDisabled}
         isAfterButtonLoading={isAddButtonLoading}
         title={title}
@@ -98,20 +113,20 @@ export const ListHeader = observer(
             value={listService.globalFilter}
             onChange={(event) => listService.setGlobalFilter(event.target.value)}
           />
-          <Flex align='center'>
-            <ButtonGroup align='center' gap='none' mode='horizontal'>
-              {actions}
-              <Tooltip appearance='accent' description={t('Enable Disable confirmation for items removing')}>
-                <Button
-                  activated={listService.needConfirm}
-                  before={listService.needConfirm ? <Icon16Lock /> : <Icon16UnlockOutline />}
-                  mode='tertiary'
-                  size='s'
-                  onClick={() => listService.toggleNeedConfirm()}
-                >
-                  {t('Need Confirm')}
-                </Button>
-              </Tooltip>
+          <ButtonGroup align='center' gap='s'>
+            {actions}
+            <Tooltip appearance='accent' description={t('Enable Disable confirmation for items removing')}>
+              <Button
+                activated={listService.needConfirm}
+                before={listService.needConfirm ? <Icon16Lock /> : <Icon16UnlockOutline />}
+                mode='tertiary'
+                size='s'
+                onClick={() => listService.toggleNeedConfirm()}
+              >
+                {t('Need Confirm')}
+              </Button>
+            </Tooltip>
+            <div>
               <Tooltip appearance='accent' description={t('Remove selected items')}>
                 <Button
                   before={<Icon16DeleteOutline />}
@@ -123,8 +138,8 @@ export const ListHeader = observer(
                   {t('Remove')}
                 </Button>
               </Tooltip>
-            </ButtonGroup>
-          </Flex>
+            </div>
+          </ButtonGroup>
         </Flex>
         {beforePagination}
         <Flex align='center' justify='space-between'>
@@ -168,8 +183,17 @@ export const ListHeader = observer(
           </Flex>
         </Flex>
         {children}
-        <ConditionalRender conditions={[listService.isPaginatedItemsEmpty]}>
+        <ConditionalRender conditions={[listService.isPaginatedItemsEmpty && !isItemsLoading]}>
           <Placeholder icon={<Icon28InboxOutline />}>{t('Empty')}</Placeholder>
+        </ConditionalRender>
+        <ConditionalRender conditions={[!!isItemsLoading]}>
+          <Flex direction='column' gap={5}>
+            {Array(5)
+              .fill({})
+              .map((_, index) => (
+                <Skeleton key={index} height={skeletonHeight} width='100%' />
+              ))}
+          </Flex>
         </ConditionalRender>
         <WarningModal
           description={t('Really delete selected items')}
