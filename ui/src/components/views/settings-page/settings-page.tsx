@@ -9,6 +9,7 @@ import { GeneralTab } from '@/components/ui/settings-tabs/general-tab'
 import { GroupsTab } from '@/components/ui/settings-tabs/groups-tab'
 import { KeysTab } from '@/components/ui/settings-tabs/keys-tab'
 import { DevicesTab } from '@/components/ui/settings-tabs/devices-tab'
+import { UsersTab } from '@/components/ui/settings-tabs/users-tab'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
@@ -62,7 +63,7 @@ export const SettingsPage = observer(() => {
         title: t('Users'),
         ariaControls: 'tab-content-users',
         disabled: !isAdmin,
-        content: <Div />,
+        content: <UsersTab />,
       },
       {
         id: getSettingsShellRoute(),

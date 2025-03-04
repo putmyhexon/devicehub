@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
 import { useInjection } from 'inversify-react'
@@ -33,10 +33,18 @@ export const DevicesTab = observer(() => {
   const { isLoading: isDevicesLoading } = deviceSettingsService.devicesQueryResult
 
   const onRemove = () => {
-    removeDevices({ ids: deviceSettingsService.joinedDevicesIds, params: removeFilters })
+    removeDevices({ ids: deviceSettingsService.joinedDevicesIds, ...removeFilters })
 
     deviceSettingsService.clearSelectedItems()
   }
+
+  useEffect(() => {
+    deviceSettingsService.addDeviceSettingsListeners()
+
+    return () => {
+      deviceSettingsService.removeDeviceSettingsListeners()
+    }
+  }, [])
 
   return (
     <ListHeader
@@ -44,13 +52,13 @@ export const DevicesTab = observer(() => {
       containerId={CONTAINER_IDS.deviceSettingsService}
       isItemsLoading={isDevicesLoading}
       isRemoveButtonDisabled={!deviceSettingsService.paginatedItems.length}
+      skeletonHeight={106}
       title={t('Device list')}
       actions={
         <Tooltip appearance='accent' description={t('Set filters for device removing')}>
           <Button
             activated={isFiltersOpen}
             before={<Icon20FilterOutline height={16} width={16} />}
-            className={styles.filters}
             mode='tertiary'
             size='s'
             onClick={() => setIsFiltersOpen((prev) => !prev)}

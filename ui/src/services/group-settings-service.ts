@@ -35,8 +35,6 @@ export class GroupSettingsService extends ListManagementService<'id', GroupListR
     this.onGroupCreate = this.onGroupCreate.bind(this)
     this.onGroupDelete = this.onGroupDelete.bind(this)
     this.onGroupChange = this.onGroupChange.bind(this)
-
-    this.addGroupListeners()
   }
 
   @computed
@@ -62,7 +60,7 @@ export class GroupSettingsService extends ListManagementService<'id', GroupListR
   @computed
   get joinedGroupIds(): string {
     return this.selectedItems
-      .filter((item) => item?.privilege !== 'root')
+      .filter((item) => item.privilege !== 'root')
       .map((item) => item.id)
       .join(',')
   }
@@ -74,7 +72,7 @@ export class GroupSettingsService extends ListManagementService<'id', GroupListR
     )
   }
 
-  addGroupListeners(): void {
+  addGroupSettingsListeners(): void {
     socket.on('user.settings.groups.created', this.onGroupCreate)
     socket.on('user.view.groups.created', this.onGroupCreate)
 
@@ -85,7 +83,7 @@ export class GroupSettingsService extends ListManagementService<'id', GroupListR
     socket.on('user.view.groups.updated', this.onGroupChange)
   }
 
-  removeGroupChangeListener(): void {
+  removeGroupSettingsListeners(): void {
     socket.off('user.settings.groups.created', this.onGroupCreate)
     socket.off('user.view.groups.created', this.onGroupCreate)
 

@@ -12,6 +12,7 @@ type ContentCardProps = {
   title: string
   children: ReactNode
   before?: ReactNode
+  extraAfter?: ReactNode
   afterButtonIcon?: ReactElement
   onAfterButtonClick?: () => void
   afterTooltipText?: string
@@ -26,6 +27,7 @@ export const ContentCard = ({
   title,
   children,
   before,
+  extraAfter,
   afterButtonIcon,
   onAfterButtonClick,
   afterTooltipText,
@@ -50,6 +52,7 @@ export const ContentCard = ({
               <Button appearance='neutral' aria-label='Help button' before={<Icon20HelpOutline />} mode='tertiary' />
             </Tooltip>
           </ConditionalRender>
+          {extraAfter}
           <ConditionalRender conditions={[!!onAfterButtonClick]}>
             <Tooltip
               appearance='accent'

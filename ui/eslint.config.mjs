@@ -405,6 +405,7 @@ export default tseslint.config(
   },
   {
     files: [
+      'src/components/lib/list-header/list-header.tsx',
       'src/components/ui/settings-tabs/keys-tab/adb-keys-control/adb-keys-control.tsx',
       'src/components/ui/settings-tabs/keys-tab/access-tokens-control/access-tokens-control.tsx',
     ],

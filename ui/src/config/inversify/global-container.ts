@@ -3,6 +3,7 @@ import { Container } from 'inversify'
 import { GroupService } from '@/services/group-service'
 import { AdbKeyService } from '@/services/adb-key-service'
 import { AccessTokenService } from '@/services/access-token-service'
+import { UserSettingsService } from '@/services/user-settings-service'
 import { GroupSettingsService } from '@/services/group-settings-service'
 import { DeviceSettingsService } from '@/services/device-settings-service'
 import { SettingsService } from '@/services/settings-service/settings-service'
@@ -29,6 +30,7 @@ globalContainer.bind(CONTAINER_IDS.settingsService).to(SettingsService)
 globalContainer.bind(CONTAINER_IDS.accessTokenService).to(AccessTokenService)
 globalContainer.bind(CONTAINER_IDS.logsTrackerService).to(LogsTrackerService)
 globalContainer.bind(CONTAINER_IDS.deviceDisconnection).to(DeviceDisconnection)
+globalContainer.bind(CONTAINER_IDS.userSettingsService).to(UserSettingsService)
 globalContainer.bind(CONTAINER_IDS.groupSettingsService).to(GroupSettingsService)
 globalContainer.bind(CONTAINER_IDS.deviceSettingsService).to(DeviceSettingsService)
 globalContainer.bind(CONTAINER_IDS.currentUserProfileStore).to(CurrentUserProfileStore)

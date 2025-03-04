@@ -5,15 +5,16 @@ import { updateDevice } from '@/api/openstf-api'
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
 
+import type { AxiosError } from 'axios'
 import type { UseMutationResult } from '@tanstack/react-query'
 import type { UpdateDeviceArgs } from '@/api/openstf-api/types'
 import type { UnexpectedErrorResponse } from '@/generated/types'
 import type { SettingsDevice } from '@/types/settings-device.type'
 
-export const useUpdateDevice = (): UseMutationResult<boolean, UnexpectedErrorResponse, UpdateDeviceArgs> =>
+export const useUpdateDevice = (): UseMutationResult<boolean, AxiosError<UnexpectedErrorResponse>, UpdateDeviceArgs> =>
   useMutation({
     mutationFn: (data) => updateDevice(data),
-    onMutate: async ({ serial, params }) => {
+    onMutate: async ({ serial, place, adbPort, storageId }) => {
       await queryClient.cancelQueries({ queryKey: queries.devices.settings.queryKey })
       const previousDevices = queryClient.getQueryData(queries.devices.settings.queryKey)
 
@@ -23,9 +24,9 @@ export const useUpdateDevice = (): UseMutationResult<boolean, UnexpectedErrorRes
         return oldData.map((item): SettingsDevice => {
           if (item.serial === serial) {
             const changedData: Partial<SettingsDevice> = {
-              ...(params?.place && { place: params.place }),
-              ...(params?.adbPort && { adbPort: params.adbPort }),
-              ...(params?.storageId && { storageId: params.storageId }),
+              ...(place && { place }),
+              ...(adbPort && { adbPort }),
+              ...(storageId && { storageId }),
             }
 
             return { ...item, ...changedData }

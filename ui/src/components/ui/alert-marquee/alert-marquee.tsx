@@ -6,8 +6,8 @@ import { ConditionalRender } from '@/components/lib/conditional-render'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
+import type { AlertMessageLevel } from '@/generated/types'
 import type { MarqueeVariant } from '@/components/lib/marquee'
-import type { AlertMessageLevel } from '@/types/alert-message-level.type'
 
 const ALERT_LEVEL_TO_MARQUEE_VARIANT_MAP: Record<AlertMessageLevel, MarqueeVariant> = {
   ['Critical']: 'Error',
@@ -20,7 +20,7 @@ export const AlertMarquee = observer(() => {
 
   return (
     <ConditionalRender conditions={[settingsService.isAlertMessageActive]}>
-      <Marquee variant={ALERT_LEVEL_TO_MARQUEE_VARIANT_MAP[settingsService.alertMessage.level]}>
+      <Marquee variant={ALERT_LEVEL_TO_MARQUEE_VARIANT_MAP[settingsService.alertMessage.level || 'Warning']}>
         {settingsService.alertMessage.data}
       </Marquee>
     </ConditionalRender>

@@ -65,7 +65,7 @@ export const DeviceItem = observer(({ device, removeFilters }: DeviceItemProps) 
   }
 
   const onRemove = () => {
-    removeDevice({ serial: device.serial, params: removeFilters })
+    removeDevice({ serial: device.serial, ...removeFilters })
 
     deviceSettingsService.setSelectedItem(device, false)
   }
@@ -89,7 +89,7 @@ export const DeviceItem = observer(({ device, removeFilters }: DeviceItemProps) 
           <Button
             before={<Icon20RefreshOutline />}
             disabled={isAdbPortPending}
-            mode='secondary'
+            mode='tertiary'
             size='s'
             onClick={onUpdateAdbPort}
           >
@@ -98,11 +98,12 @@ export const DeviceItem = observer(({ device, removeFilters }: DeviceItemProps) 
         }
         indicator={
           <Button
+            activated={isUpdatedChanged}
             appearance={!isUpdatedChanged ? 'accent' : 'accent-invariable'}
             before={<Icon24DoneOutline height={20} width={20} />}
             className={styles.saveButton}
             disabled={!isUpdatedChanged}
-            mode={isUpdatedChanged ? 'secondary' : 'tertiary'}
+            mode='tertiary'
             size='s'
             onClick={onSaveClick}
           >
@@ -141,7 +142,7 @@ export const DeviceItem = observer(({ device, removeFilters }: DeviceItemProps) 
         isOpen={isConfirmationOpen}
         title={t('Warning')}
         onClose={() => setIsConfirmationOpen(false)}
-        onOk={async () => updateDevice({ serial: device.serial, params: updateInfo })}
+        onOk={async () => updateDevice({ serial: device.serial, ...updateInfo })}
       />
     </>
   )

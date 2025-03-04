@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
-import { Cell, Checkbox } from '@vkontakte/vkui'
+import { Button, Cell, Checkbox } from '@vkontakte/vkui'
 
 import { WarningModal } from '@/components/ui/modals'
 import { ConditionalRender } from '@/components/lib/conditional-render'
@@ -16,6 +16,7 @@ type ListItemProps = {
   extraSubtitle?: ReactNode
   indicator?: ReactNode
   after?: ReactNode
+  href?: string
   modalDescription?: string
   isRemoveDisabled?: boolean
   isNeedConfirmRemove?: boolean
@@ -32,6 +33,7 @@ export const ListItem = observer(
     subtitle,
     extraSubtitle,
     indicator,
+    href,
     after,
     isSelected,
     isNeedConfirmRemove,
@@ -73,7 +75,12 @@ export const ListItem = observer(
           onClick={isOpenable ? () => setIsOpen((prev) => !prev) : undefined}
           onRemove={onRemoveClick}
         >
-          {title}
+          <ConditionalRender conditions={[!href]}>{title}</ConditionalRender>
+          <ConditionalRender conditions={[!!href]}>
+            <Button appearance='accent-invariable' href={href} mode='link' size='s'>
+              {title}
+            </Button>
+          </ConditionalRender>
         </Cell>
         <ConditionalRender conditions={[isOpen]}>{children}</ConditionalRender>
         <WarningModal

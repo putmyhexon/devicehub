@@ -3938,6 +3938,10 @@ components:
         level:
           type: string
           description: Alert message level
+          enum:
+          - Critical
+          - Information
+          - Warning
     AlertMessageResponse:
       required:
       - alertMessage
