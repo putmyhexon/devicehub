@@ -11,5 +11,9 @@ export const deviceServiceToString = (deviceService: ListDevice['service']): str
     services.push('HMS')
   }
 
+    if (deviceService?.hasAPNS) {
+        services.push('APNS')
+    }
+
   return services.join(', ')
 }

@@ -7,6 +7,7 @@
  */
 
 export type DeviceService = {
+  hasAPNS?: boolean
   hasGMS?: boolean
   hasHMS?: boolean
 }
