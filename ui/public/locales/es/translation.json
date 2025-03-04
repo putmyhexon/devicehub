@@ -422,6 +422,7 @@
   "Really delete selected items": "Eliminar realmente los artículos seleccionados?",
   "Enable Disable confirmation for items removing": "Habilitar/deshabilitar la confirmación para los elementos eliminando",
   "Any": "Cualquier",
+  "Execute adb shell command on all devices": "Ejecutar el comando ADB Shell en todos los dispositivos",
   "User list": "Lista de usuarios",
   "Set filters for user removing": "Establecer filtros para la eliminación del usuario",
   "User group ownership state": "Estado de propiedad del grupo de usuarios",

@@ -2,13 +2,14 @@ import { useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useInjection } from 'inversify-react'
 import { useTranslation } from 'react-i18next'
-import { Div, Panel, View } from '@vkontakte/vkui'
+import { Panel, View } from '@vkontakte/vkui'
 
 import { TabsPanel } from '@/components/lib/tabs-panel'
 import { GeneralTab } from '@/components/ui/settings-tabs/general-tab'
 import { GroupsTab } from '@/components/ui/settings-tabs/groups-tab'
 import { KeysTab } from '@/components/ui/settings-tabs/keys-tab'
 import { DevicesTab } from '@/components/ui/settings-tabs/devices-tab'
+import { ShellTab } from '@/components/ui/settings-tabs/shell-tab'
 import { UsersTab } from '@/components/ui/settings-tabs/users-tab'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
@@ -70,7 +71,7 @@ export const SettingsPage = observer(() => {
         title: t('Shell'),
         ariaControls: 'tab-content-shell',
         disabled: !isAdmin,
-        content: <Div />,
+        content: <ShellTab />,
       },
     ],
     [t, isAdmin]

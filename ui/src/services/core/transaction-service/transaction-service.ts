@@ -89,17 +89,18 @@ export class TransactionService<T = unknown> {
   private transactionProgressListener(incomingChannel: string, message: TransactionProgressListenerMessage): void {
     if (incomingChannel !== this.channel) return
 
-    this.progressFn?.(message.progress, message.data)
+    this.progressFn?.(message.progress, message.data, message.seq)
   }
 
   private transactionDoneListener(
     incomingChannel: string,
-    { success, body, data }: TransactionDoneListenerMessage
+    { success, body, data, source }: TransactionDoneListenerMessage
   ): void {
     if (incomingChannel !== this.channel) return
 
     if (success) {
       this.donePromise.resolve({
+        source,
         data,
         content: body && JSON.parse(body),
       })

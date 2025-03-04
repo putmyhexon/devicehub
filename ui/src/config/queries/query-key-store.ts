@@ -12,6 +12,7 @@ import {
   getGroupUsers,
   getListDevices,
   getSettingsDevices,
+  getShellDevices,
   getSettingsUsers,
 } from '@/api/openstf-api'
 
@@ -34,6 +35,10 @@ export const queries = createQueryKeyStore({
     settings: {
       queryKey: null,
       queryFn: () => getSettingsDevices({ target: 'user' }),
+    },
+    shell: {
+      queryKey: null,
+      queryFn: () => getShellDevices({ target: 'user' }),
     },
     bySerial: (serial: string) => ({
       queryKey: [serial],

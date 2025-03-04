@@ -6,11 +6,13 @@ import {
   DEVICE_GROUPS_FIELDS,
   DEVICE_LIST_FIELDS,
   USERS_GROUPS_FIELDS,
+  DEVICE_SHELL_FIELDS,
   USERS_SETTINGS_FIELDS,
 } from '@/constants/request-fields'
 
 import { OPENSTF_API_ROUTES } from './routes'
 
+import type { ShellDevice } from '@/types/shell-device.type'
 import type { SettingsUser } from '@/types/settings-user.type'
 import type { SettingsDevice } from '@/types/settings-device.type'
 import type { GroupUser } from '@/types/group-user.type'
@@ -98,6 +100,9 @@ export const getGroupDevices = (params?: ParamsWithoutFields<GetDevicesParams>):
 
 export const getSettingsDevices = (params?: ParamsWithoutFields<GetDevicesParams>): Promise<SettingsDevice[]> =>
   getDevices({ ...params, fields: DEVICE_SETTINGS_FIELDS })
+
+export const getShellDevices = (params?: ParamsWithoutFields<GetDevicesParams>): Promise<ShellDevice[]> =>
+  getDevices({ ...params, fields: DEVICE_SHELL_FIELDS })
 
 export const getGroupUsers = (params?: ParamsWithoutFields<GetUsersParams>): Promise<GroupUser[]> =>
   getUsers({ ...params, fields: USERS_GROUPS_FIELDS })

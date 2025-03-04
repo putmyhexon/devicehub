@@ -474,6 +474,7 @@
   "Really delete selected items": "真正删除选定的项目",
   "Enable Disable confirmation for items removing": "启用/禁用删除项目的确认",
   "Any": "任何",
+  "Execute adb shell command on all devices": "在所有设备上执行ADB Shell命令",
   "User list": "用户列表",
   "Set filters for user removing": "设置用于删除用户的过滤器",
   "User group ownership state": "用户组所有权状态",

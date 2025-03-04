@@ -431,6 +431,7 @@
   "Really delete selected items": "Действительно удалить выбранные элементы?",
   "Enable Disable confirmation for items removing": "Включить/отключить подтверждение для удаления элементов",
   "Any": "Любой",
+  "Execute adb shell command on all devices": "Выполнить команду ADB Shell на всех устройствах",
   "User list": "Список пользователей",
   "Set filters for user removing": "Установить фильтры для удаления пользователя",
   "User group ownership state": "Состояние владения группой пользователей",

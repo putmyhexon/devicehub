@@ -15,9 +15,10 @@ export type TransactionProgressListenerMessage = {
   source: string
 }
 
-export type ProgressFn = (progress: number, data: string) => void
+export type ProgressFn = (progress: number, data: string, seq: number) => void
 
 export type TransactionDoneResult<T = unknown> = {
+  source: string
   data: TransactionDoneListenerMessage['data']
   content: T | null
 }
