@@ -3514,6 +3514,8 @@ components:
               type: boolean
             hasGMS:
               type: boolean
+            hasAPNS:
+                type: boolean
         channel:
           type: string
         abi:
