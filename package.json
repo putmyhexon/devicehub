@@ -36,6 +36,7 @@
     "@devicefarmer/stf-syrup": "1.0.2",
     "@devicefarmer/stf-wiki": "1.0.0",
     "@irdk/adbkit": "^4.1.19",
+    "@irdk/usbmux": "^0.2.2",
     "@julusian/jpeg-turbo": "2.1.0",
     "@sentry/node": "^8.34.0",
     "angular": "1.8.3",
