@@ -453,5 +453,5 @@
   "Write an email to the user selection": "Напишите email выбранному пользователю",
   "Really grant access to user": "Действительно предоставить доступ пользователю?",
   "Really revoke access of this user": "Действительно отмените доступ этого пользователя?",
-  "User group quota": "Квота группы пользователей"
+  "User group quota": "Квота пользователя на использования групп"
 }
