@@ -11,8 +11,8 @@ import { SettingsService } from '@/services/settings-service/settings-service'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
+import type { AlertMessageLevel } from '@/generated/types'
 import type { SelectOption } from '@/components/lib/base-select'
-import type { AlertMessageLevel } from '@/types/alert-message-level.type'
 
 const SELECT_LEVEL_OPTIONS: SelectOption<AlertMessageLevel>[] = [
   { name: 'Warning', value: 'Warning' },

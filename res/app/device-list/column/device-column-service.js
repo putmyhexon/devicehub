@@ -237,6 +237,9 @@ module.exports = function DeviceColumnService($filter, gettext, SettingsService,
                 if (deviceService.hasHMS) {
                     services.push('HMS')
                 }
+                if (deviceService.hasAPNS) {
+                    services.push('APNS')
+                }
                 return services.join(', ')
             }
         })

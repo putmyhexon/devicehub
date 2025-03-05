@@ -1,6 +1,6 @@
-import type { DeviceWithFields } from '@/types/device-with-fields.type'
+import type { ListDevice } from '@/types/list-device.type'
 
-export const deviceServiceToString = (deviceService: DeviceWithFields['service']): string => {
+export const deviceServiceToString = (deviceService: ListDevice['service']): string => {
   const services = []
 
   if (deviceService?.hasGMS) {
@@ -9,6 +9,10 @@ export const deviceServiceToString = (deviceService: DeviceWithFields['service']
 
   if (deviceService?.hasHMS) {
     services.push('HMS')
+  }
+
+  if (deviceService?.hasAPNS) {
+    services.push('APNS')
   }
 
   return services.join(', ')

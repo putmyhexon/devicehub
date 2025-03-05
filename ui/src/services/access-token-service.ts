@@ -23,9 +23,7 @@ export class AccessTokenService {
 
     this.onAccessTokenGenerated = this.onAccessTokenGenerated.bind(this)
 
-    this.accessTokensQuery = mobxQueryFactory(() => ({
-      ...queries.user.accessTokens,
-    }))
+    this.accessTokensQuery = mobxQueryFactory(() => ({ ...queries.user.accessTokens }))
   }
 
   get accessTokensQueryResult(): QueryObserverResult<string[]> {

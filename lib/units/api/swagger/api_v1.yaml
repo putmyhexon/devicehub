@@ -1,16 +1,15 @@
 openapi: 3.0.1
 info:
-  title: Smartphone Test Farm
+  title: DeviceHub
   description: Control and manages real Smartphone devices from browser and restful
     apis
   contact:
-    name: STF Team
-    url: http://openstf.io/
-    email: contact@openstf.io
+    name: Devicehub Team
+    url: https://github.com/VKCOM/devicehub
   license:
     name: Apache-2.0
     url: http://www.apache.org/licenses/LICENSE-2.0
-  version: 2.4.3
+  version: 1.3.10
 servers:
 - url: /api/v1
 tags:
@@ -2139,7 +2138,10 @@ paths:
       responses:
         "200":
           description: Add adb key response
-          content: {}
+          content:
+              application/json:
+                  schema:
+                      $ref: '#/components/schemas/AdbKeyAddedResponse'
         default:
           description: Unexpected Error
           content:
@@ -2300,7 +2302,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeviceListResponse'
+                $ref: '#/components/schemas/AdbRangeResponse'
         default:
           description: |
             Unexpected Error:
@@ -2660,7 +2662,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DefaultResponse'
+                $ref: '#/components/schemas/AdbPortResponse'
         default:
           description: |
             Unexpected Error:
@@ -2961,7 +2963,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AutoTestResponse'
+                $ref: '#/components/schemas/GroupResponse'
         default:
           description: |
             Unexpected Error:
@@ -3003,6 +3005,76 @@ paths:
               schema:
                 $ref: '#/components/schemas/UnexpectedErrorResponse'
     x-swagger-router-controller: autotests
+  /autotests/{id}/addDevices/:
+      get:
+          tags:
+              - autotests
+          summary: Add devices for autotests group
+          description: Filter and add devices to autotests group
+          operationId: addDevices
+          parameters:
+              -   name: id
+                  in: path
+                  description: Group identifier
+                  required: true
+                  schema:
+                      type: string
+              -   name: amount
+                  in: query
+                  description: Device amount needed for autotests run
+                  required: true
+                  schema:
+                      minimum: 1
+                      type: integer
+              -   name: need_amount
+                  in: query
+                  description: "need only specified amount, not less"
+                  schema:
+                      type: boolean
+              -   name: abi
+                  in: query
+                  description: device abi
+                  schema:
+                      type: string
+              -   name: sdk
+                  in: query
+                  description: device sdk
+                  schema:
+                      type: string
+              -   name: model
+                  in: query
+                  description: device model
+                  schema:
+                      type: string
+              -   name: type
+                  in: query
+                  description: device type
+                  schema:
+                      type: string
+              -   name: version
+                  in: query
+                  description: device os version
+                  schema:
+                      type: string
+          responses:
+              "200":
+                  description: Updated group with new devices
+                  content:
+                      application/json:
+                          schema:
+                              $ref: '#/components/schemas/GroupResponse'
+              default:
+                  description: |
+                      Unexpected Error:
+                        * 401: Unauthorized => bad credentials
+                        * 404: Not Found => unknown data
+                        * 500: Internal Server Error
+                  content:
+                      application/json:
+                          schema:
+                              $ref: '#/components/schemas/UnexpectedErrorResponse'
+          x-codegen-request-body-name: addDevices
+      x-swagger-router-controller: autotests
   /autotests/install/{serial}:
     post:
       tags:
@@ -3169,6 +3241,34 @@ components:
           type: boolean
           default: true
         description:
+          type: string
+    AdbPortResponse:
+      required:
+      - description
+      - success
+      - port
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        description:
+          type: string
+        port:
+          type: number
+    AdbRangeResponse:
+      required:
+      - description
+      - success
+      - adbRange
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: true
+        description:
+          type: string
+        adbRange:
           type: string
     GroupResponse:
       required:
@@ -3414,6 +3514,8 @@ components:
               type: boolean
             hasGMS:
               type: boolean
+            hasAPNS:
+                type: boolean
         channel:
           type: string
         abi:
@@ -3540,27 +3642,249 @@ components:
           type: array
           items:
             type: object
-            properties: {}
-    AutoTestResponse:
+            properties:
+              _id:
+                type: string
+              name:
+                type: string
+              owner:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    format: email
+                  name:
+                    type: string
+              users:
+                type: array
+                items:
+                  type: string
+              privilege:
+                type: string
+              class:
+                type: string
+                description: "Group class; privileged value => debug, bookable, standard"
+                enum:
+                - once
+                - bookable
+                - hourly
+                - daily
+                - weekly
+                - monthly
+                - quaterly
+                - halfyearly
+                - yearly
+                - debug
+                - standard
+              repetitions:
+                type: integer
+                minimum: 0
+                description: "Group repetitions; default value => 0"
+              duration:
+                type: integer
+              isActive:
+                type: boolean
+              state:
+                type: string
+                description: "Group state; default value => pending or ready for bookable/standard classes"
+                enum:
+                - pending
+                - ready
+              dates:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    start:
+                      type: string
+                      format: date-time
+                    stop:
+                      type: string
+                      format: date-time
+              envUserGroupsNumber:
+                type: integer
+              envUserGroupsDuration:
+                type: integer
+              envUserGroupsRepetitions:
+                type: integer
+              id:
+                type: string
+              devices:
+                type: array
+                items:
+                  type: string
+              lock:
+                type: object
+                properties:
+                  user:
+                    type: boolean
+                  admin:
+                    type: boolean
+              runUrl:
+                type: string
+                nullable: true
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        ip:
+          type: string
+        group:
+          type: string
+        lastLoggedInAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        forwards:
+          type: array
+          items: {}
+        groupDeviceData:
+          type: object
+          properties:
+            columns:
+              type: object
+              properties:
+                name:
+                  type: string
+                selected:
+                  type: boolean
+                sort:
+                  type: string
+            sort:
+              type: object
+              properties:
+                index:
+                  type: number
+                reverse:
+                  type: boolean
+        adbKeys:
+          type: array
+          items:
+            type: object
+            properties:
+                fingerprint:
+                    type: string
+                title:
+                    type: string
+        settings:
+          type: object
+          properties:
+            lastUsedDevice:
+              type: string
+            dateFormat:
+              type: string
+            emailAddressSeparator:
+              type: string
+            alertMessage:
+                type: object
+                properties:
+                    activation:
+                        type: string
+                    data:
+                        type: string
+                    level:
+                        type: string
+                        enum:
+                        - Information
+                        - Warning
+                        - Critical
+            platform:
+              type: string
+            groupItemsPerPage:
+              type: object
+              properties:
+                name:
+                  type: string
+                value:
+                  type: integer
+            deviceListColumns:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  selected:
+                    type: boolean
+            selectedLanguage:
+              type: string
+            deviceListSort:
+                type: object
+                properties:
+                  fixed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        order:
+                          type: string
+                  user:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        order:
+                          type: string
+        acceptedPolicy:
+          type: boolean
+        privilege:
+          type: string
+        groups:
+          type: object
+          properties:
+            subscribed:
+              type: array
+              items:
+                type: string
+            lock:
+              type: boolean
+            quotas:
+              type: object
+              properties:
+                allocated:
+                  type: object
+                  properties:
+                    number:
+                      type: number
+                    duration:
+                      type: number
+                consumed:
+                  type: object
+                  properties:
+                    number:
+                      type: number
+                    duration:
+                      type: number
+                defaultGroupsNumber:
+                  type: number
+                defaultGroupsDuration:
+                  type: number
+                defaultGroupsRepetitions:
+                  type: number
+                repetitions:
+                  type: integer
+    AdbKeyAddedResponse:
       required:
-      - description
-      - groups
       - success
+      - fingerprint
       type: object
       properties:
         success:
           type: boolean
-        description:
+        fingerprint:
           type: string
-        group:
-          type: object
-          properties:
-            devices:
-              type: array
-              items:
-                type: object
-                properties: {}
-
     UserListResponse:
       required:
       - description
@@ -3575,8 +3899,7 @@ components:
         users:
           type: array
           items:
-            type: object
-            properties: {}
+            $ref: '#/components/schemas/User'
     UserResponse:
       required:
       - description
@@ -3589,137 +3912,7 @@ components:
         description:
           type: string
         user:
-          type: object
-          properties:
-            _id:
-                type: string
-            email:
-                type: string
-            name:
-                type: string
-            ip:
-                type: string
-            group:
-                type: string
-            lastLoggedInAt:
-                type: string
-                format: date-time
-            createdAt:
-                type: string
-                format: date-time
-            forwards:
-                type: array
-                items: {}
-            adbKeys:
-              type: array
-              items:
-                type: object
-                properties:
-                    fingerprint:
-                        type: string
-                    title:
-                        type: string
-            settings:
-                type: object
-                properties:
-                    lastUsedDevice:
-                        type: string
-                    dateFormat:
-                        type: string
-                    emailAddressSeparator:
-                        type: string
-                    alertMessage:
-                        type: object
-                        properties:
-                            activation:
-                                type: string
-                            data:
-                                type: string
-                            level:
-                                type: string
-                                enum:
-                                  - Information
-                                  - Warning
-                                  - Critical
-                    platform:
-                        type: string
-                    groupItemsPerPage:
-                        type: object
-                        properties:
-                            name:
-                                type: string
-                            value:
-                                type: integer
-                    deviceListColumns:
-                        type: array
-                        items:
-                            type: object
-                            properties:
-                                name:
-                                    type: string
-                                selected:
-                                    type: boolean
-                    selectedLanguage:
-                        type: string
-                    deviceListSort:
-                        type: object
-                        properties:
-                            fixed:
-                                type: array
-                                items:
-                                    type: object
-                                    properties:
-                                        name:
-                                            type: string
-                                        order:
-                                            type: string
-                            user:
-                                type: array
-                                items:
-                                    type: object
-                                    properties:
-                                        name:
-                                            type: string
-                                        order:
-                                            type: string
-            acceptedPolicy:
-                type: boolean
-            privilege:
-                type: string
-            groups:
-                type: object
-                properties:
-                    subscribed:
-                        type: array
-                        items:
-                            type: string
-                    lock:
-                        type: boolean
-                    quotas:
-                        type: object
-                        properties:
-                            allocated:
-                                type: object
-                                properties:
-                                    number:
-                                        type: number
-                                    duration:
-                                        type: number
-                            consumed:
-                                type: object
-                                properties:
-                                    number:
-                                        type: number
-                                    duration:
-                                        type: number
-                            defaultGroupsNumber:
-                                type: number
-                            defaultGroupsDuration:
-                                type: number
-                            defaultGroupsRepetitions:
-                                type: number
-                            repetitions:
-                                type: integer
+          $ref: '#/components/schemas/User'
 
     ServiceUserResponse:
       required:
@@ -3747,6 +3940,10 @@ components:
         level:
           type: string
           description: Alert message level
+          enum:
+          - Critical
+          - Information
+          - Warning
     AlertMessageResponse:
       required:
       - alertMessage

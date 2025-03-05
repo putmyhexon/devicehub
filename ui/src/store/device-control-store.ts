@@ -1,4 +1,4 @@
-import { makeObservable, observable } from 'mobx'
+import { action, makeObservable, observable } from 'mobx'
 import { inject, injectable } from 'inversify'
 
 import { DeviceControlService } from '@/services/core/device-control-service/device-control-service'
@@ -16,7 +16,7 @@ import type { TransactionFactory } from '@/types/transaction-factory.type'
 export class DeviceControlStore extends DeviceControlService {
   private currentNetworkType: EffectiveConnectionType = '3g'
 
-  currentQuality = 60
+  @observable currentQuality = 60
 
   constructor(
     @inject(CONTAINER_IDS.deviceBySerialStore) deviceBySerialStore: DeviceBySerialStore,
@@ -24,9 +24,7 @@ export class DeviceControlStore extends DeviceControlService {
   ) {
     super(deviceBySerialStore, transactionServiceFactory)
 
-    makeObservable(this, {
-      currentQuality: observable,
-    })
+    makeObservable(this)
   }
 
   async getClipboardContent(): Promise<string> {
@@ -44,6 +42,7 @@ export class DeviceControlStore extends DeviceControlService {
     }
   }
 
+  @action
   setCurrentQuality(quality: number): void {
     this.currentQuality = quality
   }

@@ -3,14 +3,14 @@ import { makeAutoObservable } from 'mobx'
 
 import { socket } from '@/api/socket'
 import { AdbKeysChangedMessage } from '@/types/adb-keys-changed-message.type'
-import { UserResponseUser, UserResponseUserAdbKeysItem } from '@/generated/types'
+import { User, UserAdbKeysItem } from '@/generated/types'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
 
 @injectable()
 export class AdbKeyService {
-  private adbKeyToDelete: UserResponseUserAdbKeysItem = { fingerprint: '', title: '' }
+  private adbKeyToDelete: UserAdbKeysItem = { fingerprint: '', title: '' }
 
   deviceKey = ''
   deviceTitle = ''
@@ -54,7 +54,7 @@ export class AdbKeyService {
     this.deviceTitle = value
   }
 
-  setAdbKeyToDelete(data: UserResponseUserAdbKeysItem): void {
+  setAdbKeyToDelete(data: UserAdbKeysItem): void {
     this.adbKeyToDelete = data
   }
 
@@ -79,8 +79,8 @@ export class AdbKeyService {
   }
 
   private onAdbKeysAdded({ title, fingerprint }: AdbKeysChangedMessage): void {
-    queryClient.setQueryData<UserResponseUser>(queries.user.profile.queryKey, (oldData) => {
-      const adbKey: UserResponseUserAdbKeysItem = { title, fingerprint }
+    queryClient.setQueryData<User>(queries.user.profile.queryKey, (oldData) => {
+      const adbKey: UserAdbKeysItem = { title, fingerprint }
 
       if (!oldData?.adbKeys) return { ...oldData, adbKeys: [adbKey] }
 
@@ -93,7 +93,7 @@ export class AdbKeyService {
   }
 
   private onAdbKeysRemoved({ fingerprint }: AdbKeysChangedMessage): void {
-    queryClient.setQueryData<UserResponseUser>(queries.user.profile.queryKey, (oldData) => {
+    queryClient.setQueryData<User>(queries.user.profile.queryKey, (oldData) => {
       if (!oldData?.adbKeys) return { ...oldData, adbKeys: [] }
 
       return { ...oldData, adbKeys: oldData.adbKeys.filter((item) => item.fingerprint !== fingerprint) }

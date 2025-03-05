@@ -62,7 +62,7 @@ export const DEFAULT_COLUMN_ORDER: DeviceTableColumnIds[] = [
   DeviceTableColumnIds.SDK,
   DeviceTableColumnIds.ABI,
   DeviceTableColumnIds.CPU_PLATFORM,
-  DeviceTableColumnIds.OPEN_GL_ES_VERSION,
+  DeviceTableColumnIds.OPEN_GLES_VERSION,
   DeviceTableColumnIds.BROWSER,
   DeviceTableColumnIds.MOBILE_SERVICE,
   DeviceTableColumnIds.MAC_ADDRESS,

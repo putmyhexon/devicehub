@@ -16,7 +16,7 @@ import type { ActivityOptions, ActivityOptionsSet, RunActivityArgs, SelectOption
 import type { QueryObserverResult } from '@tanstack/react-query'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 import type { MobxMutationFactory } from '@/types/mobx-mutation-factory.type'
-import type { GetManifestResponse, UploadFileResponse } from '@/api/openstf/types'
+import type { GetManifestResponse, UploadFileArgs, UploadFileResponse } from '@/api/openstf/types'
 
 @injectable()
 @deviceConnectionRequired()
@@ -39,12 +39,9 @@ export class ApplicationInstallationService {
   ) {
     makeAutoObservable(this)
 
-    this.manifestQuery = mobxQueryFactory(() => ({
-      ...queries.s.apk(this.href),
-      enabled: !!this.href,
-    }))
-    this.uploadFileMutate = mobxMutationFactory<UploadFileResponse, ErrorResponse, { type: string; file: File }>({
-      mutationFn: ({ type, file }): Promise<UploadFileResponse> => uploadFile(type, file),
+    this.manifestQuery = mobxQueryFactory(() => ({ ...queries.s.apk(this.href), enabled: !!this.href }))
+    this.uploadFileMutate = mobxMutationFactory<UploadFileResponse, ErrorResponse, UploadFileArgs>({
+      mutationFn: (data): Promise<UploadFileResponse> => uploadFile(data),
     })
 
     this.init()

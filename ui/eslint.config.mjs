@@ -11,6 +11,7 @@ import stylistic from '@stylistic/eslint-plugin'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import pluginQuery from '@tanstack/eslint-plugin-query'
+import sortClassMembers from 'eslint-plugin-sort-class-members'
 import { fixupPluginRules } from '@eslint/compat'
 
 export default tseslint.config(
@@ -34,6 +35,7 @@ export default tseslint.config(
       importPlugin.flatConfigs.recommended,
       reactPlugin.configs.flat.recommended,
       jsxA11y.flatConfigs.recommended,
+      sortClassMembers.configs['flat/recommended'],
       i18next.configs['flat/recommended'],
       ...pluginQuery.configs['flat/recommended'],
       ...tseslint.configs.recommended,
@@ -403,11 +405,21 @@ export default tseslint.config(
   },
   {
     files: [
+      'src/components/lib/list-header/list-header.tsx',
       'src/components/ui/settings-tabs/keys-tab/adb-keys-control/adb-keys-control.tsx',
       'src/components/ui/settings-tabs/keys-tab/access-tokens-control/access-tokens-control.tsx',
     ],
     rules: {
       'react/no-array-index-key': 'off',
+    },
+  },
+  {
+    files: [
+      'src/components/lib/editable-text/editable-text.tsx',
+      'src/components/ui/settings-tabs/keys-tab/access-tokens-control/access-tokens-control.tsx',
+    ],
+    rules: {
+      'jsx-a11y/no-autofocus': 'off',
     },
   }
 )

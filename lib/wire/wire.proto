@@ -116,6 +116,7 @@ enum MessageType {
     GroupChangeMessage                = 1205;
     UserChangeMessage                 = 1206;
     DeviceChangeMessage               = 1207;
+    IosServiceMessage                 = 1208;
     ChangeQualityMessage       = 1208;
     InstallResultMessage       = 1209;
     ConnectGetForwardUrlMessage = 9000;
@@ -938,6 +939,7 @@ message UpdateIosDevice{
   required string platform = 3;
   required string architecture = 4;
   required string sdk = 5;
+  required IosServiceMessage service = 6;
 }
 
 message SdkIosVersion{
@@ -964,4 +966,8 @@ message TemporarilyUnavailableMessage {
 
 message UpdateRemoteConnectUrl {
   required string serial= 1;
+}
+
+message IosServiceMessage {
+  required bool hasAPNS= 1;
 }

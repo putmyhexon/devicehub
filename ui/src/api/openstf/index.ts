@@ -3,7 +3,13 @@ import { jsonToFormData } from '@/lib/utils/json-to-form-data.util'
 
 import { OPENSTF_ROUTES } from './routes'
 
-import type { UploadFileResponse, GetAuthDocsResponse, GetAuthContactResponse, GetManifestResponse } from './types'
+import type {
+  UploadFileResponse,
+  GetAuthDocsResponse,
+  GetAuthContactResponse,
+  GetManifestResponse,
+  UploadFileArgs,
+} from './types'
 
 export const getAuthDocs = async (): Promise<string> => {
   const { data } = await openstfClient.get<GetAuthDocsResponse>(OPENSTF_ROUTES.authDocs)
@@ -17,7 +23,7 @@ export const getAuthContact = async (): Promise<string> => {
   return data.contactUrl
 }
 
-export const uploadFile = async (type: string, file: File): Promise<UploadFileResponse> => {
+export const uploadFile = async ({ type, file }: UploadFileArgs): Promise<UploadFileResponse> => {
   const { data } = await openstfClient.post<UploadFileResponse>(
     `${OPENSTF_ROUTES.uploadFile}/${type}`,
     jsonToFormData({ file }),

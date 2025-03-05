@@ -10,10 +10,10 @@ import styles from './device-table.module.css'
 
 import type { Row } from '@tanstack/react-table'
 import type { DeviceState } from '@/types/enums/device-state.enum'
-import type { DeviceWithFields } from '@/types/device-with-fields.type'
+import type { ListDevice } from '@/types/list-device.type'
 
 type TableBodyProps = {
-  rows: Row<DeviceWithFields>[]
+  rows: Row<ListDevice>[]
 }
 
 export const TableBody = ({ rows }: TableBodyProps) => {

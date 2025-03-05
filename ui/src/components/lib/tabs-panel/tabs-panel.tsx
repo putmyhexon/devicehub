@@ -13,6 +13,7 @@ type CommonTabsPanelProps<T> = {
   content: TabsContent[]
   className?: string
   routeSync?: T
+  mode?: 'plain' | 'card'
 }
 
 type TabsPanelProps<T> = T extends false
@@ -25,6 +26,7 @@ export const TabsPanel = <T extends boolean = false>({
   content,
   className,
   routeSync,
+  mode = 'card',
 }: TabsPanelProps<T>) => {
   const { t } = useTranslation()
   const { pathname } = useLocation()
@@ -42,15 +44,17 @@ export const TabsPanel = <T extends boolean = false>({
 
   return (
     <>
-      <PanelHeader className={cn(styles.tabsPanel, className)}>
+      <PanelHeader className={cn(styles.tabsPanel, className)} transparent={mode === 'plain'}>
         <Tabs>
           {content.map((tab) => (
             <TabsItem
               key={tab.id}
               aria-controls={tab.ariaControls}
               before={tab.before}
+              disabled={tab.disabled}
               id={tab.id}
               selected={tab.id === selectedId}
+              status={tab.status}
               onClick={() => onTabClick(tab.id)}
             >
               {t(tab.title)}
@@ -64,6 +68,7 @@ export const TabsPanel = <T extends boolean = false>({
             aria-controls={tab.ariaControls}
             aria-labelledby={tab.id}
             id={tab.ariaControls}
+            mode={mode}
             role='tabpanel'
             separator='hide'
           >

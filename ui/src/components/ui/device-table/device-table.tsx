@@ -26,10 +26,10 @@ import { fuzzyFilter } from './helpers'
 
 import styles from './device-table.module.css'
 
-import type { DeviceWithFields } from '@/types/device-with-fields.type'
+import type { ListDevice } from '@/types/list-device.type'
 
 type DeviceTableProps = {
-  data: DeviceWithFields[]
+  data: ListDevice[]
   isSuccess: boolean
   isLoading: boolean
   isError: boolean

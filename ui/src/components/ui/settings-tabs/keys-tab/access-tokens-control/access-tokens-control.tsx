@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import cn from 'classnames'
 import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
@@ -13,7 +13,7 @@ import { ContentCard } from '@/components/lib/content-card'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
-import { ListItem } from '../list-item'
+import { KeyListItem } from '../key-list-item'
 
 import styles from './access-tokens-control.module.css'
 
@@ -24,7 +24,6 @@ export const AccessTokensControl = observer(({ className }: { className?: string
   const [accessTokenLabel, setAccessTokenLabel] = useState('')
   const [isAddNewTokenOpen, setIsAddNewTokenOpen] = useState(false)
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
 
   const accessTokenService = useInjection(CONTAINER_IDS.accessTokenService)
   const { data = [] } = accessTokenService.accessTokensQueryResult
@@ -42,10 +41,6 @@ export const AccessTokensControl = observer(({ className }: { className?: string
       accessTokenService.removeAccessTokenGeneratedListener()
     }
   }, [])
-
-  useEffect(() => {
-    if (isAddNewTokenOpen) inputRef.current?.focus()
-  }, [isAddNewTokenOpen])
 
   return (
     <ContentCard
@@ -79,10 +74,10 @@ export const AccessTokensControl = observer(({ className }: { className?: string
                 before={<Icon20TagOutline />}
                 className={styles.addNewTokenInput}
                 disabled={!!accessTokenService.generatedTokenId}
-                getRef={inputRef}
                 id='tokenTitle'
                 spellCheck={false}
                 value={accessTokenLabel}
+                autoFocus
                 onChange={(event) => setAccessTokenLabel(event.target.value)}
               />
             </FormItem>
@@ -102,7 +97,7 @@ export const AccessTokensControl = observer(({ className }: { className?: string
       </ConditionalRender>
       <List>
         {data.map((item, index) => (
-          <ListItem
+          <KeyListItem
             key={index}
             title={item}
             onRemove={() => {

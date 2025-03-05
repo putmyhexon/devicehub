@@ -19,7 +19,7 @@ import { ContentCard } from '@/components/lib/content-card'
 
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
-import { ListItem } from '../list-item'
+import { KeyListItem } from '../key-list-item'
 
 import styles from './adb-keys-control.module.css'
 
@@ -105,7 +105,7 @@ export const AdbKeysControl = observer(({ className }: { className?: string }) =
       </ConditionalRender>
       <List>
         {data?.adbKeys?.map((item, index) => (
-          <ListItem
+          <KeyListItem
             key={index}
             subtitle={item.fingerprint}
             title={item.title || t('Unknown')}
