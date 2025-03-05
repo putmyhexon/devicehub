@@ -144,6 +144,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.13.0",
+    "@types/bluebird": "^3.5.42",
     "angular-mocks": "1.8.3",
     "async": "2.6.4",
     "chai": "3.5.0",
