@@ -431,6 +431,7 @@
   "Really delete selected items": "Чыннан да сайланган әйберләрне бетерегез",
   "Enable Disable confirmation for items removing": "Эшләрне бетерү өчен раслау / сүндерү",
   "Any": "Теләсә нинди",
+  "Execute adb shell command on all devices": "Барлык җайланмаларда adb Shell командасын башкару",
   "User list": "Кулланучылар исемлеге",
   "Set filters for user removing": "Кулланучының бетерү өчен фильтрлар куегыз",
   "User group ownership state": "Кулланучының төркеме милек дәүләт",

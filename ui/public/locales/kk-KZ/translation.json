@@ -431,6 +431,7 @@
   "Really delete selected items": "Таңдалған элементтерді шынымен жойыңыз?",
   "Enable Disable confirmation for items removing": "Элементтерді алу үшін растауды қосыңыз / өшіріңіз",
   "Any": "Іркім",
+  "Execute adb shell command on all devices": "ADB Shell командасын барлық құрылғыларда орындаңыз",
   "User list": "Пайдаланушылар тізімі",
   "Set filters for user removing": "Пайдаланушыны алып тастау үшін сүзгілерді орнатыңыз",
   "User group ownership state": "Пайдаланушылар тобының меншік мемлекеті",
