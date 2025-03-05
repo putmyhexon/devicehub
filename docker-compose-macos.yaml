@@ -246,6 +246,8 @@ services:
         container_name: devicehub-provider
         env_file:
             - scripts/variables.env
+        ports:
+            - "12010-12100:12010-12100"
         depends_on:
             devicehub-migrate:
                 condition: service_completed_successfully
