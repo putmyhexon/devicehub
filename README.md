@@ -218,7 +218,7 @@ stf local --need-scrcpy true
 
 ## Testing
 
-Refer to [TESTING.md](docs/TESTING.md) for testing instructions.
+Refer to [TESTING.md](doc/TESTING.md) for testing instructions.
 
 ## Contributing
 
