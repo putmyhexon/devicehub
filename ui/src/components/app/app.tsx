@@ -1,20 +1,5 @@
-import { RouterProvider } from 'react-router/dom'
-import { AdaptivityProvider, AppRoot, ConfigProvider } from '@vkontakte/vkui'
-
-import { useTheme } from '@/lib/hooks/use-theme.hook'
+import { RouterProvider } from 'react-router'
 
 import { appRouter } from './app-router'
 
-export const App = () => {
-  const { theme } = useTheme()
-
-  return (
-    <ConfigProvider colorScheme={theme === 'system' ? undefined : theme} platform='vkcom'>
-      <AdaptivityProvider>
-        <AppRoot>
-          <RouterProvider router={appRouter} />
-        </AppRoot>
-      </AdaptivityProvider>
-    </ConfigProvider>
-  )
-}
+export const App = () => <RouterProvider router={appRouter} />

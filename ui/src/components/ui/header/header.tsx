@@ -1,7 +1,7 @@
-import { Button, Tappable, useColorScheme } from '@vkontakte/vkui'
-import { useTranslation } from 'react-i18next'
+import { useState } from 'react'
 import { Link } from 'react-router'
-import cn from 'classnames'
+import { useTranslation } from 'react-i18next'
+import { Button, Tappable } from '@vkontakte/vkui'
 import {
   Icon16MailOutline,
   Icon16HelpOutline,
@@ -10,27 +10,42 @@ import {
   Icon16DoorEnterArrowRightOutline,
 } from '@vkontakte/icons'
 
-import DeviceHubIcon from '@/assets/device-hub.svg?react'
+import { WarningModal } from '@/components/ui/modals'
+import { DynamicLogo } from '@/components/lib/dynamic-logo'
 
+import { useGetAuthUrl } from '@/lib/hooks/use-get-auth-url.hook'
 import { useGetAuthDocs } from '@/lib/hooks/use-get-auth-docs.hook'
 import { useGetAuthContact } from '@/lib/hooks/use-get-auth-contact.hook'
+import { authStore } from '@/store/auth-store'
 
-import { getDevicesRoute, getMainRoute, getSettingsRoute } from '@/constants/route-paths'
+import { getAuthRoute, getDevicesRoute, getMainRoute, getSettingsRoute } from '@/constants/route-paths'
 
 import styles from './header.module.css'
 
 export const Header = () => {
   const { t } = useTranslation()
-  const colorScheme = useColorScheme()
+  const { data: authUrl } = useGetAuthUrl()
   const { data: authDocs } = useGetAuthDocs()
   const { data: authContact } = useGetAuthContact()
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
+
+  const onLogout = () => {
+    if (authUrl?.includes('openid')) {
+      setIsConfirmationOpen(true)
+    }
+
+    if (!authUrl?.includes('openid')) {
+      authStore.logout()
+      window.location.assign(getAuthRoute())
+    }
+  }
 
   return (
     <header className={styles.header}>
       <div className={styles.leftSide}>
         <Link className={styles.logoLink} to={getMainRoute()}>
           <Tappable activeMode='opacity' focusVisibleMode='outside' hoverMode='opacity' onClick={() => {}}>
-            <DeviceHubIcon className={cn({ [styles.logo]: colorScheme === 'dark' })} />
+            <DynamicLogo className={styles.logo} height={32} width={120} />
           </Tappable>
         </Link>
         <Link className={styles.navLink} to={getDevicesRoute()}>
@@ -67,10 +82,20 @@ export const Header = () => {
         >
           {t('Help')}
         </Button>
-        <Button before={<Icon16DoorEnterArrowRightOutline />} mode='tertiary' size='m'>
-          {t('Sign Out')}
+        <Button before={<Icon16DoorEnterArrowRightOutline />} mode='tertiary' size='m' onClick={onLogout}>
+          {t('Logout')}
         </Button>
       </div>
+      <WarningModal
+        description={t('You are authenticated via an automatic login method')}
+        isCancelShown={false}
+        isOpen={isConfirmationOpen}
+        title={t('Warning')}
+        onClose={() => setIsConfirmationOpen(false)}
+        onOk={async () => {
+          window.location.assign(getMainRoute())
+        }}
+      />
     </header>
   )
 }
