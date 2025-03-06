@@ -10,6 +10,7 @@ class AuthStore {
   get jwt(): string | null {
     return localStorage.getItem('jwt')
   }
+
   set jwt(value: string | null) {
     if (value === null) {
       localStorage.removeItem('jwt')

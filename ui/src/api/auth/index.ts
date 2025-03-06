@@ -16,6 +16,12 @@ export const ldapAuth = async (body: LdapAuthArgs): Promise<AuthResponse> => {
   return data
 }
 
+export const openIdAuth = async (): Promise<string> => {
+  const { data } = await authClient.get<{ url: string }>(AUTH_ROUTES.openId)
+
+  return data.url
+}
+
 export const getAuthUrl = async (): Promise<string> => {
   const { data } = await authClient.get<GetAuthUrlResponse>(AUTH_ROUTES.authUrl)
 

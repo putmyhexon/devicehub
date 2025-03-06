@@ -421,11 +421,5 @@ export default tseslint.config(
     rules: {
       'jsx-a11y/no-autofocus': 'off',
     },
-  },
-  {
-    files: ['src/roots/**'],
-    rules: {
-      'react-refresh/only-export-components': 'off',
-    },
   }
 )
