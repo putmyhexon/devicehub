@@ -1,11 +1,12 @@
 .authPage {
-  /* display: flex;
+  display: flex;
+  flex: 1;
   flex-direction: column;
-  justify-content: center;
-  height: 100%; */
 
+  width: 100%;
   height: 100%;
   padding: 15px;
+
   background: var(--vkui--color_background_content);
 }
 
@@ -23,5 +24,5 @@
 
 .contactButton {
   display: block;
-  margin: 0 auto;
+  margin: 10px auto;
 }

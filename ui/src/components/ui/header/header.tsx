@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { Button, Tappable } from '@vkontakte/vkui'
 import {
@@ -13,8 +13,6 @@ import {
 import { WarningModal } from '@/components/ui/modals'
 import { DynamicLogo } from '@/components/lib/dynamic-logo'
 
-import { socket } from '@/api/socket'
-
 import { useGetAuthUrl } from '@/lib/hooks/use-get-auth-url.hook'
 import { useGetAuthDocs } from '@/lib/hooks/use-get-auth-docs.hook'
 import { useGetAuthContact } from '@/lib/hooks/use-get-auth-contact.hook'
@@ -26,7 +24,6 @@ import styles from './header.module.css'
 
 export const Header = () => {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const { data: authUrl } = useGetAuthUrl()
   const { data: authDocs } = useGetAuthDocs()
   const { data: authContact } = useGetAuthContact()
@@ -96,10 +93,7 @@ export const Header = () => {
         title={t('Warning')}
         onClose={() => setIsConfirmationOpen(false)}
         onOk={async () => {
-          navigate(getAuthRoute())
-          setTimeout(() => {
-            socket.disconnect()
-          }, 100)
+          window.location.assign(getMainRoute())
         }}
       />
     </header>

@@ -12,9 +12,7 @@ export const attachTokenOnRequest = (config: InternalAxiosRequestConfig): Intern
   return config
 }
 
-export const refreshTokenOnErrorResponse = async (
-  error: AxiosError<ErrorResponse>
-): Promise<AxiosError<ErrorResponse>> => {
+export const logoutOnErrorResponse = async (error: AxiosError<ErrorResponse>): Promise<AxiosError<ErrorResponse>> => {
   const originalRequest = error.config
 
   if (originalRequest && error.response?.status === 401) {

@@ -346,7 +346,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['src/main.tsx', 'src/roots/**'],
+    files: ['src/main.tsx', 'src/create-root-with-providers.tsx'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
     },
@@ -423,11 +423,9 @@ export default tseslint.config(
     },
   },
   {
-    files: [
-      'src/roots/**'
-    ],
+    files: ['src/roots/**'],
     rules: {
-      'react-refresh/only-export-components': 'off'
-    }
+      'react-refresh/only-export-components': 'off',
+    },
   }
 )

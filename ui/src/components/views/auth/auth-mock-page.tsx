@@ -6,22 +6,15 @@ import { Button, Div, FormItem, FormLayoutGroup, FormStatus, Group, Input, Panel
 import { DynamicLogo } from '@/components/lib/dynamic-logo'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
+import { authStore } from '@/store/auth-store'
 import { useMockAuth } from '@/lib/hooks/use-mock-auth.hook'
 import { useGetAuthContact } from '@/lib/hooks/use-get-auth-contact.hook'
-import { authStore } from '@/store/auth-store'
 
 import styles from './auth-page.module.css'
 
 import type { FormEvent } from 'react'
 
-// type AuthPageProps = {
-//   redirectUrl: string
-//   authError: string
-//   mutate: () => void
-//   isSuccess: boolean
-// }
-
-export const AuthPage = () => {
+export const AuthMockPage = () => {
   const { t } = useTranslation()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -73,16 +66,7 @@ export const AuthPage = () => {
   return (
     <View activePanel='main'>
       <Panel id='main' centered>
-        <Group
-          className={styles.authPage}
-          separator='hide'
-          style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            width: '100%',
-          }}
-        >
+        <Group className={styles.authPage} separator='hide'>
           <div>
             <form className={styles.form} onSubmit={onFormSubmit}>
               <DynamicLogo className={styles.logo} height={55} width={225} />
@@ -90,7 +74,7 @@ export const AuthPage = () => {
                 <FormItem bottom={nameError} status={nameError ? 'error' : undefined} top={t('Name')}>
                   <Input
                     before={<Icon20UserOutline />}
-                    placeholder='E.g. user'
+                    placeholder='Please enter your name'
                     value={name}
                     onChange={(event) => setName(event.target.value)}
                   />
@@ -98,7 +82,7 @@ export const AuthPage = () => {
                 <FormItem bottom={emailError} status={emailError ? 'error' : undefined} top={t('Email')}>
                   <Input
                     before={<Icon20MailOutline />}
-                    placeholder='E.g. user@mail.ru'
+                    placeholder='Please enter your email'
                     type='email'
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
