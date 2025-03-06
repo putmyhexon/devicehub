@@ -1,5 +1,6 @@
-import { Navigate, useLocation, Outlet } from 'react-router'
+import { Outlet } from 'react-router'
 import { observer } from 'mobx-react-lite'
+import { useEffect } from 'react'
 
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
@@ -8,16 +9,15 @@ import { authStore } from '@/store/auth-store'
 import { getAuthRoute } from '@/constants/route-paths'
 
 export const RequireAuth = observer(() => {
-  const location = useLocation()
+  useEffect(() => {
+    if (!authStore.isAuthed) {
+      window.location.assign(getAuthRoute())
+    }
+  }, [authStore.isAuthed])
 
   return (
-    <>
-      <ConditionalRender conditions={[!authStore.isAuthed]}>
-        <Navigate state={{ from: location }} to={getAuthRoute()} replace />
-      </ConditionalRender>
-      <ConditionalRender conditions={[authStore.isAuthed]}>
-        <Outlet />
-      </ConditionalRender>
-    </>
+    <ConditionalRender conditions={[authStore.isAuthed]}>
+      <Outlet />
+    </ConditionalRender>
   )
 })

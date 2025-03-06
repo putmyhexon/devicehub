@@ -1,6 +1,8 @@
 /// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import svgr from 'vite-plugin-svgr'
+import { resolve } from 'node:path'
+
 import react from '@vitejs/plugin-react-swc'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
@@ -20,6 +22,15 @@ export default defineConfig({
         },
       },
     },
+  },
+  build: {
+    sourcemap: 'inline',
+    rollupOptions: {
+        input: {
+            main: resolve(__dirname, "index.html"),
+            authMock: resolve(__dirname, "auth/auth-mock.html")
+        }
+    }
   },
   test: {
     globals: true,

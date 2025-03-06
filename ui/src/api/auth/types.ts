@@ -11,6 +11,7 @@ export type LdapAuthArgs = {
 export type AuthResponse = {
   success: boolean
   redirect: string
+  jwt: string
 }
 
 export type GetAuthUrlResponse = {

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { Icon20MailOutline, Icon20UserOutline } from '@vkontakte/icons'
 import { Button, Div, FormItem, FormLayoutGroup, FormStatus, Group, Input, Panel, Spacing, View } from '@vkontakte/vkui'
@@ -9,10 +8,7 @@ import { ConditionalRender } from '@/components/lib/conditional-render'
 
 import { useMockAuth } from '@/lib/hooks/use-mock-auth.hook'
 import { useGetAuthContact } from '@/lib/hooks/use-get-auth-contact.hook'
-import { authClient } from '@/api/auth/auth-client'
 import { authStore } from '@/store/auth-store'
-
-import { getMainRoute } from '@/constants/route-paths'
 
 import styles from './auth-page.module.css'
 
@@ -32,9 +28,8 @@ export const AuthPage = () => {
   const [nameError, setNameError] = useState('')
   const [emailError, setEmailError] = useState('')
   const [formError, setFormError] = useState('')
-  const { data: redirectUrl, error, mutate: auth, isSuccess } = useMockAuth()
+  const { data: authData, error, mutate: auth, isSuccess } = useMockAuth()
   const { data: authContact } = useGetAuthContact()
-  const navigate = useNavigate()
 
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -43,14 +38,11 @@ export const AuthPage = () => {
   }
 
   useEffect(() => {
-    if (isSuccess && redirectUrl) {
-      authClient.get(redirectUrl).then(() => {
-        authStore.setIsAuthed(true)
-
-        navigate(getMainRoute())
-      })
+    if (isSuccess) {
+      authStore.login(authData.jwt)
+      window.location.assign(authData.redirect)
     }
-  }, [redirectUrl])
+  }, [authData])
 
   useEffect(() => {
     if (error?.response?.data.error === 'ValidationError') {

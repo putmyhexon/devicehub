@@ -18,7 +18,6 @@ import { socket } from '@/api/socket'
 import { useGetAuthUrl } from '@/lib/hooks/use-get-auth-url.hook'
 import { useGetAuthDocs } from '@/lib/hooks/use-get-auth-docs.hook'
 import { useGetAuthContact } from '@/lib/hooks/use-get-auth-contact.hook'
-import { authClient } from '@/api/auth/auth-client'
 import { authStore } from '@/store/auth-store'
 
 import { getAuthRoute, getDevicesRoute, getMainRoute, getSettingsRoute } from '@/constants/route-paths'
@@ -39,13 +38,8 @@ export const Header = () => {
     }
 
     if (!authUrl?.includes('openid')) {
-      authClient.post('/auth/api/v1/logout').then(() => {
-        authStore.setIsAuthed(false)
-        navigate(getAuthRoute())
-        setTimeout(() => {
-          socket.disconnect()
-        }, 100)
-      })
+      authStore.logout()
+      window.location.assign(getAuthRoute())
     }
   }
 

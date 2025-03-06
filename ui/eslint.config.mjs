@@ -346,7 +346,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['src/main.tsx'],
+    files: ['src/main.tsx', 'src/roots/**'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
     },
@@ -421,5 +421,13 @@ export default tseslint.config(
     rules: {
       'jsx-a11y/no-autofocus': 'off',
     },
+  },
+  {
+    files: [
+      'src/roots/**'
+    ],
+    rules: {
+      'react-refresh/only-export-components': 'off'
+    }
   }
 )
