@@ -26,11 +26,12 @@ export default defineConfig({
   build: {
     sourcemap: 'inline',
     rollupOptions: {
-        input: {
-            main: resolve(__dirname, "index.html"),
-            authMock: resolve(__dirname, "auth/auth-mock.html")
-        }
-    }
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        authMock: resolve(__dirname, 'auth/auth-mock.html'),
+        authLdap: resolve(__dirname, 'auth/auth-ldap.html'),
+      },
+    },
   },
   test: {
     globals: true,
