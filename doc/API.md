@@ -6,7 +6,7 @@ STF API  is a RESTFull API which allows you to reserve and release any STF devic
 
 ## Swagger documentation
 
-Swagger documentation for the API is available [here](https://vbanthia-zz.github.io/angular-swagger-ui).
+Swagger documentation for the API is available [here](https://daniilsmirnov.github.io/devicehub-swagger-ui/).
 
 ## APIs
 
