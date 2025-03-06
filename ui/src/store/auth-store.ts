@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 
-class AuthStore { // TODO: use proper hydration from mobx-persis-store
+class AuthStore {
+  // TODO: use proper hydration from mobx-persis-store
 
   constructor() {
     makeAutoObservable(this)

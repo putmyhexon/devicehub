@@ -1,25 +1,25 @@
-import { type ErrorResponse } from '@/generated/types';
+import { type ErrorResponse } from '@/generated/types'
 
-import { authStore } from '@/store/auth-store';
+import { authStore } from '@/store/auth-store'
 
-import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
 
 export const attachTokenOnRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-  const { jwt } = authStore;
+  const { jwt } = authStore
 
-  config.headers.Authorization = `Bearer ${jwt}`;
+  config.headers.Authorization = `Bearer ${jwt}`
 
-  return config;
-};
+  return config
+}
 
 export const refreshTokenOnErrorResponse = async (
   error: AxiosError<ErrorResponse>
 ): Promise<AxiosError<ErrorResponse>> => {
-  const originalRequest = error.config;
+  const originalRequest = error.config
 
   if (originalRequest && error.response?.status === 401) {
-    authStore.logout();
+    authStore.logout()
   }
 
-  return Promise.reject(error);
-};
+  return Promise.reject(error)
+}

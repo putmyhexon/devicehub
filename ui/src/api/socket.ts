@@ -9,6 +9,6 @@ export const socket = io(variablesConfig[import.meta.env.MODE].websocketUrl, {
   reconnection: true,
   transports: ['websocket'],
   auth: {
-    token: authStore.jwt
-  }
+    token: authStore.jwt,
+  },
 })
