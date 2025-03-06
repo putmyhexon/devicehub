@@ -37,7 +37,7 @@ export const AuthPage = () => {
   const navigate = useNavigate()
 
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.stopPropagation()
+    event.preventDefault()
 
     auth({ name, email })
   }

@@ -13,7 +13,7 @@ type DynamicLogoProps = {
   width?: number
   height?: number
   className?: string
-  logoType: 'deviceHub' | 'emulatorHub'
+  logoType?: 'deviceHub' | 'emulatorHub'
 }
 
 export const DynamicLogo = memo(({ width, height, className, logoType = 'deviceHub' }: DynamicLogoProps) => {
