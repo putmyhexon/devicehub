@@ -406,6 +406,7 @@
   "Really delete selected items": "真正刪除選定的項目",
   "Enable Disable confirmation for items removing": "啟用/禁用刪除項目的確認",
   "Any": "任何",
+  "Execute adb shell command on all devices": "在所有設備上執行ADB Shell命令",
   "User list": "用戶列表",
   "Set filters for user removing": "設置用於刪除用戶的過濾器",
   "User group ownership state": "用戶組所有權狀態",

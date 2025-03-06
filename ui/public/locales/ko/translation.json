@@ -448,6 +448,7 @@
   "Really delete selected items": "선택한 항목을 실제로 삭제하십시오",
   "Enable Disable confirmation for items removing": "제거하는 항목의 확인/비활성화",
   "Any": "어느",
+  "Execute adb shell command on all devices": "모든 장치에서 ADB 쉘 명령을 실행하십시오",
   "User list": "사용자 목록",
   "Set filters for user removing": "사용자 제거를위한 필터를 설정합니다",
   "User group ownership state": "사용자 그룹 소유권 상태",

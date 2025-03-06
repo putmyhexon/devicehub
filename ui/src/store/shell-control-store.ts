@@ -30,23 +30,23 @@ export class ShellControlStore {
     try {
       const shellResult = await this.deviceControlStore.shell(this.command)
 
-      let output = ''
+      const output: string[] = []
 
-      shellResult.subscribeToProgress((_, result) => {
+      shellResult.subscribeToProgress((_, result, seq) => {
         if (result) {
           runInAction(() => {
-            output += result
+            output[seq] = result
           })
         }
 
         if (!result) {
-          output = 'No output'
+          output[seq] = ''
         }
       })
 
       await shellResult.donePromise
 
-      this.shellResult = output
+      this.shellResult = output.join('')
       this.command = ''
     } catch (error) {
       console.error(error)

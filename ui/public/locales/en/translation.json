@@ -422,6 +422,7 @@
   "Really delete selected items": "Really delete selected items?",
   "Enable Disable confirmation for items removing": "Enable/Disable confirmation for items removing",
   "Any": "Any",
+  "Execute adb shell command on all devices": "Execute adb shell command on all devices",
   "User list": "User list",
   "Set filters for user removing": "Set filters for user removing",
   "User group ownership state": "User group ownership state",

@@ -436,6 +436,7 @@
   "Really delete selected items": "選択したアイテムを本当に削除します",
   "Enable Disable confirmation for items removing": "削除するアイテムの確認/無効化",
   "Any": "どれでも",
+  "Execute adb shell command on all devices": "すべてのデバイスでADBシェルコマンドを実行します",
   "User list": "ユーザーリスト",
   "Set filters for user removing": "ユーザーを削除するためにフィルターを設定します",
   "User group ownership state": "ユーザーグループの所有状態",
