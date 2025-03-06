@@ -9,7 +9,7 @@ respJwt=$(curl --location 'devicehub:7100/auth/api/v1/mock' \
 echo "respJwt=$respJwt"
 jwt=$(echo "$respJwt" | grep -o 'jwt=.*\"' | sed 's/jwt=//; s/"//;')
 #echo "jwt=$jwt"
-respToken=$(curl -X POST 'devicehub:7100/api/v1/user/accessTokens?title="tokenTitle"' -H "Cookie:token=\"${jwt}\"")
+respToken=$(curl -X POST 'devicehub:7100/api/v1/user/accessTokens?title="tokenTitle"' -H "Authorization: Bearer ${jwt}")
 echo "respToken=$respToken"
 token=$(echo "$respToken" | grep -o 'token".*\"' | sed 's/token":"//; s/"//;')
 #echo "token=$token"
