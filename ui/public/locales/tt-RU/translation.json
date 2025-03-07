@@ -1,5 +1,4 @@
-{
-    "Are you sure? Device will be cleaned": "Сез чыннан да ышанасызмы? Җайланма чистартылачак",
+"Are you sure? Device will be cleaned": "Сез чыннан да ышанасызмы? Җайланма чистартылачак",
     "Device search": "Җайланмаларны эзләү",
     "A new version of STF is available": "VK DeviceHubның яңа версиясе бар",
     "A package is already installed with the same name.": "Шул ук исемдәге пакет инде урнаштырылган",
@@ -454,4 +453,3 @@
     "Really grant access to user": "Кулланучыга чыннан да керү мөмкинлеге бирергә?",
     "Really revoke access of this user": "Бу кулланучының керү мөмкинлеген чыннан да кире алырга?",
     "User group quota": "Кулланучының төркем куллану квотасы"
-}

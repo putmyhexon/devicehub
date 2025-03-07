@@ -11,7 +11,7 @@ WORKDIR /opt/tests
 
 COPY . .
 COPY poetry.lock pyproject.toml ./
-RUN apk add --no-cache tzdata build-base curl && \
+RUN apk add --no-cache tzdata build-base curl jq && \
     cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
     python -m pip install poetry==1.8.3 --no-cache-dir && \
     poetry config virtualenvs.create false && \
