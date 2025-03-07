@@ -1,18 +1,19 @@
-import { openIdAuth } from '@/api/auth'
+import { openIdAuth, openIdCallback } from '@/api/auth'
 
 import { authStore } from '@/store/auth-store'
 
 const executeOpenIdAuth = async (): Promise<void> => {
-  const jwt = location.href.match(/[?&]jwt=([^&]+)/)?.[1]
-  const redirect = location.href.match(/[?&]redirect=([^&]+)/)?.[1]
+  const code = location.href.match(/[?&]code=([^&]+)/)?.[1]
 
-  if (!jwt) {
+  if (!code) {
     const url = await openIdAuth()
 
     window.location.assign(url)
   }
 
-  if (jwt && redirect) {
+  if (code) {
+    const { jwt, redirect } = await openIdCallback(code)
+
     authStore.login(jwt)
     window.location.assign(redirect)
   }
