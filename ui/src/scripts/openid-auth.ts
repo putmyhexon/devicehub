@@ -1,22 +1,18 @@
-import { openIdAuth, openIdCallback } from '@/api/auth'
-
 import { authStore } from '@/store/auth-store'
 
 const executeOpenIdAuth = async (): Promise<void> => {
-  const code = location.href.match(/[?&]code=([^&]+)/)?.[1]
+  const params = new URLSearchParams(location.search)
+  const jwt = params.get('jwt')
+  const redirect = params.get('redirect')
 
-  if (!code) {
-    const url = await openIdAuth()
+  if (!jwt || !redirect) {
+    console.error('No jwt or redirect received from backend to store on the client.')
 
-    window.location.assign(url)
+    return
   }
 
-  if (code) {
-    const { jwt, redirect } = await openIdCallback(code)
-
-    authStore.login(jwt)
-    window.location.assign(redirect)
-  }
+  authStore.login(jwt)
+  window.location.assign(redirect)
 }
 
 executeOpenIdAuth()
