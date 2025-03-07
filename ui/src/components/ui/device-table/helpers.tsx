@@ -27,8 +27,8 @@ export const browserAppsFilter = (row: Row<ListDevice>, columnId: string, filter
   row.getValue<DeviceBrowserAppsItem[]>(columnId).findIndex((item) => item.type?.includes(filterValue)) !== -1
 
 export const browserAppsSorting = (rowA: Row<ListDevice>, rowB: Row<ListDevice>, columnId: string): number => {
-  const appTypeA = rowA.getValue<DeviceBrowserAppsItem[]>(columnId)[0]?.type || ''
-  const appTypeB = rowB.getValue<DeviceBrowserAppsItem[]>(columnId)[0]?.type || ''
+  const appTypeA = rowA.getValue<DeviceBrowserAppsItem[]>(columnId)?.[0]?.type || ''
+  const appTypeB = rowB.getValue<DeviceBrowserAppsItem[]>(columnId)?.[0]?.type || ''
 
   return appTypeA.localeCompare(appTypeB)
 }
