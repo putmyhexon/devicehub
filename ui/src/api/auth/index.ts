@@ -22,6 +22,12 @@ export const openIdAuth = async (): Promise<string> => {
   return data.url
 }
 
+export const openIdCallback = async (code: string): Promise<AuthResponse> => {
+  const { data } = await authClient.post<AuthResponse>(AUTH_ROUTES.openIdCallback, undefined, { params: { code } })
+
+  return data
+}
+
 export const getAuthUrl = async (): Promise<string> => {
   const { data } = await authClient.get<GetAuthUrlResponse>(AUTH_ROUTES.authUrl)
 
