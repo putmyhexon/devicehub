@@ -7,6 +7,7 @@
     "dev": "vite",
     "dev:mock": "vite --mode mock",
     "build:prod": "tsc -b && vite build",
+    "build:prod:watch": "tsc -b && vite build --watch",
     "build:dev": "tsc -b && vite build --mode development",
     "postbuild": "rimraf dist/mockServiceWorker.js",
     "preview": "vite preview",
