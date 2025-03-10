@@ -6,7 +6,7 @@
 .table {
   table-layout: fixed;
   border-collapse: collapse;
-  width: min-content;
+  width: 100%;
 
   th {
     cursor: pointer;
