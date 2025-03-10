@@ -1,5 +1,5 @@
 # Welcome to VK DeviceHub!
-<img src="https://raw.githubusercontent.com/VKCOM/devicehub/refs/heads/master/ui/src/assets/device-hub.svg" style="width:300px;height:100px;" alt="VK Devicehub">
+<img src="https://raw.githubusercontent.com/VKCOM/devicehub/refs/heads/master/doc/logo.svg" style="width:300px;height:100px;" alt="VK Devicehub">
 
 ## About Project
 
@@ -141,7 +141,7 @@ stf local --public-ip <your_internal_network_ip_here>
 
 ## Updating
 
-To update your development version, simply pull the repository and run `npm install` again. 
+To update your development version, simply pull the repository and run `npm install` again.
 
 ## FAQ
 
