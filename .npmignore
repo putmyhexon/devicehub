@@ -16,8 +16,6 @@
 /docker
 /gulpfile.js
 /npm-debug.log
-/res/test/
-/res/web_modules/
 /rethinkdb_data/
 /temp/
 /test/
