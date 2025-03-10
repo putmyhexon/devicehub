@@ -7,8 +7,6 @@
 /*.tgz
 /.env
 /node_modules/
-/res/build/
-/res/test_out/
 /rethinkdb_data/
 /temp/
 /tmp/
