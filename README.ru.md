@@ -1,5 +1,5 @@
 # Добро пожаловать в репозиторий VK DeviceHub!
-<img src="res/common/logo/exports/readmeLogo.svg" style="width:300px;height:100px;" alt="VK Devicehub">
+<img src="ui/src/assets/device-hub.svg" style="width:300px;height:100px;" alt="VK Devicehub">
 
 ## О проекте
 
@@ -155,7 +155,7 @@ stf local --public-ip <your_internal_network_ip_here>
 
 ## Updating
 
-To update your development version, simply pull the repository and run `npm install` again. Occasionally, you may need to remove the entire `node_modules` and `res/bower_components` folder to prevent NPM or Bower from complaining about version mismatches.
+To update your development version, simply pull the repository and run `npm install` again.
 
 ## FAQ
 
