@@ -16,6 +16,7 @@ type ListItemProps = {
   extraSubtitle?: ReactNode
   indicator?: ReactNode
   after?: ReactNode
+  defaultOpened?: boolean
   href?: string
   modalDescription?: string
   isRemoveDisabled?: boolean
@@ -43,9 +44,10 @@ export const ListItem = observer(
     onRemove,
     children,
     isOpenable = true,
+    defaultOpened = false,
   }: ListItemProps) => {
     const { t } = useTranslation()
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(defaultOpened)
     const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
 
     const onRemoveClick = () => {
@@ -64,7 +66,7 @@ export const ListItem = observer(
       <div className={styles.listItem}>
         <Cell
           after={after}
-          before={<Checkbox checked={isSelected} onChange={onIsSelectedChange} />}
+          before={onIsSelectedChange && <Checkbox checked={isSelected} onChange={onIsSelectedChange} />}
           extraSubtitle={extraSubtitle}
           indicator={indicator}
           mode='removable'
@@ -88,9 +90,7 @@ export const ListItem = observer(
           isOpen={isConfirmationOpen}
           title={t('Warning')}
           onClose={() => setIsConfirmationOpen(false)}
-          onOk={async () => {
-            onRemove?.()
-          }}
+          onOk={async () => onRemove?.()}
         />
       </div>
     )

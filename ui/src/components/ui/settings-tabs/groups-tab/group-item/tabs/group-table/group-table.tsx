@@ -16,18 +16,12 @@ import { BaseSelect } from '@/components/lib/base-select'
 import { fuzzyFilter } from '@/components/ui/device-table/helpers'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
+import { PAGE_SIZE_OPTIONS } from '@/constants/page-size-options'
+
 import styles from './group-table.module.css'
 
 import type { ReactNode } from 'react'
-import type { SelectOption } from '@/components/lib/base-select'
 import type { ColumnDef, Table, InitialTableState } from '@tanstack/react-table'
-
-const PAGE_SIZE_OPTIONS: SelectOption<number>[] = [
-  { name: '5', value: 5 },
-  { name: '10', value: 10 },
-  { name: '20', value: 20 },
-  { name: '50', value: 50 },
-]
 
 type GroupTableProps<T> = {
   data: T[]

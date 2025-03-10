@@ -27,19 +27,13 @@ import { TitledValue } from '@/components/lib/titled-value'
 import { ContentCard } from '@/components/lib/content-card'
 import { ConditionalRender } from '@/components/lib/conditional-render'
 
+import { PAGE_SIZE_OPTIONS } from '@/constants/page-size-options'
+
 import styles from './list-header.module.css'
 
 import type { ReactNode } from 'react'
 import type { interfaces } from 'inversify'
-import type { SelectOption } from '@/components/lib/base-select'
 import type { ListManagementService } from '@/services/list-management-service'
-
-const PAGE_SIZE_OPTIONS: SelectOption<number>[] = [
-  { value: 5, name: '5' },
-  { value: 10, name: '10' },
-  { value: 20, name: '20' },
-  { value: 50, name: '50' },
-]
 
 type ListHeaderProps<T> = {
   title: string

@@ -23,7 +23,7 @@ const columnHelper = createColumnHelper<ListDevice>()
 
 export const DEVICE_COLUMNS = [
   /* NOTE: Device Info Group */
-  columnHelper.accessor((row) => row.model || row.serial, {
+  columnHelper.accessor((row) => row.name || row.model || row.serial, {
     header: () => <TextWithTranslation name='Model' />,
     id: DeviceTableColumnIds.MODEL,
     meta: {
@@ -46,7 +46,7 @@ export const DEVICE_COLUMNS = [
       columnGroup: ColumnGroup.DEVICE_INFO,
     })
   ),
-  columnHelper.accessor((row) => row.product || row.model || row.serial, {
+  columnHelper.accessor((row) => row.name || row.model || row.serial, {
     header: () => <TextWithTranslation name='Product' />,
     id: DeviceTableColumnIds.PRODUCT,
     meta: {

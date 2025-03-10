@@ -219,7 +219,6 @@
   "Shell": "Shell",
   "Show Screen": "Show Screen",
   "Sign In": "Sign In",
-  "Sign Out": "Sign Out",
   "Silent Mode": "Silent Mode",
   "Size": "Size",
   "Socket connection was lost": "Socket connection was lost",
@@ -423,6 +422,7 @@
   "Really delete selected items": "Really delete selected items?",
   "Enable Disable confirmation for items removing": "Enable/Disable confirmation for items removing",
   "Any": "Any",
+  "Execute adb shell command on all devices": "Execute adb shell command on all devices",
   "User list": "User list",
   "Set filters for user removing": "Set filters for user removing",
   "User group ownership state": "User group ownership state",
@@ -444,5 +444,9 @@
   "Write an email to the user selection": "Write an email to the user selection",
   "Really grant access to user": "Really grant access to user?",
   "Really revoke access of this user": "Really revoke access of this user?",
-  "User group quota": "User group quota"
+  "User group quota": "User group quota",
+  "Log In": "Log In",
+  "Contact Support": "Contact Support",
+  "Logout": "Logout",
+  "You are authenticated via an automatic login method": "You are authenticated via an automatic login method"
 }

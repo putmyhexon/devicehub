@@ -346,7 +346,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['src/main.tsx'],
+    files: ['src/main.tsx', 'src/create-root-with-providers.tsx'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
     },
