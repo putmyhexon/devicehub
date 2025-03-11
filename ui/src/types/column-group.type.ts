@@ -1,5 +1,5 @@
 export enum ColumnGroup {
-  DEVICE_INFO = 'DeviceInfo',
+  DEVICE_INFO = 'Device Info',
   OS_HARDWARE = 'OS & Hardware',
   NETWORK_CONNECTIVITY = 'Network & Connectivity',
   BATTERY = 'Battery',

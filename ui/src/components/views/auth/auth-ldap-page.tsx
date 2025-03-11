@@ -12,7 +12,7 @@ import { useGetAuthContact } from '@/lib/hooks/use-get-auth-contact.hook'
 
 import styles from './auth-page.module.css'
 
-import type { FormEvent } from 'react'
+import type { ChangeEvent, FormEvent } from 'react'
 
 export const AuthLdapPage = () => {
   const { t } = useTranslation()
@@ -28,6 +28,20 @@ export const AuthLdapPage = () => {
     event.preventDefault()
 
     auth({ username, password })
+  }
+
+  const onUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setUsernameError('')
+    setFormError('')
+
+    setUsername(event.target.value)
+  }
+
+  const onPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setPasswordError('')
+    setFormError('')
+
+    setPassword(event.target.value)
   }
 
   useEffect(() => {
@@ -74,32 +88,36 @@ export const AuthLdapPage = () => {
                 <FormItem bottom={usernameError} status={usernameError ? 'error' : undefined} top={t('Username')}>
                   <Input
                     before={<Icon20UserOutline />}
-                    placeholder='Please enter your Single Sign-On login'
+                    placeholder={t('Please enter your login')}
                     value={username}
-                    onChange={(event) => setUsername(event.target.value)}
+                    onChange={onUsernameChange}
                   />
                 </FormItem>
                 <FormItem bottom={passwordError} status={passwordError ? 'error' : undefined} top={t('Password')}>
                   <Input
                     before={<Icon20MailOutline />}
-                    placeholder='Please enter your Single Sign-On password'
-                    type='email'
+                    placeholder={t('Please enter your password')}
                     value={password}
-                    onChange={(event) => setPassword(event.target.value)}
+                    onChange={onPasswordChange}
                   />
                 </FormItem>
+                <ConditionalRender conditions={[!!formError]}>
+                  <Div>
+                    <FormStatus mode='error'>{formError}</FormStatus>
+                  </Div>
+                </ConditionalRender>
                 <Spacing size='xl' />
                 <FormItem>
-                  <Button disabled={!username || !password} size='l' type='submit' stretched>
+                  <Button
+                    disabled={!username || !password || !!usernameError || !!passwordError || !!formError}
+                    size='l'
+                    type='submit'
+                    stretched
+                  >
                     {t('Log In')}
                   </Button>
                 </FormItem>
               </FormLayoutGroup>
-              <ConditionalRender conditions={[!!formError]}>
-                <Div>
-                  <FormStatus mode='error'>{formError}</FormStatus>
-                </Div>
-              </ConditionalRender>
               <Button className={styles.contactButton} href={authContact} mode='link'>
                 {t('Contact Support')}
               </Button>
