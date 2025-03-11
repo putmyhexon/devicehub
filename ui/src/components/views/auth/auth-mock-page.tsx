@@ -13,7 +13,7 @@ import { useGetAuthContact } from '@/lib/hooks/use-get-auth-contact.hook'
 
 import styles from './auth-page.module.css'
 
-import type { FormEvent } from 'react'
+import type { ChangeEvent, FormEvent } from 'react'
 
 export const AuthMockPage = () => {
   const { t } = useTranslation()
@@ -29,6 +29,19 @@ export const AuthMockPage = () => {
     event.preventDefault()
 
     auth({ name, email })
+  }
+
+  const onNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setNameError('')
+    setFormError('')
+
+    setName(event.target.value)
+  }
+
+  const onEmailChange = (value: string) => {
+    setFormError('')
+
+    setEmail(value)
   }
 
   useEffect(() => {
@@ -77,7 +90,7 @@ export const AuthMockPage = () => {
                     before={<Icon20UserOutline />}
                     placeholder='Please enter your name'
                     value={name}
-                    onChange={(event) => setName(event.target.value)}
+                    onChange={onNameChange}
                   />
                 </FormItem>
                 <FormItem bottom={emailError} status={emailError ? 'error' : undefined} top={t('Email')}>
@@ -85,22 +98,27 @@ export const AuthMockPage = () => {
                     before={<Icon20MailOutline />}
                     placeholder='Please enter your email'
                     value={email}
-                    onChange={(value) => setEmail(value)}
+                    onChange={onEmailChange}
                     onError={(error) => setEmailError(error)}
                   />
                 </FormItem>
+                <ConditionalRender conditions={[!!formError]}>
+                  <Div>
+                    <FormStatus mode='error'>{formError}</FormStatus>
+                  </Div>
+                </ConditionalRender>
                 <Spacing size='xl' />
                 <FormItem>
-                  <Button disabled={!name || !email || !!emailError} size='l' type='submit' stretched>
+                  <Button
+                    disabled={!name || !email || !!nameError || !!emailError || !!formError}
+                    size='l'
+                    type='submit'
+                    stretched
+                  >
                     {t('Log In')}
                   </Button>
                 </FormItem>
               </FormLayoutGroup>
-              <ConditionalRender conditions={[!!formError]}>
-                <Div>
-                  <FormStatus mode='error'>{formError}</FormStatus>
-                </Div>
-              </ConditionalRender>
               <Button className={styles.contactButton} href={authContact} mode='link'>
                 {t('Contact Support')}
               </Button>

@@ -23,13 +23,14 @@ type RowsGroupProps = {
 }
 
 const RowsGroup = observer(({ columns, groupName }: RowsGroupProps) => {
+  const { t } = useTranslation()
   const onCheckboxChange = (id: string) => {
     deviceTableState.setColumnVisibility((prevVisibility) => ({ ...prevVisibility, [id]: !prevVisibility[id] }))
   }
 
   return (
     <FormLayoutGroup>
-      <FormItem className={styles.group} top={groupName}>
+      <FormItem className={styles.group} top={t(groupName)}>
         {columns?.map(({ id, meta }) =>
           id ? (
             <Checkbox
@@ -38,7 +39,7 @@ const RowsGroup = observer(({ columns, groupName }: RowsGroupProps) => {
               value={id}
               onChange={() => onCheckboxChange(id)}
             >
-              {meta?.columnName}
+              {t(meta?.columnName || 'Unknown column')}
             </Checkbox>
           ) : null
         )}
