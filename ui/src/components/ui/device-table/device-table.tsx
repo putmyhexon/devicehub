@@ -147,7 +147,9 @@ export const DeviceTable = observer(() => {
           <TableBody isDataLoaded={devicesQueryResult.isSuccess} rows={rows} />
         </ConditionalRender>
       </TableWithStickyHeader>
-      <ConditionalRender conditions={[devicesQueryResult.isSuccess && rows.length === 0]}>
+      <ConditionalRender
+        conditions={[devicesQueryResult.isSuccess && rows.length === 0 && !devicesQueryResult.isLoading]}
+      >
         <Placeholder icon={<Icon56InboxOutline />}>{t('No devices connected')}</Placeholder>
       </ConditionalRender>
       <ConditionalRender conditions={[devicesQueryResult.isError]}>

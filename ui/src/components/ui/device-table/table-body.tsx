@@ -29,7 +29,7 @@ export const TableBody = observer(({ rows, isDataLoaded }: TableBodyProps) => {
       {virtualizer.getVirtualItems().map((virtualRow, index) => {
         const row = rows[virtualRow.index]
         const deviceState = row.getValue<DeviceState>('state')
-        const needUpdate = row.getValue<boolean>('needUpdate')
+        const needUpdate = row.original.needUpdate
 
         return (
           <TableRow

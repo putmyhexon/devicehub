@@ -14,10 +14,10 @@ type TableRowProps = {
   cells: Cell<DeviceTableRow, unknown>[]
   rowSize: number
   transformValue: number
-  needUpdate: boolean
   deviceState: DeviceState
   isDataLoaded: boolean
   columnVisibility: VisibilityState
+  needUpdate?: number
 }
 
 export const TableRow = memo(

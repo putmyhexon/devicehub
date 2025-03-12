@@ -21,7 +21,7 @@ import type { DeviceChangeMessage } from '@/types/device-change-message.type'
 @injectable()
 export class DeviceListStore {
   private batchedUpdates: Record<string, Partial<Device>> = {}
-  private throttleDelay = 200
+  private throttleDelay = 250
 
   private devicesQuery
 
@@ -89,6 +89,7 @@ export class DeviceListStore {
         const updateData = this.batchedUpdates[item.serial]
 
         if (updateData) {
+          /* NOTE: needUpdate determine if the row needs to be rerendered */
           return { ...item, ...updateData, needUpdate: Date.now() }
         }
 
