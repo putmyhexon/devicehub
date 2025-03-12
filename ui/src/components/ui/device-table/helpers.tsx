@@ -9,11 +9,11 @@ import { TextCell } from './cells/text-cell/text-cell'
 import type { DeviceTableColumnIds } from './types'
 import type { ColumnGroup } from '@/types/column-group.type'
 import type { DeviceState } from '@/types/enums/device-state.enum'
-import type { ListDevice } from '@/types/list-device.type'
+import type { DeviceTableRow } from '@/types/device-table-row.type'
 import type { DeviceBrowserAppsItem, DeviceNetwork } from '@/generated/types'
 import type { FilterFn, Row, DisplayColumnDef, FilterFnOption, SortingFnOption } from '@tanstack/react-table'
 
-export const fuzzyFilter: FilterFn<ListDevice> = (row, columnId, value, addMeta): boolean => {
+export const fuzzyFilter: FilterFn<DeviceTableRow> = (row, columnId, value, addMeta): boolean => {
   const itemRank = rankItem(row.getValue(columnId), value, { threshold: 3 })
 
   addMeta({
@@ -23,10 +23,10 @@ export const fuzzyFilter: FilterFn<ListDevice> = (row, columnId, value, addMeta)
   return itemRank.passed
 }
 
-export const browserAppsFilter = (row: Row<ListDevice>, columnId: string, filterValue: string): boolean =>
+export const browserAppsFilter = (row: Row<DeviceTableRow>, columnId: string, filterValue: string): boolean =>
   row.getValue<DeviceBrowserAppsItem[]>(columnId).findIndex((item) => item.type?.includes(filterValue)) !== -1
 
-export const browserAppsSorting = (rowA: Row<ListDevice>, rowB: Row<ListDevice>, columnId: string): number => {
+export const browserAppsSorting = (rowA: Row<DeviceTableRow>, rowB: Row<DeviceTableRow>, columnId: string): number => {
   const appTypeA = rowA.getValue<DeviceBrowserAppsItem[]>(columnId)?.[0]?.type || ''
   const appTypeB = rowB.getValue<DeviceBrowserAppsItem[]>(columnId)?.[0]?.type || ''
 
@@ -46,7 +46,7 @@ const DEVICE_STATE_ORDER: Record<DeviceState, number> = {
   unhealthy: 100,
 }
 
-export const deviceStatusSorting = (rowA: Row<ListDevice>, rowB: Row<ListDevice>, columnId: string): number => {
+export const deviceStatusSorting = (rowA: Row<DeviceTableRow>, rowB: Row<DeviceTableRow>, columnId: string): number => {
   const stateA = rowA.getValue<DeviceState>(columnId)
   const stateB = rowB.getValue<DeviceState>(columnId)
 
@@ -65,9 +65,9 @@ export const textColumnDef = ({
   columnName: string
   columnGroup: ColumnGroup
   size?: number
-  filterFn?: FilterFnOption<ListDevice>
-  sortingFn?: SortingFnOption<ListDevice>
-}): DisplayColumnDef<ListDevice, string> => ({
+  filterFn?: FilterFnOption<DeviceTableRow>
+  sortingFn?: SortingFnOption<DeviceTableRow>
+}): DisplayColumnDef<DeviceTableRow, string> => ({
   header: () => <TextWithTranslation name={columnName} />,
   id: columnId,
   meta: {

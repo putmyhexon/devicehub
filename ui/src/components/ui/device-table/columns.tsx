@@ -17,11 +17,18 @@ import { DeviceStatusCell, BookedBeforeCell, BrowserCell, ProductCell, ModelCell
 import { browserAppsFilter, browserAppsSorting, deviceStatusSorting, getNetworkString, textColumnDef } from './helpers'
 import { DeviceTableColumnIds } from './types'
 
-import type { ListDevice } from '@/types/list-device.type'
+import type { DeviceTableRow } from '@/types/device-table-row.type'
 
-const columnHelper = createColumnHelper<ListDevice>()
+const columnHelper = createColumnHelper<DeviceTableRow>()
 
 export const DEVICE_COLUMNS = [
+  /* NOTE: Determine if the row needs to be rerendered */
+  columnHelper.accessor((row) => row.needUpdate, {
+    id: 'needUpdate',
+    meta: {
+      columnGroup: ColumnGroup.DEVICE_INFO,
+    },
+  }),
   /* NOTE: Device Info Group */
   columnHelper.accessor((row) => row.name || row.model || row.serial, {
     header: () => <TextWithTranslation name='Model' />,

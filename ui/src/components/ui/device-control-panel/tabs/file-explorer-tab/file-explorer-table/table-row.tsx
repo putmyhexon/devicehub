@@ -1,6 +1,7 @@
 import { memo } from 'react'
-import { flexRender, type Row } from '@tanstack/react-table'
+import { flexRender } from '@tanstack/react-table'
 
+import type { Row } from '@tanstack/react-table'
 import type { FSListMessage } from '@/types/fs-list-message.type'
 
 export const TableRow = memo(({ row }: { row: Row<FSListMessage> }) => (

@@ -1,22 +1,22 @@
-import cn from 'classnames'
-import { flexRender } from '@tanstack/react-table'
+import { observer } from 'mobx-react-lite'
 import { useWindowVirtualizer } from '@tanstack/react-virtual'
 
-import { isDeviceInactive } from '@/lib/utils/is-device-inactive.util'
+import { deviceTableState } from '@/store/device-table-state'
 
 import { ROW_HEIGHT } from './constants'
 
-import styles from './device-table.module.css'
+import { TableRow } from './table-row'
 
 import type { Row } from '@tanstack/react-table'
 import type { DeviceState } from '@/types/enums/device-state.enum'
-import type { ListDevice } from '@/types/list-device.type'
+import type { DeviceTableRow } from '@/types/device-table-row.type'
 
 type TableBodyProps = {
-  rows: Row<ListDevice>[]
+  rows: Row<DeviceTableRow>[]
+  isDataLoaded: boolean
 }
 
-export const TableBody = ({ rows }: TableBodyProps) => {
+export const TableBody = observer(({ rows, isDataLoaded }: TableBodyProps) => {
   const virtualizer = useWindowVirtualizer({
     count: rows.length,
     estimateSize: () => ROW_HEIGHT,
@@ -29,31 +29,21 @@ export const TableBody = ({ rows }: TableBodyProps) => {
       {virtualizer.getVirtualItems().map((virtualRow, index) => {
         const row = rows[virtualRow.index]
         const deviceState = row.getValue<DeviceState>('state')
+        const needUpdate = row.getValue<boolean>('needUpdate')
 
         return (
-          <tr
+          <TableRow
             key={row.id}
-            className={cn({
-              [styles.inactive]: deviceState && isDeviceInactive(deviceState),
-            })}
-            style={{
-              height: `${virtualRow.size}px`,
-              transform: `translateY(${virtualRow.start - index * virtualRow.size}px)`,
-            }}
-          >
-            {row.getVisibleCells().map((cell) => (
-              <td
-                key={cell.id}
-                style={{
-                  width: `${cell.column.getSize()}px`,
-                }}
-              >
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </td>
-            ))}
-          </tr>
+            cells={row.getVisibleCells()}
+            columnVisibility={deviceTableState.columnVisibility}
+            deviceState={deviceState}
+            isDataLoaded={isDataLoaded}
+            needUpdate={needUpdate}
+            rowSize={virtualRow.size}
+            transformValue={virtualRow.start - index * virtualRow.size}
+          />
         )
       })}
     </tbody>
   )
-}
+})

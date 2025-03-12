@@ -32,14 +32,14 @@ const RowsGroup = observer(({ columns, groupName }: RowsGroupProps) => {
     <FormLayoutGroup>
       <FormItem className={styles.group} top={t(groupName)}>
         {columns?.map(({ id, meta }) =>
-          id ? (
+          id && meta?.columnName ? (
             <Checkbox
               key={id}
               checked={deviceTableState.columnVisibility[id]}
               value={id}
               onChange={() => onCheckboxChange(id)}
             >
-              {t(meta?.columnName || 'Unknown column')}
+              {t(meta.columnName)}
             </Checkbox>
           ) : null
         )}

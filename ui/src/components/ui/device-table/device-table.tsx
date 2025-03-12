@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { observer } from 'mobx-react-lite'
 import { Icon56ErrorTriangleOutline, Icon56InboxOutline } from '@vkontakte/icons'
 import cn from 'classnames'
+import { useInjection } from 'inversify-react'
 import {
   flexRender,
   getCoreRowModel,
@@ -18,6 +19,7 @@ import { TableWithStickyHeader } from '@/components/lib/table-with-sticky-header
 import { resolveTableFilterValue } from '@/lib/utils/resolve-table-filter-value.util'
 import { deviceTableState } from '@/store/device-table-state'
 import { useDebounce } from '@/lib/hooks/use-debounce.hook'
+import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
 import { DEFAULT_COLUMN_ORDER, ROW_HEIGHT } from './constants'
 
@@ -27,30 +29,30 @@ import { fuzzyFilter } from './helpers'
 
 import styles from './device-table.module.css'
 
-import type { ListDevice } from '@/types/list-device.type'
+import type { DeviceTableRow } from '@/types/device-table-row.type'
 
-type DeviceTableProps = {
-  data: ListDevice[]
-  isSuccess: boolean
-  isLoading: boolean
-  isError: boolean
-}
-
-export const DeviceTable = observer(({ data, isSuccess, isLoading, isError }: DeviceTableProps) => {
+export const DeviceTable = observer(() => {
   const { t } = useTranslation()
   const debouncedGlobalFilter = useDebounce(deviceTableState.globalFilter, 250)
+  const { devicesQueryResult } = useInjection(CONTAINER_IDS.deviceListStore)
+
+  const displayData = useMemo<DeviceTableRow[]>(
+    () => (devicesQueryResult.isLoading ? Array(10).fill({}) : (devicesQueryResult.data ?? [])),
+    [devicesQueryResult.isLoading, devicesQueryResult.data]
+  )
   const tableColumns = useMemo(
     () =>
-      isLoading
+      devicesQueryResult.isLoading
         ? DEVICE_COLUMNS.map((column) => ({
             ...column,
             cell: () => <Skeleton width='100%' />,
           }))
         : DEVICE_COLUMNS,
-    [isLoading]
+    [devicesQueryResult.isLoading]
   )
+
   const table = useReactTable({
-    data,
+    data: displayData,
     columns: tableColumns,
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -139,14 +141,16 @@ export const DeviceTable = observer(({ data, isSuccess, isLoading, isError }: De
             </tr>
           ))}
         </thead>
-        <ConditionalRender conditions={[(isSuccess || isLoading) && rows.length > 0]}>
-          <TableBody rows={rows} />
+        <ConditionalRender
+          conditions={[(devicesQueryResult.isSuccess || devicesQueryResult.isLoading) && rows.length > 0]}
+        >
+          <TableBody isDataLoaded={devicesQueryResult.isSuccess} rows={rows} />
         </ConditionalRender>
       </TableWithStickyHeader>
-      <ConditionalRender conditions={[isSuccess && rows.length === 0]}>
+      <ConditionalRender conditions={[devicesQueryResult.isSuccess && rows.length === 0]}>
         <Placeholder icon={<Icon56InboxOutline />}>{t('No devices connected')}</Placeholder>
       </ConditionalRender>
-      <ConditionalRender conditions={[isError]}>
+      <ConditionalRender conditions={[devicesQueryResult.isError]}>
         <Placeholder icon={<Icon56ErrorTriangleOutline />}>{t('Something went wrong')}</Placeholder>
       </ConditionalRender>
     </div>
