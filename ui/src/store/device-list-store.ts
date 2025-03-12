@@ -3,7 +3,9 @@ import { makeAutoObservable } from 'mobx'
 
 import { socket } from '@/api/socket'
 import { ListDevice } from '@/types/list-device.type'
+import { DeviceTableRow } from '@/types/device-table-row.type'
 
+import { throttle } from '@/lib/utils/throttle.util'
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
 import { DeviceState } from '@/types/enums/device-state.enum'
@@ -18,13 +20,19 @@ import type { DeviceChangeMessage } from '@/types/device-change-message.type'
 
 @injectable()
 export class DeviceListStore {
+  private batchedUpdates: Record<string, Partial<Device>> = {}
+  private throttleDelay = 250
+
   private devicesQuery
+
+  private throttledFlushUpdates = throttle(this.flushUpdates, this.throttleDelay)
 
   constructor(@inject(CONTAINER_IDS.factoryMobxQuery) mobxQueryFactory: MobxQueryFactory) {
     makeAutoObservable(this)
 
     this.devicesQuery = mobxQueryFactory(() => ({ ...queries.devices.list, staleTime: Infinity }))
 
+    this.flushUpdates = this.flushUpdates.bind(this)
     this.onDeviceChange = this.onDeviceChange.bind(this)
 
     this.addDeviceChangeListener()
@@ -66,18 +74,29 @@ export class DeviceListStore {
   }
 
   private async onDeviceChange({ data: changedData }: DeviceChangeMessage<Partial<Device>>): Promise<void> {
-    const deviceList = await queryClient.ensureQueryData({ ...queries.devices.list })
+    if (changedData.serial) {
+      this.batchedUpdates[changedData.serial] = changedData
+    }
 
-    queryClient.setQueryData<Device[]>(queries.devices.list.queryKey, (oldData) => {
-      if (!oldData) return deviceList
+    this.throttledFlushUpdates()
+  }
 
-      return oldData.map((item) => {
-        if (item.serial === changedData.serial) {
-          return { ...item, ...changedData }
+  private flushUpdates(): void {
+    queryClient.setQueryData<DeviceTableRow[]>(queries.devices.list.queryKey, (oldData) => {
+      if (!oldData) return []
+
+      return oldData.map((item): DeviceTableRow => {
+        const updateData = this.batchedUpdates[item.serial]
+
+        if (updateData) {
+          /* NOTE: needUpdate determine if the row needs to be rerendered */
+          return { ...item, ...updateData, needUpdate: Date.now() }
         }
 
         return item
       })
     })
+
+    this.batchedUpdates = {}
   }
 }
