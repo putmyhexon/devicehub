@@ -81,7 +81,7 @@ export const AuthLdapPage = () => {
       <Panel id='main' centered>
         <Group className={styles.authPage} separator='hide'>
           <div>
-            <form className={styles.form} autoComplete='on' onSubmit={onFormSubmit}>
+            <form autoComplete='on' className={styles.form} onSubmit={onFormSubmit}>
               <DynamicLogo className={styles.logo} height={55} width={225} />
               <FormLayoutGroup>
                 <FormItem bottom={usernameError} status={usernameError ? 'error' : undefined} top={t('Username')}>
