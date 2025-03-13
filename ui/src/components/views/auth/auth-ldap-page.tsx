@@ -32,12 +32,14 @@ export const AuthLdapPage = () => {
   const onUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUsernameError('')
     setFormError('')
+
     setUsername(event.target.value)
   }
 
   const onPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPasswordError('')
     setFormError('')
+
     setPassword(event.target.value)
   }
 
@@ -54,16 +56,21 @@ export const AuthLdapPage = () => {
         if (item.param === 'username') {
           setUsernameError(item.msg)
         }
+
         if (item.param === 'password') {
           setPasswordError(item.msg)
         }
       }
+
       return
     }
+
     if (error?.response?.data.error === 'InvalidCredentialsError') {
       setFormError('Incorrect login details')
+
       return
     }
+
     if (error?.response?.data.error) {
       setFormError('We do not recognize you. Please check your spelling and try again or use another login option')
     }
