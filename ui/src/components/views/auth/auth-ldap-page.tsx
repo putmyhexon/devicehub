@@ -26,21 +26,18 @@ export const AuthLdapPage = () => {
 
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-
     auth({ username, password })
   }
 
   const onUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUsernameError('')
     setFormError('')
-
     setUsername(event.target.value)
   }
 
   const onPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPasswordError('')
     setFormError('')
-
     setPassword(event.target.value)
   }
 
@@ -57,21 +54,16 @@ export const AuthLdapPage = () => {
         if (item.param === 'username') {
           setUsernameError(item.msg)
         }
-
         if (item.param === 'password') {
           setPasswordError(item.msg)
         }
       }
-
       return
     }
-
     if (error?.response?.data.error === 'InvalidCredentialsError') {
       setFormError('Incorrect login details')
-
       return
     }
-
     if (error?.response?.data.error) {
       setFormError('We do not recognize you. Please check your spelling and try again or use another login option')
     }
@@ -87,23 +79,23 @@ export const AuthLdapPage = () => {
               <FormLayoutGroup>
                 <FormItem bottom={usernameError} status={usernameError ? 'error' : undefined} top={t('Username')}>
                   <Input
+                    autoComplete='username'
                     before={<Icon20UserOutline />}
+                    name='username'
                     placeholder={t('Please enter your login')}
                     value={username}
                     onChange={onUsernameChange}
-                    name='username'
-                    autoComplete='username'
                   />
                 </FormItem>
                 <FormItem bottom={passwordError} status={passwordError ? 'error' : undefined} top={t('Password')}>
                   <Input
+                    autoComplete='current-password'
                     before={<Icon20KeyOutline />}
+                    name='password'
                     placeholder={t('Please enter your password')}
+                    type='password'
                     value={password}
                     onChange={onPasswordChange}
-                    type='password'
-                    name='password'
-                    autoComplete='current-password'
                   />
                 </FormItem>
                 <ConditionalRender conditions={[!!formError]}>
