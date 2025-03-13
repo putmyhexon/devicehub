@@ -86,11 +86,15 @@ export const AuthLdapPage = () => {
   }, [error])
 
   return (
-    <View activePanel="main">
-      <Panel id="main" centered>
-        <Group className={styles.authPage} separator="hide">
+    <View activePanel='main'>
+      <Panel id='main' centered>
+        <Group className={styles.authPage} separator='hide'>
           <div>
-            <form className={styles.form} autoComplete="on" onSubmit={onFormSubmit}>
+            <form
+              className={styles.form}
+              autoComplete='on'
+              onSubmit={onFormSubmit}
+            >
               <DynamicLogo className={styles.logo} height={55} width={225} />
               <FormLayoutGroup>
                 <FormItem
@@ -103,8 +107,8 @@ export const AuthLdapPage = () => {
                     placeholder={t('Please enter your login')}
                     value={username}
                     onChange={onUsernameChange}
-                    name="username"
-                    autoComplete="username"
+                    name='username'
+                    autoComplete='username'
                   />
                 </FormItem>
                 <FormItem
@@ -117,17 +121,17 @@ export const AuthLdapPage = () => {
                     placeholder={t('Please enter your password')}
                     value={password}
                     onChange={onPasswordChange}
-                    type="password"
-                    name="password"
-                    autoComplete="current-password"
+                    type='password'
+                    name='password'
+                    autoComplete='current-password'
                   />
                 </FormItem>
                 <ConditionalRender conditions={[!!formError]}>
                   <Div>
-                    <FormStatus mode="error">{formError}</FormStatus>
+                    <FormStatus mode='error'>{formError}</FormStatus>
                   </Div>
                 </ConditionalRender>
-                <Spacing size="xl" />
+                <Spacing size='xl' />
                 <FormItem>
                   <Button
                     disabled={
@@ -137,15 +141,19 @@ export const AuthLdapPage = () => {
                       !!passwordError ||
                       !!formError
                     }
-                    size="l"
-                    type="submit"
+                    size='l'
+                    type='submit'
                     stretched
                   >
                     {t('Log In')}
                   </Button>
                 </FormItem>
               </FormLayoutGroup>
-              <Button className={styles.contactButton} href={authContact} mode="link">
+              <Button
+                className={styles.contactButton}
+                href={authContact}
+                mode='link'
+              >
                 {t('Contact Support')}
               </Button>
             </form>
