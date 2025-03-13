@@ -1,18 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Icon20UserOutline, Icon20KeyOutline } from '@vkontakte/icons'
-import {
-  Button,
-  Div,
-  FormItem,
-  FormLayoutGroup,
-  FormStatus,
-  Group,
-  Input,
-  Panel,
-  Spacing,
-  View,
-} from '@vkontakte/vkui'
+import { Button, Div, FormItem, FormLayoutGroup, FormStatus, Group, Input, Panel, Spacing, View } from '@vkontakte/vkui'
 
 import { DynamicLogo } from '@/components/lib/dynamic-logo'
 import { ConditionalRender } from '@/components/lib/conditional-render'
@@ -44,12 +33,14 @@ export const AuthLdapPage = () => {
   const onUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUsernameError('')
     setFormError('')
+
     setUsername(event.target.value)
   }
 
   const onPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPasswordError('')
     setFormError('')
+
     setPassword(event.target.value)
   }
 
@@ -66,22 +57,23 @@ export const AuthLdapPage = () => {
         if (item.param === 'username') {
           setUsernameError(item.msg)
         }
+
         if (item.param === 'password') {
           setPasswordError(item.msg)
         }
       }
+
       return
     }
 
     if (error?.response?.data.error === 'InvalidCredentialsError') {
       setFormError('Incorrect login details')
+
       return
     }
 
     if (error?.response?.data.error) {
-      setFormError(
-        'We do not recognize you. Please check your spelling and try again or use another login option'
-      )
+      setFormError('We do not recognize you. Please check your spelling and try again or use another login option')
     }
   }, [error])
 
@@ -90,18 +82,10 @@ export const AuthLdapPage = () => {
       <Panel id='main' centered>
         <Group className={styles.authPage} separator='hide'>
           <div>
-            <form
-              className={styles.form}
-              autoComplete='on'
-              onSubmit={onFormSubmit}
-            >
+            <form className={styles.form} autoComplete='on' onSubmit={onFormSubmit}>
               <DynamicLogo className={styles.logo} height={55} width={225} />
               <FormLayoutGroup>
-                <FormItem
-                  bottom={usernameError}
-                  status={usernameError ? 'error' : undefined}
-                  top={t('Username')}
-                >
+                <FormItem bottom={usernameError} status={usernameError ? 'error' : undefined} top={t('Username')}>
                   <Input
                     before={<Icon20UserOutline />}
                     placeholder={t('Please enter your login')}
@@ -111,11 +95,7 @@ export const AuthLdapPage = () => {
                     autoComplete='username'
                   />
                 </FormItem>
-                <FormItem
-                  bottom={passwordError}
-                  status={passwordError ? 'error' : undefined}
-                  top={t('Password')}
-                >
+                <FormItem bottom={passwordError} status={passwordError ? 'error' : undefined} top={t('Password')}>
                   <Input
                     before={<Icon20KeyOutline />}
                     placeholder={t('Please enter your password')}
@@ -134,13 +114,7 @@ export const AuthLdapPage = () => {
                 <Spacing size='xl' />
                 <FormItem>
                   <Button
-                    disabled={
-                      !username ||
-                      !password ||
-                      !!usernameError ||
-                      !!passwordError ||
-                      !!formError
-                    }
+                    disabled={!username || !password || !!usernameError || !!passwordError || !!formError}
                     size='l'
                     type='submit'
                     stretched
@@ -149,11 +123,7 @@ export const AuthLdapPage = () => {
                   </Button>
                 </FormItem>
               </FormLayoutGroup>
-              <Button
-                className={styles.contactButton}
-                href={authContact}
-                mode='link'
-              >
+              <Button className={styles.contactButton} href={authContact} mode='link'>
                 {t('Contact Support')}
               </Button>
             </form>
