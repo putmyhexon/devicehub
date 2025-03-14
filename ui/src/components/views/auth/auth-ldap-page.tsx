@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Icon20MailOutline, Icon20UserOutline } from '@vkontakte/icons'
+import { Icon20UserOutline, Icon20KeyOutline } from '@vkontakte/icons'
 import { Button, Div, FormItem, FormLayoutGroup, FormStatus, Group, Input, Panel, Spacing, View } from '@vkontakte/vkui'
 
 import { DynamicLogo } from '@/components/lib/dynamic-logo'
@@ -26,7 +26,6 @@ export const AuthLdapPage = () => {
 
   const onFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-
     auth({ username, password })
   }
 
@@ -82,12 +81,14 @@ export const AuthLdapPage = () => {
       <Panel id='main' centered>
         <Group className={styles.authPage} separator='hide'>
           <div>
-            <form className={styles.form} onSubmit={onFormSubmit}>
+            <form autoComplete='on' className={styles.form} onSubmit={onFormSubmit}>
               <DynamicLogo className={styles.logo} height={55} width={225} />
               <FormLayoutGroup>
                 <FormItem bottom={usernameError} status={usernameError ? 'error' : undefined} top={t('Username')}>
                   <Input
+                    autoComplete='username'
                     before={<Icon20UserOutline />}
+                    name='username'
                     placeholder={t('Please enter your login')}
                     value={username}
                     onChange={onUsernameChange}
@@ -95,8 +96,11 @@ export const AuthLdapPage = () => {
                 </FormItem>
                 <FormItem bottom={passwordError} status={passwordError ? 'error' : undefined} top={t('Password')}>
                   <Input
-                    before={<Icon20MailOutline />}
+                    autoComplete='current-password'
+                    before={<Icon20KeyOutline />}
+                    name='password'
                     placeholder={t('Please enter your password')}
+                    type='password'
                     value={password}
                     onChange={onPasswordChange}
                   />
