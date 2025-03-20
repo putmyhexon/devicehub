@@ -63,6 +63,7 @@ services:
             start_period: 0s
             start_interval: 1s
             retries: 30
+        restart: unless-stopped
         networks:
             devicehub:
         volumes:
