@@ -6,7 +6,7 @@ declare module "@devicefarmer/stf-syrup" {
     type extractBluebirdReturnR<RetT> = RetT extends Bluebird<infer RetX>
         ? RetX
         : RetT;
-    class SyrupI<
+    export class SyrupI<
         OptionsT extends object = any, // TODO: find a way to remove any. Maybe we union all the options that are needed for each dependency?
         DepsT extends SyrupI[] = [],
         RetT = unknown | void,
@@ -36,22 +36,22 @@ declare module "@devicefarmer/stf-syrup" {
         ): Bluebird<RetT>;
         invoke(overrides: OptionsT, ...args: DepsT[]): RetT;
     }
-    type ParallelSyrup = <OptionsT extends object>(
+    export type ParallelSyrup = <OptionsT extends object>(
         options?: OptionsT
     ) => SyrupI;
-    namespace ParallelSyrup {
+    export namespace ParallelSyrup {
         const Syrup: SyrupI;
     }
 
-    type SerialSyrup = ParallelSyrup;
-    namespace SerialSyrup {
+    export type SerialSyrup = ParallelSyrup;
+    export namespace SerialSyrup {
         const Syrup: SyrupI;
     }
 
-    type Syrup = ParallelSyrup;
-    namespace Syrup {
+    export type Syrup = ParallelSyrup;
+    export namespace Syrup {
         const serial: SerialSyrup;
     }
 
-    export = Syrup;
+    export default Syrup;
 }

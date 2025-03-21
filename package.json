@@ -117,6 +117,8 @@
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.13.0",
     "@types/bluebird": "^3.5.42",
+    "@types/eventemitter3": "^1.2.0",
+    "@types/ws": "^3.2.1",
     "async": "2.6.4",
     "cli-docs-generator": "1.0.7",
     "eslint": "8.22.0",
