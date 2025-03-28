@@ -183,7 +183,7 @@ export class ApplicationInstallationService {
   async installFile(file: File): Promise<void> {
     this.isInstalling = true
 
-    const type = file.name.split('.').pop() == 'apk' ? 'apk' : 'blob'
+    const type = file.name.split('.').pop() === 'apk' ? 'apk' : 'blob'
 
     const data = await this.uploadFileMutate.mutate({ type, file })
 
@@ -197,7 +197,7 @@ export class ApplicationInstallationService {
 
     const install = await (async (): Promise<InitializeTransactionReturn> => {
       if (this.device?.ios === true) {
-        return await this.deviceControlStore.installIos({
+        return await this.deviceControlStore.install({
           href: this.href,
           manifest: { application: { activities: {} } } as unknown as Manifest,
           launch: true,
