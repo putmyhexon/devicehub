@@ -19,15 +19,15 @@ export const DevicesPage = observer(() => {
     <View activePanel='main'>
       <Panel className={styles.devicesPage} id='main'>
         <DeviceStatistics />
-        <Group header={<Header size='s'>{t('Devices')}</Header>}>
+        <Group>
           <Flex align='center'>
             <SearchDevice />
-            <TableColumnVisibility />
             <TitledValue
               className={styles.displayedDevices}
               title={t('Displayed')}
               value={deviceTableState.filteredDeviceCount}
             />
+            <TableColumnVisibility/>
           </Flex>
           <CustomScrollView enableHorizontalScroll={true}>
             <DeviceTable />
