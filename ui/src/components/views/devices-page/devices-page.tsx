@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
-import {View, Panel, Group, CustomScrollView, Header, Flex, Counter} from '@vkontakte/vkui'
+import { View, Panel, Group, CustomScrollView, Header, Flex, Counter } from '@vkontakte/vkui'
 
 import { DeviceTable } from '@/components/ui/device-table'
 import { SearchDevice } from '@/components/ui/search-device'
@@ -18,18 +18,13 @@ export const DevicesPage = observer(() => {
     <View activePanel='main'>
       <Panel className={styles.devicesPage} id='main'>
         <DeviceStatistics />
-        <Group header={
-          <Header
-            size='s'
-            indicator={
-              <Counter size="s">
-                {deviceTableState.filteredDeviceCount}
-              </Counter>
-            }
-          >
-            {t('Devices')}
-          </Header>
-        }>
+        <Group
+          header={
+            <Header size='s' indicator={<Counter size='s'>{deviceTableState.filteredDeviceCount}</Counter>}>
+              {t('Devices')}
+            </Header>
+          }
+        >
           <Flex align='center'>
             <SearchDevice />
             <TableColumnVisibility />
