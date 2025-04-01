@@ -1,12 +1,11 @@
 import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
-import { View, Panel, Group, CustomScrollView, Header, Flex } from '@vkontakte/vkui'
+import { View, Panel, Group, CustomScrollView, Header, Flex, Counter } from '@vkontakte/vkui'
 
 import { DeviceTable } from '@/components/ui/device-table'
 import { SearchDevice } from '@/components/ui/search-device'
 import { DeviceStatistics } from '@/components/ui/device-statistics'
 import { TableColumnVisibility } from '@/components/ui/table-column-visibility'
-import { TitledValue } from '@/components/lib/titled-value'
 
 import { deviceTableState } from '@/store/device-table-state'
 
@@ -19,15 +18,16 @@ export const DevicesPage = observer(() => {
     <View activePanel='main'>
       <Panel className={styles.devicesPage} id='main'>
         <DeviceStatistics />
-        <Group header={<Header size='s'>{t('Devices')}</Header>}>
+        <Group
+          header={
+            <Header indicator={<Counter size='s'>{deviceTableState.filteredDeviceCount}</Counter>} size='s'>
+              {t('Devices')}
+            </Header>
+          }
+        >
           <Flex align='center'>
             <SearchDevice />
             <TableColumnVisibility />
-            <TitledValue
-              className={styles.displayedDevices}
-              title={t('Displayed')}
-              value={deviceTableState.filteredDeviceCount}
-            />
           </Flex>
           <CustomScrollView enableHorizontalScroll={true}>
             <DeviceTable />
