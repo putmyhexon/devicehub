@@ -20,7 +20,7 @@ export const DevicesPage = observer(() => {
         <DeviceStatistics />
         <Group
           header={
-            <Header size='s' indicator={<Counter size='s'>{deviceTableState.filteredDeviceCount}</Counter>}>
+            <Header indicator={<Counter size='s'>{deviceTableState.filteredDeviceCount}</Counter>} size='s'>
               {t('Devices')}
             </Header>
           }
