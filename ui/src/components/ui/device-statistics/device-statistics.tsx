@@ -34,7 +34,7 @@ export const DeviceStatistics = observer(() => {
       />
       <StatisticCard
         className={styles.deviceStatistics}
-        color='#792EC0'
+        color='var(--vkui--color_accent_violet)'
         icon={StatisticCardIcon.USERS_OUTLINE}
         text={t('Busy Devices').toUpperCase()}
         value={deviceListStore.busyDevicesCount}
