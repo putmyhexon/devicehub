@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 import { inject, injectable } from 'inversify'
+import { merge } from 'lodash'
 
 import { socket } from '@/api/socket'
 
@@ -53,7 +54,7 @@ export class DeviceBySerialStore {
     queryClient.setQueryData<Device>(queries.devices.bySerial(this.serial).queryKey, (oldData) => {
       if (!oldData) return undefined
 
-      const newData = { ...oldData, ...changedData }
+      const newData = merge(oldData, changedData)
 
       const prevDeviceState = getDeviceState(oldData)
       const nextDeviceState = getDeviceState(newData)
