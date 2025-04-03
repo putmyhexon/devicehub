@@ -1958,7 +1958,7 @@ paths:
       tags:
       - user
       summary: Gets your access tokens
-      description: Gets your access tokens; note that all fields are returned in reponse
+      description: Gets your access tokens; note that all fields are returned in response
         including the 'id' one
       operationId: getAccessTokens
       responses:
