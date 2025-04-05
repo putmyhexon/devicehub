@@ -16,7 +16,7 @@ Run `docker compose -f docker-compose-prod.yaml --env-file scripts/variables.env
 And for MacOS you can use `docker compose -f docker-compose-macos.yaml --env-file scripts/variables.env up`. You also need adb server on host. Start it with `adb start-server`
 Note: some features require direct access to the provider instance from the browser, so if you are running the provider on a different machine - make sure you pass accessible url to the --public-ip or configure location properly
 
-If you also want to add an iOS device see [this document](./doc/ios-device.md)
+If you also want to add an iOS device see [this document](doc/ios-docs/ios-device.md)
 
 ## Features
 
