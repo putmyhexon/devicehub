@@ -180,11 +180,7 @@ export class DeviceControlService {
   }
 
   async unlockDevice(): Promise<void> {
-    const inputTextPromise = await this.shell('input text 1452')
-    const inputKeyEventPromise = await this.shell('input keyevent 66')
-
-    await inputTextPromise.donePromise
-    await inputKeyEventPromise.donePromise
+    this.sendOneWay('device.unlockDevice')
   }
 
   setLightTheme(): void {
