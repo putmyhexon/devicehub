@@ -141,6 +141,10 @@ export class DeviceControlService {
     })
   }
 
+  unlockDevice(): void {
+    return this.sendOneWay('device.unlockDevice')
+  }
+
   fsRetrieve(file: string): Promise<InitializeTransactionReturn<{ href: string }>> {
     return this.sendTwoWay('fs.retrieve', {
       file,
@@ -177,10 +181,6 @@ export class DeviceControlService {
 
   getSdStatus(): Promise<InitializeTransactionReturn> {
     return this.sendTwoWay('sd.status')
-  }
-
-  async unlockDevice(): Promise<void> {
-    this.sendOneWay('device.unlockDevice')
   }
 
   setLightTheme(): void {

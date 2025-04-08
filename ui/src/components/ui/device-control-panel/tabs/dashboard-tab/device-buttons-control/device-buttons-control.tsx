@@ -102,7 +102,7 @@ export const DeviceButtonsControl = observer(({ className }: { className?: strin
             />
           </div>
         </FormItem>
-        {device?.ios === false && (
+        {device?.ios === undefined && (
           <>
             <FormItem top={t('Special actions')}>
               <div className={styles.buttonsContainer}>
