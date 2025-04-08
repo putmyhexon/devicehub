@@ -197,12 +197,13 @@ export class TouchService {
   }
 
   mouseMoveListener({ isRightButtonPressed, mousePageX, mousePageY, isAltKeyPressed }: MouseMoveListener): void {
-    if (!this.isMouseDown) return
+    const { data: device } = this.deviceBySerialStore.deviceQueryResult()
+
+    if (!this.isMouseDown && !device?.ios) return
 
     // NOTE: Skip right button click
     if (isRightButtonPressed) return
 
-    const { data: device } = this.deviceBySerialStore.deviceQueryResult()
 
     if (!device?.display?.width || !device.display?.height || !this.deviceScreenStore.getCanvasWrapper) return
 
