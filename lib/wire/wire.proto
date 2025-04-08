@@ -119,6 +119,7 @@ enum MessageType {
     IosServiceMessage                 = 1208;
     ChangeQualityMessage       = 1208;
     InstallResultMessage       = 1209;
+    UnlockDeviceMessage = 1210;
     ConnectGetForwardUrlMessage = 9000;
     GetServicesAvailabilityMessage = 9001;
     BluetoothSetEnabledMessage = 9002;
@@ -127,6 +128,9 @@ enum MessageType {
 }
 
 message UpdateAccessTokenMessage {
+}
+
+message UnlockDeviceMessage {
 }
 
 message DeleteUserMessage {

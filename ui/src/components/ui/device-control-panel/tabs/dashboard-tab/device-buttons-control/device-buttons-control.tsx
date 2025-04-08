@@ -69,7 +69,7 @@ export const DeviceButtonsControl = observer(({ className }: { className?: strin
               tooltipText={t('Camera')}
               onClick={() => deviceControlStore.camera()}
             />
-            {device?.ios === false && (
+            {device?.ios === undefined && (
               <ButtonControl
                 icon={<Icon28TextOutline />}
                 tooltipText={t('Switch Charset')}
@@ -102,7 +102,7 @@ export const DeviceButtonsControl = observer(({ className }: { className?: strin
             />
           </div>
         </FormItem>
-        {device?.ios === false && (
+        {device?.ios === undefined && (
           <>
             <FormItem top={t('Special actions')}>
               <div className={styles.buttonsContainer}>
