@@ -2,7 +2,7 @@
 
 Use ios-provider unit to add a provider that will track and manage port forwarding to the device.
 
-Also see [lib/cli/ios-device/run-wda.sh](../lib/cli/ios-device/run-wda.sh) on how to run a single device.
+Also see [lib/cli/ios-device/run-wda.sh](../../lib/cli/ios-device/run-wda.sh) on how to run a single device.
 This script is designed to set up and run WebDriverAgent on an iOS device using `idb` and `pymobiledevice3`. It also sets up port forwarding that is needed for the ios-device.
 
 ## Requirements
@@ -12,7 +12,7 @@ This script is designed to set up and run WebDriverAgent on an iOS device using 
 -   Installed `xcodebuild`
 -   Installed the `stf` command from this repository (clone this repository and do `npm ci` followed by `npm link`)
 -   Access to MongoDB which used by stf
-    Note: You need to create you own provisioning profile in XCode for the [WebDriverAgent project](../WebDriverAgent)
+    Note: You need to create you own provisioning profile in XCode for the [WebDriverAgent project](../../WebDriverAgent)
 
 ## Usage
 
