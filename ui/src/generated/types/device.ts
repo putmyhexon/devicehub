@@ -7,6 +7,7 @@
  */
 import type { DeviceBattery } from './deviceBattery'
 import type { DeviceBrowser } from './deviceBrowser'
+import type { DeviceCapabilities } from './deviceCapabilities'
 import type { DeviceCpu } from './deviceCpu'
 import type { DeviceDisplay } from './deviceDisplay'
 import type { DeviceGroup } from './deviceGroup'
@@ -26,6 +27,7 @@ export interface Device {
   battery?: DeviceBattery
   bookedBefore?: number
   browser?: DeviceBrowser
+  capabilities?: DeviceCapabilities
   channel?: string
   connectPort?: number
   cpu?: DeviceCpu

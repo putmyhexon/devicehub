@@ -82,7 +82,7 @@ void BleMouse::end(void)
     this->taskHandle = NULL;
   }
   delay(200);
-  BLEDevice::deinit();
+  BLEDevice::deinit(true);
   delay(800);
 }
 
@@ -145,6 +145,36 @@ void BleMouse::setBatteryLevel(uint8_t level) {
       this->hid->setBatteryLevel(this->batteryLevel);
 }
 
+class MySecurity : public BLESecurityCallbacks
+{
+  bool onConfirmPIN(uint32_t pin) override {
+    // If needed, confirm the PIN here
+    return true;
+  }
+  
+  uint32_t onPassKeyRequest() override {
+    // If needed, set a passkey here
+    return 123456;
+  }
+  
+  void onPassKeyNotify(uint32_t pass_key) override {
+    // Print passkey on the screen if you like
+  }
+
+  bool onSecurityRequest() override {
+    return true; // Accept security requests
+  }
+
+  void onAuthenticationComplete(esp_ble_auth_cmpl_t auth_cmpl) override {
+    if (auth_cmpl.success) {
+      Serial.println("P");
+    } else {
+      Serial.println("F");
+    }
+  }
+};
+
+
 void BleMouse::taskServer(void* pvParameter) {
   BleMouse* bleMouseInstance = (BleMouse *) pvParameter; //static_cast<BleMouse *>(pvParameter);
   BLEDevice::init(String(bleMouseInstance->deviceName.c_str()));
@@ -164,6 +194,8 @@ void BleMouse::taskServer(void* pvParameter) {
   BLESecurity *pSecurity = new BLESecurity();
 
   pSecurity->setAuthenticationMode(ESP_LE_AUTH_BOND);
+  BLEDevice::setSecurityCallbacks(new MySecurity());
+
 
   bleMouseInstance->hid->reportMap((uint8_t*)_hidReportDescriptor, sizeof(_hidReportDescriptor));
   bleMouseInstance->hid->startServices();

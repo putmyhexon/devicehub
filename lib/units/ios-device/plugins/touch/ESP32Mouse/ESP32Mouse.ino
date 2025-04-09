@@ -2,7 +2,7 @@
 #include <esp_mac.h>
 
 #define MAX_BLE_NAME_ADVERTISED 23  // 22 chars + 1 null terminator
-#define DEBUG
+// #define DEBUG
 #define INTERVAL 20
 
 BleMouse *bleMouse = NULL;
@@ -20,13 +20,13 @@ void setup() {
 
   // esp_base_mac_addr_set(macaddr);
   delay(100);
-  Serial.println("REBOOTED");
+  Serial.println("<R>");
 }
 
 void loop() {
   // Serial.println("loop");
   if (ESP.getFreeHeap() < 5000) {
-    Serial.println("LOW_HEAP_REBOOT");
+    Serial.println("L");
     delay(50);
     ESP.restart();
   }
@@ -48,14 +48,18 @@ void loop() {
         macaddr[5] = esp_random() & 0xFF;
         macaddr[4] = esp_random() & 0xFF;
         macaddr[3] = esp_random() & 0xFF;
+
         esp_base_mac_addr_set(macaddr);
 #ifdef DEBUG
         Serial.print("Using name");
         Serial.println(nameBuffer);
 #endif
-        Serial.println("OK");
+        delay(200);
+        delete bleMouse;
+        delay(200);
         bleMouse = new BleMouse(nameBuffer, "Espressif", 100);
         bleMouse->begin();
+        Serial.println("K");
         readingName = false;
         nameLen = 0;
       } else {

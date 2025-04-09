@@ -117,8 +117,9 @@ enum MessageType {
     UserChangeMessage                 = 1206;
     DeviceChangeMessage               = 1207;
     IosServiceMessage                 = 1208;
-    ChangeQualityMessage       = 1208;
-    InstallResultMessage       = 1209;
+    ChangeQualityMessage              = 1209;
+    InstallResultMessage              = 1210;
+    CapabilitiesMessage               = 1211;
     ConnectGetForwardUrlMessage = 9000;
     GetServicesAvailabilityMessage = 9001;
     BluetoothSetEnabledMessage = 9002;
@@ -839,6 +840,17 @@ message BluetoothSetEnabledMessage {
 message BluetoothGetStatusMessage {
 }
 message BluetoothCleanBondedMessage {
+}
+
+message CapabilitiesMessage {
+    required string serial = 1;
+    required bool hasTouch = 2;
+    required bool hasCursor = 3;
+    // TODO:
+    // required bool hasKeyboard = 1;
+    // hasLogs
+    // hasMedia
+    // hasClipboard and stuff like that, but later..
 }
 
 
