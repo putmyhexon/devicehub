@@ -51,9 +51,7 @@ export const GroupUsersTable = observer(() => {
           return (
             <IsInGroupCell
               isInGroup={getValue()}
-              isRemoveFromGroupDisabled={
-                userEmail === groupItemService.currentGroup?.owner?.email
-              }
+              isRemoveFromGroupDisabled={userEmail === groupItemService.currentGroup?.owner?.email}
               onAddToGroup={() => addUsersInGroup({ groupId: groupItemService.currentGroupId, userEmail })}
               onRemoveFromGroup={() => removeUsersFromGroup({ groupId: groupItemService.currentGroupId, userEmail })}
             />
