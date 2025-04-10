@@ -5,7 +5,7 @@ declare module "@devicefarmer/stf-syrup" {
         : unknown;
     type extractBluebirdReturnR<RetT> = RetT extends Bluebird<infer RetX>
         ? RetX
-        : RetT;
+        : RetT extends Promise<infer RetX> ? RetX : RetT;
     export class SyrupI<
         OptionsT extends object = any, // TODO: find a way to remove any. Maybe we union all the options that are needed for each dependency?
         DepsT extends SyrupI[] = [],
