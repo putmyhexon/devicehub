@@ -1,12 +1,6 @@
 name: Run API Tests
 
 on:
-    push:
-        paths:
-            - 'lib/**'
-            - 'Dockerfile'
-            - 'test/api/**'
-            - 'docker-compose-test.yaml'
     pull_request:
         paths:
             - 'lib/**'
