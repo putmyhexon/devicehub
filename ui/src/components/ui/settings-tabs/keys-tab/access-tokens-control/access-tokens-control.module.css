@@ -10,3 +10,8 @@
 .generateTokenButton {
   margin: 3px 0 0 10px;
 }
+
+.tokenWrapper {
+  margin-top: 20px;
+  width: 100%;
+}
