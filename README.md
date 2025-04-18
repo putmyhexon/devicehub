@@ -32,6 +32,7 @@ If you also want to add an iOS device see [this document](doc/ios-docs/ios-devic
   - All devices that are supported by Appium's WebDriverAgent are available in the UI
   - Simple taps and gestures and button presses are supported
   - Ability to install apps on iOS devices
+  - Ability to control device without XCTest by [ESP32](doc/ios-docs/esp32.md)
   - Extended remote debug coming in 2025
 
 ### Remote Control and Screen View
