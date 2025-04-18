@@ -3,15 +3,15 @@
 }
 
 .tokenList {
-  padding: 10px;
   display: flex;
   flex-wrap: wrap;
+  padding: 10px;
 }
 
 .noTokens {
-  text-align: center;
   padding: 3px;
   color: var(--vkui--color_text_secondary);
+  text-align: center;
 }
 
 .quotaForm {

@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { type FormEvent, useState } from 'react'
 import { Button, FormItem, FormLayoutGroup, Input, Spacing } from '@vkontakte/vkui'
 
+import styles from '../../users-tab.module.css'
+
 import type { UpdateUserGroupsQuotasParams, UserGroupsQuotas } from '@/generated/types'
 
 interface QuotaTabProps {
   quotas?: UserGroupsQuotas
   onUpdate: (data: UpdateUserGroupsQuotasParams) => void
 }
-
-import styles from '../../users-tab.module.css'
 
 export const QuotaTab = observer(({ quotas, onUpdate }: QuotaTabProps) => {
   const { t } = useTranslation()
