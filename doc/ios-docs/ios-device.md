@@ -30,6 +30,7 @@ stf ios-provider \
     --provider localworker \
     --storage-url http://localhost:7100/
 ```
+Also you can use ESP32 Implementation described in [this document](esp32.md)
 
 ## Determine the device name:
 
