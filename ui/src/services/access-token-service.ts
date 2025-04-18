@@ -4,13 +4,13 @@ import { QueryObserverResult } from '@tanstack/react-query'
 
 import { socket } from '@/api/socket'
 import { AccessTokenGeneratedMessage } from '@/types/access-token-generated-message.type'
-import { getAccessTokenByTitle } from '@/api/openstf-api';
+import { getAccessTokenByTitle } from '@/api/openstf-api'
 
 import { queries } from '@/config/queries/query-key-store'
 import { queryClient } from '@/config/queries/query-client'
 import { CONTAINER_IDS } from '@/config/inversify/container-ids'
 
-import type { Token } from '@/generated/types';
+import type { Token } from '@/generated/types'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 
 @injectable()
@@ -36,7 +36,7 @@ export class AccessTokenService {
   getUserAccessTokens(email: string): QueryObserverResult<string[]> {
     if (!this.userTokenQueries.has(email)) {
       const query = this.mobxQueryFactory(() => ({
-        ...queries.users.accessTokens(email)
+        ...queries.users.accessTokens(email),
       }))
 
       this.userTokenQueries.set(email, query)
@@ -80,9 +80,7 @@ export class AccessTokenService {
   removeAccessToken(email?: string): void {
     socket.emit('user.keys.accessToken.remove', { title: this.tokenToRemove, ...(!!email && { email }) })
 
-    const queryKey = email
-      ? queries.users.accessTokens(email).queryKey
-      : queries.user.accessTokens.queryKey
+    const queryKey = email ? queries.users.accessTokens(email).queryKey : queries.user.accessTokens.queryKey
 
     queryClient.setQueryData<string[]>(queryKey, (oldData) => {
       if (!oldData) return []

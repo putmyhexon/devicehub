@@ -1,1 +1,1 @@
-export { TokensTab } from './tokens-tab';
+export { TokensTab } from './tokens-tab'

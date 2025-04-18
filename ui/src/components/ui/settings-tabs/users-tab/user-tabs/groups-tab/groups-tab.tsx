@@ -1,13 +1,13 @@
 import { observer } from 'mobx-react-lite'
-import { useInjection } from 'inversify-react';
-import { useMemo } from 'react';
-import { createColumnHelper} from '@tanstack/react-table'
+import { useInjection } from 'inversify-react'
+import { useMemo } from 'react'
+import { createColumnHelper } from '@tanstack/react-table'
 
 import { UserGroupsColumnIds } from '@/components/ui/settings-tabs/users-tab/user-tabs/groups-tab/types'
 import {
   GroupTable,
   IsInGroupCell,
-  isInGroupSorting
+  isInGroupSorting,
 } from '@/components/ui/settings-tabs/groups-tab/group-item/tabs/group-table'
 import { TextWithTranslation } from '@/components/lib/text-with-translation'
 
@@ -16,7 +16,7 @@ import { useRemoveUserFromGroup } from '@/lib/hooks/use-remove-user-from-group.h
 import { useAddUserInGroup } from '@/lib/hooks/use-add-user-in-group.hook'
 import { toSentenceCase } from '@/lib/utils/to-sentence-case.util'
 
-import type {ColumnDef} from '@tanstack/react-table';
+import type { ColumnDef } from '@tanstack/react-table'
 import type { DataWithGroupStatus } from '@/types/data-with-group-status.type'
 import type { GroupListResponseGroupsItem } from '@/generated/types'
 
@@ -39,7 +39,7 @@ export const GroupsTab = observer(({ email }: GroupsTabProps) => {
 
     return groups.map((group) => ({
       ...group,
-      isInGroup: !!group.users?.includes(email)
+      isInGroup: !!group.users?.includes(email),
     }))
   }, [groupSettingsService.groupsQueryResult.data, email])
 
@@ -56,8 +56,10 @@ export const GroupsTab = observer(({ email }: GroupsTabProps) => {
             <IsInGroupCell
               isInGroup={getValue()}
               isRemoveFromGroupDisabled={email === row.original.owner?.email}
-              onAddToGroup={() => groupId ? addUsersInGroup({ groupId, userEmail: email || '' }) : undefined}
-              onRemoveFromGroup={() => groupId ? removeUsersFromGroup({ groupId, userEmail: email || '' }) : undefined}
+              onAddToGroup={() => (groupId ? addUsersInGroup({ groupId, userEmail: email || '' }) : undefined)}
+              onRemoveFromGroup={() =>
+                groupId ? removeUsersFromGroup({ groupId, userEmail: email || '' }) : undefined
+              }
             />
           )
         },

@@ -17,7 +17,7 @@ import { KeyListItem } from '../key-list-item'
 
 import styles from './access-tokens-control.module.css'
 
-import type {Token} from '@/generated/types';
+import type { Token } from '@/generated/types'
 import type { FormEvent } from 'react'
 
 export const AccessTokensControl = observer(({ className }: { className?: string }) => {
@@ -38,11 +38,10 @@ export const AccessTokensControl = observer(({ className }: { className?: string
   }
 
   const handleViewToken = (title: string) => {
-    accessTokenService.getAccessTokenByTitle(title)
-      .then(token => {
-        setTokenDetail(token)
-        setIsTokenDetailOpen(true)
-      })
+    accessTokenService.getAccessTokenByTitle(title).then((token) => {
+      setTokenDetail(token)
+      setIsTokenDetailOpen(true)
+    })
   }
 
   const handleCloseTokenDetail = () => {
@@ -135,14 +134,14 @@ export const AccessTokensControl = observer(({ className }: { className?: string
         onOk={async () => accessTokenService.removeAccessToken()}
       />
       <WarningModal
-        actions={<div/>}
+        actions={<div />}
         description={t('This is sensitive information. Do not share this token.')}
         isOpen={isTokenDetailOpen && !!tokenDetail}
         title={t('Access Token')}
         onClose={handleCloseTokenDetail}
       >
         <div className={styles.tokenWrapper}>
-          <CopyableBlock copyableText={tokenDetail?.id || ''} onOkClick={() => handleCloseTokenDetail()}/>
+          <CopyableBlock copyableText={tokenDetail?.id || ''} onOkClick={() => handleCloseTokenDetail()} />
         </div>
       </WarningModal>
     </ContentCard>

@@ -1,16 +1,16 @@
-import { observer } from 'mobx-react-lite';
-import {useTranslation} from 'react-i18next';
-import {type FormEvent, useState} from 'react';
-import {Button, FormItem, FormLayoutGroup, Input, Spacing} from '@vkontakte/vkui';
+import { observer } from 'mobx-react-lite'
+import { useTranslation } from 'react-i18next'
+import { type FormEvent, useState } from 'react'
+import { Button, FormItem, FormLayoutGroup, Input, Spacing } from '@vkontakte/vkui'
 
-import type {UpdateUserGroupsQuotasParams, UserGroupsQuotas} from '@/generated/types';
+import type { UpdateUserGroupsQuotasParams, UserGroupsQuotas } from '@/generated/types'
 
 interface QuotaTabProps {
   quotas?: UserGroupsQuotas
   onUpdate: (data: UpdateUserGroupsQuotasParams) => void
 }
 
-import styles from '../../users-tab.module.css';
+import styles from '../../users-tab.module.css'
 
 export const QuotaTab = observer(({ quotas, onUpdate }: QuotaTabProps) => {
   const { t } = useTranslation()
@@ -36,7 +36,7 @@ export const QuotaTab = observer(({ quotas, onUpdate }: QuotaTabProps) => {
             type='number'
             value={quota.number}
             required
-            onChange={(event) => setQuota((prev) => ({...prev, number: event.target.valueAsNumber}))}
+            onChange={(event) => setQuota((prev) => ({ ...prev, number: event.target.valueAsNumber }))}
           />
         </FormItem>
         <FormItem top={t('Total duration of groups')}>
@@ -46,7 +46,7 @@ export const QuotaTab = observer(({ quotas, onUpdate }: QuotaTabProps) => {
             type='number'
             value={quota.duration}
             required
-            onChange={(event) => setQuota((prev) => ({...prev, duration: event.target.valueAsNumber}))}
+            onChange={(event) => setQuota((prev) => ({ ...prev, duration: event.target.valueAsNumber }))}
           />
         </FormItem>
         <FormItem top={t('Number of repetitions per group')}>
@@ -56,10 +56,10 @@ export const QuotaTab = observer(({ quotas, onUpdate }: QuotaTabProps) => {
             type='number'
             value={quota.repetitions}
             required
-            onChange={(event) => setQuota((prev) => ({...prev, repetitions: event.target.valueAsNumber}))}
+            onChange={(event) => setQuota((prev) => ({ ...prev, repetitions: event.target.valueAsNumber }))}
           />
         </FormItem>
-        <Spacing/>
+        <Spacing />
         <FormItem>
           <Button
             disabled={!quota.number || !quota.duration || !quota.repetitions}

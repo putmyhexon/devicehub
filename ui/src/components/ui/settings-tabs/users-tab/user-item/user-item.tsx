@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react'
+import { useMemo, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useInjection } from 'inversify-react'
 import { useTranslation } from 'react-i18next'
@@ -28,7 +28,7 @@ type UserItemProps = {
 
 export const UserItem = observer(({ user, removeFilters }: UserItemProps) => {
   if (!user.email) {
-    return <div/>
+    return <div />
   }
 
   const { t } = useTranslation()
@@ -52,7 +52,7 @@ export const UserItem = observer(({ user, removeFilters }: UserItemProps) => {
 
   const onTokenRemove = (title: string) => {
     accessTokenService.setTokenToRemove(title)
-    accessTokenService.removeAccessToken(user.email || '');
+    accessTokenService.removeAccessToken(user.email || '')
   }
 
   const tabsContent = useMemo<TabsContent[]>(
@@ -61,11 +61,13 @@ export const UserItem = observer(({ user, removeFilters }: UserItemProps) => {
         id: 'AccessTokens',
         title: t('Access Tokens'),
         ariaControls: 'tab-content-tokens',
-        content: <TokensTab
-          isLoading={tokensQueryResult?.isLoading}
-          tokens={tokensQueryResult?.data || []}
-          onRemove={onTokenRemove}
-        />,
+        content: (
+          <TokensTab
+            isLoading={tokensQueryResult?.isLoading}
+            tokens={tokensQueryResult?.data || []}
+            onRemove={onTokenRemove}
+          />
+        ),
       },
       {
         id: 'Groups',
@@ -77,11 +79,13 @@ export const UserItem = observer(({ user, removeFilters }: UserItemProps) => {
         id: 'GroupQuota',
         title: t('Group Quota'),
         ariaControls: 'tab-content-group-quota',
-        content: <QuotaTab
-          quotas={user.groups?.quotas}
-          onUpdate={(data) => updateGroupQuota({ email: user.email || '', ...data })}
-        />,
-      }
+        content: (
+          <QuotaTab
+            quotas={user.groups?.quotas}
+            onUpdate={(data) => updateGroupQuota({ email: user.email || '', ...data })}
+          />
+        ),
+      },
     ],
     [t, user, tokensQueryResult]
   )
@@ -90,7 +94,7 @@ export const UserItem = observer(({ user, removeFilters }: UserItemProps) => {
   const listItemIndicator = (
     <ButtonGroup gap='s'>
       <Button
-        before={<Icon24CrownOutline height={20} width={20}/>}
+        before={<Icon24CrownOutline height={20} width={20} />}
         disabled={user.privilege === 'admin'}
         mode='tertiary'
         size='s'
@@ -99,7 +103,7 @@ export const UserItem = observer(({ user, removeFilters }: UserItemProps) => {
         {t('Grant admin')}
       </Button>
       <Button
-        before={<Icon24CancelCircleOutline height={20} width={20}/>}
+        before={<Icon24CancelCircleOutline height={20} width={20} />}
         disabled={user.privilege !== 'admin'}
         mode='tertiary'
         size='s'
@@ -125,7 +129,7 @@ export const UserItem = observer(({ user, removeFilters }: UserItemProps) => {
         onIsSelectedChange={(event) => userSettingsService.setSelectedItem(user, event.target.checked)}
         onRemove={onRemove}
       >
-        <TabsPanel content={tabsContent} mode='plain' selectedTabId={tabId} onChange={id => setTabId(id)}/>
+        <TabsPanel content={tabsContent} mode='plain' selectedTabId={tabId} onChange={(id) => setTabId(id)} />
       </ListItem>
       <WarningModal
         description={t('Really grant access to user')}

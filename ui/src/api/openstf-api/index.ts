@@ -136,7 +136,9 @@ export const getAccessTokens = async (): Promise<string[]> => {
 }
 
 export const getAccessTokensByEmail = async (email: string): Promise<string[]> => {
-  const { data } = await openstfApiClient.get<{ success: boolean, titles: string[] }>(OPENSTF_API_ROUTES.accessTokensByEmail(email))
+  const { data } = await openstfApiClient.get<{ success: boolean; titles: string[] }>(
+    OPENSTF_API_ROUTES.accessTokensByEmail(email)
+  )
 
   return data.titles || []
 }
