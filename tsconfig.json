@@ -16,6 +16,8 @@
     "target": "ES2016",
     "module": "ESNext",
     "moduleResolution": "node",
+    "lib": ["ES2016"],
+    "types": ["node"],
     "outDir": "dist"
   },
   "include": ["./lib/**/*.js", "./lib/types/**/*.d.ts", "./lib/**/*.ts"],
