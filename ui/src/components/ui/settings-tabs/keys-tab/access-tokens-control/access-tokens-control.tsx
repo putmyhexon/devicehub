@@ -71,7 +71,7 @@ export const AccessTokensControl = observer(({ className }: { className?: string
       <ConditionalRender conditions={[!!accessTokenService.generatedTokenId]}>
         <CopyableBlock
           copyableText={accessTokenService.generatedTokenId}
-          title={t('Make sure to copy your access token now. You wont be able to see it again')}
+          title={t('This is sensitive information. Do not share this token.')}
           onOkClick={() => {
             accessTokenService.resetGeneratedTokenId(accessTokenLabel)
 
@@ -141,7 +141,11 @@ export const AccessTokensControl = observer(({ className }: { className?: string
         onClose={handleCloseTokenDetail}
       >
         <div className={styles.tokenWrapper}>
-          <CopyableBlock copyableText={tokenDetail?.id || ''} onOkClick={() => handleCloseTokenDetail()} />
+          <CopyableBlock
+            className={styles.copyBlock}
+            copyableText={tokenDetail?.id || ''}
+            onOkClick={() => handleCloseTokenDetail()}
+          />
         </div>
       </WarningModal>
     </ContentCard>

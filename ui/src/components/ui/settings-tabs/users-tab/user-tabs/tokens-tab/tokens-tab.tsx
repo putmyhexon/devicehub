@@ -1,6 +1,7 @@
-import { List, Spinner } from '@vkontakte/vkui'
+import { List, Placeholder, Spinner } from '@vkontakte/vkui'
 import { useTranslation } from 'react-i18next'
 import { observer } from 'mobx-react-lite'
+import { Icon28InboxOutline } from '@vkontakte/icons'
 
 import { ListItem } from '@/components/lib/list-item'
 
@@ -26,7 +27,9 @@ export const TokensTab = observer(({ tokens, isLoading = false, onRemove }: User
   return (
     <List className={styles.tokenList} gap={12}>
       {tokens.length === 0 ? (
-        <span className={styles.noTokens}>{t('No access tokens')}</span>
+        <Placeholder className={styles.noTokens} icon={<Icon28InboxOutline />}>
+          {t('Empty')}
+        </Placeholder>
       ) : (
         tokens.map((token) => (
           <ListItem
