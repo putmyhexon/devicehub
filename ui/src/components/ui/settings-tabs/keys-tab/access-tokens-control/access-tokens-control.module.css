@@ -10,3 +10,16 @@
 .generateTokenButton {
   margin: 3px 0 0 10px;
 }
+
+.tokenWrapper {
+  width: 100%;
+  margin-top: 20px;
+
+  & > section {
+    height: 64px;
+  }
+}
+
+.copyBlock {
+  background: var(--vkui--color_background_content--active);
+}
