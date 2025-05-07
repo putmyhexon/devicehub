@@ -108,9 +108,9 @@ export const queries = createQueryKeyStore({
   service: {
     additionalUrl: {
       queryKey: null,
-      queryFn: () => additionalUrl()
-    }
-  }
+      queryFn: () => additionalUrl(),
+    },
+  },
 })
 
 export type QueryKeys = inferQueryKeyStore<typeof queries>

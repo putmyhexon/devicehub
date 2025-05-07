@@ -8,7 +8,8 @@ import type {
   GetAuthDocsResponse,
   GetAuthContactResponse,
   GetManifestResponse,
-  UploadFileArgs, GetAdditionalUrlResponse,
+  UploadFileArgs,
+  GetAdditionalUrlResponse,
 } from './types'
 
 export const getAuthDocs = async (): Promise<string> => {

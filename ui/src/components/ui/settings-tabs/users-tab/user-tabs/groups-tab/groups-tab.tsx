@@ -58,7 +58,8 @@ export const GroupsTab = observer(({ email }: GroupsTabProps) => {
               isRemoveFromGroupDisabled={email === row.original.owner?.email}
               onAddToGroup={() => (groupId ? addUsersInGroup({ groupId, userEmail: email || '' }) : undefined)}
               onRemoveFromGroup={() =>
-                groupId ? removeUsersFromGroup({ groupId, userEmail: email || '' }) : undefined}
+                groupId ? removeUsersFromGroup({ groupId, userEmail: email || '' }) : undefined
+              }
             />
           )
         },

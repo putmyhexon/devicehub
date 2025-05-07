@@ -7,7 +7,8 @@ import {
   Icon16HelpOutline,
   Icon28DevicesOutline,
   Icon28SettingsOutline,
-  Icon16DoorEnterArrowRightOutline, Icon56WebDeviceOutline,
+  Icon16DoorEnterArrowRightOutline,
+  Icon56WebDeviceOutline,
 } from '@vkontakte/icons'
 
 import { WarningModal } from '@/components/ui/modals'
@@ -53,7 +54,7 @@ export const Header = () => {
         </Link>
         <ConditionalRender conditions={[additionalUrl !== '']}>
           <Link className={styles.navLink} to={additionalUrl || ''}>
-            <Button before={<Icon56WebDeviceOutline height={28} width={28}/>} mode='tertiary' size='l'>
+            <Button before={<Icon56WebDeviceOutline height={28} width={28} />} mode='tertiary' size='l'>
               {t('Web Devices')}
             </Button>
           </Link>
