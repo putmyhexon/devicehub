@@ -32,3 +32,8 @@ export type UploadFileArgs = {
   type: string
   file: File
 }
+
+export type GetAdditionalUrlResponse = {
+  success: boolean
+  additionalUrl: string
+}

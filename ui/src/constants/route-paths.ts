@@ -1,6 +1,5 @@
 export const getMainRoute = () => '/' as const
 export const getDevicesRoute = () => '/devices' as const
-
 export const getControlRoute = (serial: string) => `/control/${serial}` as const
 export const getControlLogsRoute = (serial: string) => `/control/${serial}/logs` as const
 export const getControlAdvancedRoute = (serial: string) => `/control/${serial}/advanced` as const

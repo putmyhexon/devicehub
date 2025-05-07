@@ -9,6 +9,7 @@ import type {
   GetAuthContactResponse,
   GetManifestResponse,
   UploadFileArgs,
+  GetAdditionalUrlResponse,
 } from './types'
 
 export const getAuthDocs = async (): Promise<string> => {
@@ -43,4 +44,10 @@ export const downloadFile = async (href: string): Promise<Blob> => {
   const { data } = await openstfClient.get<Blob>(`${href}?download`, { responseType: 'blob' })
 
   return data
+}
+
+export const additionalUrl = async (): Promise<string> => {
+  const { data } = await openstfClient.get<GetAdditionalUrlResponse>(OPENSTF_ROUTES.additionalUrl)
+
+  return data.additionalUrl
 }
