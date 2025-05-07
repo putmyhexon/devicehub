@@ -7,7 +7,7 @@ import {
   Icon16HelpOutline,
   Icon28DevicesOutline,
   Icon28SettingsOutline,
-  Icon16DoorEnterArrowRightOutline,
+  Icon16DoorEnterArrowRightOutline, Icon56WebDeviceOutline,
 } from '@vkontakte/icons'
 
 import { WarningModal } from '@/components/ui/modals'
@@ -16,16 +16,19 @@ import { DynamicLogo } from '@/components/lib/dynamic-logo'
 import { useGetAuthUrl } from '@/lib/hooks/use-get-auth-url.hook'
 import { useGetAuthDocs } from '@/lib/hooks/use-get-auth-docs.hook'
 import { useGetAuthContact } from '@/lib/hooks/use-get-auth-contact.hook'
+import { useGetAdditionalUrl } from '@/lib/hooks/use-get-additional-url.hook'
 import { authStore } from '@/store/auth-store'
 
 import { getAuthRoute, getDevicesRoute, getMainRoute, getSettingsRoute } from '@/constants/route-paths'
 
 import styles from './header.module.css'
+import { ConditionalRender } from '@/components/lib/conditional-render'
 
 export const Header = () => {
   const { t } = useTranslation()
   const { data: authUrl } = useGetAuthUrl()
   const { data: authDocs } = useGetAuthDocs()
+  const { data: additionalUrl } = useGetAdditionalUrl()
   const { data: authContact } = useGetAuthContact()
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
 
@@ -48,6 +51,13 @@ export const Header = () => {
             <DynamicLogo className={styles.logo} height={32} width={120} />
           </Tappable>
         </Link>
+        <ConditionalRender conditions={[additionalUrl !== '']}>
+          <Link className={styles.navLink} to={additionalUrl || ''}>
+            <Button before={<Icon56WebDeviceOutline height={28} width={28}/>} mode='tertiary' size='l'>
+              {t('Web Devices')}
+            </Button>
+          </Link>
+        </ConditionalRender>
         <Link className={styles.navLink} to={getDevicesRoute()}>
           <Button before={<Icon28DevicesOutline />} mode='tertiary' size='l'>
             {t('Devices')}
