@@ -13,6 +13,7 @@ import {
 
 import { WarningModal } from '@/components/ui/modals'
 import { DynamicLogo } from '@/components/lib/dynamic-logo'
+import { ConditionalRender } from '@/components/lib/conditional-render'
 
 import { useGetAuthUrl } from '@/lib/hooks/use-get-auth-url.hook'
 import { useGetAuthDocs } from '@/lib/hooks/use-get-auth-docs.hook'
@@ -23,7 +24,6 @@ import { authStore } from '@/store/auth-store'
 import { getAuthRoute, getDevicesRoute, getMainRoute, getSettingsRoute } from '@/constants/route-paths'
 
 import styles from './header.module.css'
-import { ConditionalRender } from '@/components/lib/conditional-render'
 
 export const Header = () => {
   const { t } = useTranslation()
