@@ -27,9 +27,9 @@ export const useRemoveUserFromGroup = (): UseMutationResult<
         return oldData.map((item): GroupListResponseGroupsItem => {
           if (item.id === data.groupId) {
             return {
-              ...item
-              , users: item.users?.filter((email) => email !== data.userEmail)
-              , moderators: item.moderators?.filter((email) => email !== data.userEmail)
+              ...item,
+              users: item.users?.filter((email) => email !== data.userEmail),
+              moderators: item.moderators?.filter((email) => email !== data.userEmail),
             }
           }
 

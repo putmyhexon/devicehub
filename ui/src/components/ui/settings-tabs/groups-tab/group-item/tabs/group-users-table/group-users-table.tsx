@@ -40,10 +40,16 @@ export const GroupUsersTable = observer(() => {
     const currentGroup = groupItemService.currentGroup
     const isAdmin = currentUserProfileStore.isAdmin
     const isOwner = currentGroup?.owner?.email === currentUserProfileStore.profileQueryResult?.data?.email
-    const isModerator = currentGroup?.moderators?.includes(currentUserProfileStore.profileQueryResult?.data?.email || '')
+    const isModerator = currentGroup?.moderators?.includes(
+      currentUserProfileStore.profileQueryResult?.data?.email || ''
+    )
 
     return isAdmin || isOwner || isModerator
-  }, [groupItemService.currentGroup, currentUserProfileStore.profileQueryResult?.data?.email, currentUserProfileStore.isAdmin])
+  }, [
+    groupItemService.currentGroup,
+    currentUserProfileStore.profileQueryResult?.data?.email,
+    currentUserProfileStore.isAdmin,
+  ])
 
   const filteredData = useMemo(() => {
     if (hasEditPermissions) {
@@ -51,7 +57,7 @@ export const GroupUsersTable = observer(() => {
     }
 
     // If no edit permissions, only show users that are in the group
-    return groupItemService.groupUsersData.filter(user => user.isInGroup)
+    return groupItemService.groupUsersData.filter((user) => user.isInGroup)
   }, [hasEditPermissions, groupItemService.groupUsersData])
 
   const displayData = useMemo(() => {
@@ -59,38 +65,41 @@ export const GroupUsersTable = observer(() => {
       return filteredData
     }
 
-    return filteredData.filter(user => user.privilege !== 'admin')
+    return filteredData.filter((user) => user.privilege !== 'admin')
   }, [filteredData, currentUserProfileStore.isAdmin])
 
   const columns = useMemo(
     () => [
-      ...(hasEditPermissions ? [
-        columnHelper.accessor((row) => row.isInGroup, {
-          id: GroupUsersColumnIds.IS_IN_GROUP,
-          sortingFn: isInGroupSorting,
-          header: () => (
-            <IsInGroupCell
-              isAddToGroupDisabled={!groupItemService.currentGroup?.users?.length}
-              isInGroup={!groupItemService.isSomeUsersNotInGroup}
-              isRemoveFromGroupDisabled={!groupItemService.isCanRemoveAllUsers}
-              onAddToGroup={() => addUsersInGroup({ groupId: groupItemService.currentGroupId })}
-              onRemoveFromGroup={() => removeUsersFromGroup({ groupId: groupItemService.currentGroupId })}
-            />
-          ),
-          cell: ({ getValue, row }) => {
-            const { email: userEmail } = row.original
+      ...(hasEditPermissions
+        ? [
+            columnHelper.accessor((row) => row.isInGroup, {
+              id: GroupUsersColumnIds.IS_IN_GROUP,
+              sortingFn: isInGroupSorting,
+              header: () => (
+                <IsInGroupCell
+                  isAddToGroupDisabled={!groupItemService.currentGroup?.users?.length}
+                  isInGroup={!groupItemService.isSomeUsersNotInGroup}
+                  isRemoveFromGroupDisabled={!groupItemService.isCanRemoveAllUsers}
+                  onAddToGroup={() => addUsersInGroup({ groupId: groupItemService.currentGroupId })}
+                  onRemoveFromGroup={() => removeUsersFromGroup({ groupId: groupItemService.currentGroupId })}
+                />
+              ),
+              cell: ({ getValue, row }) => {
+                const { email: userEmail } = row.original
 
-            return (
-              <IsInGroupCell
-                isInGroup={getValue()}
-                isRemoveFromGroupDisabled={userEmail === groupItemService.currentGroup?.owner?.email}
-                onAddToGroup={() => addUsersInGroup({ groupId: groupItemService.currentGroupId, userEmail })}
-                onRemoveFromGroup={() => removeUsersFromGroup({ groupId: groupItemService.currentGroupId, userEmail })}
-              />
-            )
-          },
-        })
-      ] : []),
+                return (
+                  <IsInGroupCell
+                    isInGroup={getValue()}
+                    isRemoveFromGroupDisabled={userEmail === groupItemService.currentGroup?.owner?.email}
+                    onAddToGroup={() => addUsersInGroup({ groupId: groupItemService.currentGroupId, userEmail })}
+                    onRemoveFromGroup={() =>
+                      removeUsersFromGroup({ groupId: groupItemService.currentGroupId, userEmail })}
+                  />
+                )
+              },
+            }),
+          ]
+        : []),
       columnHelper.accessor((row) => toSentenceCase(row.name || ''), {
         header: () => <TextWithTranslation name='Name' />,
         id: GroupUsersColumnIds.NAME,
@@ -102,57 +111,66 @@ export const GroupUsersTable = observer(() => {
         cell: ({ getValue }) => getValue(),
       }),
       // Only show privilege column for admins
-      ...(currentUserProfileStore.isAdmin ? [
-        columnHelper.accessor((row) => toSentenceCase(row.privilege || ''), {
-          header: () => <TextWithTranslation name='Privilege' />,
-          id: GroupUsersColumnIds.PRIVILEGE,
-          cell: ({ getValue }) => getValue(),
-        })
-      ] : []),
+      ...(currentUserProfileStore.isAdmin
+        ? [
+            columnHelper.accessor((row) => toSentenceCase(row.privilege || ''), {
+              header: () => <TextWithTranslation name='Privilege' />,
+              id: GroupUsersColumnIds.PRIVILEGE,
+              cell: ({ getValue }) => getValue(),
+            }),
+          ]
+        : []),
       // Add moderator column if user can manage moderators
-      ...(hasEditPermissions ? [
-        columnHelper.accessor((row) => {
-          const currentGroup = groupItemService.currentGroup
-          const userEmail = row.email || ''
-          const isOwner = userEmail === currentGroup?.owner?.email
-          const isModerator = currentGroup?.moderators?.includes(userEmail)
+      ...(hasEditPermissions
+        ? [
+            columnHelper.accessor(
+              (row) => {
+                const currentGroup = groupItemService.currentGroup
+                const userEmail = row.email || ''
+                const isOwner = userEmail === currentGroup?.owner?.email
+                const isModerator = currentGroup?.moderators?.includes(userEmail)
 
-          return {
-            isModerator,
-            isOwner,
-            email: userEmail
-          }
-        }, {
-          header: () => <TextWithTranslation name='Moderator' />,
-          id: GroupUsersColumnIds.MODERATOR,
-          cell: ({ getValue }) => {
-            const { isModerator, isOwner, email } = getValue()
+                return {
+                  isModerator,
+                  isOwner,
+                  email: userEmail,
+                }
+              },
+              {
+                header: () => <TextWithTranslation name='Moderator' />,
+                id: GroupUsersColumnIds.MODERATOR,
+                cell: ({ getValue }) => {
+                  const { isModerator, isOwner, email } = getValue()
 
-            // Owner can't be assigned as moderator (they already have all permissions)
-            if (isOwner) {
-              return null
-            }
+                  // Owner can't be assigned as moderator (they already have all permissions)
+                  if (isOwner) {
+                    return null
+                  }
 
-            return (
-              <Button
-                before={<Icon16Crown />}
-                mode={isModerator ? 'outline' : 'primary'}
-                size="s"
-                onClick={() => isModerator ?
-                  removeUserAsModerator({
-                    groupId: groupItemService.currentGroupId,
-                    userEmail: email
-                  }) : addUserAsModerator({
-                    groupId: groupItemService.currentGroupId,
-                    userEmail: email
-                  })}
-              >
-                {isModerator ? t('Remove Moderator') : t('Make Moderator')}
-              </Button>
-            )
-          },
-        }),
-      ] : []),
+                  return (
+                    <Button
+                      before={<Icon16Crown />}
+                      mode={isModerator ? 'outline' : 'primary'}
+                      size='s'
+                      onClick={() =>
+                        isModerator
+                          ? removeUserAsModerator({
+                              groupId: groupItemService.currentGroupId,
+                              userEmail: email,
+                            })
+                          : addUserAsModerator({
+                              groupId: groupItemService.currentGroupId,
+                              userEmail: email,
+                            })}
+                    >
+                      {isModerator ? t('Remove Moderator') : t('Make Moderator')}
+                    </Button>
+                  )
+                },
+              }
+            ),
+          ]
+        : []),
     ],
     [hasEditPermissions, currentUserProfileStore.isAdmin]
   ) as ColumnDef<DataWithGroupStatus<GroupUser>>[]

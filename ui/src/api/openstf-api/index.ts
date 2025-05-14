@@ -312,7 +312,7 @@ export const getAlertMessage = async (): Promise<AlertMessage> => {
 
 export const addUserAsModerator = async ({ groupId, userEmail }: GroupUserArgs): Promise<boolean> => {
   if (!userEmail) throw new Error('User email is required to add moderator')
-  
+
   const { data } = await openstfApiClient.put<GroupResponse>(OPENSTF_API_ROUTES.groupModerator(groupId, userEmail))
 
   return data.success
@@ -320,7 +320,7 @@ export const addUserAsModerator = async ({ groupId, userEmail }: GroupUserArgs):
 
 export const removeUserAsModerator = async ({ groupId, userEmail }: GroupUserArgs): Promise<boolean> => {
   if (!userEmail) throw new Error('User email is required to remove moderator')
-  
+
   const { data } = await openstfApiClient.delete<GroupResponse>(OPENSTF_API_ROUTES.groupModerator(groupId, userEmail))
 
   return data.success
