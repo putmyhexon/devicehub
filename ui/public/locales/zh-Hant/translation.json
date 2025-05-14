@@ -432,5 +432,8 @@
   "Log In": "登入",
   "Contact Support": "聯繫支持",
   "Logout": "註銷",
-  "You are authenticated via an automatic login method": "您通過自動登錄方法對您進行身份驗證"
+  "You are authenticated via an automatic login method": "您通過自動登錄方法對您進行身份驗證",
+  "Moderator": "主持人",
+  "Make Moderator": "成為主持人",
+  "Remove Moderator": "移除版主"
 }

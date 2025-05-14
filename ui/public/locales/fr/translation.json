@@ -504,5 +504,8 @@
   "Log In": "Se connecter",
   "Contact Support": "Support de contact",
   "Logout": "Déconnexion",
-  "You are authenticated via an automatic login method": "Vous êtes authentifié via une méthode de connexion automatique"
+  "You are authenticated via an automatic login method": "Vous êtes authentifié via une méthode de connexion automatique",
+  "Moderator": "Modérateur",
+  "Make Moderator": "En faire un modérateur",
+  "Remove Moderator": "Supprimer le modérateur"
 }

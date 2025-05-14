@@ -454,5 +454,8 @@
   "Really revoke access of this user": "Бұл пайдаланушының кіруіне шынымен де қайтарып алыңыз?",
   "User group quota": "Пайдаланушы тобының квотасы",
   "Contact Support": "Байланыс қолдауы",
-  "You are authenticated via an automatic login method": "Автоматты кіру әдісі арқылы аутентификацияланасыз"
+  "You are authenticated via an automatic login method": "Автоматты кіру әдісі арқылы аутентификацияланасыз",
+  "Moderator": "Модератор",
+  "Make Moderator": "Модератор жасаңыз",
+  "Remove Moderator": "Модераторды алып тастаңыз"
 }

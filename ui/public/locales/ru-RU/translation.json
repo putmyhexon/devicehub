@@ -454,5 +454,8 @@
   "Really revoke access of this user": "Действительно отмените доступ этого пользователя?",
   "User group quota": "Квота пользователя на использования групп",
   "Contact Support": "Связаться с поддержкой",
-  "You are authenticated via an automatic login method": "Вы авторизованы через способ, когда вход происходит автоматически"
+  "You are authenticated via an automatic login method": "Вы авторизованы через способ, когда вход происходит автоматически",
+  "Moderator": "Модератор",
+  "Make Moderator": "Сделать модератором",
+  "Remove Moderator": "Убрать модератора"
 }

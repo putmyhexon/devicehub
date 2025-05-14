@@ -385,5 +385,8 @@
   "Log In": "Zaloguj się",
   "Contact Support": "Kontakt z obsługą",
   "Logout": "Logout",
-  "You are authenticated via an automatic login method": "Jesteś uwierzytelniony za pomocą automatycznej metody logowania"
+  "You are authenticated via an automatic login method": "Jesteś uwierzytelniony za pomocą automatycznej metody logowania",
+  "Moderator": "Moderator",
+  "Make Moderator": "Uczyń moderatorem",
+  "Remove Moderator": "Usuń moderatora"
 }

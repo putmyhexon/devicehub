@@ -447,5 +447,8 @@
   "Log In": "Acceso",
   "Contact Support": "Soporte de contacto",
   "Logout": "Cierre de sesión",
-  "You are authenticated via an automatic login method": "Te autentican a través de un método de inicio de sesión automático"
+  "You are authenticated via an automatic login method": "Te autentican a través de un método de inicio de sesión automático",
+  "Moderator": "Moderador",
+  "Make Moderator": "Convertirlo en moderador",
+  "Remove Moderator": "Eliminar moderador"
 }

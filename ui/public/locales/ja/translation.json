@@ -462,5 +462,8 @@
   "Log In": "ログイン",
   "Contact Support": "お問い合わせサポート",
   "Logout": "ログアウト",
-  "You are authenticated via an automatic login method": "自動ログインメソッドを介して認証されます"
+  "You are authenticated via an automatic login method": "自動ログインメソッドを介して認証されます",
+  "Moderator": "モデレータ",
+  "Make Moderator": "モデレーターにする",
+  "Remove Moderator": "モデレーターを削除"
 }

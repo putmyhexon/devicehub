@@ -15,4 +15,5 @@ export const OPENSTF_API_ROUTES = {
   userGroupQuota: (email: string) => `/users/${email}/groupsQuotas`,
   grantAdmin: (email: string) => `/users/grantAdmin/${email}`,
   revokeAdmin: (email: string) => `/users/revokeAdmin/${email}`,
+  groupModerator: (id: string, email: string) => `/groups/${id}/moderators/${email}`,
 } as const
