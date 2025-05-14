@@ -1,6 +1,6 @@
 import { createQueryKeyStore } from '@lukemorales/query-key-factory'
 
-import { getAuthContact, getAuthDocs, getManifest } from '@/api/openstf'
+import { getAuthContact, getAuthDocs, getManifest, additionalUrl } from '@/api/openstf'
 import {
   getAccessTokens,
   getAdbRange,
@@ -14,6 +14,7 @@ import {
   getSettingsDevices,
   getShellDevices,
   getSettingsUsers,
+  getAccessTokensByEmail,
 } from '@/api/openstf-api'
 import { getAuthUrl } from '@/api/auth'
 
@@ -63,6 +64,10 @@ export const queries = createQueryKeyStore({
       queryKey: null,
       queryFn: () => getAlertMessage(),
     },
+    accessTokens: (email: string) => ({
+      queryKey: [email],
+      queryFn: (): Promise<string[]> => getAccessTokensByEmail(email),
+    }),
   },
   user: {
     profile: {
@@ -99,6 +104,12 @@ export const queries = createQueryKeyStore({
       queryKey: [href],
       queryFn: (): Promise<GetManifestResponse> => getManifest(href),
     }),
+  },
+  service: {
+    additionalUrl: {
+      queryKey: null,
+      queryFn: () => additionalUrl(),
+    },
   },
 })
 
