@@ -225,6 +225,10 @@ Refer to [TESTING.md](doc/TESTING.md) for testing instructions.
 
 To contribute, please read the guidelines outlined in [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Other Docs
+
+If you still have questions try to [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/VKCOM/devicehub) or contact us in discussions
+
 ## License
 
 For licensing information, please see [LICENSE](LICENSE).
