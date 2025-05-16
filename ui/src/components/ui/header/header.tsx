@@ -55,7 +55,7 @@ export const Header = () => {
         <ConditionalRender conditions={[additionalUrl !== '']}>
           <Link className={styles.navLink} to={additionalUrl || ''}>
             <Button before={<Icon56WebDeviceOutline height={28} width={28} />} mode='tertiary' size='l'>
-              {t('Web Devices')}
+              {t('Browsers')}
             </Button>
           </Link>
         </ConditionalRender>
