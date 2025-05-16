@@ -25,7 +25,7 @@ jobs:
 
             - name: Show logs for devicehub
               if: always()
-              run: docker compose -f docker-compose-test.yaml logs devicehub
+              run: docker compose -f docker-compose-api-tests.yaml logs devicehub
 
             - name: Check generate device logs
               if: always()
