@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
 import { useInjection } from 'inversify-react'
 import { Button, Tooltip } from '@vkontakte/vkui'
-import { Icon16MailOutline, Icon16Crown } from '@vkontakte/icons'
+import {Icon16MailOutline, Icon36UserOutline, Icon20UserStarOutline} from '@vkontakte/icons'
 import { createColumnHelper } from '@tanstack/react-table'
 
 import { TextWithTranslation } from '@/components/lib/text-with-translation'
@@ -137,19 +137,26 @@ export const GroupUsersTable = observer(() => {
                 }
               },
               {
-                header: () => <TextWithTranslation name='Moderator' />,
+                header: () => <TextWithTranslation name='Group privilege' />,
                 id: GroupUsersColumnIds.MODERATOR,
                 cell: ({ getValue }) => {
                   const { isModerator, isOwner, email } = getValue()
 
                   // Owner can't be assigned as moderator (they already have all permissions)
                   if (isOwner) {
-                    return null
+                    return <Button
+                      before={<Icon20UserStarOutline height={24} width={24}/>}
+                      mode={'primary'}
+                      size='s'
+                      onClick={() => {}}
+                    >
+                      {t('Owner')}
+                    </Button>
                   }
 
                   return (
                     <Button
-                      before={<Icon16Crown />}
+                      before={<Icon36UserOutline height={24} width={24}/>}
                       mode={isModerator ? 'outline' : 'primary'}
                       size='s'
                       onClick={() =>

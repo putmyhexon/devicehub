@@ -459,5 +459,6 @@
   "This is sensitive information. Do not share this token.": "Это конфиденциальная информация. Не передавайте этот токен третьим лицам.",
   "Moderator": "Модератор",
   "Make Moderator": "Сделать модератором",
-  "Remove Moderator": "Убрать модератора"
+  "Remove Moderator": "Убрать модератора",
+  "Group privilege": "Права в группе"
 }
