@@ -12,6 +12,7 @@ services:
       ["mongod", "--replSet", "myReplicaSet", "--bind_ip", "localhost,mongo1"]
     networks:
       devicehub:
+
   mongosetup:
     image: mongo:6.0.10
     depends_on:
@@ -22,49 +23,65 @@ services:
     entrypoint: ["bash", "/scripts/mongo_setup_test.sh"]
     networks:
       devicehub:
-  adb:
-    container_name: adb
-    image: devicefarmer/adb:latest
-    restart: unless-stopped
-    volumes:
-      - "/dev/bus/usb:/dev/bus/usb"
+
+  emulator:
+    build: ./test/e2e/helpers/emulator
+    hostname: emulator
+    container_name: emulator
     privileged: true
+    environment:
+      EMULATOR_ROOT: /opt/android-sdk/emulator
+      LD_LIBRARY_PATH: "/opt/android-sdk/emulator/lib64/qt/lib:/opt/android-sdk/emulator/lib64/libstdc++:/opt/android-sdk/emulator/lib64:/opt/android-sdk/emulator/lib64/gles_swiftshader"
+    command: >
+      bash -c "
+        adb -a start-server & \
+        emulator -avd test_avd -read-only -no-accel -delay-adb -no-boot-anim -skip-adb-auth -no-window -no-audio -no-qt -no-snapshot -verbose -logcat '*:v'
+      "
+    healthcheck:
+      test: [ "CMD-SHELL", "adb devices | grep emulator || exit 1" ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
     networks:
       devicehub:
+    restart: unless-stopped
+
   devicehub:
-    container_name: devicehub
     build: .
+    container_name: devicehub
+    hostname: devicehub
+    depends_on:
+      mongosetup:
+        condition: service_completed_successfully
+      emulator:
+        condition: service_healthy
     ports:
       - "7100:7100"
       - "7110:7110"
       - "7400-7500:7400-7500"
     environment:
-      - TZ='America/Los_Angeles'
+      - TZ=America/Los_Angeles
       - MONGODB_PORT_27017_TCP=mongodb://mongo1:27017
       - STF_ADMIN_EMAIL=administrator@fakedomain.com
       - STF_ADMIN_NAME=administrator
-    restart: unless-stopped
-    command: stf local --adb-host adb --public-ip 0.0.0.0 --provider-min-port 7400 --provider-max-port 7500
+    command: stf local --adb-host emulator --public-ip 0.0.0.0 --provider-min-port 7400 --provider-max-port 7500
     healthcheck:
-        test: [ "CMD", "curl", "-f", "http://devicehub:7100/auth/contact" ]
-        interval: 20s
-        timeout: 10s
-        retries: 5
-    depends_on:
-        mongosetup:
-            condition: service_completed_successfully
-        adb:
-            condition: service_started
+      test: ["CMD", "curl", "-f", "http://devicehub:7100/auth/contact"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
     networks:
       devicehub:
+
   devicehub-e2e-tests:
     build: ./test/e2e
-    environment:
-      - CI=1
     container_name: devicehub-e2e-tests
-    command: npx playwright test
     depends_on:
       devicehub:
         condition: service_healthy
+    command: npx playwright test
+    environment:
+      - CI=1
     restart: "no"
     network_mode: host
