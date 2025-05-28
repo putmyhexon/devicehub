@@ -2957,7 +2957,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeviceListResponse'
+                required:
+                  - description
+                  - success
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  description:
+                    type: string
         default:
           description: |
             Unexpected Error:
@@ -3032,7 +3040,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GroupResponse'
+                $ref: '#/components/schemas/AutoTestResponse'
         default:
           description: |
             Unexpected Error:
@@ -3131,7 +3139,7 @@ paths:
                   content:
                       application/json:
                           schema:
-                              $ref: '#/components/schemas/GroupResponse'
+                              $ref: '#/components/schemas/AutoTestResponse'
               default:
                   description: |
                       Unexpected Error:
@@ -3464,6 +3472,7 @@ components:
     Device:
       required:
       - serial
+      - group
       type: object
       properties:
         _id:
@@ -3629,9 +3638,7 @@ components:
             scale:
               type: integer
             temp:
-              oneOf:
-                - type: number
-                - type: string
+              type: integer
             voltage:
               type: integer
         browser:
@@ -4042,6 +4049,26 @@ components:
           type: boolean
         fingerprint:
           type: string
+    AutoTestResponse:
+      required:
+        - description
+        - groups
+        - success
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        group:
+          type: object
+          properties:
+            id:
+              type: string
+            devices:
+              type: array
+              items:
+                $ref: '#/components/schemas/Device'
     UserListResponse:
       required:
       - description
