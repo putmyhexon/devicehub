@@ -6,24 +6,24 @@ from attrs import field as _attrs_field
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
-    from ..models.device import Device
+    from ..models.auto_test_response_group import AutoTestResponseGroup
 
 
-T = TypeVar("T", bound="DeviceListResponse")
+T = TypeVar("T", bound="AutoTestResponse")
 
 
 @_attrs_define
-class DeviceListResponse:
+class AutoTestResponse:
     """
     Attributes:
         success (bool):
         description (str):
-        devices (Union[Unset, List['Device']]):
+        group (Union[Unset, AutoTestResponseGroup]):
     """
 
     success: bool
     description: str
-    devices: Union[Unset, List["Device"]] = UNSET
+    group: Union[Unset, "AutoTestResponseGroup"] = UNSET
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -31,12 +31,9 @@ class DeviceListResponse:
 
         description = self.description
 
-        devices: Union[Unset, List[Dict[str, Any]]] = UNSET
-        if not isinstance(self.devices, Unset):
-            devices = []
-            for devices_item_data in self.devices:
-                devices_item = devices_item_data.to_dict()
-                devices.append(devices_item)
+        group: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.group, Unset):
+            group = self.group.to_dict()
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -46,35 +43,35 @@ class DeviceListResponse:
                 "description": description,
             }
         )
-        if devices is not UNSET:
-            field_dict["devices"] = devices
+        if group is not UNSET:
+            field_dict["group"] = group
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
-        from ..models.device import Device
+        from ..models.auto_test_response_group import AutoTestResponseGroup
 
         d = src_dict.copy()
         success = d.pop("success")
 
         description = d.pop("description")
 
-        devices = []
-        _devices = d.pop("devices", UNSET)
-        for devices_item_data in _devices or []:
-            devices_item = Device.from_dict(devices_item_data)
+        _group = d.pop("group", UNSET)
+        group: Union[Unset, AutoTestResponseGroup]
+        if isinstance(_group, Unset):
+            group = UNSET
+        else:
+            group = AutoTestResponseGroup.from_dict(_group)
 
-            devices.append(devices_item)
-
-        device_list_response = cls(
+        auto_test_response = cls(
             success=success,
             description=description,
-            devices=devices,
+            group=group,
         )
 
-        device_list_response.additional_properties = d
-        return device_list_response
+        auto_test_response.additional_properties = d
+        return auto_test_response
 
     @property
     def additional_keys(self) -> List[str]:

@@ -4,7 +4,7 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 if TYPE_CHECKING:
-    from ..models.user_list_response_users_item import UserListResponseUsersItem
+    from ..models.user import User
 
 
 T = TypeVar("T", bound="UserListResponse")
@@ -16,12 +16,12 @@ class UserListResponse:
     Attributes:
         success (bool):
         description (str):
-        users (List['UserListResponseUsersItem']):
+        users (List['User']):
     """
 
     success: bool
     description: str
-    users: List["UserListResponseUsersItem"]
+    users: List["User"]
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -48,7 +48,7 @@ class UserListResponse:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
-        from ..models.user_list_response_users_item import UserListResponseUsersItem
+        from ..models.user import User
 
         d = src_dict.copy()
         success = d.pop("success")
@@ -58,7 +58,7 @@ class UserListResponse:
         users = []
         _users = d.pop("users")
         for users_item_data in _users:
-            users_item = UserListResponseUsersItem.from_dict(users_item_data)
+            users_item = User.from_dict(users_item_data)
 
             users.append(users_item)
 

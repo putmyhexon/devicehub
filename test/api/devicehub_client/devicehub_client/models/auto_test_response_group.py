@@ -9,27 +9,23 @@ if TYPE_CHECKING:
     from ..models.device import Device
 
 
-T = TypeVar("T", bound="DeviceListResponse")
+T = TypeVar("T", bound="AutoTestResponseGroup")
 
 
 @_attrs_define
-class DeviceListResponse:
+class AutoTestResponseGroup:
     """
     Attributes:
-        success (bool):
-        description (str):
+        id (Union[Unset, str]):
         devices (Union[Unset, List['Device']]):
     """
 
-    success: bool
-    description: str
+    id: Union[Unset, str] = UNSET
     devices: Union[Unset, List["Device"]] = UNSET
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        success = self.success
-
-        description = self.description
+        id = self.id
 
         devices: Union[Unset, List[Dict[str, Any]]] = UNSET
         if not isinstance(self.devices, Unset):
@@ -40,12 +36,9 @@ class DeviceListResponse:
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
-        field_dict.update(
-            {
-                "success": success,
-                "description": description,
-            }
-        )
+        field_dict.update({})
+        if id is not UNSET:
+            field_dict["id"] = id
         if devices is not UNSET:
             field_dict["devices"] = devices
 
@@ -56,9 +49,7 @@ class DeviceListResponse:
         from ..models.device import Device
 
         d = src_dict.copy()
-        success = d.pop("success")
-
-        description = d.pop("description")
+        id = d.pop("id", UNSET)
 
         devices = []
         _devices = d.pop("devices", UNSET)
@@ -67,14 +58,13 @@ class DeviceListResponse:
 
             devices.append(devices_item)
 
-        device_list_response = cls(
-            success=success,
-            description=description,
+        auto_test_response_group = cls(
+            id=id,
             devices=devices,
         )
 
-        device_list_response.additional_properties = d
-        return device_list_response
+        auto_test_response_group.additional_properties = d
+        return auto_test_response_group
 
     @property
     def additional_keys(self) -> List[str]:
