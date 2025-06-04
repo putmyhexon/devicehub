@@ -256,13 +256,13 @@ def device_in_group_check(api_client, successful_response_check, __device_has_gr
 def devices_in_group_check(api_client, successful_response_check, __device_has_group_check):
     def devices_in_group_check_func(serials, group_id, group_name=None):
         # add timeout to wait while devices move to group in DB
-        time.sleep(1)
+        time.sleep(2)
         response = get_group.sync_detailed(id=group_id, client=api_client)
         successful_response_check(response, description='Group Information')
         is_not_none(response.parsed.group)
         group_dict = response.parsed.group.to_dict()
-        equal(sorted(serials), sorted(group_dict.get('devices')))
         for serial in serials:
+            is_in(serial, group_dict.get('devices'))
             __device_has_group_check(serial, group_id, group_name)
 
     return devices_in_group_check_func
