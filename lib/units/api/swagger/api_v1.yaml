@@ -3546,6 +3546,7 @@ components:
               type: string
             lifeTime:
               type: object
+              nullable: true
               properties:
                 start:
                   type: string
@@ -3555,6 +3556,7 @@ components:
                   format: date-time
             owner:
               type: object
+              nullable: true
               properties:
                 email:
                   type: string

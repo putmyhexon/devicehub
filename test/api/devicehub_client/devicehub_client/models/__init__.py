@@ -28,8 +28,8 @@ from .device_capabilities import DeviceCapabilities
 from .device_cpu import DeviceCpu
 from .device_display import DeviceDisplay
 from .device_group import DeviceGroup
-from .device_group_life_time import DeviceGroupLifeTime
-from .device_group_owner import DeviceGroupOwner
+from .device_group_life_time_type_0 import DeviceGroupLifeTimeType0
+from .device_group_owner_type_0 import DeviceGroupOwnerType0
 from .device_list_response import DeviceListResponse
 from .device_memory import DeviceMemory
 from .device_network import DeviceNetwork
@@ -123,8 +123,8 @@ __all__ = (
     "DeviceCpu",
     "DeviceDisplay",
     "DeviceGroup",
-    "DeviceGroupLifeTime",
-    "DeviceGroupOwner",
+    "DeviceGroupLifeTimeType0",
+    "DeviceGroupOwnerType0",
     "DeviceListResponse",
     "DeviceMemory",
     "DeviceNetwork",

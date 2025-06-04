@@ -5,11 +5,11 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="DeviceGroupOwner")
+T = TypeVar("T", bound="DeviceGroupOwnerType0")
 
 
 @_attrs_define
-class DeviceGroupOwner:
+class DeviceGroupOwnerType0:
     """
     Attributes:
         email (Union[Unset, str]):
@@ -42,13 +42,13 @@ class DeviceGroupOwner:
 
         name = d.pop("name", UNSET)
 
-        device_group_owner = cls(
+        device_group_owner_type_0 = cls(
             email=email,
             name=name,
         )
 
-        device_group_owner.additional_properties = d
-        return device_group_owner
+        device_group_owner_type_0.additional_properties = d
+        return device_group_owner_type_0
 
     @property
     def additional_keys(self) -> List[str]:

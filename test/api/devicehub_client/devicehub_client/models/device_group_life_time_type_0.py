@@ -7,11 +7,11 @@ from dateutil.parser import isoparse
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="DeviceGroupLifeTime")
+T = TypeVar("T", bound="DeviceGroupLifeTimeType0")
 
 
 @_attrs_define
-class DeviceGroupLifeTime:
+class DeviceGroupLifeTimeType0:
     """
     Attributes:
         start (Union[Unset, datetime.datetime]):
@@ -58,13 +58,13 @@ class DeviceGroupLifeTime:
         else:
             stop = isoparse(_stop)
 
-        device_group_life_time = cls(
+        device_group_life_time_type_0 = cls(
             start=start,
             stop=stop,
         )
 
-        device_group_life_time.additional_properties = d
-        return device_group_life_time
+        device_group_life_time_type_0.additional_properties = d
+        return device_group_life_time_type_0
 
     @property
     def additional_keys(self) -> List[str]:
