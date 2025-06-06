@@ -1,30 +1,54 @@
-from typing import Any, Dict, List, Type, TypeVar
+from typing import Any, Dict, List, Type, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="UserListResponseUsersItem")
+from ..types import UNSET, Unset
+
+T = TypeVar("T", bound="DeviceGroupOwnerType0")
 
 
 @_attrs_define
-class UserListResponseUsersItem:
-    """ """
+class DeviceGroupOwnerType0:
+    """
+    Attributes:
+        email (Union[Unset, str]):
+        name (Union[Unset, str]):
+    """
 
+    email: Union[Unset, str] = UNSET
+    name: Union[Unset, str] = UNSET
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
+        email = self.email
+
+        name = self.name
+
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
+        field_dict.update({})
+        if email is not UNSET:
+            field_dict["email"] = email
+        if name is not UNSET:
+            field_dict["name"] = name
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        user_list_response_users_item = cls()
+        email = d.pop("email", UNSET)
 
-        user_list_response_users_item.additional_properties = d
-        return user_list_response_users_item
+        name = d.pop("name", UNSET)
+
+        device_group_owner_type_0 = cls(
+            email=email,
+            name=name,
+        )
+
+        device_group_owner_type_0.additional_properties = d
+        return device_group_owner_type_0
 
     @property
     def additional_keys(self) -> List[str]:

@@ -5,50 +5,50 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="UserResponseUserAdbKeysItem")
+T = TypeVar("T", bound="UserSettingsGroupItemsPerPage")
 
 
 @_attrs_define
-class UserResponseUserAdbKeysItem:
+class UserSettingsGroupItemsPerPage:
     """
     Attributes:
-        fingerprint (Union[Unset, str]):
-        title (Union[Unset, str]):
+        name (Union[Unset, str]):
+        value (Union[Unset, int]):
     """
 
-    fingerprint: Union[Unset, str] = UNSET
-    title: Union[Unset, str] = UNSET
+    name: Union[Unset, str] = UNSET
+    value: Union[Unset, int] = UNSET
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        fingerprint = self.fingerprint
+        name = self.name
 
-        title = self.title
+        value = self.value
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if fingerprint is not UNSET:
-            field_dict["fingerprint"] = fingerprint
-        if title is not UNSET:
-            field_dict["title"] = title
+        if name is not UNSET:
+            field_dict["name"] = name
+        if value is not UNSET:
+            field_dict["value"] = value
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        fingerprint = d.pop("fingerprint", UNSET)
+        name = d.pop("name", UNSET)
 
-        title = d.pop("title", UNSET)
+        value = d.pop("value", UNSET)
 
-        user_response_user_adb_keys_item = cls(
-            fingerprint=fingerprint,
-            title=title,
+        user_settings_group_items_per_page = cls(
+            name=name,
+            value=value,
         )
 
-        user_response_user_adb_keys_item.additional_properties = d
-        return user_response_user_adb_keys_item
+        user_settings_group_items_per_page.additional_properties = d
+        return user_settings_group_items_per_page
 
     @property
     def additional_keys(self) -> List[str]:

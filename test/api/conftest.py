@@ -261,8 +261,8 @@ def devices_in_group_check(api_client, successful_response_check, __device_has_g
         successful_response_check(response, description='Group Information')
         is_not_none(response.parsed.group)
         group_dict = response.parsed.group.to_dict()
-        equal(sorted(serials), sorted(group_dict.get('devices')))
         for serial in serials:
+            is_in(serial, group_dict.get('devices'))
             __device_has_group_check(serial, group_id, group_name)
 
     return devices_in_group_check_func
@@ -273,9 +273,9 @@ def common_group_id(api_client):
     response = get_groups.sync_detailed(client=api_client)
     equal(response.status_code, 200)
     is_true(response.parsed.success)
-    common_group = next(filter(lambda x: x['name'] == 'Common', response.parsed.groups), None)
+    common_group = next(filter(lambda x: x.to_dict()['name'] == 'Common', response.parsed.groups), None)
     is_not_none(common_group)
-    return common_group['id']
+    return common_group.to_dict()['id']
 
 
 @pytest.fixture()

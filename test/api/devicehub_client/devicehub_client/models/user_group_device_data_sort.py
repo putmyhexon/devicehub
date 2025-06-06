@@ -5,50 +5,50 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="UserResponseUserGroupsQuotasConsumed")
+T = TypeVar("T", bound="UserGroupDeviceDataSort")
 
 
 @_attrs_define
-class UserResponseUserGroupsQuotasConsumed:
+class UserGroupDeviceDataSort:
     """
     Attributes:
-        number (Union[Unset, float]):
-        duration (Union[Unset, float]):
+        index (Union[Unset, float]):
+        reverse (Union[Unset, bool]):
     """
 
-    number: Union[Unset, float] = UNSET
-    duration: Union[Unset, float] = UNSET
+    index: Union[Unset, float] = UNSET
+    reverse: Union[Unset, bool] = UNSET
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        number = self.number
+        index = self.index
 
-        duration = self.duration
+        reverse = self.reverse
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if number is not UNSET:
-            field_dict["number"] = number
-        if duration is not UNSET:
-            field_dict["duration"] = duration
+        if index is not UNSET:
+            field_dict["index"] = index
+        if reverse is not UNSET:
+            field_dict["reverse"] = reverse
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        number = d.pop("number", UNSET)
+        index = d.pop("index", UNSET)
 
-        duration = d.pop("duration", UNSET)
+        reverse = d.pop("reverse", UNSET)
 
-        user_response_user_groups_quotas_consumed = cls(
-            number=number,
-            duration=duration,
+        user_group_device_data_sort = cls(
+            index=index,
+            reverse=reverse,
         )
 
-        user_response_user_groups_quotas_consumed.additional_properties = d
-        return user_response_user_groups_quotas_consumed
+        user_group_device_data_sort.additional_properties = d
+        return user_group_device_data_sort
 
     @property
     def additional_keys(self) -> List[str]:
