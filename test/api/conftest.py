@@ -256,7 +256,7 @@ def device_in_group_check(api_client, successful_response_check, __device_has_gr
 def devices_in_group_check(api_client, successful_response_check, __device_has_group_check):
     def devices_in_group_check_func(serials, group_id, group_name=None):
         # add timeout to wait while devices move to group in DB
-        time.sleep(2)
+        time.sleep(1)
         response = get_group.sync_detailed(id=group_id, client=api_client)
         successful_response_check(response, description='Group Information')
         is_not_none(response.parsed.group)
@@ -319,3 +319,13 @@ def failure_response_check():
             equal(response_content['description'], description)
 
     return failure_response_check_func
+
+
+from enum import Enum
+
+
+class WrongType(str, Enum):
+    NONE = None
+
+    def __str__(self) -> str:
+        return str(self.value)
