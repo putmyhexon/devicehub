@@ -1,10 +1,17 @@
+from enum import Enum
+
 import pytest
 from pytest_check import equal, is_not_none, is_none
 
-from api.conftest import WrongType
 from devicehub_client.api.devices import get_devices, get_device_by_serial
 from devicehub_client.models import GetDevicesTarget
 
+
+class WrongType(str, Enum):
+    NONE = None
+
+    def __str__(self) -> str:
+        return str(self.value)
 
 # TODO: add param: GetDevicesTarget.STANDARD, when generator of devices will be ready(add device with standard group)
 # api/v1/devices - list of devices

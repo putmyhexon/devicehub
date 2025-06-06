@@ -319,13 +319,3 @@ def failure_response_check():
             equal(response_content['description'], description)
 
     return failure_response_check_func
-
-
-from enum import Enum
-
-
-class WrongType(str, Enum):
-    NONE = None
-
-    def __str__(self) -> str:
-        return str(self.value)
