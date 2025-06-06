@@ -5,50 +5,50 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="DeviceGroupOwner")
+T = TypeVar("T", bound="UserSettingsDeviceListColumnsItem")
 
 
 @_attrs_define
-class DeviceGroupOwner:
+class UserSettingsDeviceListColumnsItem:
     """
     Attributes:
-        email (Union[Unset, str]):
         name (Union[Unset, str]):
+        selected (Union[Unset, bool]):
     """
 
-    email: Union[Unset, str] = UNSET
     name: Union[Unset, str] = UNSET
+    selected: Union[Unset, bool] = UNSET
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        email = self.email
-
         name = self.name
+
+        selected = self.selected
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if email is not UNSET:
-            field_dict["email"] = email
         if name is not UNSET:
             field_dict["name"] = name
+        if selected is not UNSET:
+            field_dict["selected"] = selected
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        email = d.pop("email", UNSET)
-
         name = d.pop("name", UNSET)
 
-        device_group_owner = cls(
-            email=email,
+        selected = d.pop("selected", UNSET)
+
+        user_settings_device_list_columns_item = cls(
             name=name,
+            selected=selected,
         )
 
-        device_group_owner.additional_properties = d
-        return device_group_owner
+        user_settings_device_list_columns_item.additional_properties = d
+        return user_settings_device_list_columns_item
 
     @property
     def additional_keys(self) -> List[str]:

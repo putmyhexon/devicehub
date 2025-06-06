@@ -5,50 +5,50 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="UserResponseUserSettingsGroupItemsPerPage")
+T = TypeVar("T", bound="GroupListResponseGroupsItemLock")
 
 
 @_attrs_define
-class UserResponseUserSettingsGroupItemsPerPage:
+class GroupListResponseGroupsItemLock:
     """
     Attributes:
-        name (Union[Unset, str]):
-        value (Union[Unset, int]):
+        user (Union[Unset, bool]):
+        admin (Union[Unset, bool]):
     """
 
-    name: Union[Unset, str] = UNSET
-    value: Union[Unset, int] = UNSET
+    user: Union[Unset, bool] = UNSET
+    admin: Union[Unset, bool] = UNSET
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        name = self.name
+        user = self.user
 
-        value = self.value
+        admin = self.admin
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if name is not UNSET:
-            field_dict["name"] = name
-        if value is not UNSET:
-            field_dict["value"] = value
+        if user is not UNSET:
+            field_dict["user"] = user
+        if admin is not UNSET:
+            field_dict["admin"] = admin
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        name = d.pop("name", UNSET)
+        user = d.pop("user", UNSET)
 
-        value = d.pop("value", UNSET)
+        admin = d.pop("admin", UNSET)
 
-        user_response_user_settings_group_items_per_page = cls(
-            name=name,
-            value=value,
+        group_list_response_groups_item_lock = cls(
+            user=user,
+            admin=admin,
         )
 
-        user_response_user_settings_group_items_per_page.additional_properties = d
-        return user_response_user_settings_group_items_per_page
+        group_list_response_groups_item_lock.additional_properties = d
+        return group_list_response_groups_item_lock
 
     @property
     def additional_keys(self) -> List[str]:

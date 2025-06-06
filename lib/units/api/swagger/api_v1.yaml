@@ -2957,7 +2957,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeviceListResponse'
+                required:
+                  - description
+                  - success
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  description:
+                    type: string
         default:
           description: |
             Unexpected Error:
@@ -3032,7 +3040,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GroupResponse'
+                $ref: '#/components/schemas/AutoTestResponse'
         default:
           description: |
             Unexpected Error:
@@ -3131,7 +3139,7 @@ paths:
                   content:
                       application/json:
                           schema:
-                              $ref: '#/components/schemas/GroupResponse'
+                              $ref: '#/components/schemas/AutoTestResponse'
               default:
                   description: |
                       Unexpected Error:
@@ -3462,8 +3470,6 @@ components:
               type: string
           description: Owner of the group in conflict
     Device:
-      required:
-      - serial
       type: object
       properties:
         _id:
@@ -3540,6 +3546,7 @@ components:
               type: string
             lifeTime:
               type: object
+              nullable: true
               properties:
                 start:
                   type: string
@@ -3549,6 +3556,7 @@ components:
                   format: date-time
             owner:
               type: object
+              nullable: true
               properties:
                 email:
                   type: string
@@ -3629,9 +3637,7 @@ components:
             scale:
               type: integer
             temp:
-              oneOf:
-                - type: number
-                - type: string
+              type: integer
             voltage:
               type: integer
         browser:
@@ -4042,6 +4048,26 @@ components:
           type: boolean
         fingerprint:
           type: string
+    AutoTestResponse:
+      required:
+        - description
+        - groups
+        - success
+      type: object
+      properties:
+        success:
+          type: boolean
+        description:
+          type: string
+        group:
+          type: object
+          properties:
+            id:
+              type: string
+            devices:
+              type: array
+              items:
+                $ref: '#/components/schemas/Device'
     UserListResponse:
       required:
       - description

@@ -1,54 +1,45 @@
-from typing import Any, Dict, List, Type, TypeVar, Union
+from typing import Any, Dict, List, Type, TypeVar
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-from ..types import UNSET, Unset
-
-T = TypeVar("T", bound="UserResponseUserSettingsDeviceListColumnsItem")
+T = TypeVar("T", bound="GetAccessTokenByTitleBody")
 
 
 @_attrs_define
-class UserResponseUserSettingsDeviceListColumnsItem:
+class GetAccessTokenByTitleBody:
     """
     Attributes:
-        name (Union[Unset, str]):
-        selected (Union[Unset, bool]):
+        title (str): Access Token Title
     """
 
-    name: Union[Unset, str] = UNSET
-    selected: Union[Unset, bool] = UNSET
+    title: str
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        name = self.name
-
-        selected = self.selected
+        title = self.title
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
-        field_dict.update({})
-        if name is not UNSET:
-            field_dict["name"] = name
-        if selected is not UNSET:
-            field_dict["selected"] = selected
+        field_dict.update(
+            {
+                "title": title,
+            }
+        )
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        name = d.pop("name", UNSET)
+        title = d.pop("title")
 
-        selected = d.pop("selected", UNSET)
-
-        user_response_user_settings_device_list_columns_item = cls(
-            name=name,
-            selected=selected,
+        get_access_token_by_title_body = cls(
+            title=title,
         )
 
-        user_response_user_settings_device_list_columns_item.additional_properties = d
-        return user_response_user_settings_device_list_columns_item
+        get_access_token_by_title_body.additional_properties = d
+        return get_access_token_by_title_body
 
     @property
     def additional_keys(self) -> List[str]:
