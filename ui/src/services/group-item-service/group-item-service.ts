@@ -175,6 +175,7 @@ export class GroupItemService {
   }
 
   setEntireScheduleData(data: SetScheduleDataArgs): void {
+    console.log('setEntireScheduleData', data)
     const { start, stop } = data.dates?.[0] || {}
 
     const updatedData: ScheduleData = {
@@ -193,7 +194,7 @@ export class GroupItemService {
   }
 
   checkDurationQuota(deviceNumber: number): boolean {
-    if (isOriginGroup(this.scheduleData.groupClass)) return true
+    if (isOriginGroup(this.currentGroup?.class)) return true
 
     const [startDate, expireDate] = this.scheduleData.dateRange
 
