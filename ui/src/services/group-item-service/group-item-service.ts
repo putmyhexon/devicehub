@@ -175,7 +175,6 @@ export class GroupItemService {
   }
 
   setEntireScheduleData(data: SetScheduleDataArgs): void {
-    console.log('setEntireScheduleData', data)
     const { start, stop } = data.dates?.[0] || {}
 
     const updatedData: ScheduleData = {
