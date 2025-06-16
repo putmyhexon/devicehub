@@ -193,7 +193,7 @@ export class GroupItemService {
   }
 
   checkDurationQuota(deviceNumber: number): boolean {
-    if (isOriginGroup(this.scheduleData.groupClass)) return true
+    if (isOriginGroup(this.currentGroup?.class)) return true
 
     const [startDate, expireDate] = this.scheduleData.dateRange
 
