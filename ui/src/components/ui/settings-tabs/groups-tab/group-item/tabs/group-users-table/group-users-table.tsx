@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import { useTranslation } from 'react-i18next'
 import { useInjection } from 'inversify-react'
 import { Button, Tooltip } from '@vkontakte/vkui'
-import {Icon16MailOutline, Icon36UserOutline, Icon20UserStarOutline} from '@vkontakte/icons'
+import { Icon16MailOutline, Icon36UserOutline, Icon20UserStarOutline } from '@vkontakte/icons'
 import { createColumnHelper } from '@tanstack/react-table'
 
 import { TextWithTranslation } from '@/components/lib/text-with-translation'
@@ -93,7 +93,8 @@ export const GroupUsersTable = observer(() => {
                     isRemoveFromGroupDisabled={userEmail === groupItemService.currentGroup?.owner?.email}
                     onAddToGroup={() => addUsersInGroup({ groupId: groupItemService.currentGroupId, userEmail })}
                     onRemoveFromGroup={() =>
-                      removeUsersFromGroup({ groupId: groupItemService.currentGroupId, userEmail })}
+                      removeUsersFromGroup({ groupId: groupItemService.currentGroupId, userEmail })
+                    }
                   />
                 )
               },
@@ -144,19 +145,21 @@ export const GroupUsersTable = observer(() => {
 
                   // Owner can't be assigned as moderator (they already have all permissions)
                   if (isOwner) {
-                    return <Button
-                      before={<Icon20UserStarOutline height={24} width={24}/>}
-                      mode={'primary'}
-                      size='s'
-                      onClick={() => {}}
-                    >
-                      {t('Owner')}
-                    </Button>
+                    return (
+                      <Button
+                        before={<Icon20UserStarOutline height={24} width={24} />}
+                        mode={'primary'}
+                        size='s'
+                        onClick={() => {}}
+                      >
+                        {t('Owner')}
+                      </Button>
+                    )
                   }
 
                   return (
                     <Button
-                      before={<Icon36UserOutline height={24} width={24}/>}
+                      before={<Icon36UserOutline height={24} width={24} />}
                       mode={isModerator ? 'outline' : 'primary'}
                       size='s'
                       onClick={() =>
@@ -168,7 +171,8 @@ export const GroupUsersTable = observer(() => {
                           : addUserAsModerator({
                               groupId: groupItemService.currentGroupId,
                               userEmail: email,
-                            })}
+                            })
+                      }
                     >
                       {isModerator ? t('Remove Moderator') : t('Make Moderator')}
                     </Button>

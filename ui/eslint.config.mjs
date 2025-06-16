@@ -94,7 +94,7 @@ export default tseslint.config(
       'react/react-in-jsx-scope': 'off',
       'react/require-default-props': 'off',
       'react/no-array-index-key': 'warn',
-      'react/jsx-curly-newline': 'error',
+      'react/jsx-curly-newline': 'off',
       'react/jsx-props-no-spreading': [
         'error',
         {

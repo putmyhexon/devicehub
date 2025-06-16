@@ -259,7 +259,6 @@ export class DeviceScreenStore {
     }
 
     this.isScreenStreamingJustStarted = true
-
   }
 
   private messageListener(message: MessageEvent<Blob | string>): void {
@@ -314,6 +313,7 @@ export class DeviceScreenStore {
           return
         }
       } catch {
+        /* empty */
       }
     }
 
