@@ -32,11 +32,7 @@ export class GroupItemService {
   private usersQuery
   private devicesQuery
 
-  scheduleData: ScheduleData = {
-    dateRange: [new Date(), addMinutes(new Date(), 5)],
-    repetitions: 0,
-    groupClass: 'once',
-  }
+  scheduleData!: ScheduleData
   scheduleFormErrors: ScheduleFormErrors = {}
   conflicts: ConflictTableRow[] = []
 
@@ -48,8 +44,21 @@ export class GroupItemService {
   ) {
     makeAutoObservable(this)
 
-    this.usersQuery = mobxQueryFactory(() => ({ ...queries.users.group }))
+    this.usersQuery = mobxQueryFactory(() => ({ ...queries.group.users(currentGroupId) }))
     this.devicesQuery = mobxQueryFactory(() => ({ ...queries.devices.group({ target: 'origin' }) }))
+
+    this.setEntireScheduleData(
+      this.currentGroup || {
+        dates: [
+          {
+            start: new Date().toISOString(),
+            stop: addMinutes(new Date(), 5).toISOString(),
+          },
+        ],
+        repetitions: 0,
+        class: 'once',
+      }
+    )
   }
 
   get usersQueryResult(): QueryObserverResult<GroupUser[]> {
@@ -60,8 +69,8 @@ export class GroupItemService {
     return this.devicesQuery.result
   }
 
-  get currentGroup(): GroupListResponseGroupsItem | undefined {
-    return this.groupSettingsService.groupsQueryResult.data?.find((item) => item.id === this.currentGroupId)
+  get currentGroup(): GroupListResponseGroupsItem {
+    return this.groupSettingsService.groupsQueryResult.data?.find((item) => item.id === this.currentGroupId) || {}
   }
 
   get isSomeUsersNotInGroup(): boolean {
@@ -193,14 +202,15 @@ export class GroupItemService {
   }
 
   checkDurationQuota(deviceNumber: number): boolean {
-    if (isOriginGroup(this.currentGroup?.class)) return true
+    if (isOriginGroup(this.scheduleData.groupClass)) return true
 
     const [startDate, expireDate] = this.scheduleData.dateRange
 
-    if (!startDate || !expireDate || !this.currentGroup?.devices) return false
+    if (!startDate || !expireDate) return false
 
+    const devicesLength = this.currentGroup.devices?.length || 0
     const duration =
-      (this.currentGroup.devices.length + deviceNumber) *
+      (devicesLength + deviceNumber) *
       (expireDate.getTime() - startDate.getTime()) *
       (this.scheduleData.repetitions + 1)
 

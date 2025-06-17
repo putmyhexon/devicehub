@@ -18,6 +18,7 @@
     "valid-typeof": 2,
 
     // Best practices
+    "no-prototype-builtins": 0,
     "no-useless-catch": 0,
     "accessor-pairs": 2,
     "block-scoped-var": 2,
