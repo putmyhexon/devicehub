@@ -5,10 +5,10 @@
  * Control and manages real Smartphone devices from browser and restful apis
  * OpenAPI spec version: 1.3.10
  */
-import type { GroupListResponseGroupsItem } from './groupListResponseGroupsItem'
+import type { Group } from './group'
 
 export interface GroupListResponse {
   description: string
-  groups: GroupListResponseGroupsItem[]
+  groups: Group[]
   success: boolean
 }

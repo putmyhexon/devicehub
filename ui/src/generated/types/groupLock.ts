@@ -6,10 +6,7 @@
  * OpenAPI spec version: 1.3.10
  */
 
-/**
- * @nullable
- */
-export type DeviceGroupLifeTime = {
-  start?: string
-  stop?: string
-} | null
+export type GroupLock = {
+  admin?: boolean
+  user?: boolean
+}
