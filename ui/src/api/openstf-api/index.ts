@@ -149,6 +149,14 @@ export const getAccessTokenByTitle = async (title: string): Promise<Token | null
   return data.token || null
 }
 
+export const getUsersInGroup = async ({ groupId }: GroupUserArgs): Promise<GroupUser[]> => {
+  const { data } = await openstfApiClient.get<UsersWithFieldsListResponse<GroupUser>>(
+    OPENSTF_API_ROUTES.groupUser(groupId)
+  )
+
+  return data.users
+}
+
 export const addUserInGroup = async ({ groupId, userEmail }: GroupUserArgs): Promise<boolean> => {
   const { data } = await openstfApiClient.put<GroupResponse>(OPENSTF_API_ROUTES.groupUser(groupId, userEmail))
 

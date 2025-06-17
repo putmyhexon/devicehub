@@ -15,9 +15,11 @@ import {
   getShellDevices,
   getSettingsUsers,
   getAccessTokensByEmail,
+  getUsersInGroup,
 } from '@/api/openstf-api'
 import { getAuthUrl } from '@/api/auth'
 
+import type { GroupUser } from '@/types/group-user.type'
 import type { GroupDevice } from '@/types/group-device.type'
 import type { ParamsWithoutFields } from '@/api/openstf-api/types'
 import type { inferQueryKeyStore } from '@lukemorales/query-key-factory'
@@ -84,6 +86,12 @@ export const queries = createQueryKeyStore({
       queryKey: null,
       queryFn: () => getGroups(),
     },
+  },
+  group: {
+    users: (groupId: string) => ({
+      queryKey: [groupId],
+      queryFn: (): Promise<GroupUser[]> => getUsersInGroup({ groupId }),
+    }),
   },
   auth: {
     docs: {
