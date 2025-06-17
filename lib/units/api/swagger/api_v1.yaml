@@ -2566,6 +2566,52 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
     x-swagger-router-controller: devices
+  /devices/{serial}/use:
+    post:
+      tags:
+      - admin
+      summary: Use device by specified user.
+      description: Use device by specified user. Admin privilege required.
+      operationId: useDeviceByUser
+      parameters:
+        - name: serial
+          in: path
+          description: Device identifier (serial)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Email of the desired user
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Email of the desired user
+        required: true
+      responses:
+        "200":
+          description: Device is in use and remote connection is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoteConnectUserDeviceResponse'
+        default:
+          description: |
+            Unexpected Error:
+              * 401: Unauthorized => bad credentials
+              * 404: Not Found => unknown data
+              * 500: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedErrorResponse'
+      x-codegen-request-body-name: serial
+    x-swagger-router-controller: devices
   /devices/groups/{id}:
     put:
       tags:
@@ -3372,6 +3418,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnexpectedErrorResponse'
+    x-swagger-router-controller: groups
 
 components:
   schemas:

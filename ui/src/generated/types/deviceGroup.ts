@@ -11,11 +11,13 @@ import type { DeviceGroupOwner } from './deviceGroupOwner'
 export type DeviceGroup = {
   class?: string
   id?: string
+  /** @nullable */
   lifeTime?: DeviceGroupLifeTime
   lock?: boolean
   name?: string
   origin?: string
   originName?: string
+  /** @nullable */
   owner?: DeviceGroupOwner
   repetitions?: number
   /** @nullable */

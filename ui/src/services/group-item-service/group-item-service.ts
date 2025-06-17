@@ -44,7 +44,7 @@ export class GroupItemService {
   ) {
     makeAutoObservable(this)
 
-    this.usersQuery = mobxQueryFactory(() => ({ ...queries.group.users(currentGroupId) }))
+    this.usersQuery = mobxQueryFactory(() => ({ ...queries.users.group }))
     this.devicesQuery = mobxQueryFactory(() => ({ ...queries.devices.group({ target: 'origin' }) }))
 
     this.setEntireScheduleData(

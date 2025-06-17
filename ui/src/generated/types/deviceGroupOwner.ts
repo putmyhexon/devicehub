@@ -6,7 +6,10 @@
  * OpenAPI spec version: 1.3.10
  */
 
+/**
+ * @nullable
+ */
 export type DeviceGroupOwner = {
   email?: string
   name?: string
-}
+} | null
