@@ -3933,7 +3933,10 @@ components:
               runUrl:
                 type: string
                 nullable: true
-
+              moderators:
+                type: array
+                items:
+                  type: string
     User:
       type: object
       properties:
