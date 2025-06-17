@@ -5,6 +5,7 @@
  * Control and manages real Smartphone devices from browser and restful apis
  * OpenAPI spec version: 1.3.10
  */
+import type { DeviceBatteryTemp } from './deviceBatteryTemp'
 
 export type DeviceBattery = {
   health?: string
@@ -12,6 +13,6 @@ export type DeviceBattery = {
   scale?: number
   source?: string
   status?: string
-  temp?: number
+  temp?: DeviceBatteryTemp
   voltage?: number
 }
