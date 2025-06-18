@@ -24,6 +24,7 @@ export type GroupListResponseGroupsItem = {
   id?: string
   isActive?: boolean
   lock?: GroupListResponseGroupsItemLock
+  moderators?: string[]
   name?: string
   owner?: GroupListResponseGroupsItemOwner
   privilege?: string
@@ -37,5 +38,4 @@ export type GroupListResponseGroupsItem = {
   /** Group state; default value => pending or ready for bookable/standard classes */
   state?: GroupListResponseGroupsItemState
   users?: string[]
-  moderators?: string[]
 }
