@@ -3,6 +3,7 @@ name: Run API Tests
 on:
     pull_request:
         paths:
+            - '.github/workflows/api_tests.yaml'
             - 'lib/**'
             - 'Dockerfile'
             - 'test/api/**'
