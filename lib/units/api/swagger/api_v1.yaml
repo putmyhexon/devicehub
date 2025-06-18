@@ -992,11 +992,16 @@ paths:
           type: string
       responses:
         "200":
-          description: Users information
+          description: Information of a operation success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserListResponse'
+                required:
+                  - success
+                type: object
+                properties:
+                  success:
+                    type: boolean
         default:
           description: |
             Unexpected Error:
