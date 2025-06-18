@@ -24,6 +24,7 @@ export type GroupListResponseGroupsItem = {
   id?: string
   isActive?: boolean
   lock?: GroupListResponseGroupsItemLock
+  moderators?: string[]
   name?: string
   owner?: GroupListResponseGroupsItemOwner
   privilege?: string
