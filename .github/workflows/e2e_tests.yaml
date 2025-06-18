@@ -30,7 +30,7 @@ jobs:
       - name: Set up Docker compose
         uses: docker/setup-compose-action@v1
         with:
-          version: 2.37.1
+          version: v2.37.1
 
       - name: Run Playwright Tests
         run: docker compose -f docker-compose-e2e-tests.yaml up --build --remove-orphans --exit-code-from devicehub-e2e-tests --abort-on-container-exit devicehub-e2e-tests

@@ -21,7 +21,7 @@ jobs:
             - name: Set up Docker compose
               uses: docker/setup-compose-action@v1
               with:
-                version: 2.37.1
+                version: v2.37.1
 
             - name: Run API tests
               run: docker compose -f docker-compose-api-tests.yaml up --build --remove-orphans --exit-code-from devicehub-pytest --abort-on-container-exit devicehub-pytest
