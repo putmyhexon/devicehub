@@ -101,7 +101,7 @@ export class DeviceSettingsService extends ListManagementService<'serial', Setti
 
       if (isDeviceAlreadyExist) return oldData
 
-      return [...oldData, device]
+      return [...oldData, device as SettingsDevice]
     })
   }
 
