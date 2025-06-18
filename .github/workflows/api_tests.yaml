@@ -1,35 +1,50 @@
 name: Run API Tests
 
 on:
-    pull_request:
-        paths:
-            - '.github/workflows/api_tests.yaml'
-            - 'lib/**'
-            - 'Dockerfile'
-            - 'test/api/**'
-            - 'docker-compose-api-tests.yaml'
-            - 'package.json'
-            - 'package-lock.json'
+  pull_request:
+    paths:
+      - '.github/workflows/api_tests.yaml'
+      - 'lib/**'
+      - 'Dockerfile'
+      - 'test/api/**'
+      - 'docker-compose-api-tests.yaml'
+      - 'package.json'
+      - 'package-lock.json'
+
 jobs:
-    run-api-tests:
-        runs-on: ubuntu-latest
+  build_api_tests:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v3
-              with:
-                version: latest
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          version: latest
 
-            - name: Run API tests
-              run: docker compose -f docker-compose-api-tests.yaml up --build --remove-orphans --exit-code-from devicehub-pytest --abort-on-container-exit devicehub-pytest
+      - name: Build Docker containers for API tests
+        run: |
+          docker compose -f docker-compose-api-tests.yaml build --build-arg DOCKER_BUILD_TAG=$(github.ref)
 
-            - name: Show logs for devicehub
-              if: always()
-              run: docker compose -f docker-compose-api-tests.yaml logs devicehub
+  run_api_tests:
+    runs-on: ubuntu-latest
 
-            - name: Check generate device logs
-              if: always()
-              run: docker compose -f docker-compose-api-tests.yaml logs devicehub-generate-fake-device
+    needs: build_api_tests
+
+    steps:
+      - name: Checkout repository (again, if needed)
+        uses: actions/checkout@v4
+
+      - name: Run API tests
+        run: |
+          docker compose -f docker-compose-api-tests.yaml up --remove-orphans --exit-code-from devicehub-pytest --abort-on-container-exit devicehub-pytest
+
+      - name: Show logs for devicehub
+        if: always()
+        run: docker compose -f docker-compose-api-tests.yaml logs devicehub
+
+      - name: Check generate device logs
+        if: always()
+        run: docker compose -f docker-compose-api-tests.yaml logs devicehub-generate-fake-device
