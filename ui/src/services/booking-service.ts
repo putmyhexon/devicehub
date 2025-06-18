@@ -32,7 +32,7 @@ export class BookingService {
   async reBookDevice(): Promise<void> {
     const { data: device } = await this.deviceBySerialStore.refetch()
 
-    if (!device || !device.channel) return
+    if (!device || !device.channel || !device.serial) return
 
     await this.groupService.invite(device.serial, device.channel, device.group)
 
