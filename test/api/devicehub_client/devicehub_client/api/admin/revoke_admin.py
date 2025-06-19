@@ -5,7 +5,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.user_list_response import UserListResponse
+from ...models.revoke_admin_response_200 import RevokeAdminResponse200
 from ...types import Response
 
 
@@ -22,9 +22,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[UserListResponse]:
+) -> Optional[RevokeAdminResponse200]:
     if response.status_code == 200:
-        response_200 = UserListResponse.from_dict(response.json())
+        response_200 = RevokeAdminResponse200.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -35,7 +35,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[UserListResponse]:
+) -> Response[RevokeAdminResponse200]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -48,7 +48,7 @@ def sync_detailed(
     email: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[UserListResponse]:
+) -> Response[RevokeAdminResponse200]:
     """Gets users
 
      gets users; if you are the administrator user then all user fields are returned, otherwise only
@@ -62,7 +62,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[UserListResponse]
+        Response[RevokeAdminResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -80,7 +80,7 @@ def sync(
     email: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Optional[UserListResponse]:
+) -> Optional[RevokeAdminResponse200]:
     """Gets users
 
      gets users; if you are the administrator user then all user fields are returned, otherwise only
@@ -94,7 +94,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        UserListResponse
+        RevokeAdminResponse200
     """
 
     return sync_detailed(
@@ -107,7 +107,7 @@ async def asyncio_detailed(
     email: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[UserListResponse]:
+) -> Response[RevokeAdminResponse200]:
     """Gets users
 
      gets users; if you are the administrator user then all user fields are returned, otherwise only
@@ -121,7 +121,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[UserListResponse]
+        Response[RevokeAdminResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -137,7 +137,7 @@ async def asyncio(
     email: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Optional[UserListResponse]:
+) -> Optional[RevokeAdminResponse200]:
     """Gets users
 
      gets users; if you are the administrator user then all user fields are returned, otherwise only
@@ -151,7 +151,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        UserListResponse
+        RevokeAdminResponse200
     """
 
     return (

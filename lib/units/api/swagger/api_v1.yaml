@@ -4159,7 +4159,6 @@ components:
 
     ServiceUserResponse:
       required:
-      - description
       - serviceUserInfo
       - success
       type: object

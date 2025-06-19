@@ -47,6 +47,7 @@ from .finger_print_payload import FingerPrintPayload
 from .generate_fake_device_response_200 import GenerateFakeDeviceResponse200
 from .get_access_token_by_title_body import GetAccessTokenByTitleBody
 from .get_devices_target import GetDevicesTarget
+from .grant_admin_response_200 import GrantAdminResponse200
 from .group_list_response import GroupListResponse
 from .group_list_response_groups_item import GroupListResponseGroupsItem
 from .group_list_response_groups_item_class import GroupListResponseGroupsItemClass
@@ -62,6 +63,7 @@ from .group_response_group import GroupResponseGroup
 from .groups_payload import GroupsPayload
 from .owner_response import OwnerResponse
 from .remote_connect_user_device_response import RemoteConnectUserDeviceResponse
+from .revoke_admin_response_200 import RevokeAdminResponse200
 from .service_user_response import ServiceUserResponse
 from .service_user_response_service_user_info import ServiceUserResponseServiceUserInfo
 from .size_response import SizeResponse
@@ -69,6 +71,7 @@ from .token import Token
 from .type_response import TypeResponse
 from .unexpected_error_response import UnexpectedErrorResponse
 from .use_and_connect_device_body import UseAndConnectDeviceBody
+from .use_device_by_user_body import UseDeviceByUserBody
 from .user import User
 from .user_access_token_response import UserAccessTokenResponse
 from .user_access_tokens_response import UserAccessTokensResponse
@@ -142,6 +145,7 @@ __all__ = (
     "GenerateFakeDeviceResponse200",
     "GetAccessTokenByTitleBody",
     "GetDevicesTarget",
+    "GrantAdminResponse200",
     "GroupListResponse",
     "GroupListResponseGroupsItem",
     "GroupListResponseGroupsItemClass",
@@ -157,6 +161,7 @@ __all__ = (
     "GroupsPayload",
     "OwnerResponse",
     "RemoteConnectUserDeviceResponse",
+    "RevokeAdminResponse200",
     "ServiceUserResponse",
     "ServiceUserResponseServiceUserInfo",
     "SizeResponse",
@@ -164,6 +169,7 @@ __all__ = (
     "TypeResponse",
     "UnexpectedErrorResponse",
     "UseAndConnectDeviceBody",
+    "UseDeviceByUserBody",
     "User",
     "UserAccessTokenResponse",
     "UserAccessTokensResponse",
