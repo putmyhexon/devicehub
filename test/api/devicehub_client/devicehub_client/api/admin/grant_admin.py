@@ -5,7 +5,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.grant_admin_response_200 import GrantAdminResponse200
+from ...models.user_response import UserResponse
 from ...types import Response
 
 
@@ -20,11 +20,9 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(
-    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[GrantAdminResponse200]:
+def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[UserResponse]:
     if response.status_code == 200:
-        response_200 = GrantAdminResponse200.from_dict(response.json())
+        response_200 = UserResponse.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -33,9 +31,7 @@ def _parse_response(
         return None
 
 
-def _build_response(
-    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[GrantAdminResponse200]:
+def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[UserResponse]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -48,7 +44,7 @@ def sync_detailed(
     email: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[GrantAdminResponse200]:
+) -> Response[UserResponse]:
     """Gets users
 
      gets users; if you are the administrator user then all user fields are returned, otherwise only
@@ -62,7 +58,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[GrantAdminResponse200]
+        Response[UserResponse]
     """
 
     kwargs = _get_kwargs(
@@ -80,7 +76,7 @@ def sync(
     email: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Optional[GrantAdminResponse200]:
+) -> Optional[UserResponse]:
     """Gets users
 
      gets users; if you are the administrator user then all user fields are returned, otherwise only
@@ -94,7 +90,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        GrantAdminResponse200
+        UserResponse
     """
 
     return sync_detailed(
@@ -107,7 +103,7 @@ async def asyncio_detailed(
     email: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[GrantAdminResponse200]:
+) -> Response[UserResponse]:
     """Gets users
 
      gets users; if you are the administrator user then all user fields are returned, otherwise only
@@ -121,7 +117,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[GrantAdminResponse200]
+        Response[UserResponse]
     """
 
     kwargs = _get_kwargs(
@@ -137,7 +133,7 @@ async def asyncio(
     email: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Optional[GrantAdminResponse200]:
+) -> Optional[UserResponse]:
     """Gets users
 
      gets users; if you are the administrator user then all user fields are returned, otherwise only
@@ -151,7 +147,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        GrantAdminResponse200
+        UserResponse
     """
 
     return (

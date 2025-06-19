@@ -992,16 +992,11 @@ paths:
           type: string
       responses:
         "200":
-          description: Information of a operation success
+          description: User information
           content:
             application/json:
               schema:
-                required:
-                  - success
-                type: object
-                properties:
-                  success:
-                    type: boolean
+                $ref: '#/components/schemas/UserResponse'
         default:
           description: |
             Unexpected Error:
@@ -1030,16 +1025,11 @@ paths:
           type: string
       responses:
         "200":
-          description: Users information
+          description: User information
           content:
             application/json:
               schema:
-                required:
-                  - success
-                type: object
-                properties:
-                  success:
-                    type: boolean
+                $ref: '#/components/schemas/UserResponse'
         default:
           description: |
             Unexpected Error:
