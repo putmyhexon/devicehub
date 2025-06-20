@@ -6,10 +6,9 @@
  * OpenAPI spec version: 1.3.10
  */
 
-/**
- * @nullable
- */
-export type DeviceGroupLifeTime = {
-  start?: string
-  stop?: string
-} | null
+export type GenerateFakeDeviceParams = {
+  /**
+   * How many devices to create
+   */
+  number?: number
+}

@@ -70,7 +70,7 @@ export interface Device {
   reverseForwards?: DeviceReverseForwardsItem[]
   screenPort?: number
   sdk?: string
-  serial: string
+  serial?: string
   service?: DeviceService
   status?: number
   statusChangedAt?: string

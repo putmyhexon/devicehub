@@ -93,7 +93,7 @@ export const DeviceTopBar = observer(() => {
         title={t('Warning')}
         onClose={() => setIsConfirmationOpen(false)}
         onOk={async () => {
-          if (!device?.channel) return
+          if (!device?.channel || !device?.serial) return
 
           await deviceDisconnection.stopUsingDevice(device.serial, device.channel)
 

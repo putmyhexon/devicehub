@@ -37,7 +37,7 @@ export const ErrorModal = ({ ...props }: Omit<BaseModalProps, 'actions' | 'icon'
             size='l'
             stretched
             onClick={() => {
-              if (!device?.channel) return
+              if (!device?.channel || !device?.serial) return
 
               deviceDisconnection.stopUsingDevice(device.serial, device.channel)
 

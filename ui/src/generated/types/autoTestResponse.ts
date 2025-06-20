@@ -5,11 +5,10 @@
  * Control and manages real Smartphone devices from browser and restful apis
  * OpenAPI spec version: 1.3.10
  */
+import type { AutoTestResponseGroup } from './autoTestResponseGroup'
 
-/**
- * @nullable
- */
-export type DeviceGroupLifeTime = {
-  start?: string
-  stop?: string
-} | null
+export interface AutoTestResponse {
+  description: string
+  group?: AutoTestResponseGroup
+  success: boolean
+}
