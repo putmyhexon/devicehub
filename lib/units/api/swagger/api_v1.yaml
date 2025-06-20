@@ -4139,7 +4139,6 @@ components:
       required:
       - description
       - success
-      - user
       type: object
       properties:
         success:
