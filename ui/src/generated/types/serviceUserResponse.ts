@@ -8,7 +8,7 @@
 import type { ServiceUserResponseServiceUserInfo } from './serviceUserResponseServiceUserInfo'
 
 export interface ServiceUserResponse {
-  description: string
+  description?: string
   serviceUserInfo: ServiceUserResponseServiceUserInfo
   success: boolean
 }
