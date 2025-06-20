@@ -235,7 +235,7 @@ def test_grant_admin_privilege(api_client, random_user, successful_response_chec
 
     # Grant admin privilege
     response = grant_admin.sync_detailed(client=api_client, email=user.email)
-    successful_response_check(response=response, description='Users information')
+    successful_response_check(response=response, description='Grant admin for user')
 
     # Verify admin privilege was granted
     response = get_user_by_email.sync_detailed(client=api_client, email=user.email)
@@ -265,7 +265,7 @@ def test_grant_admin_already_admin_user(api_client, random_user, successful_resp
 
     # Grant admin privilege to already admin user
     response = grant_admin.sync_detailed(client=api_client, email=user.email)
-    successful_response_check(response=response, description='Users information')
+    successful_response_check(response=response, description='Grant admin for user')
 
     # Verify user is still admin
     response = get_user_by_email.sync_detailed(client=api_client, email=user.email)
@@ -319,7 +319,7 @@ def test_grant_revoke_admin_cycle(api_client, random_user, successful_response_c
 
     # Grant admin privilege
     response = grant_admin.sync_detailed(client=api_client, email=user.email)
-    successful_response_check(response=response, description='Users information')
+    successful_response_check(response=response, description='Grant admin for user')
 
     # Verify admin privilege
     response = get_user_by_email.sync_detailed(client=api_client, email=user.email)
@@ -327,7 +327,7 @@ def test_grant_revoke_admin_cycle(api_client, random_user, successful_response_c
 
     # Revoke admin privilege
     response = revoke_admin.sync_detailed(client=api_client, email=user.email)
-    successful_response_check(response=response, description='Users information')
+    successful_response_check(response=response, description='Revoke admin for user')
 
     # Verify privilege reverted to user
     response = get_user_by_email.sync_detailed(client=api_client, email=user.email)
@@ -361,7 +361,7 @@ def test_revoke_admin_privilege(api_client, random_user, successful_response_che
 
     # Revoke admin privilege
     response = revoke_admin.sync_detailed(client=api_client, email=user.email)
-    successful_response_check(response=response, description='Users information')
+    successful_response_check(response=response, description='Revoke admin for user')
 
     # Verify admin privilege was revoked
     response = get_user_by_email.sync_detailed(client=api_client, email=user.email)
