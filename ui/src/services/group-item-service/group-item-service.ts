@@ -23,7 +23,7 @@ import type { GroupDevice } from '@/types/group-device.type'
 import type { QueryObserverResult } from '@tanstack/react-query'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 import type { ConflictTableRow } from '@/types/conflict-table-row.type'
-import type {Conflict, GroupListResponseGroupsItem, GroupPayloadClass} from '@/generated/types'
+import type { Conflict, GroupListResponseGroupsItem, GroupPayloadClass } from '@/generated/types'
 import type { CurrentUserProfileStore } from '@/store/current-user-profile-store'
 import type { ScheduleData, ScheduleFormErrors, SetScheduleDataArgs } from './types'
 
@@ -149,33 +149,30 @@ export class GroupItemService {
       const isInGroup = !!this.currentGroup?.devices?.includes(item.serial)
 
       /*
-      * TODO: check by each group instead device.group [device one-to-many groups].
-      *  Mb a common store for all group-item instead fetch by each service(group.id).
-      *  If this check does not prevent an attempt to add busy device,
-      *  backend will return the required error.
-      *  Alternative: GET endpoint to devices available for adding for a specific group. */
+       * TODO: check by each group instead device.group [device one-to-many groups].
+       *  Mb a common store for all group-item instead fetch by each service(group.id).
+       *  If this check does not prevent an attempt to add busy device,
+       *  backend will return the required error.
+       *  Alternative: GET endpoint to devices available for adding for a specific group. */
       if (!isOriginGroup(item.group?.class as GroupPayloadClass)) {
         const stop = new Date(item.group?.lifeTime?.stop || '')
         const start = new Date(item.group?.lifeTime?.start || '')
 
         // find intersections
         if (
-          (
-            start  < this.scheduleData.dateRange[0] &&
-            stop > this.scheduleData.dateRange[0]
-          ) || (
-            start > this.scheduleData.dateRange[0] &&
-            start < this.scheduleData.dateRange[1]
-          )
+          (start < this.scheduleData.dateRange[0] && stop > this.scheduleData.dateRange[0]) ||
+          (start > this.scheduleData.dateRange[0] && start < this.scheduleData.dateRange[1])
         ) {
           return []
         }
       }
 
-      return [{
-        ...item,
-        isInGroup,
-      }]
+      return [
+        {
+          ...item,
+          isInGroup,
+        },
+      ]
     })
   }
 
