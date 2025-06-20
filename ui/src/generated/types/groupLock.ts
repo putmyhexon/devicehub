@@ -5,10 +5,8 @@
  * Control and manages real Smartphone devices from browser and restful apis
  * OpenAPI spec version: 1.3.10
  */
-import type { Group } from './group'
 
-export interface GroupListResponse {
-  description: string
-  groups: Group[]
-  success: boolean
+export type GroupLock = {
+  admin?: boolean
+  user?: boolean
 }
