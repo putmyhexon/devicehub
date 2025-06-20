@@ -23,7 +23,7 @@ import type { GroupDevice } from '@/types/group-device.type'
 import type { QueryObserverResult } from '@tanstack/react-query'
 import type { MobxQueryFactory } from '@/types/mobx-query-factory.type'
 import type { ConflictTableRow } from '@/types/conflict-table-row.type'
-import type { Conflict, GroupListResponseGroupsItem } from '@/generated/types'
+import type {Conflict, GroupListResponseGroupsItem, GroupPayloadClass} from '@/generated/types'
 import type { CurrentUserProfileStore } from '@/store/current-user-profile-store'
 import type { ScheduleData, ScheduleFormErrors, SetScheduleDataArgs } from './types'
 
@@ -145,18 +145,31 @@ export class GroupItemService {
   get groupDevicesData(): DataWithGroupStatus<GroupDevice>[] {
     const devices = this.devicesQuery.data || []
 
-    return devices.map((item) => {
-      if (item.serial && this.currentGroup?.devices?.includes(item.serial)) {
-        return {
-          ...item,
-          isInGroup: true,
+    return devices.flatMap((item) => {
+      const isInGroup = !!this.currentGroup?.devices?.includes(item.serial)
+
+      if (!isOriginGroup(item.group?.class as GroupPayloadClass)) {
+        const stop = new Date(item.group?.lifeTime?.stop || '')
+        const start = new Date(item.group?.lifeTime?.start || '')
+
+        // find intersections
+        if (
+          (
+            start  < this.scheduleData.dateRange[0] &&
+            stop > this.scheduleData.dateRange[0]
+          ) || (
+            start > this.scheduleData.dateRange[0] &&
+            start < this.scheduleData.dateRange[1]
+          )
+        ) {
+          return []
         }
       }
 
-      return {
+      return [{
         ...item,
-        isInGroup: false,
-      }
+        isInGroup,
+      }]
     })
   }
 
