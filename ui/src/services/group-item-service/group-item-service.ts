@@ -148,6 +148,12 @@ export class GroupItemService {
     return devices.flatMap((item) => {
       const isInGroup = !!this.currentGroup?.devices?.includes(item.serial)
 
+      /*
+      * TODO: check by each group instead device.group [device one-to-many groups].
+      *  Mb a common store for all group-item instead fetch by each service(group.id).
+      *  If this check does not prevent an attempt to add busy device,
+      *  backend will return the required error.
+      *  Alternative: GET endpoint to devices available for adding for a specific group. */
       if (!isOriginGroup(item.group?.class as GroupPayloadClass)) {
         const stop = new Date(item.group?.lifeTime?.stop || '')
         const start = new Date(item.group?.lifeTime?.start || '')
