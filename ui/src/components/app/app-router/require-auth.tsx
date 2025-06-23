@@ -11,7 +11,17 @@ import { getAuthRoute } from '@/constants/route-paths'
 export const RequireAuth = observer(() => {
   useEffect(() => {
     if (!authStore.isAuthed) {
-      window.location.assign(getAuthRoute())
+      const params = new URLSearchParams(location.search)
+      const jwt = params.get('jwt')
+
+      if (!jwt) {
+        window.location.assign(getAuthRoute())
+
+        return
+      }
+
+      authStore.login(jwt)
+      window.history.replaceState({}, '', location.pathname + location.hash)
     }
   }, [authStore.isAuthed])
 
