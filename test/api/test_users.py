@@ -11,6 +11,8 @@ from devicehub_client.api.users import get_users
 from devicehub_client.models import AlertMessagePayload, AlertMessagePayloadActivation, \
     AlertMessagePayloadLevel
 
+from api.conftest import ADMIN_PRIVILEGE, USER_PRIVILEGE
+
 
 # api/v1/users - list of user
 def test_get_users(api_client, successful_response_check):
@@ -161,25 +163,10 @@ def test_create_remove_user(api_client, random_user, successful_response_check, 
 
 @pytest.mark.parametrize("admin", [True, False])
 # api/v1/users/service/{id} - create server account
-def test_create_server_user(api_client, admin, random_user, stf_secret, successful_response_check):
-    request_user = random_user()
-    response = create_service_user.sync_detailed(
-        client=api_client,
-        email=request_user.email,
-        name=request_user.name,
-        admin=admin,
-        secret=stf_secret
-    )
-    successful_response_check(
-        response=response,
-        status_code=201,
-        description='Created (service user)'
-    )
-    service_user_dict = response.parsed.service_user_info.to_dict()
-    is_not_none(service_user_dict)
-    equal(service_user_dict.get('email'), request_user.email)
-    is_not_none(service_user_dict.get('token'))
-
+def test_create_server_user(api_client, admin, random_user, stf_secret, successful_response_check,
+                             service_user_creating):
+    request_user = random_user(privilege=ADMIN_PRIVILEGE if admin else USER_PRIVILEGE)
+    service_user_creating(user=request_user)
     response = get_user_by_email.sync_detailed(client=api_client, email=request_user.email)
     successful_response_check(
         response=response,
@@ -189,20 +176,21 @@ def test_create_server_user(api_client, admin, random_user, stf_secret, successf
     is_not_none(user_dict)
     equal(user_dict.get('email'), request_user.email)
     equal(user_dict.get('name'), request_user.name)
-    equal(user_dict.get('privilege'), 'admin' if admin else 'user')
+    equal(user_dict.get('privilege'), request_user.privilege)
 
 
 @pytest.mark.parametrize("admin", [True, False])
 def test_create_server_user_without_admin_privilege(
     api_client_custom_token,
-    service_user_token,
+    service_user_creating,
     random_user,
     stf_secret,
     admin
 ):
     request_user = random_user()
+    service_user = service_user_creating()
     response = create_service_user.sync_detailed(
-        client=api_client_custom_token(token=service_user_token()),
+        client=api_client_custom_token(token=service_user.token),
         email=request_user.email,
         name=request_user.name,
         admin=admin,
@@ -211,23 +199,10 @@ def test_create_server_user_without_admin_privilege(
     equal(response.status_code, 403)
 
 
-def test_grant_admin_privilege(api_client, random_user, successful_response_check, stf_secret):
+def test_grant_admin_privilege(api_client, random_user, successful_response_check, stf_secret, regular_user):
     """Test granting admin privilege to a regular user"""
     # First create a regular user
-    user = random_user()
-    response = create_service_user.sync_detailed(
-        client=api_client,
-        email=user.email,
-        name=user.name,
-        admin=False,
-        secret=stf_secret
-    )
-    successful_response_check(
-        response=response,
-        status_code=201,
-        description='Created (service user)'
-    )
-
+    user = regular_user()
     # Verify user has regular privilege
     response = get_user_by_email.sync_detailed(client=api_client, email=user.email)
     successful_response_check(response=response, description='User Information')
@@ -242,26 +217,13 @@ def test_grant_admin_privilege(api_client, random_user, successful_response_chec
     successful_response_check(response=response, description='User Information')
     equal(response.parsed.user.privilege, 'admin')
 
-    # Cleanup
-    delete_user.sync_detailed(client=api_client, email=user.email)
 
-
-def test_grant_admin_already_admin_user(api_client, random_user, successful_response_check, stf_secret):
+def test_grant_admin_already_admin_user(api_client, random_user, successful_response_check, stf_secret,
+                                        service_user_creating):
     """Test granting admin privilege to user who is already admin"""
     # Create user with admin privilege
-    user = random_user()
-    response = create_service_user.sync_detailed(
-        client=api_client,
-        email=user.email,
-        name=user.name,
-        admin=True,
-        secret=stf_secret
-    )
-    successful_response_check(
-        response=response,
-        status_code=201,
-        description='Created (service user)'
-    )
+    user = random_user(privilege=ADMIN_PRIVILEGE)
+    service_user_creating(user=user)
 
     # Grant admin privilege to already admin user
     response = grant_admin.sync_detailed(client=api_client, email=user.email)
@@ -272,50 +234,33 @@ def test_grant_admin_already_admin_user(api_client, random_user, successful_resp
     successful_response_check(response=response, description='User Information')
     equal(response.parsed.user.privilege, 'admin')
 
-    # Cleanup
-    delete_user.sync_detailed(client=api_client, email=user.email)
 
-
-def test_grant_admin_nonexistent_user(api_client):
+def test_grant_admin_nonexistent_user(api_client, unsuccess_response_check):
     """Test granting admin to non-existent user returns 404"""
     response = grant_admin.sync_detailed(client=api_client, email='nonexistent@example.com')
-    equal(response.status_code, 404)
-    is_none(response.parsed)
+    unsuccess_response_check(response, status_code=404, description='Not Found (user)')
 
 
-def test_grant_admin_with_bad_token(api_client_with_bad_token, admin_user):
+def test_grant_admin_with_bad_token(api_client_with_bad_token, admin_user, failure_response_check):
     """Test granting admin with invalid token returns 401"""
     response = grant_admin.sync_detailed(client=api_client_with_bad_token, email=admin_user.email)
-    equal(response.status_code, 401)
-    is_none(response.parsed)
+    failure_response_check(response, status_code=401, message='Unknown token')
 
 
-def test_grant_admin_without_admin_privilege(api_client_custom_token, service_user_token, admin_user):
+def test_grant_admin_without_admin_privilege(api_client_custom_token, service_user_creating, admin_user, failure_response_check):
     """Test granting admin without admin privilege returns 403"""
+    service_user = service_user_creating()
     response = grant_admin.sync_detailed(
-        client=api_client_custom_token(token=service_user_token()),
+        client=api_client_custom_token(token=service_user.token),
         email=admin_user.email
     )
-    equal(response.status_code, 403)
-    is_none(response.parsed)
+    failure_response_check(response, status_code=403, message='Forbidden: privileged operation (admin)')
 
 
-def test_grant_revoke_admin_cycle(api_client, random_user, successful_response_check, stf_secret):
+def test_grant_revoke_admin_cycle(api_client, random_user, successful_response_check, stf_secret, regular_user):
     """Test complete cycle of granting and revoking admin privileges"""
     # Create regular user
-    user = random_user()
-    response = create_service_user.sync_detailed(
-        client=api_client,
-        email=user.email,
-        name=user.name,
-        admin=False,
-        secret=stf_secret
-    )
-    successful_response_check(
-        response=response,
-        status_code=201,
-        description='Created (service user)'
-    )
+    user = regular_user()
 
     # Grant admin privilege
     response = grant_admin.sync_detailed(client=api_client, email=user.email)
@@ -323,6 +268,7 @@ def test_grant_revoke_admin_cycle(api_client, random_user, successful_response_c
 
     # Verify admin privilege
     response = get_user_by_email.sync_detailed(client=api_client, email=user.email)
+    successful_response_check(response=response, description='User Information')
     equal(response.parsed.user.privilege, 'admin')
 
     # Revoke admin privilege
@@ -331,28 +277,15 @@ def test_grant_revoke_admin_cycle(api_client, random_user, successful_response_c
 
     # Verify privilege reverted to user
     response = get_user_by_email.sync_detailed(client=api_client, email=user.email)
+    successful_response_check(response=response, description='User Information')
     equal(response.parsed.user.privilege, 'user')
 
-    # Cleanup
-    delete_user.sync_detailed(client=api_client, email=user.email)
 
-
-def test_revoke_admin_privilege(api_client, random_user, successful_response_check, stf_secret):
+def test_revoke_admin_privilege(api_client, random_user, successful_response_check, stf_secret, service_user_creating):
     """Test revoking admin privilege from a user"""
     # First create a user with admin privilege
-    user = random_user()
-    response = create_service_user.sync_detailed(
-        client=api_client,
-        email=user.email,
-        name=user.name,
-        admin=True,
-        secret=stf_secret
-    )
-    successful_response_check(
-        response=response,
-        status_code=201,
-        description='Created (service user)'
-    )
+    user = random_user(privilege=ADMIN_PRIVILEGE)
+    service_user_creating(user=user)
 
     # Verify user has admin privilege
     response = get_user_by_email.sync_detailed(client=api_client, email=user.email)
@@ -368,32 +301,28 @@ def test_revoke_admin_privilege(api_client, random_user, successful_response_che
     successful_response_check(response=response, description='User Information')
     equal(response.parsed.user.privilege, 'user')
 
-    # Cleanup
-    delete_user.sync_detailed(client=api_client, email=user.email)
 
-
-def test_revoke_admin_nonexistent_user(api_client):
+def test_revoke_admin_nonexistent_user(api_client, unsuccess_response_check):
     """Test revoking admin from non-existent user returns 404"""
     response = revoke_admin.sync_detailed(client=api_client, email='nonexistent@example.com')
-    equal(response.status_code, 404)
-    is_none(response.parsed)
+    unsuccess_response_check(response, status_code=404, description='Not Found (user)')
 
 
-def test_revoke_admin_with_bad_token(api_client_with_bad_token, admin_user):
+def test_revoke_admin_with_bad_token(api_client_with_bad_token, admin_user, failure_response_check):
     """Test revoking admin with invalid token returns 401"""
     response = revoke_admin.sync_detailed(client=api_client_with_bad_token, email=admin_user.email)
-    equal(response.status_code, 401)
-    is_none(response.parsed)
+    failure_response_check(response, status_code=401, message='Unknown token')
 
 
-def test_revoke_admin_without_admin_privilege(api_client_custom_token, service_user_token, admin_user):
+def test_revoke_admin_without_admin_privilege(api_client_custom_token, service_user_creating, admin_user,
+                                              failure_response_check):
     """Test revoking admin without admin privilege returns 403"""
+    service_user = service_user_creating()
     response = revoke_admin.sync_detailed(
-        client=api_client_custom_token(token=service_user_token()),
+        client=api_client_custom_token(token=service_user.token),
         email=admin_user.email
     )
-    equal(response.status_code, 403)
-    is_none(response.parsed)
+    failure_response_check(response, status_code=403, message='Forbidden: privileged operation (admin)')
 
 
 def test_update_default_user_groups_quotas(api_client, successful_response_check):
@@ -449,10 +378,11 @@ def test_update_default_user_groups_quotas_unauthorized(api_client_with_bad_toke
     equal(response.status_code, 401)
 
 
-def test_update_default_user_groups_quotas_without_admin(api_client_custom_token, service_user_token):
+def test_update_default_user_groups_quotas_without_admin(api_client_custom_token, service_user_creating):
     """Test updating default quotas without admin privilege returns 403"""
+    service_user = service_user_creating()
     response = update_default_user_groups_quotas.sync_detailed(
-        client=api_client_custom_token(token=service_user_token()),
+        client=api_client_custom_token(token=service_user.token),
         number=5
     )
     equal(response.status_code, 403)
@@ -482,7 +412,7 @@ def test_update_user_groups_quotas(api_client, random_user, successful_response_
         )
         successful_response_check(
             response=response,
-            description='User information'
+            description='Updated (user quotas)'
         )
         is_not_none(response.parsed.user)
 
@@ -538,10 +468,11 @@ def test_update_user_groups_quotas_unauthorized(api_client_with_bad_token, admin
     equal(response.status_code, 401)
 
 
-def test_update_user_groups_quotas_without_admin(api_client_custom_token, service_user_token, admin_user):
+def test_update_user_groups_quotas_without_admin(api_client_custom_token, service_user_creating, admin_user):
     """Test updating user quotas without admin privilege returns 403"""
+    service_user = service_user_creating()
     response = update_user_groups_quotas.sync_detailed(
-        client=api_client_custom_token(token=service_user_token()),
+        client=api_client_custom_token(token=service_user.token),
         email=admin_user.email,
         number=5
     )

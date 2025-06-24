@@ -1,7 +1,9 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar
+from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
+
+from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
     from ..models.user import User
@@ -16,12 +18,12 @@ class UserResponse:
     Attributes:
         success (bool):
         description (str):
-        user (User):
+        user (Union[Unset, User]):
     """
 
     success: bool
     description: str
-    user: "User"
+    user: Union[Unset, "User"] = UNSET
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -29,7 +31,9 @@ class UserResponse:
 
         description = self.description
 
-        user = self.user.to_dict()
+        user: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.user, Unset):
+            user = self.user.to_dict()
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -37,9 +41,10 @@ class UserResponse:
             {
                 "success": success,
                 "description": description,
-                "user": user,
             }
         )
+        if user is not UNSET:
+            field_dict["user"] = user
 
         return field_dict
 
@@ -52,7 +57,12 @@ class UserResponse:
 
         description = d.pop("description")
 
-        user = User.from_dict(d.pop("user"))
+        _user = d.pop("user", UNSET)
+        user: Union[Unset, User]
+        if isinstance(_user, Unset):
+            user = UNSET
+        else:
+            user = User.from_dict(_user)
 
         user_response = cls(
             success=success,

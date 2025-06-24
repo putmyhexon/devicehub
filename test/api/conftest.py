@@ -2,10 +2,12 @@ import json
 import random
 import string
 import time
+from http.cookiejar import debug
 
 import pytest
 from pytest_check import equal, is_not_none, is_true, is_false, is_in, greater_equal, greater, is_none
 
+from api.devicehub_client.devicehub_client.api.admin import delete_user, create_user
 from devicehub_client import AuthenticatedClient
 from devicehub_client.api.admin import create_service_user
 from devicehub_client.api.devices import get_devices, get_device_by_serial
@@ -13,7 +15,9 @@ from devicehub_client.api.groups import get_groups, get_group
 
 ADMIN_EMAIL = 'administrator@fakedomain.com'
 ADMIN_NAME = 'administrator'
+
 ADMIN_PRIVILEGE = 'admin'
+USER_PRIVILEGE = 'user'
 
 STF_SECRET = 'kute kittykat'
 
@@ -58,15 +62,27 @@ def api_client_custom_token(base_url):
     return api_client_by_token_func
 
 
-# method create service user and return his token
+class UserKeeper():
+  def __init__(self):
+    self.user = None
+
+  def get_user(self):
+    return self.user
+
+  def set_user(self, new_user):
+    self.user = new_user
+
+# method create service user and return User and remove one after test
 @pytest.fixture()
-def service_user_token(api_client, stf_secret, random_user, successful_response_check):
-    def service_user_token_func(user=random_user(), is_admin=False):
+def service_user_creating(request, api_client, stf_secret, random_user, successful_response_check):
+    request.param = UserKeeper()
+    def service_user_creating_func(user=random_user()):
+        request.param.set_user(user)
         response = create_service_user.sync_detailed(
             client=api_client,
             email=user.email,
             name=user.name,
-            admin=is_admin,
+            admin=user.privilege == ADMIN_PRIVILEGE,
             secret=stf_secret
         )
         successful_response_check(
@@ -78,10 +94,47 @@ def service_user_token(api_client, stf_secret, random_user, successful_response_
         is_not_none(service_user_dict)
         token = service_user_dict.get('token')
         is_not_none(token)
-        return token
+        email = service_user_dict.get('email')
+        equal(email, user.email)
+        user.token = token
+        return user
 
-    return service_user_token_func
+    yield service_user_creating_func
+    # remove service user auto tests
+    response = delete_user.sync_detailed(client=api_client, email=request.param.get_user().email)
+    successful_response_check(response, description='Deleted (users)')
 
+
+# method create regular user and return User and remove one after test
+@pytest.fixture()
+def regular_user(request, api_client, stf_secret, random_user, successful_response_check):
+    request.param = UserKeeper()
+    def regular_user_func(user=random_user()):
+        request.param.set_user(user)
+        response = create_user.sync_detailed(
+            client=api_client,
+            email=user.email,
+            name=user.name
+        )
+        successful_response_check(
+            response=response,
+            status_code=201,
+            description='Created (user)'
+        )
+        user_dict = response.parsed.user.to_dict()
+        is_not_none(user_dict)
+        email = user_dict.get('email')
+        name = user_dict.get('name')
+        privilege = user_dict.get('privilege')
+        equal(email, user.email)
+        equal(name, user.name)
+        equal(privilege, user.privilege)
+        return user
+
+    yield regular_user_func
+    # remove regular user auto tests
+    response = delete_user.sync_detailed(client=api_client, email=request.param.get_user().email)
+    successful_response_check(response, description='Deleted (users)')
 
 @pytest.fixture()
 def api_client_with_bad_token(base_url):
@@ -90,13 +143,14 @@ def api_client_with_bad_token(base_url):
 
 
 class User:
-    def __init__(self, email, name, privilege):
+    def __init__(self, email, name, privilege, token=None):
         self.email = email
         self.name = name
         self.privilege = privilege
+        self.token = token
 
     def __str__(self):
-        return f"User(email={self.email}, name={self.name}, privilege={self.privilege})"
+        return f"User(email={self.email}, name={self.name}, privilege={self.privilege}, *token={self.token})"
 
 
 @pytest.fixture()
@@ -111,8 +165,8 @@ def stf_secret():
 
 @pytest.fixture()
 def random_user(random_str):
-    def random_user_func():
-        return User(email=f'{random_str()}@test.com', name=random_str(), privilege='user')
+    def random_user_func(privilege=USER_PRIVILEGE):
+        return User(email=f'{random_str()}@test.com', name=random_str(), privilege=privilege)
 
     return random_user_func
 
@@ -309,13 +363,24 @@ def successful_response_check():
 
 
 @pytest.fixture()
-def failure_response_check():
-    def failure_response_check_func(response, status_code=400, description=None):
+def unsuccess_response_check():
+    def unsuccess_response_check_func(response, status_code=400, description=None):
         # print(f'\n!!!DEBUG!!!\n{response}\n=================')
         equal(response.status_code, status_code)
         response_content = json.loads(response.content)
         is_false(response_content['success'])
         if description is not None:
             equal(response_content['description'], description)
+
+    return unsuccess_response_check_func
+
+@pytest.fixture()
+def failure_response_check():
+    def failure_response_check_func(response, status_code=401, message=None):
+        # print(f'\n!!!DEBUG!!!\n{response}\n=================')
+        equal(response.status_code, status_code)
+        response_content = json.loads(response.content)
+        if message is not None:
+            equal(response_content['message'], message)
 
     return failure_response_check_func
