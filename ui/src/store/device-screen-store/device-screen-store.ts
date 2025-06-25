@@ -20,6 +20,7 @@ export class DeviceScreenStore {
   private websocketReconnecting = false
   private websocketReconnectionAttempt = 0
   private websocketReconnectionTimeoutID: ReturnType<typeof setTimeout> | null = null
+  private disposed = false
 
   private context: ImageBitmapRenderingContext | null = null
   private canvasWrapper: HTMLDivElement | null = null
@@ -62,15 +63,20 @@ export class DeviceScreenStore {
   }
 
   setIsScreenLoading(value: boolean): void {
+    if (this.disposed) return
     this.isScreenLoading = value
   }
 
   async startScreenStreaming(canvas: HTMLCanvasElement, canvasWrapper: HTMLDivElement): Promise<void> {
+    if (this.disposed) return
+
     runInAction(() => {
       this.setIsScreenLoading(true)
     })
 
     const device = await this.deviceBySerialStore.fetch()
+
+    if (this.disposed) return
 
     this.device = device
     this.context = canvas.getContext('bitmaprenderer')
@@ -80,10 +86,18 @@ export class DeviceScreenStore {
   }
 
   stopScreenStreaming(): void {
+    this.disposed = true
     this.stopWebsocket()
+
+    if (this.websocketReconnectionTimeoutID) {
+      clearTimeout(this.websocketReconnectionTimeoutID)
+      this.websocketReconnectionTimeoutID = null
+    }
   }
 
   updateBounds(): void {
+    if (this.disposed) return
+
     if (!this.canvasWrapper) {
       throw new Error('Unable to read bounds; container must have dimensions')
     }
@@ -104,6 +118,8 @@ export class DeviceScreenStore {
   }
 
   determineAspectRatioMode(): void {
+    if (this.disposed) return
+
     if (this.canvasWrapper && this.context) {
       const canvasAspect = this.context.canvas.width / this.context.canvas.height
       const canvasWrapperAspect = this.canvasWrapper.offsetWidth / this.canvasWrapper.offsetHeight
@@ -113,6 +129,8 @@ export class DeviceScreenStore {
   }
 
   private shouldUpdateScreen(): boolean {
+    if (this.disposed) return false
+
     return Boolean(
       // NO if the user has disabled the screen.
       this.showScreen &&
@@ -126,18 +144,24 @@ export class DeviceScreenStore {
   }
 
   private onScreenInterestGained(): void {
+    if (this.disposed) return
+
     if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
       this.websocket.send('on')
     }
   }
 
   private onScreenInterestAreaChanged(): void {
+    if (this.disposed) return
+
     if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
       this.websocket.send('size ' + this.adjustedBoundSize.width + 'x' + this.adjustedBoundSize.height)
     }
   }
 
   private onScreenInterestLost(): void {
+    if (this.disposed) return
+
     if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
       this.websocket.send('off')
     }
@@ -189,6 +213,8 @@ export class DeviceScreenStore {
   }
 
   private updateImageArea(imageWidth: number, imageHeight: number): void {
+    if (this.disposed) return
+
     if (!this.context) {
       throw new Error('Context is not set')
     }
@@ -217,6 +243,8 @@ export class DeviceScreenStore {
   }
 
   private connectWebsocket(): void {
+    if (this.disposed) return
+
     if (!this.device?.display?.url) {
       throw new Error('No display url')
     }
@@ -244,6 +272,8 @@ export class DeviceScreenStore {
   }
 
   private reconnectWebsocket(): void {
+    if (this.disposed) return
+
     // NOTE: No need reconnect if it is already in progress
     if (this.websocketReconnecting || this.websocketReconnectionTimeoutID) return
 
@@ -253,6 +283,8 @@ export class DeviceScreenStore {
   }
 
   private openListener(): void {
+    if (this.disposed) return
+
     if (this.websocketReconnecting) {
       this.websocketReconnecting = false
       this.websocketReconnectionAttempt = 0
@@ -262,6 +294,8 @@ export class DeviceScreenStore {
   }
 
   private messageListener(message: MessageEvent<Blob | string>): void {
+    if (this.disposed) return
+
     if (message.data instanceof Blob) {
       createImageBitmap(message.data).then((image) => {
         if (!this.context) {
@@ -331,6 +365,8 @@ export class DeviceScreenStore {
   private errorListener(): void {}
 
   private closeListener(event: CloseEvent): void {
+    if (this.disposed) return
+
     this.setIsScreenLoading(true)
     this.websocketReconnecting = false
 
@@ -342,6 +378,8 @@ export class DeviceScreenStore {
 
     if (this.websocketReconnectionAttempt < this.websocketReconnectionMaxAttempts) {
       this.websocketReconnectionTimeoutID = setTimeout(() => {
+        if (this.disposed) return
+
         this.websocketReconnectionTimeoutID = null
         this.reconnectWebsocket()
       }, this.websocketReconnectionInterval)
