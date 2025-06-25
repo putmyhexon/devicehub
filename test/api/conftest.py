@@ -178,12 +178,16 @@ def random_str():
 
     return random_str_func
 
+@pytest.fixture()
+def random_num():
+    def random_num_func(size=10):
+        return random.randint(0, 10**size)
+    return random_num_func
 
 @pytest.fixture()
 def random_choice():
     def random_func(list):
         return random.choice(list)
-
     return random_func
 
 
