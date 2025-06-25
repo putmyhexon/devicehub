@@ -12,7 +12,7 @@ from devicehub_client.api.users import get_users
 from devicehub_client.models import AlertMessagePayload, AlertMessagePayloadActivation, \
     AlertMessagePayloadLevel
 
-from api.conftest import ADMIN_PRIVILEGE, USER_PRIVILEGE, random_num
+from conftest import ADMIN_PRIVILEGE, USER_PRIVILEGE
 
 
 # api/v1/users - list of user
