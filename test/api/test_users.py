@@ -2,6 +2,7 @@ import json
 from datetime import datetime, timedelta, timezone
 
 import pytest
+from devicehub_client.api.user import get_user
 from pytest_check import equal, greater, is_not_none, is_true, is_none, is_in, is_false, between_equal
 
 from devicehub_client.api.admin import update_users_alert_message, create_user, delete_user, \
@@ -12,7 +13,6 @@ from devicehub_client.models import AlertMessagePayload, AlertMessagePayloadActi
     AlertMessagePayloadLevel
 
 from api.conftest import ADMIN_PRIVILEGE, USER_PRIVILEGE, random_num
-from api.devicehub_client.devicehub_client.api.user import get_user
 
 
 # api/v1/users - list of user

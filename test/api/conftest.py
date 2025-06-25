@@ -7,9 +7,8 @@ from http.cookiejar import debug
 import pytest
 from pytest_check import equal, is_not_none, is_true, is_false, is_in, greater_equal, greater, is_none
 
-from api.devicehub_client.devicehub_client.api.admin import delete_user, create_user
 from devicehub_client import AuthenticatedClient
-from devicehub_client.api.admin import create_service_user
+from devicehub_client.api.admin import create_service_user, delete_user, create_user
 from devicehub_client.api.devices import get_devices, get_device_by_serial
 from devicehub_client.api.groups import get_groups, get_group
 
