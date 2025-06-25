@@ -1,6 +1,7 @@
 from datetime import datetime, timezone, timedelta
 from time import sleep
 
+import pytest
 from pytest_check import greater, equal, is_not_none, is_not_in, is_none, between_equal
 
 from devicehub_client.api.admin import add_origin_group_devices
@@ -86,13 +87,13 @@ def test_get_unexisting_group_devices(
     api_client,
     fake_device_field_check,
     common_group_id,
-    failure_response_check,
+        unsuccess_response_check,
     random_str,
     first_device_serial
 ):
     random_group = f'group-{random_str()}'
     response = get_group_devices.sync_detailed(id=random_group, client=api_client)
-    failure_response_check(response, status_code=404, description='Not Found (group)')
+    unsuccess_response_check(response, status_code=404, description='Not Found (group)')
     is_none(response.parsed)
 
 
@@ -117,12 +118,12 @@ def test_get_groups_unexisting_device(
     api_client,
     fake_device_field_check,
     common_group_id,
-    failure_response_check,
+        unsuccess_response_check,
     random_str
 ):
     random_serial = f'serial-{random_str()}'
     response = get_group_device.sync_detailed(id=common_group_id, serial=random_serial, client=api_client)
-    failure_response_check(response, status_code=404, description='Not Found (device)')
+    unsuccess_response_check(response, status_code=404, description='Not Found (device)')
     is_none(response.parsed)
 
 
@@ -130,13 +131,13 @@ def test_get_unexisting_group_device(
     api_client,
     fake_device_field_check,
     common_group_id,
-    failure_response_check,
+        unsuccess_response_check,
     random_str,
     first_device_serial
 ):
     random_group = f'group-{random_str()}'
     response = get_group_device.sync_detailed(id=random_group, serial=first_device_serial, client=api_client)
-    failure_response_check(response, status_code=404, description='Not Found (group)')
+    unsuccess_response_check(response, status_code=404, description='Not Found (group)')
     is_none(response.parsed)
 
 
@@ -159,11 +160,11 @@ def test_create_and_delete_once_group(api_client, random_str, successful_respons
 def test_return_device_to_origin_group(
     api_client,
     api_client_custom_token,
-    service_user_token,
+        service_user_creating,
     random_str,
     random_user,
     successful_response_check,
-    failure_response_check,
+    unsuccess_response_check,
     common_group_id,
     first_device_serial,
     device_in_group_check
@@ -187,12 +188,11 @@ def test_return_device_to_origin_group(
     )
     successful_response_check(response, description='Updated (devices)')
     # create and add user to admin bookable group
-    user = random_user()
-    user_token = service_user_token(user=user)
-    response = add_group_user.sync_detailed(id=bookable_group_id, email=user.email, client=api_client)
+    service_user = service_user_creating()
+    response = add_group_user.sync_detailed(id=bookable_group_id, email=service_user.email, client=api_client)
     successful_response_check(response, description='Added (group users)')
     # create once group by user
-    user_api_client = api_client_custom_token(token=user_token)
+    user_api_client = api_client_custom_token(token=service_user.token)
     response = create_group.sync_detailed(
         client=user_api_client,
         body=GroupPayload(
@@ -211,7 +211,7 @@ def test_return_device_to_origin_group(
     successful_response_check(response, description='Added (group devices)')
     # try to delete bookable group by admin
     response = delete_group.sync_detailed(id=bookable_group_id, client=api_client)
-    failure_response_check(response, status_code=403, description='Forbidden (groups)')
+    unsuccess_response_check(response, status_code=403, description='Forbidden (groups)')
     # delete once group by user
     response = delete_group.sync_detailed(id=once_group_id, client=user_api_client)
     successful_response_check(response, description='Deleted (groups)')
@@ -265,10 +265,11 @@ def test_remove_device_by_one_from_once_group(
     devices_serial,
     device_in_group_check,
     api_client_custom_token,
-    service_user_token
+        service_user_creating
 ):
     # create once group by user
-    user_api_client = api_client_custom_token(token=service_user_token())
+    service_user = service_user_creating()
+    user_api_client = api_client_custom_token(token=service_user.token)
     response = create_group.sync_detailed(
         client=user_api_client,
         body=GroupPayload(
@@ -319,10 +320,11 @@ def test_remove_devices_from_once_group(
     devices_serial,
     devices_in_group_check,
     api_client_custom_token,
-    service_user_token
+        service_user_creating
 ):
     # create once group by user
-    user_api_client = api_client_custom_token(token=service_user_token())
+    service_user = service_user_creating()
+    user_api_client = api_client_custom_token(token=service_user.token)
     response = create_group.sync_detailed(
         client=user_api_client,
         body=GroupPayload(
@@ -426,7 +428,7 @@ def test_scheduler_del_expired_once_group(
     api_client,
     random_str,
     successful_response_check,
-devices_serial, devices_in_group_check, common_group_id, failure_response_check):
+devices_serial, devices_in_group_check, common_group_id, unsuccess_response_check):
     # create group
     bookable_group_name = f'Group_expired_once-{random_str()}'
     response = create_group.sync_detailed(
@@ -457,4 +459,4 @@ devices_serial, devices_in_group_check, common_group_id, failure_response_check)
 
     # check that scheduler del group
     response = get_group.sync_detailed(client=api_client, id=group_id)
-    failure_response_check(response, status_code=404, description='Not Found (group)')
+    unsuccess_response_check(response, status_code=404, description='Not Found (group)')
