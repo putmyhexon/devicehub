@@ -113,7 +113,7 @@
     "newline-after-var": [0, "always"], // TODO: 1 may be ok
     "no-array-constructor": 2,
     "no-bitwise": 0, // We use them
-    "no-continue": 1,
+    "no-continue": 0,
     "no-inline-comments": 0,
     "no-lonely-if": 0, // TODO: 1 may be ok
     "no-mixed-spaces-and-tabs": 2, // optionally set `[2, "smart-tabs"]`
