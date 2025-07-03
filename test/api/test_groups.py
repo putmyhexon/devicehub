@@ -10,9 +10,6 @@ from devicehub_client.api.groups import get_groups, get_group_device, get_group_
     get_group
 from devicehub_client.models import GroupPayload, GroupPayloadClass, DevicesPayload, GroupPayloadState, GroupState
 
-from api.conftest import unsuccess_response_check
-
-
 def test_get_groups(api_client, successful_response_check):
     response = get_groups.sync_detailed(client=api_client)
     successful_response_check(response, description='Groups Information')
