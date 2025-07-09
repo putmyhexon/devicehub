@@ -5,10 +5,11 @@ import pytest
 from pytest_check import greater, equal, is_not_none, is_not_in, is_none, between_equal
 
 from devicehub_client.api.admin import add_origin_group_devices
+from devicehub_client.api.devices import get_devices
 from devicehub_client.api.groups import get_groups, get_group_device, get_group_devices, create_group, delete_group, \
     add_group_device, add_group_user, add_group_devices, remove_group_device, update_group, remove_group_devices, \
-    get_group
-from devicehub_client.models import GroupPayload, GroupPayloadClass, DevicesPayload, GroupPayloadState, GroupState
+    get_group, delete_groups
+from devicehub_client.models import GroupPayload, GroupsPayload, GroupPayloadClass, DevicesPayload, GroupPayloadState, GroupState
 
 def test_get_groups(api_client, successful_response_check):
     response = get_groups.sync_detailed(client=api_client)
@@ -468,3 +469,159 @@ def test_conflict_group_response(
     equal(test_start_time_plus_fifteen, second_conflict.date.stop)
     equal(second_group.name, second_conflict.group)
     equal(second_group.owner.email, second_conflict.owner.email)
+
+def test_periodic_group_lifetime_and_device_assignment(
+    api_client,
+    api_client_custom_token,
+    service_user_creating,
+    common_group_id,
+    devices_serial,
+    group_creating,
+    successful_response_check,
+    devices_in_group_check,
+    random_str
+):
+    service_user = service_user_creating()
+    user_api_client = api_client_custom_token(token=service_user.token)
+
+    now = datetime.now(timezone.utc)
+    start_date = now - timedelta(hours=1, minutes=1)
+    end_date = now + timedelta(seconds=5) - timedelta(hours=1)
+
+    hourly_group = group_creating(
+        group_class=GroupPayloadClass.HOURLY,
+        state=GroupPayloadState.PENDING,
+        start_time=start_date,
+        stop_time=end_date,
+        repetitions=2
+    )
+
+    # Add all devices to the group
+    response = add_group_devices.sync_detailed(
+        id=hourly_group.id,
+        client=api_client,
+        body=DevicesPayload(serials=','.join(devices_serial))
+    )
+    successful_response_check(response, description='Added (group devices)')
+
+    # Confirm the group by changing state to READY
+    response = update_group.sync_detailed(
+        id=hourly_group.id,
+        client=api_client,
+        body=GroupPayload(
+            state=GroupPayloadState.READY
+        )
+    )
+    successful_response_check(response, description='Updated (group)')
+
+    # Wait 1 second and check all devices have the new group ID
+    sleep(1)
+    devices_in_group_check(serials=devices_serial, group_id=hourly_group.id, group_name=hourly_group.name)
+
+    # Check that regular user cannot access devices (should get empty list)
+    user_devices_response = get_devices.sync_detailed(client=user_api_client)
+    successful_response_check(user_devices_response, description='Devices Information')
+    equal(len(user_devices_response.parsed.devices), 0)
+
+    # Check that admin still has access to all devices
+    admin_devices_response = get_devices.sync_detailed(client=api_client)
+    successful_response_check(admin_devices_response, description='Devices Information')
+    equal(len(admin_devices_response.parsed.devices), 5)
+
+    # Wait total 5 seconds and check all devices return to Common group
+    sleep(4)
+    devices_in_group_check(serials=devices_serial, group_id=common_group_id, group_name='Common')
+
+    # Check that the group is deleted and no longer in the list
+    response = get_groups.sync_detailed(client=api_client)
+    successful_response_check(response, description='Groups Information')
+    group_ids = [group.id for group in response.parsed.groups]
+    is_not_in(hourly_group.id, group_ids)
+
+    # Check that regular user has access devices
+    user_devices_response = get_devices.sync_detailed(client=user_api_client)
+    successful_response_check(user_devices_response, description='Devices Information')
+    equal(len(user_devices_response.parsed.devices), 5)
+
+def test_device_flow_by_schedule_in_once(
+    api_client,
+    api_client_custom_token,
+    devices_serial,
+    group_creating,
+    service_user_creating,
+    successful_response_check,
+    unsuccess_response_check,
+    random_user
+):
+      now = datetime.now(timezone.utc)
+
+      bookable = group_creating(
+          group_class=GroupPayloadClass.BOOKABLE,
+          state=GroupPayloadState.READY
+      )
+
+      response = add_origin_group_devices.sync_detailed(
+          id=bookable.id,
+          client=api_client,
+          body=DevicesPayload(serials=','.join(devices_serial))
+      )
+      successful_response_check(response, description='Updated (devices)')
+
+      user_a = api_client_custom_token(token=service_user_creating(random_user()).token)
+      user_b = api_client_custom_token(token=service_user_creating(random_user()).token)
+
+      once_a = group_creating(
+          custom_api_client=user_a,
+          group_class=GroupPayloadClass.ONCE,
+          state=GroupPayloadState.READY,
+          start_time=now,
+          stop_time=now + timedelta(seconds=5),
+          repetitions=0
+      )
+
+      once_b = group_creating(
+         custom_api_client=user_b,
+         group_class=GroupPayloadClass.ONCE,
+         state=GroupPayloadState.READY,
+         start_time=now + timedelta(seconds=7),
+         stop_time=now + timedelta(seconds=17),
+         repetitions=0
+      )
+
+      response = add_group_devices.sync_detailed(
+          id=once_a.id,
+          client=api_client,
+          body=DevicesPayload(serials=','.join(devices_serial))
+      )
+      successful_response_check(response, description='Added (group devices)')
+
+      response = add_group_devices.sync_detailed(
+          id=once_b.id,
+          client=api_client,
+          body=DevicesPayload(serials=','.join(devices_serial))
+      )
+      successful_response_check(response, description='Added (group devices)')
+
+      sleep(1)
+
+      # User A has devices
+      user_a_devices_response = get_devices.sync_detailed(client=user_a)
+      successful_response_check(user_a_devices_response, description='Devices Information')
+      equal(len(user_a_devices_response.parsed.devices), 5)
+
+      # User B has no devices
+      user_b_devices_response = get_devices.sync_detailed(client=user_b)
+      successful_response_check(user_b_devices_response, description='Devices Information')
+      equal(len(user_b_devices_response.parsed.devices), 0)
+
+      sleep(6)
+
+      # User B has devices
+      user_b_devices_response = get_devices.sync_detailed(client=user_b)
+      successful_response_check(user_b_devices_response, description='Devices Information')
+      equal(len(user_b_devices_response.parsed.devices), 5)
+
+      # User A has no devices
+      user_a_devices_response = get_devices.sync_detailed(client=user_a)
+      successful_response_check(user_a_devices_response, description='Devices Information')
+      equal(len(user_a_devices_response.parsed.devices), 0)
