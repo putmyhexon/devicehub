@@ -4604,9 +4604,13 @@ components:
     Token:
       type: object
       properties:
+        email:
+          type: string
         id:
           type: string
         title:
+          type: string
+        jwt:
           type: string
     UserAccessTokenResponse:
       required:

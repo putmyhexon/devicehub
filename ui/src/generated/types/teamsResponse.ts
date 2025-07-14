@@ -5,10 +5,10 @@
  * Control and manages real Smartphone devices from browser and restful apis
  * OpenAPI spec version: 1.3.10
  */
+import type { Team } from './team'
 
-export interface Token {
-  email?: string
-  id?: string
-  jwt?: string
-  title?: string
+export interface TeamsResponse {
+  description: string
+  success: boolean
+  teams?: Team[]
 }

@@ -6,9 +6,9 @@
  * OpenAPI spec version: 1.3.10
  */
 
-export interface Token {
-  email?: string
+export interface Team {
+  groups?: string[]
   id?: string
-  jwt?: string
-  title?: string
+  name?: string
+  users?: string[]
 }
