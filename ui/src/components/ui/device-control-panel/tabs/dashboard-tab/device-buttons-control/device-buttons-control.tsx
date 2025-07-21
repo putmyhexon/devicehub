@@ -41,10 +41,10 @@ export const DeviceButtonsControl = observer(({ className }: { className?: strin
   const deviceBySerialStore = useInjection(CONTAINER_IDS.deviceBySerialStore)
   const { data: device } = deviceBySerialStore.deviceQueryResult()
   const airplaneMutation = useMutation({
-    mutationFn: async ({enabled}: {enabled: boolean}) => {
+    mutationFn: async ({ enabled }: { enabled: boolean }) => {
       const tr = await deviceControlStore.setAirplaneMode(enabled)
       await tr.donePromise
-    }
+    },
   })
 
   return (
@@ -157,7 +157,7 @@ export const DeviceButtonsControl = observer(({ className }: { className?: strin
                     checked={device?.airplaneMode}
                     disabled={airplaneMutation.isPending}
                     onChange={(event) => {
-                      airplaneMutation.mutate({enabled: event.target.checked})
+                      airplaneMutation.mutate({ enabled: event.target.checked })
                     }}
                   />
                   <SelectionControl.Label>{t('Airplane Mode')}</SelectionControl.Label>
