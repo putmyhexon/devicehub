@@ -62,6 +62,12 @@ export class DeviceControlService {
     })
   }
 
+  async setAirplaneMode(state: boolean): Promise<InitializeTransactionReturn> {
+    return await this.sendTwoWay('airplane.set', {
+      enabled: state,
+    })
+  }
+
   // NOTE: I have no idea where this method used
   touchMoveIos({ x, y, pX, pY, pressure, contact, seq }: TouchMoveIosArgs): void {
     this.sendOneWay('input.touchMoveIos', {
