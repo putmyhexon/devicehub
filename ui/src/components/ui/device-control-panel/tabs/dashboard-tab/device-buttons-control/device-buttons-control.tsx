@@ -1,4 +1,4 @@
-import { FormItem, FormLayoutGroup, SelectionControl, Spinner, Switch } from '@vkontakte/vkui'
+import { FormItem, FormLayoutGroup, SelectionControl, Switch } from '@vkontakte/vkui'
 import { useTranslation } from 'react-i18next'
 import {
   Icon24Play,
