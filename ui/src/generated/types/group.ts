@@ -27,6 +27,7 @@ export interface Group {
   id?: string
   isActive?: boolean
   lock?: GroupLock
+  moderators?: string[]
   name?: string
   owner?: GroupOwner
   privilege?: string

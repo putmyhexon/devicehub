@@ -43,6 +43,12 @@ def base_url(request):
         pytest.fail(reason='Missed base_url')
     return f'{url}/api/v1'
 
+@pytest.fixture(scope='module')
+def base_ws_uri(request):
+    url = request.config.option.base_url
+    if url is None:
+        pytest.fail(reason='Missed base_url')
+    return f'{url.replace("https", "wss")}/socket.io/?EIO=4&transport=websocket'
 
 @pytest.fixture()
 def api_client(token_from_params, base_url):

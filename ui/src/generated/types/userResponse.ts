@@ -10,5 +10,5 @@ import type { User } from './user'
 export interface UserResponse {
   description: string
   success: boolean
-  user: User
+  user?: User
 }

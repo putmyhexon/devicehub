@@ -6,9 +6,11 @@
  * OpenAPI spec version: 1.3.10
  */
 
-export interface Token {
-  email?: string
-  id?: string
-  jwt?: string
-  title?: string
+/**
+ * Payload object for adding new team
+ */
+export interface TeamPayload {
+  groups?: string[]
+  name?: string
+  users?: string[]
 }
