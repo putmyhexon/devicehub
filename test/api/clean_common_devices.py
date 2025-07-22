@@ -26,7 +26,7 @@ async def get_result_from_ws(ws, tx_id):
                     return res
             return False
     except asyncio.TimeoutError:
-        print(f'Timeout occurred while waiting for the response with tx_uuid: {tx_id}\n{'-' * 50}')
+        print(f'Timeout occurred while waiting for the response with tx_uuid: {tx_id}\n{"-" * 50}')
         return None
 
 def collect_stat(qa_common_devices, file_path="common_devices_stat.txt"):
@@ -62,7 +62,7 @@ async def test_clean_common_devices(api_client, successful_response_check, base_
             qa_common_devices.append((device.serial, device.channel))
     count_qa_common_devices = len(qa_common_devices)
     released_devices = 0
-    print(f'\n{'='*50}\nFind {{{count_qa_common_devices}}} QA Common Devices.\n{'='*50}\n')
+    print(f'\n{"="*50}\nFind {{{count_qa_common_devices}}} QA Common Devices.\n{"="*50}\n')
     # Collect statistic data
     if count_qa_common_devices > 0:
         collect_stat([device[0] for device in qa_common_devices])
@@ -89,7 +89,7 @@ async def test_clean_common_devices(api_client, successful_response_check, base_
 
             if result:
                 released_devices += 1
-                print(f'Device:{serial} - #2 - was released\n{'-'*50}')
+                print(f'Device:{serial} - #2 - was released\n{"-"*50}')
                 continue
             else:
                 tx_uuid = uuid.uuid4()
@@ -107,8 +107,8 @@ async def test_clean_common_devices(api_client, successful_response_check, base_
 
                         if result:
                             released_devices += 1
-                            print(f'Device:{serial} - #4 - was released\n{'-'*50}')
+                            print(f'Device:{serial} - #4 - was released\n{"-"*50}')
                             break
 
-        print(f'\n{'='*50}\n{{{released_devices}(from {count_qa_common_devices})}} QA Common Devices was released.\n{'='*50}')
+        print(f'\n{"="*50}\n{{{released_devices}(from {count_qa_common_devices})}} QA Common Devices was released.\n{"="*50}')
         equal(released_devices, count_qa_common_devices, 'Not all QA Common Devices were released.')
