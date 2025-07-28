@@ -29,22 +29,6 @@ async def get_result_from_ws(ws, tx_id):
         print(f'Timeout occurred while waiting for the response with tx_uuid: {tx_id}\n{"-" * 50}')
         return None
 
-def collect_stat(qa_common_devices, file_path="common_devices_stat.txt"):
-    devices_stat = {}
-    if os.path.exists(file_path):
-        with open(file_path, "r") as file:
-            for line in file:
-                serial, count = line.split(' ')
-                devices_stat[serial] = int(count)
-    for new_serial in qa_common_devices:
-        if new_serial in devices_stat.keys():
-            devices_stat[new_serial] = devices_stat[new_serial] + 1
-        else:
-            devices_stat[new_serial] = 1
-    with open(file_path, "w") as file:
-        for serial in sorted(devices_stat.keys()):
-            file.write(f'{serial} {devices_stat[serial]}\n')
-
 @pytest.mark.asyncio
 @pytest.mark.skipif(
     os.environ.get("RUN_CLEAN_TEST") != "true",
@@ -63,9 +47,6 @@ async def test_clean_common_devices(api_client, successful_response_check, base_
     count_qa_common_devices = len(qa_common_devices)
     released_devices = 0
     print(f'\n{"="*50}\nFind {{{count_qa_common_devices}}} QA Common Devices.\n{"="*50}\n')
-    # Collect statistic data
-    if count_qa_common_devices > 0:
-        collect_stat([device[0] for device in qa_common_devices])
 
     if len(token_from_params) > 100:
         jwt = token_from_params
