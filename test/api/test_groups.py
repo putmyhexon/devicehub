@@ -237,6 +237,7 @@ def test_return_devices_after_delete_bookable_group(
         body=DevicesPayload(serials=','.join(devices_serial))
     )
     successful_response_check(response, description='Updated (devices)')
+    sleep(1)
     # delete bookable group
     response = delete_group.sync_detailed(id=bookable_group.id, client=api_client)
     successful_response_check(response, description='Deleted (groups)')
