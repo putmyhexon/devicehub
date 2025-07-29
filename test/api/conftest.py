@@ -395,7 +395,7 @@ def first_device_serial(successful_response_check, api_client):
     response = get_devices.sync_detailed(client=api_client)
     successful_response_check(response, description='Devices Information')
     is_not_none(response.parsed.devices)
-    greater(len(response.parsed.devices), 0)
+    equal(len(response.parsed.devices), 5)
     return response.parsed.devices[0].serial
 
 
@@ -404,7 +404,7 @@ def devices_serial(successful_response_check, api_client):
     response = get_devices.sync_detailed(client=api_client)
     successful_response_check(response, description='Devices Information')
     is_not_none(response.parsed.devices)
-    greater(len(response.parsed.devices), 0)
+    equal(len(response.parsed.devices), 5)
     return list(map(lambda x: x.serial, response.parsed.devices))
 
 
