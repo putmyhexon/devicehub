@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
 COPY . .
 
 RUN npm ci --python="/usr/bin/python3" --loglevel http && \
+    ./node_modules/.bin/tsc && \
     npm prune --production
 
 WORKDIR /app/ui
@@ -43,7 +44,6 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
-
 
 RUN useradd --system --create-home --shell /usr/sbin/nologin devicehub-user
 
