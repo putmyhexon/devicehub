@@ -39,11 +39,11 @@ export class DeviceConnection {
         this.debugCommand =
           device.manufacturer === 'Apple'
             ? `curl http://${data}/status`
-            : device.manufacturer && device.model
-              ? `adb connect ${data}`
-              : `sdb connect ${data}`
-
-        console.info(this.debugCommand)
+            : device.platform === 'Tizen'
+              ? `sdb connect ${data}`
+              : device.ready
+                ? `adb connect ${data}`
+                : 'Error'
       })
 
       await this.groupService.invite(this.serial, device.channel, device.group)

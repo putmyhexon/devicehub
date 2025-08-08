@@ -27,16 +27,22 @@ export class GroupService {
 
     const transaction = this.transactionServiceFactory()
     const { channel: transactionChannel, donePromise: transactionEndPromise } = transaction.initializeTransaction()
-
-    socket.emit('group.invite', channel, transactionChannel, {
-      requirements: {
-        serial: {
-          value: serial,
-          match: 'exact',
+    const invite = (): void =>
+      socket.emit('group.invite', channel, transactionChannel, {
+        requirements: {
+          serial: {
+            value: serial,
+            match: 'exact',
+          },
         },
-      },
-      timeout,
-    })
+        timeout,
+      }) as never
+
+    if (!socket.connected) {
+      socket.on('connect', invite)
+    } else {
+      invite()
+    }
 
     return transactionEndPromise
   }
