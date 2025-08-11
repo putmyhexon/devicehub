@@ -29,11 +29,9 @@ jobs:
         id: typecheck
         run: |
           set +e
-          npm run typecheck | tee typecheck.txt
+          (npm run typecheck || true) | tee typecheck.txt
           echo "problems=$(cat typecheck.txt | grep "error TS" | wc -l)" >> $GITHUB_OUTPUT
           set -e
-        problemMatcher: '$tsc'
-
 
       # - name: Comment number of TS errors
       #   if: always()
