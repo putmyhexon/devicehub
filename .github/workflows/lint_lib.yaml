@@ -24,9 +24,11 @@ jobs:
 
       - name: Stylelint Check
         run: npm run lint
+        if: always()
 
       - name: Run typecheck and capture summary
         id: typecheck
+        if: always()
         run: |
           set +e
           (npm run typecheck || true) | tee typecheck.txt
