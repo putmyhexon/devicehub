@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "allowJs": false,
-    "checkJs": false
+    "checkJs": false,
+    "noImplicitAny": false
   },
   "include": ["./lib/**/*.ts"],
   "exclude": ["./lib/**/*.js"]
