@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "strict": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
     "strictBindCallApply": true,
@@ -18,7 +18,7 @@
     "moduleResolution": "nodenext",
     "target": "es2022",
     "rewriteRelativeImportExtensions": true,
-    "lib": ["ES2020"],
+    "lib": ["ES2022"],
     "types": ["node"]
   },
   "include": ["./lib/**/*.js", "./lib/types/**/*.d.ts", "./lib/**/*.ts"],

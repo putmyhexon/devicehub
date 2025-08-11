@@ -42,7 +42,7 @@ export class Log extends EventEmitter {
 
     private readonly names: Record<LogLevel, string> = LogLevelLabel;
 
-    private readonly styles: Record<LogLevel, keyof typeof chalk> = {
+    private readonly styles = {
         [LogLevel.DEBUG]: "grey",
         [LogLevel.VERBOSE]: "cyan",
         [LogLevel.INFO]: "green",
@@ -50,7 +50,7 @@ export class Log extends EventEmitter {
         [LogLevel.WARNING]: "yellow",
         [LogLevel.ERROR]: "red",
         [LogLevel.FATAL]: "red",
-    };
+    } as const;
 
     constructor(tag: string) {
         super();
@@ -95,7 +95,7 @@ export class Log extends EventEmitter {
             priority,
             tag: this.tag,
             pid: process.pid,
-            identifier: this.localIdentifier || Logger.globalIdentifier,
+            identifier: this.localIdentifier || globalLogger.globalIdentifier,
             message: util.format(...args),
         };
     }
@@ -128,17 +128,19 @@ export class Log extends EventEmitter {
 export const createLogger = (tag: string): Log => {
     return new Log(tag);
 };
-const Logger = {
-    Level: LogLevel,
-    LevelLabel: LogLevelLabel,
-    globalIdentifier: "*",
-    createLogger,
 
-    setGlobalIdentifier(identifier: string): typeof Logger {
-        Logger.globalIdentifier = identifier;
-        return Logger;
-    },
+class Logger {
+    Level = LogLevel;
+    LevelLabel = LogLevelLabel;
+    globalIdentifier = "*";
+    createLogger = createLogger;
 
-    on: innerLogger.on.bind(innerLogger),
-};
-export default Logger;
+    setGlobalIdentifier(identifier: string) {
+        this.globalIdentifier = identifier;
+        return this;
+    }
+
+    on = innerLogger.on.bind(innerLogger);
+}
+const globalLogger = new Logger();
+export default globalLogger;
