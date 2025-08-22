@@ -1,4 +1,4 @@
-import {Db} from 'mongodb'
+import {Db, MongoServerError} from 'mongodb'
 import logger from '../util/logger.ts'
 import tables from './tables.ts'
 
@@ -45,16 +45,14 @@ export default async function setupDb(conn: Db): Promise<Db> {
             await conn.collection(table).createIndex(index, {unique: true})
         }
         catch (err) {
-            if (alreadyExistsError(err)) {
-                log.info('Table "%s" already exists', table)
-            }
-            else if (noMasterAvailableError(err)) {
-                log.info('No master available')
-                await new Promise((resolve) => setTimeout(resolve, 1000))
-                return createTable(table, options) // retry
-            }
-            else {
-                throw err
+            if(err instanceof MongoServerError) {
+                if(err.message.includes("already exists")) {
+                    log.info('Table "%s" already exists', table)
+                    return
+                } else if (err.message.includes("No master available")) {
+                    await new Promise((resolve) => setTimeout(resolve, 1000))
+                    return createTable(table, options) // retry
+                }
             }
         }
     }
