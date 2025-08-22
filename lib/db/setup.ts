@@ -9,26 +9,6 @@ interface TableOptions {
 export default async function setupDb(conn: Db): Promise<Db> {
     const log = logger.createLogger('db:setup')
 
-    function alreadyExistsError(err: unknown): boolean {
-        return (
-            typeof err === 'object' &&
-            err !== null &&
-            'msg' in err &&
-            typeof (err as any).msg === 'string' &&
-            (err as any).msg.includes('already exists')
-        )
-    }
-
-    function noMasterAvailableError(err: unknown): boolean {
-        return (
-            typeof err === 'object' &&
-            err !== null &&
-            'msg' in err &&
-            typeof (err as any).msg === 'string' &&
-            (err as any).msg.includes('No master available')
-        )
-    }
-
     async function createTable(
         table: string,
         options: TableOptions
