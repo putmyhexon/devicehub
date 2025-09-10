@@ -106,7 +106,7 @@ export class Log extends EventEmitter {
 
     private _entry(priority: LogLevel, args: LogArguments): LogEntry {
         return {
-            unit: 'unknown',
+            unit: globalLogger.unit,
             timestamp: new Date(),
             priority,
             tag: this.tag,
@@ -198,8 +198,11 @@ class Logger {
     on = innerLogger.on.bind(innerLogger)
 }
 
+
+const globalLogger = new Logger()
+
 const consoleLogger = createLogger('console')
 console.log = consoleLogger.info.bind(consoleLogger)
 console.error = consoleLogger.error.bind(consoleLogger)
 
-export default new Logger()
+export default globalLogger
