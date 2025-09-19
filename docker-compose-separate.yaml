@@ -12,7 +12,7 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
-    network: host
+    network_mode: host
   devicehub-mongo:
     image: mongo:7.0
     hostname: devicehub-mongo
@@ -28,7 +28,7 @@ services:
       start_interval: 1s
       retries: 30
     restart: unless-stopped
-    network: host
+    network_mode: host
     volumes:
       - devicehub-db-volume:/data/db
   devicehub-mongosetup:
@@ -41,7 +41,7 @@ services:
       - ./scripts/mongo_setup.sh:/scripts/mongo_setup.sh
     restart: "no"
     entrypoint: ["bash", "/scripts/mongo_setup.sh"]
-    network: host
+    network_mode: host
   devicehub-migrate:
     build: .
     image: vkcom/devicehub
@@ -52,7 +52,7 @@ services:
     depends_on:
       devicehub-mongosetup:
         condition: service_completed_successfully
-    network: host
+    network_mode: host
   devicehub-app:
     build: .
     image: vkcom/devicehub
@@ -64,7 +64,7 @@ services:
       devicehub-migrate:
         condition: service_completed_successfully
     restart: unless-stopped
-    network: host
+    network_mode: host
   devicehub-auth:
     build: .
     image: vkcom/devicehub
@@ -76,7 +76,7 @@ services:
       devicehub-migrate:
         condition: service_completed_successfully
     restart: unless-stopped
-    network: host
+    network_mode: host
   devicehub-processor:
     build: .
     image: vkcom/devicehub
@@ -88,7 +88,7 @@ services:
       devicehub-migrate:
         condition: service_completed_successfully
     restart: unless-stopped
-    network: host
+    network_mode: host
   devicehub-reaper:
     build: .
     image: vkcom/devicehub
@@ -100,7 +100,7 @@ services:
       devicehub-migrate:
         condition: service_completed_successfully
     restart: unless-stopped
-    network: host
+    network_mode: host
   devicehub-storage-plugin-apk:
     build: .
     image: vkcom/devicehub
@@ -112,7 +112,7 @@ services:
       devicehub-migrate:
         condition: service_completed_successfully
     restart: unless-stopped
-    network: host
+    network_mode: host
   devicehub-storage-plugin-image:
     build: .
     image: vkcom/devicehub
@@ -124,7 +124,7 @@ services:
       devicehub-migrate:
         condition: service_completed_successfully
     restart: unless-stopped
-    network: host
+    network_mode: host
   devicehub-storage-temp:
     build: .
     image: vkcom/devicehub
@@ -136,7 +136,7 @@ services:
       devicehub-migrate:
         condition: service_completed_successfully
     restart: unless-stopped
-    network: host
+    network_mode: host
   devicehub-triproxy-app:
     build: .
     image: vkcom/devicehub
@@ -152,7 +152,7 @@ services:
       devicehub-migrate:
         condition: service_completed_successfully
     restart: unless-stopped
-    network: host
+    network_mode: host
   devicehub-triproxy-dev:
     build: .
     image: vkcom/devicehub
@@ -168,7 +168,7 @@ services:
       devicehub-migrate:
         condition: service_completed_successfully
     restart: unless-stopped
-    network: host
+    network_mode: host
   devicehub-websocket:
     build: .
     image: vkcom/devicehub
@@ -180,7 +180,7 @@ services:
       devicehub-migrate:
         condition: service_completed_successfully
     restart: unless-stopped
-    network: host
+    network_mode: host
   devicehub-api:
     build: .
     image: vkcom/devicehub
@@ -192,7 +192,7 @@ services:
       devicehub-migrate:
         condition: service_completed_successfully
     restart: unless-stopped
-    network: host
+    network_mode: host
   devicehub-api-groups-engine:
     build: .
     image: vkcom/devicehub
@@ -204,7 +204,7 @@ services:
       devicehub-migrate:
         condition: service_completed_successfully
     restart: unless-stopped
-    network: host
+    network_mode: host
   devicehub-provider:
     build: .
     image: vkcom/devicehub
@@ -220,6 +220,6 @@ services:
         condition: service_healthy
     restart: unless-stopped
     command: stf provider --name devicehub-provider --adb-host adbd --no-cleanup --connect-sub tcp://devicehub-triproxy-dev:7250 --connect-push tcp://devicehub-triproxy-dev:7270 --storage-url https://${STF_DOMAIN}:${STF_PORT}/ --public-ip ${STF_DOMAIN} --min-port=12010 --max-port=12100 --heartbeat-interval 10000 --screen-ws-url-pattern "wss://${STF_DOMAIN}:${STF_PORT}/d/devicehub-provider/<%= publicPort %>/" --secret=${STF_SECRET}
-    network: host
+    network_mode: host
 volumes:
   devicehub-db-volume:
