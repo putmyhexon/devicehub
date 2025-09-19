@@ -11,7 +11,7 @@ services:
       - /dev/bus/usb:/dev/bus/usb
     privileged: true
     healthcheck:
-      test: nc -vz 192.168.0.102 5037
+      test: nc -vz 127.0.0.1 5037
       interval: 1m30s
       timeout: 30s
       retries: 5
