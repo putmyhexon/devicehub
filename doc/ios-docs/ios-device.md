@@ -39,3 +39,32 @@ The device name is determined using idb list-targets.
 ## Port forwarding:
 
 A [fork](https://github.com/irdkwmnsb/node-usbmux) of node-usbmux is used to forward ports 9100 and 8100 from the device to the local machine.
+
+
+1. Install idb from scratch
+Install python from here https://www.python.org/downloads/
+Install pip like that python3 -m ensurepip --upgrade https://pip.pypa.io/en/stable/installation/
+Install idb like that pip3 install fb-idb https://fbidb.io/docs/installation/
+2. Install xcode from appstore 
+3. Install stf on computer 
+clone repo https://github.com/VKCOM/devicehub
+install nvm first brew install nvm
+   mkdir ~/.nvm
+
+   export NVM_DIR="$HOME/.nvm"
+   [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+   [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+npm link
+npm ci
+4. Run ios provider
+```bash
+stf ios-provider \
+    --connect-sub tcp://192.168.0.102:7150 \
+    --connect-push tcp://192.168.0.102:7170 \
+    --connect-app-dealer tcp://192.168.0.102:7160 \
+    --connect-dev-dealer tcp://192.168.0.102:7260 \
+    --screen-ws-url-pattern 'wss://devicehub.putmyhexon.ru:<%= publicPort %>' \
+    --public-ip devicehub.putmyhexon.ru \
+    --provider ios-provider \
+    --storage-url https://devicehub.putmyhexon.ru/
+```
