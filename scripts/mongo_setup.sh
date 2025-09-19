@@ -1,12 +1,12 @@
 #!/bin/bash
 
-mongosh --host devicehub-mongo:27017 <<EOF
+mongosh --host 192.168.0.102:27017 <<EOF
     rs.initiate({
         _id:'devicehub-rs',
         members: [
             {
                 _id:0,
-                host:'devicehub-mongo:27017',
+                host:'192.168.0.102:27017',
                 priority: 2
             }
         ]
