@@ -81,3 +81,20 @@ stf ios-provider \
     --secret nosecret \
     --no-cleanup
 ```
+
+
+stf ios-provider \
+--connect-sub tcp://192.168.0.102:7250 \
+--connect-push tcp://192.168.0.102:7270 \
+--connect-app-dealer tcp://192.168.0.102:7160 \
+--connect-dev-dealer tcp://192.168.0.102:7260 \
+--screen-ws-url-pattern "wss://devicehub.putmyhexon.ru:443/d/ios-provider-2/<%= publicPort %>/" \
+--public-ip devicehub.putmyhexon.ru \
+--provider ios-provider-2 \
+--storage-url https://devicehub.putmyhexon.ru:443/ \
+--secret nosecret \
+--no-cleanup
+
+add to zhsrc
+export MONGODB_PORT_27017_TCP="mongodb://192.168.0.102:27017/database?replicaSet=devicehub-rs&directConnection=true"
+export SECRET="nosecret"
